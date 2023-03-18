@@ -26,6 +26,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -36,15 +37,13 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
     }
 
     @Override
-    @NotNull
-    public NamespacedMappingKey id() {
+    public @NotNull NamespacedMappingKey id() {
         return NamespacedMappingKey.of(wrappedObject.item().asString());
     }
 
     @SuppressWarnings("PatternValidation")
     @Override
-    @NotNull
-    public ItemContent withId(@NotNull NamespacedMappingKey id) {
+    public @NotNull ItemContent withId(@NotNull NamespacedMappingKey id) {
         return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), wrappedObject.count(), wrappedObject.nbt()));
     }
 
@@ -54,30 +53,30 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
     }
 
     @Override
-    @NotNull
-    public ItemContent withCount(int count) {
+    public @NotNull ItemContent withCount(int count) {
         return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), count, wrappedObject.nbt()));
     }
 
     @Override
-    @Nullable
-    public String tag() {
+    public @Nullable CompoundTag tag() {
         var nbt = wrappedObject.nbt();
         if (nbt == null) {
             return null;
         }
-        return nbt.string();
+        var tag =  AdventureBackend.getSnbtSerializer().deserialize(nbt.string());
+        if (tag instanceof CompoundTag) {
+            return (CompoundTag) tag;
+        }
+        return null;
     }
 
     @Override
-    @NotNull
-    public ItemContent withTag(@Nullable String tag) {
-        return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), wrappedObject.count(), tag == null || tag.isEmpty() ? null : BinaryTagHolder.of(tag)));
+    public @NotNull ItemContent withTag(@Nullable CompoundTag tag) {
+        return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), wrappedObject.count(), tag == null || tag.isEmpty() ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
     }
 
     @Override
-    @NotNull
-    public ItemContent.Builder toBuilder() {
+    public ItemContent.@NotNull Builder toBuilder() {
         return new AdventureItemContentBuilder(id(), count(), tag());
     }
 
@@ -95,17 +94,17 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
     @Accessors(fluent = true, chain = true)
     @Setter
     public static class AdventureItemContentBuilder implements ItemContent.Builder {
-        private static final NamespacedMappingKey INVALID_KEY = NamespacedMappingKey.of("minecraft", "air");
+        private static final @NotNull NamespacedMappingKey INVALID_KEY = NamespacedMappingKey.of("minecraft", "air");
 
-        private NamespacedMappingKey id = INVALID_KEY; // Should be air if not present
+        private @NotNull NamespacedMappingKey id = INVALID_KEY; // Should be air if not present
         private int count = 1;
-        private String tag;
+        private @Nullable CompoundTag tag;
 
         @SuppressWarnings("PatternValidation")
         @Override
         @NotNull
         public ItemContent build() {
-            return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), count, tag == null || tag.isEmpty() ? null : BinaryTagHolder.of(tag)));
+            return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), count, tag == null ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
         }
     }
 }

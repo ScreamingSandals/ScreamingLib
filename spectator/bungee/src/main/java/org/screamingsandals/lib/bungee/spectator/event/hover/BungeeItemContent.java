@@ -25,6 +25,7 @@ import net.md_5.bungee.api.chat.hover.content.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
+import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -35,8 +36,7 @@ public class BungeeItemContent extends BasicWrapper<Item> implements ItemContent
     }
 
     @Override
-    @NotNull
-    public NamespacedMappingKey id() {
+    public @NotNull NamespacedMappingKey id() {
         var id = wrappedObject.getId();
         if (id == null) {
             return NamespacedMappingKey.of("minecraft:air"); // md_5's nice api said: will be air if null
@@ -45,8 +45,7 @@ public class BungeeItemContent extends BasicWrapper<Item> implements ItemContent
     }
 
     @Override
-    @NotNull
-    public ItemContent withId(@NotNull NamespacedMappingKey id) {
+    public @NotNull ItemContent withId(@NotNull NamespacedMappingKey id) {
         return new BungeeItemContent(new Item(id.asString(), wrappedObject.getCount(), wrappedObject.getTag()));
     }
 
@@ -56,30 +55,30 @@ public class BungeeItemContent extends BasicWrapper<Item> implements ItemContent
     }
 
     @Override
-    @NotNull
-    public ItemContent withCount(int count) {
+    public @NotNull ItemContent withCount(int count) {
         return new BungeeItemContent(new Item(wrappedObject.getId(), count, wrappedObject.getTag()));
     }
 
     @Override
-    @Nullable
-    public String tag() {
+    public @Nullable CompoundTag tag() {
         var tag = wrappedObject.getTag();
         if (tag == null) {
             return null;
         }
-        return tag.getNbt();
+        var compound = AbstractBungeeBackend.getSnbtSerializer().deserialize(tag.getNbt());
+        if (compound instanceof CompoundTag) {
+            return (CompoundTag) compound;
+        }
+        return null;
     }
 
     @Override
-    @NotNull
-    public ItemContent withTag(@Nullable String tag) {
-        return new BungeeItemContent(new Item(wrappedObject.getId(), wrappedObject.getCount(), tag != null ? ItemTag.ofNbt(tag) : null));
+    public @NotNull ItemContent withTag(@Nullable CompoundTag tag) {
+        return new BungeeItemContent(new Item(wrappedObject.getId(), wrappedObject.getCount(), tag != null ? ItemTag.ofNbt(AbstractBungeeBackend.getSnbtSerializer().serialize(tag)) : null));
     }
 
     @Override
-    @NotNull
-    public ItemContent.Builder toBuilder() {
+    public ItemContent.@NotNull Builder toBuilder() {
         return new BungeeItemContentBuilder(id(), count(), tag());
     }
 
@@ -97,9 +96,9 @@ public class BungeeItemContent extends BasicWrapper<Item> implements ItemContent
     @Accessors(fluent = true, chain = true)
     @Setter
     public static class BungeeItemContentBuilder implements ItemContent.Builder {
-        private NamespacedMappingKey id;
+        private @Nullable NamespacedMappingKey id;
         private int count = 1;
-        private String tag;
+        private @Nullable CompoundTag tag;
 
         @Override
         @NotNull
@@ -107,7 +106,7 @@ public class BungeeItemContent extends BasicWrapper<Item> implements ItemContent
             return new BungeeItemContent(new Item(
                     id != null ? id.asString() : "minecraft:air",
                     count,
-                    tag != null ? ItemTag.ofNbt(tag) : null
+                    tag != null ? ItemTag.ofNbt(AbstractBungeeBackend.getSnbtSerializer().serialize(tag)) : null
             ));
         }
     }

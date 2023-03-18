@@ -30,11 +30,13 @@ import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventureAdapter;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventureConsoleAdapter;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventurePlayerAdapter;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
+import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.spectator.SpectatorBackend;
 import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
@@ -43,8 +45,12 @@ import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 
 // let's trick the bukkit's class loader a little
 class SpigotBackendAdventureExtension {
-    static SpectatorBackend initAdventureBackend() {
-        var adventureBackend = new AdventureBackend();
+    static SpectatorBackend initAdventureBackend(@NotNull SNBTSerializer snbtSerializerLocal) {
+        var adventureBackend = new AdventureBackend() {
+            {
+                snbtSerializer = snbtSerializerLocal;
+            }
+        };
 
         // TODO: Fix for upcoming paper versions
         var gson = PaperComponents.gsonSerializer();
@@ -93,7 +99,7 @@ class SpigotBackendAdventureExtension {
         AdventureBackend.getAdditionalItemContentConverter()
                 .registerW2P(Item.class, adventureItemContent -> {
                     var nbt = adventureItemContent.tag();
-                    return new Item(adventureItemContent.id().asString(), adventureItemContent.count(), nbt != null ? ItemTag.ofNbt(nbt) : null);
+                    return new Item(adventureItemContent.id().asString(), adventureItemContent.count(), nbt != null ? ItemTag.ofNbt(snbtSerializerLocal.serialize(nbt)) : null);
                 });
 
         AdventureBackend.getAdditionalEntityContentConverter()
@@ -132,17 +138,17 @@ class SpigotBackendAdventureExtension {
                 });
 
         AbstractBungeeBackend.getAdditionalItemContentConverter()
-                .registerW2P(net.kyori.adventure.text.event.HoverEvent.ShowItem.class, bungeeItemContent -> {;
+                .registerW2P(net.kyori.adventure.text.event.HoverEvent.ShowItem.class, bungeeItemContent -> {
                     //noinspection PatternValidation
                     var id = bungeeItemContent.id();
                     var tag = bungeeItemContent.tag();
                     BinaryTagHolder value = null;
                     if (tag != null) {
                         try {
-                            value = BinaryTagHolder.binaryTagHolder(tag);
+                            value = BinaryTagHolder.binaryTagHolder(snbtSerializerLocal.serialize(tag));
                         } catch (Throwable ignored) {
                             // Old Adventure
-                            value = BinaryTagHolder.of(tag);
+                            value = BinaryTagHolder.of(snbtSerializerLocal.serialize(tag));
                         }
                     }
                     //noinspection PatternValidation

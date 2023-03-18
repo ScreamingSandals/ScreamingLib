@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -79,6 +80,10 @@ public class ClassStorage {
 	
 	public static Object getHandle(Object obj) {
 		return Reflect.getMethod(obj, "getHandle").invoke();
+	}
+
+	public static Object getHandleOfItemStack(Object obj) {
+		return Reflect.getField(obj, "handle");
 	}
 	
 	public static Object getPlayerConnection(Player player) {
@@ -160,11 +165,15 @@ public class ClassStorage {
 		return false;
 	}
 
-	public static Object asMinecraftComponent(Component component) {
+	public static @NotNull Object asMinecraftComponent(@NotNull Component component) {
+		return asMinecraftComponent(component.toJavaJson());
+	}
+
+	public static @NotNull Object asMinecraftComponent(@NotNull String javaJson) {
 		if (Component_i_SerializerAccessor.getMethodM_130701_1() != null) { // 1.16.1+
-			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) component.toJavaJson());
+			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) javaJson);
 		} else {
-			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodFunc_150699_a1(), (Object) component.toJavaJson());
+			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodFunc_150699_a1(), (Object) javaJson);
 		}
 	}
 
@@ -173,33 +182,47 @@ public class ClassStorage {
 		return Reflect.getMethod(CB.CraftItemStack, "asNMSCopy", ItemStack.class).invokeStatic(item);
 	}
 
+	public static ItemStack asCBStack(ItemStack item) {
+		Preconditions.checkNotNull(item, "Item is null!");
+		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftCopy", ItemStack.class).invokeStatic(item);
+	}
+
 	public static Object getDataWatcher(Object handler) {
 		Preconditions.checkNotNull(handler, "Handler is null!");
 		return Reflect.fastInvoke(handler, EntityAccessor.getMethodGetEntityData1());
 	}
 
 	public static int getEntityTypeId(String key, Class<?> clazz) {
-		var registry = Reflect.getFieldResulted(RegistryAccessor.getFieldENTITY_TYPE());
-
-		if (registry.isPresent()) {
-			// 1.14+
+		var registry1_19_3 = Reflect.getFieldResulted(BuiltInRegistriesAccessor.getFieldENTITY_TYPE());
+		if (registry1_19_3.isPresent()) {
+			// 1.19.3+
 			var optional = Reflect.fastInvoke(EntityTypeAccessor.getMethodByString1(), (Object) key);
 
-			if (optional instanceof Optional) {
-				return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
-			}
-
-			// 1.13.X
-			var nullable = Reflect.fastInvoke(EntityTypeAccessor.getMethodFunc_200713_a1(), (Object) key);
-			return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), nullable).asOptional(Integer.class).orElse(0);
+			return registry1_19_3.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
 		} else {
-			// 1.11 - 1.12.2
-			if (EntityTypeAccessor.getFieldField_191308_b() != null) {
-				return Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_191308_b()).fastInvokeResulted(MappedRegistryAccessor.getMethodFunc_148757_b1(), clazz).asOptional(Integer.class).orElse(0);
-			}
+			// <= 1.19.2
+			var registry = Reflect.getFieldResulted(RegistryAccessor.getFieldENTITY_TYPE());
 
-			// 1.8.8 - 1.10.2
-			return (int) Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_75624_e()).as(Map.class).get(clazz);
+			if (registry.isPresent()) {
+				// 1.14+
+				var optional = Reflect.fastInvoke(EntityTypeAccessor.getMethodByString1(), (Object) key);
+
+				if (optional instanceof Optional) {
+					return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
+				}
+
+				// 1.13.X
+				var nullable = Reflect.fastInvoke(EntityTypeAccessor.getMethodFunc_200713_a1(), (Object) key);
+				return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), nullable).asOptional(Integer.class).orElse(0);
+			} else {
+				// 1.11 - 1.12.2
+				if (EntityTypeAccessor.getFieldField_191308_b() != null) {
+					return Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_191308_b()).fastInvokeResulted(MappedRegistryAccessor.getMethodFunc_148757_b1(), clazz).asOptional(Integer.class).orElse(0);
+				}
+
+				// 1.8.8 - 1.10.2
+				return (int) Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_75624_e()).as(Map.class).get(clazz);
+			}
 		}
 	}
 }

@@ -1,6 +1,5 @@
 dependencies {
     compileOnly libs.slf4j
-    compileOnly libs.protobuf
 
     api project(':utils-common')
     api project(':spectator-common')

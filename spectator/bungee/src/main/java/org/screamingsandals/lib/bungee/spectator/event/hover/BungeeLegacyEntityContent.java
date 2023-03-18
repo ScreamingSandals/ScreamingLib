@@ -20,10 +20,11 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
+import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -31,51 +32,72 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.UUID;
 
-public class BungeeLegacyEntityContent extends BasicWrapper<String> implements EntityContent {
-    public BungeeLegacyEntityContent(String snbt) {
-        super(snbt);
+public class BungeeLegacyEntityContent extends BasicWrapper<CompoundTag> implements EntityContent {
+    public BungeeLegacyEntityContent(@NotNull String snbt) {
+        this(readTag(snbt));
+    }
+
+    public BungeeLegacyEntityContent(@NotNull CompoundTag tag) {
+        super(tag);
+    }
+
+    private static @NotNull CompoundTag readTag(@NotNull String snbt) {
+        var tag = AbstractBungeeBackend.getSnbtSerializer().deserialize(snbt);
+        if (tag instanceof CompoundTag) {
+            return (CompoundTag) tag;
+        }
+        return CompoundTag.EMPTY;
     }
 
     // TODO: parse snbt
     @Override
-    @NotNull
-    public UUID id() {
-        return null; // TODO
+    public @NotNull UUID id() {
+        var string = wrappedObject.tag("id");
+        if (string instanceof StringTag) {
+            return UUID.fromString(((StringTag) string).value());
+        }
+        return UUID.randomUUID();
     }
 
     @Override
-    @NotNull
-    public EntityContent withId(@NotNull UUID id) {
-        return this; // TODO
+    public @NotNull EntityContent withId(@NotNull UUID id) {
+        return new BungeeLegacyEntityContent(wrappedObject.with("id", id.toString()));
     }
 
     @Override
-    @NotNull
-    public NamespacedMappingKey type() {
-        return null; // TODO
+    public @NotNull NamespacedMappingKey type() {
+        var string = wrappedObject.tag("type");
+        if (string instanceof StringTag) {
+            return NamespacedMappingKey.of(((StringTag) string).value());
+        }
+        return NamespacedMappingKey.of("minecraft", "pig");
     }
 
     @Override
-    @NotNull
-    public EntityContent withType(@NotNull NamespacedMappingKey type) {
-        return this; // TODO
+    public @NotNull EntityContent withType(@NotNull NamespacedMappingKey type) {
+        return new BungeeLegacyEntityContent(wrappedObject.with("type", type.asString()));
     }
 
     @Override
-    @Nullable
-    public Component name() {
-        return null; // TODO
+    public @Nullable Component name() {
+        var name = wrappedObject.tag("name");
+        if (name instanceof StringTag) {
+            return Component.fromJavaJson(((StringTag) name).value());
+        }
+        return null;
     }
 
     @Override
-    @NotNull
-    public EntityContent withType(@Nullable Component name) {
-        return this; // TODO
+    public @NotNull EntityContent withType(@Nullable Component name) {
+        if (name != null) {
+            return new BungeeLegacyEntityContent(wrappedObject.with("name", name.toJavaJson()));
+        } else {
+            return new BungeeLegacyEntityContent(wrappedObject.without("name"));
+        }
     }
 
     @Override
-    @NotNull
-    public EntityContent.Builder toBuilder() {
+    public EntityContent.@NotNull Builder toBuilder() {
         return new BungeeLegacyEntityContentBuilder(
                 id(),
                 type(),
@@ -83,25 +105,34 @@ public class BungeeLegacyEntityContent extends BasicWrapper<String> implements E
         );
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T as(Class<T> type) {
+        if (type == String.class) {
+            return (T) AbstractBungeeBackend.getSnbtSerializer().serialize(wrappedObject);
+        }
+        return super.as(type);
+    }
+
     @NoArgsConstructor
     @AllArgsConstructor
     @Accessors(fluent = true, chain = true)
     @Setter
     public static class BungeeLegacyEntityContentBuilder implements EntityContent.Builder {
-        private UUID id;
-        private NamespacedMappingKey type;
-        private Component name;
+        private @Nullable UUID id;
+        private @Nullable NamespacedMappingKey type;
+        private @Nullable Component name;
 
         @Override
         @NotNull
         public EntityContent build() {
-            return new BungeeLegacyEntityContent(
-                    "{id: \"" + (id != null ? id.toString() : UUID.randomUUID().toString()) + "\"" +
-                            ", type: \"" + (type != null ? type.asString() : "minecraft:pig") + "\""
-                            // escape every quote in the json because the json should be string
-                            + (name != null ? ", name: \"" + ComponentSerializer.toString(name.as(BaseComponent.class)).replace("\"", "\\\"") + "\"" : "")
-                            + "}" // I hope this is correct
-            );
+            var compound = CompoundTag.EMPTY
+                    .with("id", id != null ? id.toString() : UUID.randomUUID().toString())
+                    .with("type", type != null ? type.asString() : "minecraft:pig");
+            if (name != null) {
+                compound = compound.with("name", name.toJavaJson());
+            }
+            return new BungeeLegacyEntityContent(compound);
         }
     }
 }

@@ -58,6 +58,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     private final int entityId;
     private final Hologram hologram;
+    private final String tabName16;
     private Component tabListName;
     @Getter(AccessLevel.NONE)
     private final List<SClientboundPlayerInfoPacket.Property> properties;
@@ -78,7 +79,8 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         }
 
         this.hologramElevation = 1.5D;
-        this.tabListName = Component.fromLegacy("[NPC] " + uuid.toString().replace("-", "").substring(0, 10));
+        this.tabName16 = "[NPC] " + uuid.toString().replace("-", "").substring(0, 10);
+        this.tabListName = Component.fromLegacy(tabName16);
         this.hologram = HologramManager.hologram(location.add(0.0D, hologramElevation, 0.0D));
         this.metadata = new ArrayList<>();
         this.properties = new ArrayList<>();
@@ -122,7 +124,9 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         if (shown() && viewer.isOnline()) {
             hologram.addViewer(viewer);
             createSpawnPackets().forEach(packet -> packet.sendPacket(viewer));
-            scheduleTabHide(viewer);
+            if (!Server.isVersion(1, 19, 3) || viewer.getProtocolVersion() < 761) {
+                scheduleTabHide(viewer);
+            }
         }
     }
 
@@ -312,7 +316,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
             SClientboundSetPlayerTeamPacket.Mode mode
     ) {
         return new SClientboundSetPlayerTeamPacket()
-                .teamKey(tabListName.toLegacy())
+                .teamKey(tabName16)
                 .mode(mode)
                 .displayName(tabListName)
                 .collisionRule(collisionRule)
@@ -322,17 +326,18 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 .teamSuffix(Component.empty())
                 .friendlyFire(false)
                 .seeInvisible(true)
-                .entities(Collections.singletonList(tabListName.toLegacy()));
+                .entities(Collections.singletonList(tabName16));
     }
 
     private List<SClientboundPlayerInfoPacket.PlayerInfoData> getNPCInfoData() {
         return Collections.singletonList(new SClientboundPlayerInfoPacket.PlayerInfoData(
                 uuid(),
-                tabListName.toLegacy(),
+                tabName16,
                 1,
                 GAME_MODE,
                 tabListName,
-                List.copyOf(properties)
+                List.copyOf(properties),
+                false
         ));
     }
 }

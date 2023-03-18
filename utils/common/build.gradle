@@ -1,45 +1,8 @@
-plugins {
-    id "com.google.protobuf" version "0.8.18"
-}
-
-apply plugin: "com.google.protobuf"
-
 dependencies {
-    //proto
-    compileOnly libs.protobuf
-
     compileOnly libs.gson
     compileOnly libs.slf4j
 
     api project(':api-utils')
     api libs.configurate.core
     api libs.configurate.gson
-    api libs.resulter
-}
-
-sourceSets.configureEach{s->
-    java {
-        srcDir project.buildDir.toPath()
-                .resolve("generatedProto")
-                .resolve(s.name)
-                .resolve("java")
-                .toFile()
-
-        srcDir project.buildDir.toPath()
-                .resolve("generatedProto")
-                .resolve(s.name)
-                .resolve("grpc")
-                .toFile()
-    }
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
-    }
-    generateProtoTasks {
-        all()
-    }
-
-    generatedFilesBaseDir = "${project.buildDir}/generatedProto"
 }

@@ -25,10 +25,13 @@ import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
 import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
+import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionHolder;
+import org.screamingsandals.lib.nbt.Tag;
+import org.screamingsandals.lib.nbt.configurate.TagSerializer;
 import org.screamingsandals.lib.particle.ParticleTypeHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
@@ -44,6 +47,7 @@ public class SLibSerializers {
     @NotNull
     public TypeSerializerCollection.Builder appendSerializers(TypeSerializerCollection.@NotNull Builder builder) {
         return SpectatorSerializers.appendSerializers(builder)
+                .register(Tag.class, TagSerializer.INSTANCE)
                 .register(AttributeTypeHolder.class, AttributeTypeHolderSerializer.INSTANCE)
                 .register(DamageCauseHolder.class, DamageCauseHolderSerializer.INSTANCE)
                 .register(DifficultyHolder.class, DifficultyHolderSerializer.INSTANCE)
@@ -61,7 +65,8 @@ public class SLibSerializers {
                 .register(FireworkEffectHolder.class, FireworkEffectHolderSerializer.INSTANCE)
                 .register(ItemTypeHolder.class, ItemTypeHolderSerializer.INSTANCE)
                 .register(BlockTypeHolder.class, BlockTypeHolderSerializer.INSTANCE)
-                .register(EquipmentSlotHolder.class, EquipmentSlotHolderSerializer.INSTANCE);
+                .register(EquipmentSlotHolder.class, EquipmentSlotHolderSerializer.INSTANCE)
+                .register(Item.class, ItemSerializer.INSTANCE);
     }
     @NotNull
     public TypeSerializerCollection makeSerializers(TypeSerializerCollection.@NotNull Builder builder) {

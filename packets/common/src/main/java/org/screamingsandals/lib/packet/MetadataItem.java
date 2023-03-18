@@ -219,7 +219,7 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            writer.writeVarInt(2);
+            writer.writeVarInt(writer.protocol() >= 761 ? 3 : 2);
             writer.writeFloat(data);
         }
     }
@@ -240,7 +240,7 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            writer.writeVarInt(3);
+            writer.writeVarInt(writer.protocol() >= 761 ? 4 : 3);
             writer.writeSizedString(text);
         }
     }
@@ -261,7 +261,7 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            writer.writeVarInt(4);
+            writer.writeVarInt(writer.protocol() >= 761 ? 5 : 4);
             writer.writeComponent(text);
         }
     }
@@ -282,7 +282,7 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            writer.writeVarInt(5);
+            writer.writeVarInt(writer.protocol() >= 761 ? 6 : 5);
             var flag = val != null && !val.equals(Component.empty());
             writer.writeBoolean(flag);
             if (flag) {
@@ -307,11 +307,7 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() < 393) {
-                writer.writeVarInt(6);
-            } else {
-                writer.writeVarInt(7);
-            }
+            writer.writeVarInt(writer.protocol() < 393 ? 6 : writer.protocol() >= 761 ? 8 : 7);
             writer.writeBoolean(val);
         }
     }
@@ -332,11 +328,7 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() < 393) {
-                writer.writeVarInt(7);
-            } else {
-                writer.writeVarInt(8);
-            }
+            writer.writeVarInt(writer.protocol() < 393 ? 7 : writer.protocol() >= 761 ? 9 : 8);
             writer.writeVector(val);
         }
     }
@@ -357,11 +349,7 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() < 393) {
-                writer.writeVarInt(8);
-            } else {
-                writer.writeVarInt(9);
-            }
+            writer.writeVarInt(writer.protocol() < 393 ? 8 : writer.protocol() >= 761 ? 10 : 9);
             writer.writeLong(blockPosToLong(val.getX(), val.getY(), val.getZ()));
         }
     }
@@ -382,11 +370,7 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() < 393) {
-                writer.writeVarInt(9);
-            } else {
-                writer.writeVarInt(10);
-            }
+            writer.writeVarInt(writer.protocol() < 393 ? 9 : writer.protocol() >= 761 ? 11 : 10);
             var present = blockPosition != null;
             writer.writeBoolean(present);
             if (present) {

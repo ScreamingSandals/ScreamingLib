@@ -49,6 +49,7 @@ public class MiniMessageParser {
             .defaultStylingTags()
             .defaultComponentTags()
             .resetTag(true)
+            .strictClosing(false)
             .build();
     private final MiniTagParser parser;
     private final Map<String, ComponentBuilderResolver> componentTagResolvers;

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.item.builder;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeMapping;
@@ -32,6 +33,7 @@ import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataConsumer;
 import org.screamingsandals.lib.metadata.MetadataKey;
+import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -45,45 +47,66 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface ItemBuilder extends MetadataConsumer {
-    ItemBuilder type(@NotNull ItemTypeHolder type);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder type(@NotNull ItemTypeHolder type);
 
-    ItemBuilder durability(int durability);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder durability(int durability);
 
-    ItemBuilder amount(int amount);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder amount(int amount);
 
-    ItemBuilder displayName(@Nullable Component displayName);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder displayName(@Nullable Component displayName);
 
-    ItemBuilder itemLore(@Nullable List<@NotNull Component> lore);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder itemLore(@Nullable List<@NotNull Component> lore);
 
-    ItemBuilder attributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder attributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers);
 
-    ItemBuilder attributeModifier(@NotNull ItemAttributeHolder modifier);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder attributeModifier(@NotNull ItemAttributeHolder modifier);
 
-    ItemBuilder data(@NotNull ItemData data);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder data(@NotNull ItemData data);
 
-    ItemBuilder hideFlags(@Nullable List<@NotNull HideFlags> flags);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder hideFlags(@Nullable List<@NotNull HideFlags> flags);
 
-    ItemBuilder hideFlag(@NotNull HideFlags flag);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder hideFlag(@NotNull HideFlags flag);
 
-    ItemBuilder enchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder enchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments);
 
-    ItemBuilder enchantment(@NotNull EnchantmentHolder enchantment);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder enchantment(@NotNull EnchantmentHolder enchantment);
 
-    ItemBuilder customModelData(@Nullable Integer data);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder customModelData(@Nullable Integer data);
 
-    ItemBuilder unbreakable(boolean unbreakable);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder unbreakable(boolean unbreakable);
 
-    ItemBuilder repairCost(int repairCost);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder repairCost(int repairCost);
 
-    Optional<Item> build();
+    @Contract("_ -> this")
+    @NotNull ItemBuilder tag(@NotNull CompoundTag tag);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull Optional<Item> build();
 
     @Deprecated
-    ItemBuilder platformMeta(Object meta);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder platformMeta(Object meta);
 
     // DSL
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    default ItemBuilder type(@NotNull Object type) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder type(@NotNull Object type) {
         if (type instanceof ItemTypeHolder) {
             return type((ItemTypeHolder) type);
         }
@@ -91,27 +114,33 @@ public interface ItemBuilder extends MetadataConsumer {
         return this;
     }
 
-    default ItemBuilder name(@NotNull Component name) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder name(@NotNull Component name) {
         return displayName(name);
     }
 
-    default ItemBuilder name(@NotNull ComponentLike name) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder name(@NotNull ComponentLike name) {
         return displayName(name.asComponent());
     }
 
-    default ItemBuilder name(@Nullable String name) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder name(@Nullable String name) {
         return displayName(name == null ? null : Component.fromLegacy(name));
     }
 
-    default ItemBuilder localizedName(@Nullable String name) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder localizedName(@Nullable String name) {
         return displayName(name == null ? null : Component.translatable().translate(name).build());
     }
 
-    default ItemBuilder repair(int repair) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder repair(int repair) {
         return repairCost(repair);
     }
 
-    default <C> ItemBuilder flags(@Nullable List<C> flags) {
+    @Contract("_ -> this")
+    default <C> @NotNull ItemBuilder flags(@Nullable List<@NotNull C> flags) {
         if (flags == null) {
             return this;
         } else {
@@ -134,17 +163,21 @@ public interface ItemBuilder extends MetadataConsumer {
      * @param component
      * @return
      */
-    ItemBuilder lore(@NotNull Component component);
+    @Contract("_ -> this")
+    @NotNull ItemBuilder lore(@NotNull Component component);
 
-    default ItemBuilder lore(@NotNull ComponentLike component) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder lore(@NotNull ComponentLike component) {
         return lore(component.asComponent());
     }
 
-    default ItemBuilder lore(@Nullable String lore) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder lore(@Nullable String lore) {
         return lore(lore == null ? Component.empty() : Component.fromLegacy(lore));
     }
 
-    default <C> ItemBuilder lore(@NotNull List<C> lore) {
+    @Contract("_ -> this")
+    default <C> @NotNull ItemBuilder lore(@NotNull List<@Nullable C> lore) {
         return itemLore(lore.stream()
                 .map(c -> {
                     if (c instanceof ComponentLike) {
@@ -158,41 +191,48 @@ public interface ItemBuilder extends MetadataConsumer {
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    default ItemBuilder enchant(@NotNull Object enchant, int level) {
+    @Contract("_,_ -> this")
+    default @NotNull ItemBuilder enchant(@NotNull Object enchant, int level) {
         return enchant(enchant + " " + level);
     }
 
-    default ItemBuilder enchant(@NotNull Map<Object, Integer> enchants) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder enchant(@NotNull Map<@NotNull Object, @NotNull Integer> enchants) {
         enchants.forEach(this::enchant);
         return this;
     }
 
-    default ItemBuilder enchant(@NotNull List<Object> enchants) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder enchant(@NotNull List<@NotNull Object> enchants) {
         enchants.forEach(this::enchant);
         return this;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    default ItemBuilder enchant(@NotNull Object enchant) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder enchant(@NotNull Object enchant) {
         EnchantmentHolder.ofOptional(enchant).ifPresent(this::enchantment);
         return this;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)
-    default ItemBuilder potion(@NotNull Object potion) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder potion(@NotNull Object potion) {
         PotionHolder.ofOptional(potion).ifPresent(potionHolder -> {
             this.setMetadata(ItemMeta.POTION_TYPE, potionHolder);
         });
         return this;
     }
 
-    default ItemBuilder attribute(@NotNull Object itemAttribute) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder attribute(@NotNull Object itemAttribute) {
         AttributeMapping.wrapItemAttribute(itemAttribute).ifPresent(this::attributeModifier);
         return this;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
-    default ItemBuilder effect(@NotNull Object effect) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder effect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
             list.forEach(effect1 -> PotionEffectHolder.ofOptional(effect1).ifPresent(potionEffectHolder -> {
@@ -208,16 +248,19 @@ public interface ItemBuilder extends MetadataConsumer {
     }
 
 
-    default ItemBuilder recipe(@NotNull String key) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder recipe(@NotNull String key) {
         return recipe(NamespacedMappingKey.of(key));
     }
 
-    default ItemBuilder recipe(@NotNull NamespacedMappingKey key) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder recipe(@NotNull NamespacedMappingKey key) {
         this.addToListMetadata(ItemMeta.RECIPES, key);
         return this;
     }
 
-    default ItemBuilder color(@NotNull String color) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder color(@NotNull String color) {
         var c = Color.hexOrName(color);
         if (c != null) {
             return color(c);
@@ -225,7 +268,8 @@ public interface ItemBuilder extends MetadataConsumer {
         return this;
     }
 
-    default ItemBuilder color(@NotNull Color color) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder color(@NotNull Color color) {
         if (this.supportsMetadata(ItemMeta.CUSTOM_POTION_COLOR)) {
             this.setMetadata(ItemMeta.CUSTOM_POTION_COLOR, color);
         } else {
@@ -234,16 +278,19 @@ public interface ItemBuilder extends MetadataConsumer {
         return this;
     }
 
-    default ItemBuilder color(int r, int g, int b) {
+    @Contract("_,_,_ -> this")
+    default @NotNull ItemBuilder color(int r, int g, int b) {
         return color(Color.rgb(r, g, b));
     }
 
-    default ItemBuilder skullOwner(@Nullable String skullOwner) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder skullOwner(@Nullable String skullOwner) {
         this.setMetadata(ItemMeta.SKULL_OWNER, skullOwner);
         return this;
     }
 
-    default ItemBuilder fireworkEffect(@NotNull Object effect) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder fireworkEffect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
             list.forEach(effect1 -> FireworkEffectHolder.ofOptional(effect1).ifPresent(fireworkEffectHolder -> {
@@ -262,21 +309,29 @@ public interface ItemBuilder extends MetadataConsumer {
         return this;
     }
 
-    default ItemBuilder power(int power) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder power(int power) {
         this.setMetadata(ItemMeta.FIREWORK_POWER, power);
         return this;
     }
 
-    default ItemBuilder damage(int damage) {
+    @Contract("_ -> this")
+    default @NotNull ItemBuilder damage(int damage) {
         return durability(damage);
     }
 
     @Override
-    <T> ItemBuilder setMetadata(MetadataKey<T> key, T value);
+    @Contract("_,_ -> this")
+    @Deprecated
+    <T> @NotNull ItemBuilder setMetadata(MetadataKey<T> key, T value);
 
     @Override
-    <T> ItemBuilder setMetadata(MetadataCollectionKey<T> key, Collection<T> value);
+    @Contract("_,_ -> this")
+    @Deprecated
+    <T> @NotNull ItemBuilder setMetadata(MetadataCollectionKey<T> key, Collection<T> value);
 
     @Override
-    <T> ItemBuilder addToListMetadata(MetadataCollectionKey<T> key, T value);
+    @Contract("_,_ -> this")
+    @Deprecated
+    <T> @NotNull ItemBuilder addToListMetadata(MetadataCollectionKey<T> key, T value);
 }

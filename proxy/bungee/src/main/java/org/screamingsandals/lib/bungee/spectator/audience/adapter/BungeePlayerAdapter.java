@@ -53,17 +53,9 @@ public class BungeePlayerAdapter extends BungeeAdapter implements PlayerAdapter 
     }
 
     @Override
-    public void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType) {
+    public void sendMessage(@NotNull ComponentLike message) {
         var comp = message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(owner()) : message.asComponent();
-        if (messageType == MessageType.CHAT) {
-            if (source == null) {
-                sender().sendMessage(comp.as(BaseComponent.class));
-            } else {
-                sender().sendMessage(source, comp.as(BaseComponent.class));
-            }
-        } else {
-            sender().sendMessage(ChatMessageType.SYSTEM, comp.as(BaseComponent.class));
-        }
+        sender().sendMessage(ChatMessageType.SYSTEM, comp.as(BaseComponent.class));
     }
 
     @Override

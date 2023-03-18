@@ -16,10 +16,12 @@
 
 package org.screamingsandals.lib.utils;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  *
  * @param <R> replacement type
  */
 public interface Replaceable<R> {
-    void replace(R replaceable);
+    void replace(@Nullable R replaceable);
 }

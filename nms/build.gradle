@@ -24,8 +24,12 @@ nmsGen {
     }
 
     reqClass('net.minecraft.core.Registry') {
-        reqField('ENTITY_TYPE')
+        reqField('ENTITY_TYPE') // <= 1.19.2
         reqMethod('getId', Object)
+    }
+
+    reqClass('net.minecraft.core.registries.BuiltInRegistries') {
+        reqField('ENTITY_TYPE')
     }
 
     reqClass('net.minecraft.core.MappedRegistry') {
@@ -114,12 +118,29 @@ nmsGen {
         reqField('latency')
     }
 
+    reqClass('net.minecraft.resources.ResourceLocation') {
+        reqConstructor(String)
+    }
+
+    reqClass('net.minecraft.world.InteractionHand') {
+        reqEnumField('MAIN_HAND')
+        reqEnumField('OFF_HAND')
+    }
+
+    var FriendlyByteBuf = reqClass('net.minecraft.network.FriendlyByteBuf') {
+        reqConstructor('io.netty.buffer.ByteBuf')
+    }
+
     reqClass('net.minecraft.network.protocol.Packet')
 
     reqClass('net.minecraft.network.protocol.game.ClientboundAnimatePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockEventPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket') {
+        reqConstructor(String, '@FriendlyByteBuf') // pre-1.13
+        reqConstructor('@ResourceLocation', '@FriendlyByteBuf') // 1.13+
+    }
     reqClass('net.minecraft.network.protocol.game.ClientboundContainerClosePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket')
@@ -147,8 +168,18 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundKeepAlivePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundDisconnectPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundAddPlayerPacket')
-    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket')
-    reqClass('net.minecraft.network.protocol.game.ClientboundTabListPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundOpenBookPacket') {
+        reqConstructor()
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket') // < 1.19.2
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket') // 1.19.3+
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket') // 1.19.3+
+    reqClass('net.minecraft.network.protocol.game.ClientboundTabListPacket') {
+        reqConstructor()
+        reqConstructor('@Component', '@Component')
+        reqField('header')
+        reqField('footer')
+    }
     reqClass('net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetObjectivePacket')
@@ -285,23 +316,21 @@ nmsGen {
         reqConstructor()
         reqMethod('getAllKeys')
         reqMethod('get', String)
-        reqMethod('put', String, '@Tag')
+        reqMethod(chain('put', 'searge:func_74782_a:1.13.2'), String, '@Tag')
     }
 
-    reqClass('net.minecraft.network.FriendlyByteBuf') {
-        reqMethod('writeNbt', '@CompoundTag')
-    }
+    FriendlyByteBuf.reqMethod('writeNbt', '@CompoundTag')
 
     reqClass('net.minecraft.nbt.DoubleTag') {
         reqConstructor(double)
         reqMethod('getAsDouble')
-        reqMethod('valueOf', double)
+        reqMethod('valueOf', double) // 1.15+
     }
 
     reqClass('net.minecraft.nbt.FloatTag') {
         reqConstructor(float)
         reqMethod('getAsFloat')
-        reqMethod('valueOf', float)
+        reqMethod('valueOf', float) // 1.15+
     }
 
     reqClass('net.minecraft.nbt.IntArrayTag') {
@@ -312,37 +341,45 @@ nmsGen {
     reqClass('net.minecraft.nbt.IntTag') {
         reqConstructor(int)
         reqMethod('getAsInt')
-        reqMethod('valueOf', int)
+        reqMethod('valueOf', int) // 1.15+
     }
 
-    // ListTag
+    reqClass('net.minecraft.nbt.ListTag') {
+        reqConstructor()
+        reqMethod('size')
+        reqMethod(chain('get', 'searge:func_179238_g:1.12.2'), int)
+        reqMethod(chain('spigot:add:1.13.2', 'spigot:add:1.12.2'), '@Tag') // <= 1.13.2
+    }
 
-    reqClass('net.minecraft.nbt.LongArrayTag') {
+    reqClass('net.minecraft.nbt.LongArrayTag') { // 1.12+
         reqConstructor(long[])
-        reqMethod('getAsLongArray')
+        reqMethod('getAsLongArray') // 1.13+
+        reqField('searge:field_193587_b:1.12') // 1.12.x
     }
 
     reqClass('net.minecraft.nbt.LongTag') {
         reqConstructor(long)
         reqMethod('getAsLong')
-        reqMethod('valueOf', long)
+        reqMethod('valueOf', long) // 1.15+
     }
 
     reqClass('net.minecraft.nbt.ShortTag') {
         reqConstructor(short)
         reqMethod('getAsShort')
-        reqMethod('valueOf', short)
+        reqMethod('valueOf', short) // 1.15+
     }
 
     reqClass('net.minecraft.nbt.StringTag') {
         reqConstructor(String)
-        reqMethod('valueOf', String)
+        reqMethod('valueOf', String) // 1.15+
     }
 
 
     reqClass('net.minecraft.world.item.ItemStack') {
         reqMethod('copy')
+        reqMethod('save', '@CompoundTag')
         reqMethod('getTag')
+        reqMethod('setTag', '@CompoundTag')
     }
 
     reqClass('net.minecraft.network.protocol.handshake.ClientIntentionPacket') {

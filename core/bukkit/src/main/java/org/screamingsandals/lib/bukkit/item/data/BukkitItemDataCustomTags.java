@@ -22,179 +22,180 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
 import org.bukkit.inventory.meta.tags.ItemTagAdapterContext;
 import org.bukkit.inventory.meta.tags.ItemTagType;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.utils.GsonUtils;
 import org.screamingsandals.lib.utils.Primitives;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
 import java.util.Set;
-import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class BukkitItemDataCustomTags implements ItemData {
-    private static final List<Class<?>> BASE_TAGS = List.of(Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class, int[].class, byte[].class, long[].class);
+    private static final @NotNull List<Class<?>> BASE_TAGS = List.of(Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class, int[].class, byte[].class, long[].class);
 
-    private final Plugin plugin;
     @Getter
-    private final CustomItemTagContainer dataContainer;
+    private final @NotNull CustomItemTagContainer dataContainer;
 
-    public static boolean isWrapperType(Class<?> clazz) {
+    public static boolean isWrapperType(@NotNull Class<?> clazz) {
         return BASE_TAGS.contains(clazz);
     }
 
     @Override
-    public Set<String> getKeys() {
+    public @NotNull Set<@NotNull NamespacedMappingKey> getKeys() {
         throw new UnsupportedOperationException("Not implemented.");
     }
 
     @Override
-    public <T> void set(String key, T data, Class<T> tClass) {
+    public <T> void set(@NotNull String key, @NotNull T data, @NotNull Class<T> tClass) {
+        set(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), data, tClass);
+    }
+
+    @Override
+    public <T> void set(@NotNull NamespacedMappingKey key, @NotNull T data, @NotNull Class<T> tClass) {
         if (!Primitives.isWrapperType(tClass)) {
             tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
         }
 
-        final var container = this.dataContainer;
-        final var namespacedKey = new NamespacedKey(plugin, key);
+        final var namespacedKey = new NamespacedKey(key.namespace(), key.value());
         if (isWrapperType(tClass)) {
             if (data instanceof String) {
                 final var s = (String) data;
-                container.setCustomTag(namespacedKey, ItemTagType.STRING, s);
+                dataContainer.setCustomTag(namespacedKey, ItemTagType.STRING, s);
                 return;
             }
 
             if (data instanceof Byte) {
                 final var s = (Byte) data;
-                container.setCustomTag(namespacedKey, ItemTagType.BYTE, s);
+                dataContainer.setCustomTag(namespacedKey, ItemTagType.BYTE, s);
                 return;
             }
 
             if (data instanceof Short) {
                 final var s = (Short) data;
-                container.setCustomTag(namespacedKey, ItemTagType.SHORT, s);
+                dataContainer.setCustomTag(namespacedKey, ItemTagType.SHORT, s);
                 return;
             }
 
             if (data instanceof Integer) {
                 final var s = (Integer) data;
-                container.setCustomTag(namespacedKey, ItemTagType.INTEGER, s);
+                dataContainer.setCustomTag(namespacedKey, ItemTagType.INTEGER, s);
                 return;
             }
 
             if (data instanceof Long) {
                 final var s = (Long) data;
-                container.setCustomTag(namespacedKey, ItemTagType.LONG, s);
+                dataContainer.setCustomTag(namespacedKey, ItemTagType.LONG, s);
                 return;
             }
 
             if (data instanceof Float) {
                 final var s = (Float) data;
-                container.setCustomTag(namespacedKey, ItemTagType.FLOAT, s);
+                dataContainer.setCustomTag(namespacedKey, ItemTagType.FLOAT, s);
                 return;
             }
 
             if (data instanceof Double) {
                 final var s = (Double) data;
-                container.setCustomTag(namespacedKey, ItemTagType.DOUBLE, s);
+                dataContainer.setCustomTag(namespacedKey, ItemTagType.DOUBLE, s);
                 return;
             }
 
             if (data instanceof byte[]) {
                 final var s = (byte[]) data;
-                container.setCustomTag(namespacedKey, ItemTagType.BYTE_ARRAY, s);
+                dataContainer.setCustomTag(namespacedKey, ItemTagType.BYTE_ARRAY, s);
                 return;
             }
 
             if (data instanceof int[]) {
                 final var s = (int[]) data;
-                container.setCustomTag(namespacedKey, ItemTagType.INTEGER_ARRAY, s);
+                dataContainer.setCustomTag(namespacedKey, ItemTagType.INTEGER_ARRAY, s);
                 return;
             }
 
             if (data instanceof long[]) {
                 final var s = (long[]) data;
-                container.setCustomTag(namespacedKey, ItemTagType.LONG_ARRAY, s);
+                dataContainer.setCustomTag(namespacedKey, ItemTagType.LONG_ARRAY, s);
                 return;
             }
 
             throw new UnsupportedOperationException("This stuff is not supported!");
         }
 
-        container.setCustomTag(namespacedKey, new JsonPersistentDataType<>(tClass), data);
+        dataContainer.setCustomTag(namespacedKey, new JsonPersistentDataType<>(tClass), data);
     }
 
     @Override
-    @Nullable
+    public <T> @Nullable T get(@NotNull String key, @NotNull Class<T> tClass) {
+        return get(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), tClass);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
-    public <T> T get(String key, Class<T> tClass) {
+    public <T> @Nullable T get(@NotNull NamespacedMappingKey key, @NotNull Class<T> tClass) {
         if (!Primitives.isWrapperType(tClass)) {
             tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
         }
 
-        final var container = dataContainer;
-        final var namespacedKey = new NamespacedKey(plugin, key);
+        final var namespacedKey = new NamespacedKey(key.namespace(), key.value());
         if (isWrapperType(tClass)) {
             if (String.class.isAssignableFrom(tClass)) {
-                return (T) container.getCustomTag(namespacedKey, ItemTagType.STRING);
+                return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.STRING);
             }
 
             if (Byte.class.isAssignableFrom(tClass)) {
-                return (T) container.getCustomTag(namespacedKey, ItemTagType.BYTE);
+                return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.BYTE);
             }
 
             if (Short.class.isAssignableFrom(tClass)) {
-                return (T) container.getCustomTag(namespacedKey, ItemTagType.SHORT);
+                return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.SHORT);
             }
 
             if (Integer.class.isAssignableFrom(tClass)) {
-                return (T) container.getCustomTag(namespacedKey, ItemTagType.INTEGER);
+                return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.INTEGER);
             }
 
             if (Long.class.isAssignableFrom(tClass)) {
-                return (T) container.getCustomTag(namespacedKey, ItemTagType.LONG);
+                return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.LONG);
             }
 
             if (Float.class.isAssignableFrom(tClass)) {
-                return (T) container.getCustomTag(namespacedKey, ItemTagType.FLOAT);
+                return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.FLOAT);
             }
 
             if (Double.class.isAssignableFrom(tClass)) {
-                return (T) container.getCustomTag(namespacedKey, ItemTagType.DOUBLE);
+                return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.DOUBLE);
             }
 
             if (byte[].class.isAssignableFrom(tClass)) {
-                return (T) container.getCustomTag(namespacedKey, ItemTagType.BYTE_ARRAY);
+                return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.BYTE_ARRAY);
             }
 
             if (int[].class.isAssignableFrom(tClass)) {
-                return (T) container.getCustomTag(namespacedKey, ItemTagType.INTEGER_ARRAY);
+                return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.INTEGER_ARRAY);
             }
 
             if (long[].class.isAssignableFrom(tClass)) {
-                return (T) container.getCustomTag(namespacedKey, ItemTagType.LONG_ARRAY);
+                return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.LONG_ARRAY);
             }
 
             throw new UnsupportedOperationException("This stuff is not supported!");
         }
 
-        return container.getCustomTag(namespacedKey, new JsonPersistentDataType<>(tClass));
+        return dataContainer.getCustomTag(namespacedKey, new JsonPersistentDataType<>(tClass));
     }
 
     @Override
-    public <T> Optional<T> getOptional(String key, Class<T> tClass) {
-        return Optional.ofNullable(get(key, tClass));
+    public boolean contains(@NotNull String key) {
+        throw new UnsupportedOperationException("Not implemented.");
     }
 
     @Override
-    public <T> T getOrDefault(String key, Class<T> tClass, Supplier<T> def) {
-        return getOptional(key, tClass).orElse(def.get());
-    }
-
-    @Override
-    public boolean contains(String key) {
+    public boolean contains(@NotNull NamespacedMappingKey key) {
         throw new UnsupportedOperationException("Not implemented.");
     }
 
@@ -204,9 +205,9 @@ public class BukkitItemDataCustomTags implements ItemData {
     }
 
     public static class JsonPersistentDataType<T> implements ItemTagType<String, T> {
-        private final Class<T> tClass;
+        private final @NotNull Class<T> tClass;
 
-        public JsonPersistentDataType(Class<T> tClass) {
+        public JsonPersistentDataType(@NotNull Class<T> tClass) {
             this.tClass = tClass;
         }
 

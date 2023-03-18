@@ -52,7 +52,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                         mapping.put(NamespacedMappingKey.of(namespaced.getNamespace(), namespaced.getKey()), holder);
                         values.add(holder);
                         /* we are probably not able to backport non-minecraft block tags (probably except mineable/* and similar, but we are not able to backport them yet */
-                        if (NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
+                        if (NamespacedKey.MINECRAFT.equals(namespaced.getNamespace())) {
                             var backPorts = ModernBlockTagBackPorts.getPortedTags(holder, s ->
                                 KeyedUtils.isTagged(Tag.REGISTRY_BLOCKS, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), Material.class, material)
                             );

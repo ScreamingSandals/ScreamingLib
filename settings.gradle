@@ -33,6 +33,7 @@ include 'api-utils'
 registerModule('utils')
 include 'nms'
 include 'minitag'
+include 'nbt'
 include 'shared-core'
 include 'lang'
 include 'annotation'

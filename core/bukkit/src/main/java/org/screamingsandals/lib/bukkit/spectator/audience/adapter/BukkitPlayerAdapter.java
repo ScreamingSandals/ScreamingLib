@@ -16,20 +16,24 @@
 
 package org.screamingsandals.lib.bukkit.spectator.audience.adapter;
 
+import io.netty.buffer.Unpooled;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.item.ItemTagKeys;
+import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.builder.ItemFactory;
+import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.nms.accessors.*;
-import org.screamingsandals.lib.spectator.AudienceComponentLike;
-import org.screamingsandals.lib.spectator.Book;
-import org.screamingsandals.lib.spectator.ComponentLike;
-import org.screamingsandals.lib.spectator.TitleableAudienceComponentLike;
-import org.screamingsandals.lib.spectator.audience.MessageType;
+import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
@@ -39,7 +43,7 @@ import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.spectator.title.Title;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.util.UUID;
+import java.util.ArrayList;
 
 public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter {
     public BukkitPlayerAdapter(PlayerAudience owner, Player commandSender) {
@@ -57,13 +61,9 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
     }
 
     @Override
-    public void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType) {
+    public void sendMessage(@NotNull ComponentLike message) {
         var comp = message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(owner()) : message.asComponent();
-        if (source != null && Reflect.hasMethod(commandSender().spigot(), "sendMessage", ChatMessageType.class, UUID.class, BaseComponent.class)) {
-            commandSender().spigot().sendMessage(messageType == MessageType.SYSTEM ? ChatMessageType.SYSTEM : ChatMessageType.CHAT, source, comp.as(BaseComponent.class));
-        } else {
-            commandSender().spigot().sendMessage(messageType == MessageType.SYSTEM ? ChatMessageType.SYSTEM : ChatMessageType.CHAT, comp.as(BaseComponent.class));
-        }
+        commandSender().spigot().sendMessage(comp.as(BaseComponent.class));
     }
 
     @Override
@@ -80,10 +80,46 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
             commandSender().setPlayerListHeaderFooter(headerC.as(BaseComponent.class), footerC.as(BaseComponent.class));
         } else {
             try {
-                // TODO: try to send components using nms
-                commandSender().setPlayerListHeaderFooter(headerC.toLegacy(), footerC.toLegacy());
+                @NotNull Object headerComponent;
+                @NotNull Object footerComponent;
+                if (Component.empty().equals(headerC)) {
+                    String clearString;
+                    if (Server.isVersion(1, 15)) {
+                        clearString = "{\"text\": \"\"}";
+                    } else {
+                        clearString = "{\"translate\": \"\"}";
+                    }
+                    headerComponent = ClassStorage.asMinecraftComponent(clearString);
+                } else {
+                    headerComponent = ClassStorage.asMinecraftComponent(headerC);
+                }
+                if (Component.empty().equals(footerC)) {
+                    String clearString;
+                    if (Server.isVersion(1, 15)) {
+                        clearString = "{\"text\": \"\"}";
+                    } else {
+                        clearString = "{\"translate\": \"\"}";
+                    }
+                    footerComponent = ClassStorage.asMinecraftComponent(clearString);
+                } else {
+                    footerComponent = ClassStorage.asMinecraftComponent(footerC);
+                }
+
+                Object packet;
+                if (ClientboundTabListPacketAccessor.getConstructor1() != null) {
+                    packet = Reflect.construct(ClientboundTabListPacketAccessor.getConstructor1(), headerComponent, footerComponent);
+                } else {
+                    packet = Reflect.construct(ClientboundTabListPacketAccessor.getConstructor0());
+                    Reflect.setField(packet, ClientboundTabListPacketAccessor.getFieldHeader(), headerComponent);
+                    Reflect.setField(packet, ClientboundTabListPacketAccessor.getFieldFooter(), footerComponent);
+                }
+                ClassStorage.sendNMSConstructedPacket(commandSender(), packet);
             } catch (Throwable ignored) {
-                // TODO: method is too new, fallback to NMS
+                try {
+                    commandSender().setPlayerListHeaderFooter(headerC.toLegacy(), footerC.toLegacy());
+                } catch (Throwable ignored2) {
+                    // method is too new
+                }
             }
         }
     }
@@ -207,6 +243,46 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
 
     @Override
     public void openBook(@NotNull Book book) {
-        // TODO: https://github.com/ScreamingSandals/SimpleInventories/blob/master/core/src/main/java/org/screamingsandals/simpleinventories/utils/BookUtils.java
+        var player = commandSender();
+        var pages = new ArrayList<StringTag>();
+        for (var page : book.pages()) {
+            pages.add(new StringTag(page.toJavaJson()));
+        }
+        var item = ItemFactory.builder()
+                .type(ItemTypeHolder.of("minecraft:written_book"))
+                .tag(CompoundTag.EMPTY
+                        .with(ItemTagKeys.TITLE, book.title().toJavaJson())
+                        .with(ItemTagKeys.AUTHOR, book.author().toJavaJson())
+                        .with(ItemTagKeys.PAGES, pages)
+                        .with(ItemTagKeys.RESOLVED, (byte) 1)
+                )
+                .build()
+                .orElse(null);
+
+        if (item == null) {
+            return;
+        }
+
+        var itemInHand = player.getItemInHand();
+        player.setItemInHand(item.as(ItemStack.class));
+
+        try {
+            if (!Server.isVersion(1, 13)) {
+                var bytebuf = Reflect.construct(FriendlyByteBufAccessor.getConstructor0(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));
+                var packet = Reflect.construct(ClientboundCustomPayloadPacketAccessor.getConstructor0(), "MC|BOpen", bytebuf);
+                ClassStorage.sendNMSConstructedPacket(player, packet);
+            } else if (!Server.isVersion(1, 13, 1)) {
+                var bytebuf = Reflect.construct(FriendlyByteBufAccessor.getConstructor0(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));
+                var location = Reflect.construct(ResourceLocationAccessor.getConstructor0(), "minecraft:book_open");
+                var packet = Reflect.construct(ClientboundCustomPayloadPacketAccessor.getConstructor1(), location, bytebuf);
+                ClassStorage.sendNMSConstructedPacket(player, packet);
+            } else {
+                var packet = Reflect.construct(ClientboundOpenBookPacketAccessor.getConstructor0(), InteractionHandAccessor.getFieldMAIN_HAND());
+                ClassStorage.sendNMSConstructedPacket(player, packet);
+            }
+        } catch (Throwable ignored) {
+        } finally {
+            player.setItemInHand(itemInHand);
+        }
     }
 }

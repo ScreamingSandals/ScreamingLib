@@ -16,7 +16,8 @@
 
 package org.screamingsandals.lib.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -25,17 +26,17 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class PotionEffectHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<PotionEffectHolder> {
-    private static final String EFFECT_KEY = "effect";
-    private static final String DURATION_KEY = "duration";
-    private static final String AMPLIFIER_KEY = "amplifier";
-    private static final String AMBIENT_KEY = "ambient";
-    private static final String PARTICLES_KEY = "particles";
-    private static final String ICON_KEY = "icon";
+    private static final @NotNull String EFFECT_KEY = "effect";
+    private static final @NotNull String DURATION_KEY = "duration";
+    private static final @NotNull String AMPLIFIER_KEY = "amplifier";
+    private static final @NotNull String AMBIENT_KEY = "ambient";
+    private static final @NotNull String PARTICLES_KEY = "particles";
+    private static final @NotNull String ICON_KEY = "icon";
 
-    public static final PotionEffectHolderSerializer INSTANCE = new PotionEffectHolderSerializer();
+    public static final @NotNull PotionEffectHolderSerializer INSTANCE = new PotionEffectHolderSerializer();
 
     @Override
-    public PotionEffectHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull PotionEffectHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             if (!node.isMap()) {
                 return PotionEffectHolder.of(node.getString());
@@ -61,7 +62,7 @@ public class PotionEffectHolderSerializer extends AbstractScreamingSerializer im
     }
 
     @Override
-    public void serialize(Type type, @Nullable PotionEffectHolder obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable PotionEffectHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

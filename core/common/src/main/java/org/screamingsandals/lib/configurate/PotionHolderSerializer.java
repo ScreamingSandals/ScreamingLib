@@ -16,7 +16,8 @@
 
 package org.screamingsandals.lib.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -26,10 +27,10 @@ import java.lang.reflect.Type;
 
 public class PotionHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<PotionHolder> {
 
-    public static final PotionHolderSerializer INSTANCE = new PotionHolderSerializer();
+    public static final @NotNull PotionHolderSerializer INSTANCE = new PotionHolderSerializer();
 
     @Override
-    public PotionHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull PotionHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             return PotionHolder.of(node.getString());
         } catch (Throwable t) {
@@ -38,7 +39,7 @@ public class PotionHolderSerializer extends AbstractScreamingSerializer implemen
     }
 
     @Override
-    public void serialize(Type type, @Nullable PotionHolder obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable PotionHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(obj == null ? null : obj.platformName());
     }
 }

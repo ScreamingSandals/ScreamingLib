@@ -84,16 +84,23 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     }
 
     @Override
-    @Nullable
-    public Long seed() {
-        // TODO: 1.19: Implement seed when Adventure 4.12.0 is out
+    public @Nullable Long seed() {
+        try {
+            var seed = wrappedObject.seed();
+            return seed.isPresent() ? seed.getAsLong() : null;
+        } catch (Throwable ignored) {
+            // Only Adventure 4.12.0+
+        }
         return null;
     }
 
     @Override
-    @NotNull
-    public SoundStart withSeed(@Nullable Long seed) {
-        // TODO: 1.19: Implement seed when Adventure 4.12.0 is out
+    public @NotNull SoundStart withSeed(@Nullable Long seed) {
+        try {
+            return new AdventureSoundStart(Sound.sound(wrappedObject).seed(seed == null ? OptionalLong.empty() : OptionalLong.of(seed)).build());
+        } catch (Throwable ignored) {
+            // Only Adventure 4.12.0+
+        }
         return this;
     }
 
@@ -126,8 +133,21 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
         @Override
         @NotNull
         public SoundStart build() {
-            // TODO: 1.19: Implement seed when Adventure 4.12.0 is out
-            return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.value()), source.as(Sound.Source.class), volume, pitch));
+            try {
+                // Adventure 4.12.0+
+                return new AdventureSoundStart(
+                        Sound.sound()
+                                .type(Key.key(soundKey.namespace(), soundKey.value()))
+                                .source(source.as(Sound.Source.class))
+                                .volume(volume)
+                                .pitch(pitch)
+                                .seed(seed == null ? OptionalLong.empty() : OptionalLong.of(seed))
+                                .build()
+                );
+            } catch (Throwable ignored) {
+                // Adventure <= 4.11.0
+                return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.value()), source.as(Sound.Source.class), volume, pitch));
+            }
         }
     }
 }

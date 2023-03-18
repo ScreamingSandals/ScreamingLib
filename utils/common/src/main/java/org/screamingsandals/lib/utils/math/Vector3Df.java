@@ -20,30 +20,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.utils.ProtoLocation;
-import org.screamingsandals.lib.utils.ProtoVector3D;
-import org.screamingsandals.lib.utils.ProtoVector3Df;
-import com.iamceph.resulter.core.pack.ProtoWrapper;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vector3Df implements Cloneable, ProtoWrapper<ProtoVector3Df> {
+public class Vector3Df implements Cloneable {
     private float x;
     private float y;
     private float z;
-
-    public static Vector3Df unwrap(ProtoVector3Df wrapped) {
-        return new Vector3Df(wrapped.getX(), wrapped.getY(), wrapped.getZ());
-    }
-
-    public static Vector3Df unwrap(ProtoVector3D wrapped) {
-        return new Vector3Df((float) wrapped.getX(), (float) wrapped.getY(), (float) wrapped.getZ());
-    }
-
-    public static Vector3Df unwrap(ProtoLocation wrapped) {
-        return new Vector3Df((float) wrapped.getX(), (float) wrapped.getY(), (float) wrapped.getZ());
-    }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
@@ -124,12 +108,8 @@ public class Vector3Df implements Cloneable, ProtoWrapper<ProtoVector3Df> {
         return this;
     }
 
-    @Override
-    public ProtoVector3Df asProto() {
-        return ProtoVector3Df.newBuilder()
-                .setX(this.x)
-                .setY(this.y)
-                .setZ(this.z)
-                .build();
+    public @NotNull Vector3D toVector3D() {
+        return new Vector3D(this.x, this.y, this.z);
     }
 }
+

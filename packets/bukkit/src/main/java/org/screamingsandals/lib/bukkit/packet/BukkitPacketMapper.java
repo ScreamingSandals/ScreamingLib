@@ -79,8 +79,12 @@ public class BukkitPacketMapper extends PacketMapper {
     protected void sendRawPacket(PlayerWrapper player, ByteBuf buffer) {
         var channel = player.getChannel();
         if (channel.isActive()) {
-            final var ctx = channel.pipeline().context("encoder");
+            var ctx = channel.pipeline().context("encoder");
             if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, soft-depend is sus
+                var viaCtx = channel.pipeline().context("via-encoder");
+                if (viaCtx != null) {
+                    ctx = viaCtx;
+                }
                 // ViaVersion fixes incompatibilities with other plugins, so we just use it if it's present
                 final var conn = Via.getAPI().getConnection(player.getUuid());
                 if (conn != null) {
@@ -94,9 +98,10 @@ public class BukkitPacketMapper extends PacketMapper {
                 // TODO: ProtocolSupport
             }
 
+            var finalCtx = ctx;
             final Runnable task = () -> {
-                if (ctx != null) {
-                    ctx.writeAndFlush(buffer);
+                if (finalCtx != null) {
+                    finalCtx.writeAndFlush(buffer);
                 } else {
                     channel.writeAndFlush(buffer);
                 }

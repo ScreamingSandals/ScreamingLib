@@ -29,7 +29,9 @@ import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundSource;
 import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundStart;
 import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundStop;
 import org.screamingsandals.lib.bukkit.spectator.title.BukkitTitle;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
+import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
@@ -54,8 +56,13 @@ public class SpigotBackend extends AbstractBungeeBackend {
     private SpectatorBackend adventureBackend;
 
     public SpigotBackend() {
+        if (Version.isVersion(1, 12)) {
+            snbtSerializer = SNBTSerializer.builder()
+                    .shouldSaveLongArraysDirectly(true)
+                    .build();
+        }
         if (Reflect.has("net.kyori.adventure.Adventure") && Reflect.has("io.papermc.paper.text.PaperComponents")) {
-            adventureBackend = SpigotBackendAdventureExtension.initAdventureBackend();
+            adventureBackend = SpigotBackendAdventureExtension.initAdventureBackend(snbtSerializer);
         }
     }
 

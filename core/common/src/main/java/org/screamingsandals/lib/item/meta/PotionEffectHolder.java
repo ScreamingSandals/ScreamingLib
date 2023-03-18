@@ -16,17 +16,15 @@
 
 package org.screamingsandals.lib.item.meta;
 
-import com.iamceph.resulter.core.pack.ProtoWrapper;
 import org.jetbrains.annotations.Contract;
 import org.screamingsandals.lib.utils.ComparableWrapper;
-import org.screamingsandals.lib.utils.ProtoPotionEffect;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface PotionEffectHolder extends ComparableWrapper, ProtoWrapper<ProtoPotionEffect> {
+public interface PotionEffectHolder extends ComparableWrapper {
     String platformName();
 
     int duration();
@@ -194,17 +192,5 @@ public interface PotionEffectHolder extends ComparableWrapper, ProtoWrapper<Prot
 
     static List<PotionEffectHolder> all() {
         return PotionEffectMapping.getValues();
-    }
-
-    @Override
-    default ProtoPotionEffect asProto() {
-        return ProtoPotionEffect.newBuilder()
-                .setPlatformName(platformName())
-                .setAmplifier(amplifier())
-                .setDuration(duration())
-                .setAmbient(ambient())
-                .setIcon(icon())
-                .setParticles(particles())
-                .build();
     }
 }

@@ -19,6 +19,8 @@ package org.screamingsandals.lib.spectator.mini.resolvers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
+import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
@@ -32,6 +34,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 public class HoverResolver implements StylingResolver {
+    private static final @NotNull SNBTSerializer internalSNBTSerializer = SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build();
 
     @Override
     public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, Placeholder... placeholders) {
@@ -56,7 +59,7 @@ public class HoverResolver implements StylingResolver {
                     } catch (NumberFormatException ignored) {}
                     if (tag.getArgs().size() > 3) {
                         var snbt = tag.getArgs().get(3);
-                        item.tag(snbt);
+                        item.tag((CompoundTag) internalSNBTSerializer.deserialize(snbt));
                     }
                 }
                 builder.hoverEvent(item);
@@ -95,7 +98,7 @@ public class HoverResolver implements StylingResolver {
                     if (count != 1 || tag != null) {
                         args.add(String.valueOf(count));
                         if (tag != null) {
-                            args.add(tag);
+                            args.add(internalSNBTSerializer.serialize(tag));
                         }
                     }
                     return new TagNode(tagName, args);

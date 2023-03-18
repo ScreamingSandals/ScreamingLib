@@ -29,25 +29,7 @@ import java.util.UUID;
 
 public interface Audience {
 
-    default void sendMessage(@NotNull ComponentLike message) {
-        sendMessage((UUID) null, message, MessageType.CHAT);
-    }
-
-    default void sendMessage(@NotNull ComponentLike message, @NotNull MessageType messageType) {
-        sendMessage((UUID) null, message, messageType);
-    }
-
-    default void sendMessage(@Nullable UniqueIdentifiable identifiable, @NotNull ComponentLike message) {
-        sendMessage(identifiable != null ? identifiable.uuid() : null, message, MessageType.CHAT);
-    }
-
-    default void sendMessage(@Nullable UniqueIdentifiable identifiable, @NotNull ComponentLike message, @NotNull MessageType messageType) {
-        sendMessage(identifiable != null ? identifiable.uuid() : null, message, messageType);
-    }
-
-    default void sendMessage(@Nullable UUID source, @NotNull ComponentLike message) {
-        sendMessage(source, message, MessageType.CHAT);
-    }
+    void sendMessage(@NotNull ComponentLike message);
 
     default void sendRichMessage(@NotNull String message) {
         sendMessage(Component.fromMiniMessage(message));
@@ -61,15 +43,14 @@ public interface Audience {
         sendMessage(Component.text(message, color));
     }
 
-    void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType);
-
     interface ForwardingToMulti extends Audience {
         @NotNull
         @ApiStatus.OverrideOnly
         Iterable<? extends Audience> audiences();
 
-        default void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType) {
-            audiences().forEach(audience -> audience.sendMessage(source, message, messageType));
+        @Override
+        default void sendMessage(@NotNull ComponentLike message) {
+            audiences().forEach(audience -> audience.sendMessage(message));
         }
     }
 
@@ -78,8 +59,9 @@ public interface Audience {
         @ApiStatus.OverrideOnly
         Audience audience();
 
-        default void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType) {
-            audience().sendMessage(source, message, messageType);
+        @Override
+        default void sendMessage(@NotNull ComponentLike message) {
+            audience().sendMessage(message);
         }
     }
 
@@ -89,8 +71,9 @@ public interface Audience {
         @ApiStatus.OverrideOnly
         Adapter adapter();
 
-        default void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType) {
-            adapter().sendMessage(source, message, messageType);
+        @Override
+        default void sendMessage(@NotNull ComponentLike message) {
+            adapter().sendMessage(message);
         }
     }
 }

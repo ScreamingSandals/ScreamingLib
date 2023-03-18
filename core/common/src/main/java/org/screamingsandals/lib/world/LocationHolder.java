@@ -16,10 +16,8 @@
 
 package org.screamingsandals.lib.world;
 
-import com.iamceph.resulter.core.pack.ProtoWrapper;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -40,47 +38,35 @@ import java.util.stream.Collectors;
  * <img src="https://i.imgur.com/dpRCb53.png">
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @ConfigSerializable
-public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Serializable {
+@Builder(toBuilder = true)
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+@With
+public class LocationHolder implements Wrapper, Serializable {
     /**
      * The X coordinate of this location.
      */
-    private double x;
+    private final double x;
     /**
      * The Y coordinate of this location.
      */
-    private double y;
+    private final double y;
     /**
      * The Z coordinate of this location.
      */
-    private double z;
+    private final double z;
     /**
      * The yaw of this location (horizontal rotation), 0 is the default.
      */
-    private float yaw;
+    private final float yaw;
     /**
      * The pitch of this location (vertical rotation), 0 is the default.
      */
-    private float pitch;
+    private final float pitch;
     /**
      * The world of this location.
      */
-    private WorldHolder world;
-
-    /**
-     * Constructs a new location.
-     *
-     * @param x X coordinate
-     * @param y Y coordinate
-     * @param z Z coordinate
-     */
-    public LocationHolder(double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
+    private final WorldHolder world;
 
     /**
      * Clones the current location and increments the coordinates by the supplied values.
@@ -90,12 +76,13 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param z Z coordinate to add
      * @return the new location
      */
-    public LocationHolder add(double x, double y, double z) {
-        final var clone = clone();
-        clone.x += x;
-        clone.y += y;
-        clone.z += z;
-        return clone;
+    @Contract(value = "_,_,_ -> new", pure = true)
+    public @NotNull LocationHolder add(double x, double y, double z) {
+        return toBuilder()
+                .x(this.x + x)
+                .y(this.y + y)
+                .z(this.z + z)
+                .build();
     }
 
     /**
@@ -104,7 +91,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param holder the location holder to add
      * @return the new location
      */
-    public LocationHolder add(LocationHolder holder) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder add(@NotNull LocationHolder holder) {
         return add(holder.getX(), holder.getY(), holder.getZ());
     }
 
@@ -114,7 +102,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param vec the vector to add
      * @return the new location
      */
-    public LocationHolder add(Vector3D vec) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder add(@NotNull Vector3D vec) {
         return add(vec.getX(), vec.getY(), vec.getZ());
     }
 
@@ -124,7 +113,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param vec the vector to add
      * @return the new location
      */
-    public LocationHolder add(Vector3Df vec) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder add(@NotNull Vector3Df vec) {
         return add(vec.getX(), vec.getY(), vec.getZ());
     }
 
@@ -134,7 +124,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param blockFace the block face to add
      * @return the new location
      */
-    public LocationHolder add(BlockFace blockFace) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder add(@NotNull BlockFace blockFace) {
         return add(blockFace.getBlockDirection());
     }
 
@@ -145,7 +136,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param distance  how far in the direction the new location should be
      * @return the new location
      */
-    public LocationHolder add(BlockFace blockFace, int distance) {
+    @Contract(value = "_,_ -> new", pure = true)
+    public @NotNull LocationHolder add(@NotNull BlockFace blockFace, int distance) {
         return add(blockFace.getBlockDirection().multiply(distance));
     }
 
@@ -157,13 +149,13 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param z Z coordinate to subtract
      * @return the new location
      */
-    @NotNull
-    public LocationHolder subtract(double x, double y, double z) {
-        final var clone = clone();
-        clone.x -= x;
-        clone.y -= y;
-        clone.z -= z;
-        return clone;
+    @Contract(value = "_,_,_ -> new", pure = true)
+    public @NotNull LocationHolder subtract(double x, double y, double z) {
+        return toBuilder()
+                .x(this.x - x)
+                .y(this.y - y)
+                .z(this.z - z)
+                .build();
     }
 
     /**
@@ -172,7 +164,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param holder the location holder to subtract
      * @return the new location
      */
-    public LocationHolder subtract(LocationHolder holder) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder subtract(@NotNull LocationHolder holder) {
         return subtract(holder.getX(), holder.getY(), holder.getZ());
     }
 
@@ -182,7 +175,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param vec the vector to subtract
      * @return the new location
      */
-    public LocationHolder subtract(Vector3D vec) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder subtract(@NotNull Vector3D vec) {
         return subtract(vec.getX(), vec.getY(), vec.getZ());
     }
 
@@ -192,7 +186,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param vec the vector to subtract
      * @return the new location
      */
-    public LocationHolder subtract(Vector3Df vec) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder subtract(@NotNull Vector3Df vec) {
         return subtract(vec.getX(), vec.getY(), vec.getZ());
     }
 
@@ -202,7 +197,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param blockFace the block face to add
      * @return the new location
      */
-    public LocationHolder subtract(BlockFace blockFace) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder subtract(@NotNull BlockFace blockFace) {
         return subtract(blockFace.getBlockDirection());
     }
 
@@ -213,7 +209,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param distance  how far in the direction the new location should be
      * @return the new location
      */
-    public LocationHolder subtract(BlockFace blockFace, int distance) {
+    @Contract(value = "_,_ -> new", pure = true)
+    public @NotNull LocationHolder subtract(@NotNull BlockFace blockFace, int distance) {
         return subtract(blockFace.getBlockDirection().multiply(distance));
     }
 
@@ -242,7 +239,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      *
      * @return the vector
      */
-    public Vector3D asVector() {
+    public @NotNull Vector3D asVector() {
         return new Vector3D(this.x, this.y, this.z);
     }
 
@@ -251,26 +248,8 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      *
      * @return the vector
      */
-    public Vector3Df asVectorf() {
+    public @NotNull Vector3Df asVectorf() {
         return new Vector3Df((float) this.x, (float) this.y, (float) this.z);
-    }
-
-    /**
-     * Converts this location into a {@link ProtoVector3D}. Useful for Protobuf sending :)
-     *
-     * @return wrapped location into a Protobuf message
-     */
-    public ProtoVector3D asWrappedVector() {
-       return asVector().asProto();
-    }
-
-    /**
-     * Converts this location into a {@link ProtoVector3Df}. Useful for Protobuf sending :)
-     *
-     * @return wrapped location into a Protobuf message
-     */
-    public ProtoVector3Df asWrappedVectorf() {
-        return asVectorf().asProto();
     }
 
     /**
@@ -305,7 +284,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      *
      * @return the facing direction vector
      */
-    public Vector3D getFacingDirection() {
+    public @NotNull Vector3D getFacingDirection() {
         var vector = new Vector3D();
 
         vector.setY(-Math.sin(Math.toRadians(pitch)));
@@ -322,7 +301,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      *
      * @return the block
      */
-    public BlockHolder getBlock() {
+    public @NotNull BlockHolder getBlock() {
         return as(BlockHolder.class);
     }
 
@@ -331,7 +310,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      *
      * @return the chunk
      */
-    public ChunkHolder getChunk() {
+    public @NotNull ChunkHolder getChunk() {
         return getWorld().getChunkAt(this).orElseThrow();
     }
 
@@ -340,7 +319,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      *
      * @param particle the particle
      */
-    public void sendParticle(ParticleHolder particle) {
+    public void sendParticle(@NotNull ParticleHolder particle) {
         getWorld().sendParticle(particle, this);
     }
 
@@ -349,7 +328,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      *
      * @return the highest non-empty block
      */
-    public BlockHolder getHighestBlock() {
+    public @NotNull BlockHolder getHighestBlock() {
         return getWorld().getHighestBlockAt(getBlockX(), getBlockZ());
     }
 
@@ -369,16 +348,15 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      */
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public LocationHolder clone() {
-        final var location = new LocationHolder();
-        location.setX(getX());
-        location.setY(getY());
-        location.setZ(getZ());
-        location.setPitch(getPitch());
-        location.setYaw(getYaw());
-        location.setWorld(getWorld());
-
-        return location;
+    public @NotNull LocationHolder clone() {
+        return new LocationHolder(
+                this.x,
+                this.y,
+                this.z,
+                this.yaw,
+                this.pitch,
+                this.world
+        );
     }
 
     /**
@@ -387,7 +365,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param radius the radius
      * @return the entities
      */
-    public List<EntityBasic> getNearbyEntities(int radius) {
+    public @NotNull List<@NotNull EntityBasic> getNearbyEntities(int radius) {
         return world.getEntities().stream()
                 .filter(e -> isInRange(e.getLocation(), radius))
                 .collect(Collectors.toList());
@@ -401,7 +379,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param <T>    the entity type
      * @return the entities
      */
-    public <T extends EntityBasic> List<T> getNearbyEntitiesByClass(Class<T> clazz, int radius) {
+    public <T extends EntityBasic> @NotNull List<@NotNull T> getNearbyEntitiesByClass(@NotNull Class<T> clazz, int radius) {
         return world.getEntitiesByClass(clazz).stream()
                 .filter(e -> isInRange(e.getLocation(), radius))
                 .collect(Collectors.toList());
@@ -413,7 +391,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param holder the world to compare
      * @return is the world the same?
      */
-    public boolean isWorldSame(LocationHolder holder) {
+    public boolean isWorldSame(@NotNull LocationHolder holder) {
         return getWorld().equals(holder.getWorld());
     }
 
@@ -424,7 +402,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param distance the radius
      * @return is the supplied location within the radius of this location?
      */
-    public boolean isInRange(LocationHolder holder, int distance) {
+    public boolean isInRange(@NotNull LocationHolder holder, int distance) {
         return getDistanceSquared(holder) < distance;
     }
 
@@ -435,7 +413,7 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @param distance the radius
      * @return is the supplied location out of range of this location?
      */
-    public boolean outOfRange(LocationHolder holder, int distance) {
+    public boolean outOfRange(@NotNull LocationHolder holder, int distance) {
         return getDistanceSquared(holder) >= distance;
     }
 
@@ -444,10 +422,10 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * in the direction of the vector.
      *
      * @param vector the direction vector
-     * @return the same location
+     * @return the new location
      */
-    @NotNull
-    public LocationHolder setDirection(@NotNull Vector3D vector) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder setDirection(@NotNull Vector3D vector) {
         /*
          * Sin = Opp / Hyp
          * Cos = Adj / Hyp
@@ -461,35 +439,18 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
         final double z = vector.getZ();
 
         if (x == 0 && z == 0) {
-            pitch = vector.getY() > 0 ? -90 : 90;
-            return this;
+            float pitch = vector.getY() > 0 ? -90 : 90;
+            return new LocationHolder(this.x, this.y, this.z, this.yaw, pitch, this.world);
         }
 
         double theta = Math.atan2(-x, z);
-        yaw = (float) Math.toDegrees((theta + _2PI) % _2PI);
+        float yaw = (float) Math.toDegrees((theta + _2PI) % _2PI);
 
         double x2 = Math.pow(x, 2);
         double z2 = Math.pow(z, 2);
         double xz = Math.sqrt(x2 + z2);
-        pitch = (float) Math.toDegrees(Math.atan(-vector.getY() / xz));
+        float pitch = (float) Math.toDegrees(Math.atan(-vector.getY() / xz));
 
-        return this;
-    }
-
-    /**
-     * Converts this location into a {@link ProtoLocation}. Useful for Protobuf sending :)
-     *
-     * @return wrapped location into a Protobuf message
-     */
-    @Override
-    public ProtoLocation asProto() {
-        return ProtoLocation.newBuilder()
-                .setX(this.x)
-                .setY(this.y)
-                .setZ(this.z)
-                .setPitch(this.pitch)
-                .setYaw(this.yaw)
-                .setWorldUuid(this.world.getUuid().toString())
-                .build();
+        return new LocationHolder(this.x, this.y, this.z, yaw, pitch, this.world);
     }
 }

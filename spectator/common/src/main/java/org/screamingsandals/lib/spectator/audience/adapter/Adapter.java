@@ -18,16 +18,12 @@ package org.screamingsandals.lib.spectator.audience.adapter;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.Audience;
-import org.screamingsandals.lib.spectator.audience.MessageType;
-
-import java.util.UUID;
 
 @ApiStatus.Internal
 public interface Adapter {
     Audience owner();
 
-    void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType);
+    void sendMessage(@NotNull ComponentLike message);
 }

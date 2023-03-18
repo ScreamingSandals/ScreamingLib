@@ -16,7 +16,12 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.SNBTSerializer;
+import org.screamingsandals.lib.nbt.Tag;
+import org.screamingsandals.lib.nbt.configurate.TagSerializer;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -26,23 +31,33 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class ItemContentSerializer implements TypeSerializer<ItemContent> {
-    public static final ItemContentSerializer INSTANCE = new ItemContentSerializer();
+    public static final @NotNull ItemContentSerializer INSTANCE = new ItemContentSerializer();
 
-    private static final String ID_KEY = "id";
-    private static final String COUNT_KEY = "count";
-    private static final String TAG_KEY = "tag";
+    private static final @NotNull SNBTSerializer internalSNBTSerializer = SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build();
+    private static final @NotNull String ID_KEY = "id";
+    private static final @NotNull String COUNT_KEY = "count";
+    private static final @NotNull String TAG_KEY = "tag";
 
     @Override
-    public ItemContent deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull ItemContent deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var id = NamespacedMappingKey.of(node.node(ID_KEY).getString("minecraft:air"));
             var count = node.node(COUNT_KEY).getInt(1);
-            @Nullable
-            var tag = node.node(TAG_KEY).getString();
+            var tag = node.node(TAG_KEY);
+            CompoundTag compoundTag;
+            if (!tag.empty()) {
+                if (tag.isMap()) {
+                    compoundTag = (CompoundTag) TagSerializer.INSTANCE.deserialize(Tag.class, tag);
+                } else {
+                    compoundTag = (CompoundTag) internalSNBTSerializer.deserialize(tag.getString(""));
+                }
+            } else {
+                compoundTag = null;
+            }
             return ItemContent.builder()
                     .id(id)
                     .count(count)
-                    .tag(tag)
+                    .tag(compoundTag)
                     .build();
         } catch (Throwable throwable) {
             throw new SerializationException(throwable);
@@ -50,7 +65,7 @@ public class ItemContentSerializer implements TypeSerializer<ItemContent> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable ItemContent obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable ItemContent obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

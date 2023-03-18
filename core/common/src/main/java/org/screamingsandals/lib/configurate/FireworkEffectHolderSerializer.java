@@ -16,7 +16,8 @@
 
 package org.screamingsandals.lib.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.spectator.Color;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -29,16 +30,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<FireworkEffectHolder> {
-    private static final String TYPE_KEY = "type";
-    private static final String FLICKER_KEY = "flicker";
-    private static final String TRAIL_KEY = "trail";
-    private static final String COLORS_KEY = "colors";
-    private static final String FADE_COLORS_KEY = "fade-colors";
+    private static final @NotNull String TYPE_KEY = "type";
+    private static final @NotNull String FLICKER_KEY = "flicker";
+    private static final @NotNull String TRAIL_KEY = "trail";
+    private static final @NotNull String COLORS_KEY = "colors";
+    private static final @NotNull String FADE_COLORS_KEY = "fade-colors";
 
-    public static final FireworkEffectHolderSerializer INSTANCE = new FireworkEffectHolderSerializer();
+    public static final @NotNull FireworkEffectHolderSerializer INSTANCE = new FireworkEffectHolderSerializer();
 
     @Override
-    public FireworkEffectHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull FireworkEffectHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             if (!node.isMap()) {
                 return FireworkEffectHolder.of(node.getString());
@@ -91,7 +92,7 @@ public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer 
     }
 
     @Override
-    public void serialize(Type type, @Nullable FireworkEffectHolder obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable FireworkEffectHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;
