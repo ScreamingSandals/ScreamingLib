@@ -10,6 +10,7 @@ nmsGen {
     basePackage = "org.screamingsandals.lib.nms.accessors"
     sourceSet = "src/generated/java"
     cleanOnRebuild = true
+    minMinecraftVersion = "1.8.8"
 
     reqClass('net.minecraft.network.chat.Component') {
         reqMethod('searge:func_150254_d') // get legacy string
@@ -320,7 +321,7 @@ nmsGen {
         reqMethod(chain('put', 'searge:func_74782_a:1.13.2'), String, '@Tag')
     }
 
-    FriendlyByteBuf.reqMethod('writeNbt', '@CompoundTag')
+    FriendlyByteBuf.reqMethod(chain('writeNbt', 'searge:func_150786_a:1.8.8'), '@CompoundTag')
 
     reqClass('net.minecraft.nbt.DoubleTag') {
         reqConstructor(double)
