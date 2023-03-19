@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.particle;
 import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.particle.*;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
@@ -31,13 +32,24 @@ import java.util.Locale;
 
 @Service
 public class BukkitParticleTypeRegistry extends ParticleTypeRegistry {
+    private static final boolean IS_PARTICLE_SUPPORTED = Version.isVersion(1, 9);
+
     public BukkitParticleTypeRegistry() {
-        specialType(Particle.class, BukkitParticleType::new);
+        if (IS_PARTICLE_SUPPORTED) {
+            specialType(Particle.class, BukkitParticleType::new);
+        } else {
+            // TODO: 1.8 support
+        }
     }
 
     // TODO: is there any bukkit-like server supporting custom values for this registry?
     @Override
     protected @Nullable ParticleType resolveMappingPlatform(@NotNull ResourceLocation location) {
+        if (!IS_PARTICLE_SUPPORTED) {
+            // TODO: 1.8 support
+            return null;
+        }
+
         if (!"minecraft".equals(location.namespace())) {
             return null;
         }
@@ -56,6 +68,11 @@ public class BukkitParticleTypeRegistry extends ParticleTypeRegistry {
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull ParticleType> getRegistryItemStream0() {
+        if (!IS_PARTICLE_SUPPORTED) {
+            // TODO: 1.8 support
+            return SimpleRegistryItemStream.createDummy();
+        }
+
         return new SimpleRegistryItemStream<>(
                 () -> Arrays.stream(org.bukkit.Particle.values()).filter(particle -> !particle.name().startsWith("LEGACY_")),
                 BukkitParticleType::new,
