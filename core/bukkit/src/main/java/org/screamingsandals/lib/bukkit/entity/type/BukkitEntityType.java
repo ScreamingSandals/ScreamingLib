@@ -72,7 +72,7 @@ public class BukkitEntityType extends BasicWrapper<org.bukkit.entity.EntityType>
             if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
                 KeyedUtils.isTagged(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey(key.namespace(), key.path()), org.bukkit.entity.EntityType.class, wrappedObject);
             } else if (Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null) { // Paper implemented them earlier in 1.16.5
-                KeyedUtils.isTagged(Tag.REGISTRY_ENTITIES, new NamespacedKey(key.namespace(), key.path()), org.bukkit.entity.EntityType.class, wrappedObject);
+                KeyedUtils.isTagged((String) Reflect.getField(Tag.class, "REGISTRY_ENTITIES"), new NamespacedKey(key.namespace(), key.path()), org.bukkit.entity.EntityType.class, wrappedObject);
             } // TODO: else bypass using NMS on CB-like servers
         }
         // backported tags

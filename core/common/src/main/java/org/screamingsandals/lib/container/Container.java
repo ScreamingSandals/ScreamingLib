@@ -18,7 +18,7 @@ package org.screamingsandals.lib.container;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.container.type.InventoryTypeHolder;
+import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -138,7 +138,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
      *
      * @return the type of this inventory
      */
-    @NotNull InventoryTypeHolder getType();
+    @NotNull InventoryType getType();
 
     /**
      * Completely wipes the contents of this inventory.

@@ -20,7 +20,7 @@ import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.attribute.AttributeTypeHolder;
 import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.container.type.InventoryTypeHolder;
+import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.entity.damage.DamageType;
 import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.screamingsandals.lib.entity.type.EntityType;
@@ -57,7 +57,7 @@ public class SLibSerializers {
                 .register(EntityType.class, EntityTypeHolderSerializer.INSTANCE)
                 .register(GameMode.class, GameModeHolderSerializer.INSTANCE)
                 .register(GameRuleType.class, GameRuleHolderSerializer.INSTANCE)
-                .register(InventoryTypeHolder.class, InventoryTypeHolderSerializer.INSTANCE)
+                .register(InventoryType.class, InventoryTypeHolderSerializer.INSTANCE)
                 .register(ParticleType.class, ParticleTypeHolderSerializer.INSTANCE)
                 .register(PotionEffectHolder.class, PotionEffectHolderSerializer.INSTANCE)
                 .register(Potion.class, PotionHolderSerializer.INSTANCE)

@@ -18,27 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.container.type.InventoryTypeHolder;
+import org.screamingsandals.lib.container.type.InventoryType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class InventoryTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<InventoryTypeHolder> {
+public class InventoryTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<InventoryType> {
     public static final @NotNull InventoryTypeHolderSerializer INSTANCE = new InventoryTypeHolderSerializer();
 
     @Override
-    public @NotNull InventoryTypeHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull InventoryType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return InventoryTypeHolder.of(node.getString());
+            return InventoryType.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable InventoryTypeHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable InventoryType obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(obj == null ? null : obj.platformName());
     }
 }

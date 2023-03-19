@@ -21,7 +21,7 @@ import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
-import org.screamingsandals.lib.container.type.InventoryTypeHolder;
+import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.container.Container;
@@ -142,8 +142,8 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public @NotNull InventoryTypeHolder getType() {
-        return InventoryTypeHolder.of(wrappedObject.getType());
+    public @NotNull InventoryType getType() {
+        return InventoryType.of(wrappedObject.getType());
     }
 
     @Override

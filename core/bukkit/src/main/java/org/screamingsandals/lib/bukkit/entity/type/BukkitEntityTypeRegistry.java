@@ -57,7 +57,7 @@ public class BukkitEntityTypeRegistry extends EntityTypeRegistry {
                         if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
                             return KeyedUtils.isTagged(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), org.bukkit.entity.EntityType.class, entityType);
                         } else if (Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null) { // Paper implemented them earlier in 1.16.5
-                            return KeyedUtils.isTagged(Tag.REGISTRY_ENTITIES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), org.bukkit.entity.EntityType.class, entityType);
+                            return KeyedUtils.isTagged((String) Reflect.getField(Tag.class, "REGISTRY_ENTITIES"), new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), org.bukkit.entity.EntityType.class, entityType);
                         } // TODO: else bypass using NMS on CB-like servers
                         return false;
                     }, Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null || Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null);

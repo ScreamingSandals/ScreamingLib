@@ -19,19 +19,17 @@ package org.screamingsandals.lib.container.type;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
-import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-import java.util.List;
-
-public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
+public interface InventoryType extends RegistryItem, RawValueHolder {
     @NotNull String platformName();
 
     int size();
@@ -49,27 +47,27 @@ public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
     }
 
     /**
-     * Compares the entity type and the object
+     * Compares the inventory type and the object
      *
-     * @param object Object that represents entity type
-     * @return true if specified entity type is the same as this
+     * @param object Object that represents inventory type
+     * @return true if specified inventory type is the same as this
      */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
     boolean is(@Nullable Object object);
 
     /**
-     * Compares the entity type and the objects
+     * Compares the inventory type and the objects
      *
-     * @param objects Array of objects that represents entity type
-     * @return true if at least one of the entity type objects is same as this
+     * @param objects Array of objects that represents inventory type
+     * @return true if at least one of the inventory type objects is same as this
      */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
     boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    static @NotNull InventoryTypeHolder of(@NotNull Object inventoryType) {
+    static @NotNull InventoryType of(@NotNull Object inventoryType) {
         var result = ofNullable(inventoryType);
         Preconditions.checkNotNullIllegal(result, "Could not find inventory type: " + inventoryType);
         return result;
@@ -77,14 +75,14 @@ public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
     @Contract("null -> null")
-    static @Nullable InventoryTypeHolder ofNullable(@Nullable Object inventoryType) {
-        if (inventoryType instanceof InventoryTypeHolder) {
-            return (InventoryTypeHolder) inventoryType;
+    static @Nullable InventoryType ofNullable(@Nullable Object inventoryType) {
+        if (inventoryType instanceof InventoryType) {
+            return (InventoryType) inventoryType;
         }
-        return InventoryTypeMapping.resolve(inventoryType);
+        return InventoryTypeRegistry.getInstance().resolveMapping(inventoryType);
     }
 
-    static @Unmodifiable @NotNull List<@NotNull InventoryTypeHolder> all() {
-        return InventoryTypeMapping.getValues();
+    static @NotNull RegistryItemStream<@NotNull InventoryType> all() {
+        return InventoryTypeRegistry.getInstance().getRegistryItemStream();
     }
 }

@@ -16,17 +16,17 @@
 
 package org.screamingsandals.lib.bukkit.container.type;
 
-import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.container.type.InventoryTypeHolder;
+import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitInventoryTypeHolder extends BasicWrapper<InventoryType> implements InventoryTypeHolder {
+public class BukkitInventoryType extends BasicWrapper<org.bukkit.event.inventory.InventoryType> implements InventoryType {
 
-    public BukkitInventoryTypeHolder(@NotNull InventoryType wrappedObject) {
+    public BukkitInventoryType(@NotNull org.bukkit.event.inventory.InventoryType wrappedObject) {
         super(wrappedObject);
     }
 
@@ -42,14 +42,20 @@ public class BukkitInventoryTypeHolder extends BasicWrapper<InventoryType> imple
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof InventoryType || object instanceof InventoryTypeHolder) {
+        if (object instanceof org.bukkit.event.inventory.InventoryType || object instanceof InventoryType) {
             return equals(object);
         }
-        return equals(InventoryTypeHolder.ofNullable(object));
+        return equals(InventoryType.ofNullable(object));
     }
 
     @Override
     public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
+    }
+
+    @Override
+    public @NotNull ResourceLocation location() {
+        // TODO: proper translation
+        return ResourceLocation.of(wrappedObject.name());
     }
 }

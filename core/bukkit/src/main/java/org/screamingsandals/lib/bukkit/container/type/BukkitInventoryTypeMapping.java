@@ -16,23 +16,51 @@
 
 package org.screamingsandals.lib.bukkit.container.type;
 
-import org.bukkit.event.inventory.InventoryType;
-import org.screamingsandals.lib.container.type.InventoryTypeMapping;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.container.type.InventoryType;
+import org.screamingsandals.lib.container.type.InventoryTypeRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.utils.registry.SimpleRegistryItemStream;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 @Service
-public class BukkitInventoryTypeMapping extends InventoryTypeMapping {
-    public BukkitInventoryTypeMapping() {
-        inventoryTypeConverter
-                .registerP2W(InventoryType.class, BukkitInventoryTypeHolder::new);
+public class BukkitInventoryTypeMapping extends InventoryTypeRegistry {
+    // TODO: Bukkit's inventory types doesn't exactly match the vanilla types, we should make correct translations
 
-        Arrays.stream(InventoryType.values()).forEach(inventoryType -> {
-            var holder = new BukkitInventoryTypeHolder(inventoryType);
-            mapping.put(ResourceLocation.of(inventoryType.name()), holder);
-            values.add(holder);
-        });
+    public BukkitInventoryTypeMapping() {
+        specialType(org.bukkit.event.inventory.InventoryType.class, BukkitInventoryType::new);
+    }
+
+    @Override
+    protected @NotNull RegistryItemStream<@NotNull InventoryType> getRegistryItemStream0() {
+        return new SimpleRegistryItemStream<>(
+                () -> Arrays.stream(org.bukkit.event.inventory.InventoryType.values()),
+                BukkitInventoryType::new,
+                inventoryType -> ResourceLocation.of(inventoryType.name()),
+                (inventoryType, literal) -> inventoryType.name().toLowerCase(Locale.ROOT).contains(literal),
+                (inventoryType, namespace) -> "minecraft".equals(namespace),
+                List.of()
+        );
+    }
+
+    @Override
+    protected @Nullable InventoryType resolveMappingPlatform(@NotNull ResourceLocation location) {
+        if (!"minecraft".equals(location.namespace())) {
+            return null;
+        }
+
+        try {
+            var value = org.bukkit.event.inventory.InventoryType.valueOf(location.path().toUpperCase(Locale.ROOT));
+            return new BukkitInventoryType(value);
+        } catch (IllegalArgumentException ignored) {
+        }
+
+        return null;
     }
 }

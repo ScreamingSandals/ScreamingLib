@@ -19,7 +19,7 @@ package org.screamingsandals.lib.container;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.container.type.InventoryTypeHolder;
+import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
@@ -48,7 +48,7 @@ public abstract class ContainerFactory {
     public abstract <C extends Container> @Nullable C wrapContainer0(@Nullable Object container);
 
     @Contract("null -> null")
-    public static <C extends Container> @Nullable C createContainer(@Nullable InventoryTypeHolder type) {
+    public static <C extends Container> @Nullable C createContainer(@Nullable InventoryType type) {
         if (factory == null) {
             throw new UnsupportedOperationException("ContainerFactory is not initialized yet.");
         }
@@ -56,7 +56,7 @@ public abstract class ContainerFactory {
     }
 
     @Contract("null, _ -> null")
-    public static <C extends Container> @Nullable C createContainer(@Nullable InventoryTypeHolder type, @Nullable Component name) {
+    public static <C extends Container> @Nullable C createContainer(@Nullable InventoryType type, @Nullable Component name) {
         if (factory == null) {
             throw new UnsupportedOperationException("ContainerFactory is not initialized yet.");
         }
@@ -77,9 +77,9 @@ public abstract class ContainerFactory {
         return factory.createContainer0(size, name);
     }
 
-    public abstract <C extends Container> @Nullable C createContainer0(@Nullable InventoryTypeHolder type);
+    public abstract <C extends Container> @Nullable C createContainer0(@Nullable InventoryType type);
 
-    public abstract <C extends Container> @Nullable C createContainer0(@Nullable InventoryTypeHolder type, @Nullable Component name);
+    public abstract <C extends Container> @Nullable C createContainer0(@Nullable InventoryType type, @Nullable Component name);
 
     public abstract <C extends Container> @Nullable C createContainer0(int size);
 

@@ -17,14 +17,13 @@
 package org.screamingsandals.lib.bukkit.container;
 
 import org.bukkit.Bukkit;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
-import org.screamingsandals.lib.container.type.InventoryTypeHolder;
+import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.annotations.Service;
 
@@ -45,15 +44,15 @@ public class BukkitContainerFactory extends ContainerFactory {
     }
 
     @Override
-    public <C extends Container> @Nullable C createContainer0(@Nullable InventoryTypeHolder type) {
+    public <C extends Container> @Nullable C createContainer0(@Nullable InventoryType type) {
         if (type == null) {
             return null;
         }
-        return wrapContainer0(Bukkit.createInventory(null, type.as(InventoryType.class)));
+        return wrapContainer0(Bukkit.createInventory(null, type.as(org.bukkit.event.inventory.InventoryType.class)));
     }
 
     @Override
-    public <C extends Container> @Nullable C createContainer0(@Nullable InventoryTypeHolder type, @Nullable Component name) {
+    public <C extends Container> @Nullable C createContainer0(@Nullable InventoryType type, @Nullable Component name) {
         if (type == null) {
             return null;
         }
@@ -61,9 +60,9 @@ public class BukkitContainerFactory extends ContainerFactory {
             return wrapContainer0(type);
         }
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
-            return wrapContainer0(Bukkit.createInventory(null, type.as(InventoryType.class), name.as(net.kyori.adventure.text.Component.class)));
+            return wrapContainer0(Bukkit.createInventory(null, type.as(org.bukkit.event.inventory.InventoryType.class), name.as(net.kyori.adventure.text.Component.class)));
         } else {
-            return wrapContainer0(Bukkit.createInventory(null, type.as(InventoryType.class), name.toLegacy()));
+            return wrapContainer0(Bukkit.createInventory(null, type.as(org.bukkit.event.inventory.InventoryType.class), name.toLegacy()));
         }
     }
 
