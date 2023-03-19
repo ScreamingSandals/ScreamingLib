@@ -38,24 +38,26 @@ public abstract class MetadataItem {
     /**
      * Serializes the index position of this MetadataItem instance to the provided PacketWriter object.
      *
-     * Note: This method is to be overridden by subclasses to also serialize the data to the provided PacketWriter
+     * Note: This method is to be overridden by subclasses to also serialize the data to the provided PacketWriter.
+     * and if the protocol version is 56 and above you should use {@link MetadataItem#writeLegacyHeader(PacketWriter, int)} instead
      *
      * @param writer the PacketWriter instance to serialize this MetaDataItem to
      */
     public void write(PacketWriter writer) {
-        // from protocol 47 and lower this is condensed into a single byte for index and type
-        if (writer.protocol() > 47) {
+        if (writer.protocol() > 56) {
             writer.writeByte(index);
         }
     }
 
     /**
-     * Serializes the index position and type into a single byte for protocol < 47
+     * Serializes the index position and type into a single byte for protocol < 57
      *
-     * @param writer the PacketWriter instance to serialize this MetaDataItem to
+     * @param writer the PacketWriter instance to serialize this byte to
      * @param type the type id of this MetaDataItem.
      */
     public void writeLegacyHeader(PacketWriter writer, int type) {
+        // from protocol 57 and lower this is condensed into a single byte for index and type.
+        // so we write it separately
         writer.writeByte((byte) ((type << 5 | index & 0x1F) & 0xFF));
     }
 
