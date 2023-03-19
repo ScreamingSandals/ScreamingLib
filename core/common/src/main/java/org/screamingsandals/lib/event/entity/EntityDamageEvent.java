@@ -18,7 +18,7 @@ package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.BasicEntity;
-import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
+import org.screamingsandals.lib.entity.damage.DamageType;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
@@ -26,7 +26,7 @@ public interface EntityDamageEvent extends SCancellableEvent, PlatformEvent {
 
     @NotNull BasicEntity entity();
 
-    @NotNull DamageCauseHolder damageCause();
+    @NotNull DamageType damageCause();
 
     double damage();
 

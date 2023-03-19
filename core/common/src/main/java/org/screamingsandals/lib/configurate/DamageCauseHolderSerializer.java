@@ -18,27 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
+import org.screamingsandals.lib.entity.damage.DamageType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class DamageCauseHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<DamageCauseHolder> {
+public class DamageCauseHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<DamageType> {
     public static final @NotNull DamageCauseHolderSerializer INSTANCE = new DamageCauseHolderSerializer();
 
     @Override
-    public @NotNull DamageCauseHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull DamageType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return DamageCauseHolder.of(node.getString());
+            return DamageType.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable DamageCauseHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable DamageType obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(obj == null ? null : obj.platformName());
     }
 }

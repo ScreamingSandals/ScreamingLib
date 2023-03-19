@@ -16,46 +16,53 @@
 
 package org.screamingsandals.lib.entity.damage;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-import java.util.List;
+public interface DamageType extends RegistryItem, RawValueHolder, TaggableHolder {
 
-public interface DamageCauseHolder extends ComparableWrapper, RawValueHolder {
-
+    @ApiStatus.Experimental
     @NotNull String platformName();
 
+    /**
+     * This method accept any object that represents damage type, or tags if prefixed with #
+     *
+     * @param object object that represents damage type
+     * @return true if this damage type is equivalent to the object
+     */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    boolean is(@Nullable Object damageCause);
+    boolean is(@Nullable Object object);
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    boolean is(@Nullable Object @NotNull... damageCauses);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    static @NotNull DamageCauseHolder of(@NotNull Object damageCause) {
-        var result = ofNullable(damageCause);
-        Preconditions.checkNotNullIllegal(result, "Could not find damage cause: " + damageCause);
+    static @NotNull DamageType of(@NotNull Object damageType) {
+        var result = ofNullable(damageType);
+        Preconditions.checkNotNullIllegal(result, "Could not find damage type: " + damageType);
         return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
     @Contract("null -> null")
-    static @Nullable DamageCauseHolder ofNullable(@Nullable Object damageCause) {
-        if (damageCause instanceof DamageCauseHolder) {
-            return (DamageCauseHolder) damageCause;
+    static @Nullable DamageType ofNullable(@Nullable Object damageType) {
+        if (damageType instanceof DamageType) {
+            return (DamageType) damageType;
         }
-        return DamageCauseMapping.resolve(damageCause);
+        return DamageTypeRegistry.getInstance().resolveMapping(damageType);
     }
 
-    static @Unmodifiable @NotNull List<@NotNull DamageCauseHolder> all() {
-        return DamageCauseMapping.getValues();
+    static @NotNull RegistryItemStream<@NotNull DamageType> all() {
+        return DamageTypeRegistry.getInstance().getRegistryItemStream();
     }
 }

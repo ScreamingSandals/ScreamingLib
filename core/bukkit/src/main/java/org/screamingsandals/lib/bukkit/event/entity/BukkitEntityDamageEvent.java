@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
+import org.screamingsandals.lib.entity.damage.DamageType;
 import org.screamingsandals.lib.event.entity.EntityDamageEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
@@ -45,7 +45,7 @@ public class BukkitEntityDamageEvent implements EntityDamageEvent, BukkitCancell
 
     // Internal cache
     private @Nullable BasicEntity entity;
-    private @Nullable DamageCauseHolder damageCause;
+    private @Nullable DamageType damageCause;
 
     @Override
     public @NotNull BasicEntity entity() {
@@ -56,9 +56,9 @@ public class BukkitEntityDamageEvent implements EntityDamageEvent, BukkitCancell
     }
 
     @Override
-    public @NotNull DamageCauseHolder damageCause() {
+    public @NotNull DamageType damageCause() {
         if (damageCause == null) {
-            damageCause = DamageCauseHolder.of(event.getCause());
+            damageCause = DamageType.of(event.getCause());
         }
         return damageCause;
     }

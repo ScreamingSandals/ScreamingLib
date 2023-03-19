@@ -47,8 +47,22 @@ public class BukkitEntityPoseRegistry extends EntityPoseRegistry {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(Pose.values()),
                     BukkitEntityPose::new,
-                    pose -> ResourceLocation.of(pose.name()),
-                    (pose, literal) -> pose.name().toLowerCase(Locale.ROOT).contains(literal),
+                    pose -> {
+                        if ("SNEAKING".equals(pose.name())) {
+                            return ResourceLocation.of("crouching");
+                        }
+
+                        return ResourceLocation.of(pose.name());
+                    },
+                    (pose, literal) -> {
+                        var path = pose.name().toLowerCase(Locale.ROOT);
+
+                        if ("crouching".equals(path)) {
+                            path = "sneaking";
+                        }
+
+                        return path.contains(literal);
+                    },
                     (pose, namespace) -> "minecraft".equals(namespace),
                     List.of()
             );

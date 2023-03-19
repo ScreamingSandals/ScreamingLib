@@ -20,7 +20,7 @@ import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.container.type.InventoryTypeMapping;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
+import org.screamingsandals.lib.entity.damage.DamageTypeRegistry;
 import org.screamingsandals.lib.entity.pose.EntityPoseRegistry;
 import org.screamingsandals.lib.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.event.EventManager;
@@ -79,7 +79,7 @@ import org.screamingsandals.lib.world.weather.WeatherRegistry;
         Locations.class,
         Blocks.class,
         BlockSnapshots.class,
-        DamageCauseMapping.class,
+        DamageTypeRegistry.class,
         GameModeRegistry.class,
         InventoryTypeMapping.class,
         EntityPoseRegistry.class,

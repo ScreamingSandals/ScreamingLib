@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity.pose;
+package org.screamingsandals.lib.entity.damage;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -27,16 +27,16 @@ import org.screamingsandals.lib.utils.registry.SimpleRegistry;
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 @ApiStatus.Internal
-public abstract class EntityPoseRegistry extends SimpleRegistry<EntityPose> {
-    private static @Nullable EntityPoseRegistry registry;
+public abstract class DamageTypeRegistry extends SimpleRegistry<DamageType> {
+    private static @Nullable DamageTypeRegistry registry;
 
-    public EntityPoseRegistry() {
-        super(EntityPose.class);
-        Preconditions.checkArgument(registry == null, "EntityPoseRegistry is already initialized!");
+    public DamageTypeRegistry() {
+        super(DamageType.class);
+        Preconditions.checkArgument(registry == null, "DamageTypeRegistry is already initialized!");
         registry = this;
     }
 
-    public static @NotNull EntityPoseRegistry getInstance() {
-        return Preconditions.checkNotNull(registry, "EntityPoseRegistry is not initialized yet!");
+    public static @NotNull DamageTypeRegistry getInstance() {
+        return Preconditions.checkNotNull(registry, "DamageTypeRegistry is not initialized yet!");
     }
 }
