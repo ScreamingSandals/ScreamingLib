@@ -319,7 +319,7 @@ nmsGen {
         reqMethod(chain('put', 'searge:func_74782_a:1.13.2'), String, '@Tag')
     }
 
-    FriendlyByteBuf.reqMethod('writeNbt', '@CompoundTag')
+    FriendlyByteBuf.reqMethod(chain('writeNbt', 'searge:func_150786_a:1.8.8'), '@CompoundTag')
 
     reqClass('net.minecraft.nbt.DoubleTag') {
         reqConstructor(double)

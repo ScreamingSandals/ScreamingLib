@@ -50,6 +50,16 @@ public abstract class MetadataItem {
     }
 
     /**
+     * Serializes the index position and type into a single byte for protocol < 47
+     *
+     * @param writer the PacketWriter instance to serialize this MetaDataItem to
+     * @param type the type id of this MetaDataItem.
+     */
+    public void writeLegacyHeader(PacketWriter writer, int type) {
+        writer.writeByte((byte) ((type << 5 | index & 0x1F) & 0xFF));
+    }
+
+    /**
      * Returns a new {@link ByteMetadataItem} instance from the given index and value.
      *
      * @param index the index position of the MetaDataItem
@@ -191,8 +201,8 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() <= 47) {
-                writer.writeByte((byte) ((getIndex() & 0x1F) & 0xFF));
+            if (writer.protocol() < 57) {
+                writeLegacyHeader(writer, 0);
             } else {
                 writer.writeVarInt(0);
             }
@@ -216,8 +226,8 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() <= 47) {
-                writer.writeByte((byte) (1  << 5 | (getIndex() & 0x1F) & 0xFF));
+            if (writer.protocol() < 57) {
+                writeLegacyHeader(writer, 1);
                 writer.writeShort(data);
             }
         }
@@ -239,8 +249,8 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() <= 47) {
-                writer.writeByte((byte) (2  << 5 | (getIndex() & 0x1F) & 0xFF));
+            if (writer.protocol() < 57) {
+                writeLegacyHeader(writer, 2);
                 writer.writeInt(data);
             } else {
                 writer.writeVarInt(1);
@@ -265,8 +275,8 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() <= 47) {
-                writer.writeByte((byte) (3  << 5 | (getIndex() & 0x1F) & 0xFF));
+            if (writer.protocol() < 57) {
+                writeLegacyHeader(writer, 3);
             } else {
                 writer.writeVarInt(writer.protocol() >= 761 ? 3 : 2);
             }
@@ -290,8 +300,8 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() <= 47) {
-                writer.writeByte((byte) (4  << 5 | (getIndex() & 0x1F) & 0xFF));
+            if (writer.protocol() < 47) {
+                writeLegacyHeader(writer, 4);
             } else {
                 writer.writeVarInt(writer.protocol() >= 761 ? 4 : 3);
             }
@@ -361,8 +371,8 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() <= 47) {
-                writer.writeByte((byte) ((getIndex() & 0x1F) & 0xFF));
+            if (writer.protocol() < 57) {
+                writeLegacyHeader(writer, 0);
             } else {
                 writer.writeVarInt(writer.protocol() < 393 ? 6 : writer.protocol() >= 761 ? 8 : 7);
             }
@@ -386,8 +396,8 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            if (writer.protocol() <= 47) {
-                writer.writeByte((byte) (7  << 5 | (getIndex() & 0x1F) & 0xFF));
+            if (writer.protocol() < 57) {
+                writeLegacyHeader(writer, 7);
             } else {
                 writer.writeVarInt(writer.protocol() < 393 ? 7 : writer.protocol() >= 761 ? 9 : 8);
             }
