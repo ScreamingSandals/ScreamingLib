@@ -37,6 +37,7 @@ public class PacketIdMapping {
         putTranslateSafely(ClientboundAddMobPacket.class, ClientboundAddMobPacketAccessor.getType());
         putTranslateSafely(ClientboundAddPlayerPacket.class, ClientboundAddPlayerPacketAccessor.getType());
         putTranslateSafely(ClientboundAnimatePacket.class, ClientboundAnimatePacketAccessor.getType());
+        putTranslateSafely(ClientboundAnimatePacket.ClientboundHurtAnimationPacket.class, ClientboundHurtAnimationPacketAccessor.getType());
         putTranslateSafely(ClientboundBlockDestructionPacket.class, ClientboundBlockDestructionPacketAccessor.getType());
         putTranslateSafely(ClientboundBlockEventPacket.class, ClientboundBlockEventPacketAccessor.getType());
         putTranslateSafely(ClientboundBlockUpdatePacket.class, ClientboundBlockUpdatePacketAccessor.getType());

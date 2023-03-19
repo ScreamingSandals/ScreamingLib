@@ -188,6 +188,7 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket$Parameters')
+    reqClass('net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket')
 
     /* SPECTATOR start - Spigot implementation (no-legacy text) */
     // Titles <= 1.16.5
@@ -251,11 +252,12 @@ nmsGen {
 
     // old way of getting protocol
     reqClass('net.minecraft.network.protocol.status.ServerStatus') {
-        reqMethod('getVersion')
+        reqMethod('getVersion') // -1.19.3
+        reqMethod('version') // 1.19.4+ - incompatible change: the method now returns Optional instead of nullable object
     }
 
     reqClass('net.minecraft.network.protocol.status.ServerStatus$Version') {
-        reqMethod('getProtocol')
+        reqMethod(chain('protocol', 'getProtocol')) // 1.19.4 - compatible change: ServerStatus$Version is now record, so the method got renamed
     }
 
     reqClass('net.minecraft.world.level.block.state.BlockState')
@@ -280,7 +282,7 @@ nmsGen {
     }
 
     reqClass('net.minecraft.network.ConnectionProtocol$PacketSet') {
-        reqMethod('getId', Class)
+        reqMethod(chain('getId', ':getId:1.19.3'), Class) // 1.19.4: compatible change - return type changed from boxed Integer to primitive int
     }
 
     reqClass('net.minecraft.server.network.ServerGamePacketListenerImpl') {
