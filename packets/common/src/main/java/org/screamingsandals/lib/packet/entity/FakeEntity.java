@@ -96,7 +96,11 @@ public class FakeEntity {
     }
 
     public void setAirTicks(int airTicks) {
-        put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.AIR_TICKS), airTicks));
+        if (Server.isVersion(1, 9)) {
+            put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.AIR_TICKS), airTicks));
+        } else {
+            put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.AIR_TICKS), (short) airTicks));
+        }
     }
 
     public void setCustomNameVisible(boolean customNameVisible) {
@@ -301,7 +305,9 @@ public class FakeEntity {
                     register(EntityMetadata.TICKS_FROZEN);
                 }
 
-                register(EntityMetadata.HAND_STATES);
+                if (Server.isVersion(1, 9)) {
+                    register(EntityMetadata.HAND_STATES);
+                }
                 register(EntityMetadata.HEALTH);
                 register(EntityMetadata.POTION_EFFECT_COLOR);
                 register(EntityMetadata.POTION_AMBIENCY);

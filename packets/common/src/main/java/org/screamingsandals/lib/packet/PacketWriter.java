@@ -523,7 +523,7 @@ public abstract class PacketWriter extends OutputStream {
             item.write(this);
         }
 
-        writeByte((byte) 0xff); // termination sequence
+        writeByte(protocol() <= 47 ? (byte) 0x7f : (byte) 0xff); // termination sequence
     }
 
     // Platform classes must override this method

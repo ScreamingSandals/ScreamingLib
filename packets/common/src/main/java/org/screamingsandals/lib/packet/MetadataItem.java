@@ -43,7 +43,10 @@ public abstract class MetadataItem {
      * @param writer the PacketWriter instance to serialize this MetaDataItem to
      */
     public void write(PacketWriter writer) {
-        writer.writeByte(index);
+        // from protocol 47 and lower this is condensed into a single byte for index and type
+        if (writer.protocol() > 47) {
+            writer.writeByte(index);
+        }
     }
 
     /**
@@ -66,6 +69,17 @@ public abstract class MetadataItem {
      */
     public static VarIntMetadataItem of(byte index, int value) {
         return new VarIntMetadataItem(index, value);
+    }
+
+    /**
+     * Returns a new {@link ShortMetadataItem} instance from the given index and value.
+     *
+     * @param index the index position of the MetaDataItem
+     * @param value the value the MetaDataItem should hold
+     * @return a ShortMetadataItem instance that holds the index and value provided
+     */
+    public static ShortMetadataItem of(byte index, short value) {
+        return new ShortMetadataItem(index, value);
     }
 
     /**
@@ -177,8 +191,35 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            writer.writeVarInt(0);
+            if (writer.protocol() <= 47) {
+                writer.writeByte((byte) ((getIndex() & 0x1F) & 0xFF));
+            } else {
+                writer.writeVarInt(0);
+            }
             writer.writeByte(data);
+        }
+    }
+
+    /**
+     * Represents a ShortMetadataItem which is used to serialize data of type short to a PacketWriter.
+     */
+    @Getter
+    @ToString(callSuper = true)
+    public static class ShortMetadataItem extends MetadataItem {
+        private final short data;
+
+        public ShortMetadataItem(byte index, short data) {
+            super(index);
+            this.data = data;
+        }
+
+        @Override
+        public void write(PacketWriter writer) {
+            super.write(writer);
+            if (writer.protocol() <= 47) {
+                writer.writeByte((byte) (1  << 5 | (getIndex() & 0x1F) & 0xFF));
+                writer.writeShort(data);
+            }
         }
     }
 
@@ -198,8 +239,13 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            writer.writeVarInt(1);
-            writer.writeVarInt(data);
+            if (writer.protocol() <= 47) {
+                writer.writeByte((byte) (2  << 5 | (getIndex() & 0x1F) & 0xFF));
+                writer.writeInt(data);
+            } else {
+                writer.writeVarInt(1);
+                writer.writeVarInt(data);
+            }
         }
     }
 
@@ -219,7 +265,11 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            writer.writeVarInt(writer.protocol() >= 761 ? 3 : 2);
+            if (writer.protocol() <= 47) {
+                writer.writeByte((byte) (3  << 5 | (getIndex() & 0x1F) & 0xFF));
+            } else {
+                writer.writeVarInt(writer.protocol() >= 761 ? 3 : 2);
+            }
             writer.writeFloat(data);
         }
     }
@@ -240,7 +290,11 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            writer.writeVarInt(writer.protocol() >= 761 ? 4 : 3);
+            if (writer.protocol() <= 47) {
+                writer.writeByte((byte) (4  << 5 | (getIndex() & 0x1F) & 0xFF));
+            } else {
+                writer.writeVarInt(writer.protocol() >= 761 ? 4 : 3);
+            }
             writer.writeSizedString(text);
         }
     }
@@ -307,7 +361,11 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            writer.writeVarInt(writer.protocol() < 393 ? 6 : writer.protocol() >= 761 ? 8 : 7);
+            if (writer.protocol() <= 47) {
+                writer.writeByte((byte) ((getIndex() & 0x1F) & 0xFF));
+            } else {
+                writer.writeVarInt(writer.protocol() < 393 ? 6 : writer.protocol() >= 761 ? 8 : 7);
+            }
             writer.writeBoolean(val);
         }
     }
@@ -328,7 +386,11 @@ public abstract class MetadataItem {
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
-            writer.writeVarInt(writer.protocol() < 393 ? 7 : writer.protocol() >= 761 ? 9 : 8);
+            if (writer.protocol() <= 47) {
+                writer.writeByte((byte) (7  << 5 | (getIndex() & 0x1F) & 0xFF));
+            } else {
+                writer.writeVarInt(writer.protocol() < 393 ? 7 : writer.protocol() >= 761 ? 9 : 8);
+            }
             writer.writeVector(val);
         }
     }
