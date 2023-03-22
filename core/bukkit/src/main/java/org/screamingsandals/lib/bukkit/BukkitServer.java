@@ -158,7 +158,7 @@ public class BukkitServer extends Server {
         }
         return Reflect.getFieldResulted(Reflect.fastInvoke(Bukkit.getServer(), "getServer"), MinecraftServerAccessor.getFieldStatus())
                 .fastInvokeResulted(ServerStatusAccessor.getMethodGetVersion1())
-                .fastInvokeResulted(ServerStatus_i_VersionAccessor.getMethodGetProtocol1())
+                .fastInvokeResulted(ServerStatus_i_VersionAccessor.getMethodProtocol1())
                 .as(Integer.class);
     }
 
