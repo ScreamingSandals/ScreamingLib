@@ -19,53 +19,100 @@ package org.screamingsandals.lib.utils.key;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResourceLocation implements MappingKey, ComparableWrapper {
-    public static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z0-9_.\\-]+):)?(?<path>[A-Za-z0-9_.\\-/ ]+)$");
-    public static final @NotNull Pattern VALID_NAMESPACE = Pattern.compile("^[a-z0-9_.\\-]+$");
-    public static final @NotNull Pattern VALID_PATH = Pattern.compile("^[a-z0-9_.\\-/]+$");
-
     private final @NotNull String namespace;
     private final @NotNull String key;
 
+    @Deprecated(forRemoval = true)
     public static @NotNull Optional<ResourceLocation> ofOptional(@NotNull String combinedString) {
-        var matcher = RESOLUTION_PATTERN.matcher(combinedString);
-        if (!matcher.matches()) {
-            return Optional.empty();
+        return Optional.ofNullable(ofNullable(combinedString));
+    }
+
+    public static @Nullable ResourceLocation ofNullable(@NotNull String combinedString) {
+        @Nullable String namespace = null;
+        var builder = new StringBuilder(combinedString.length());
+        var length = combinedString.length();
+        var whitespaceCharacter = false;
+        var slashUsed = false;
+        for (var i = 0; i < length; i++) {
+            var c = combinedString.charAt(i);
+            if (c == ' ') { // we treat whitespaces as underscores
+                whitespaceCharacter = true;
+                continue;
+            } else if (whitespaceCharacter) {
+                whitespaceCharacter = false;
+                if (c != '/' && c != ':' && builder.length() != 0) {
+                    builder.append('_');
+                }
+            }
+
+            if (c >= 'A' && c <= 'Z') { // we accept these characters, however we lowercase them
+                builder.append((char) (c + 0x20)); // lowercase these characters
+            } else if (c == '/') {
+                // valid character but can't be used in namespace, only in path
+                slashUsed = true;
+                builder.append('/');
+            } else if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-') {
+                builder.append(c);
+            } else if (c == ':' && namespace == null) {
+                if (slashUsed) {
+                    return null;
+                }
+                namespace = builder.toString();
+                builder.setLength(0);
+            } else {
+                return null;
+            }
         }
-
-        var namespace = matcher.group("namespace") != null ? matcher.group("namespace").toLowerCase(Locale.ROOT) : "minecraft";
-        var key = matcher.group("path").replaceAll(" ", "_").toLowerCase(Locale.ROOT);
-
-        return ofOptional(namespace, key);
+        if (builder.length() == 0) {
+            return null;
+        }
+        return new ResourceLocation(namespace == null ? "minecraft" : namespace, builder.toString());
     }
 
     public static @NotNull ResourceLocation of(@NotNull String combinedString) {
-        return ofOptional(combinedString).orElseThrow(() -> new IllegalArgumentException(combinedString + " doesn't match validation patterns!"));
+        var result = ofNullable(combinedString);
+        if (result == null) {
+            throw new IllegalArgumentException(combinedString + " doesn't match validation patterns!");
+        }
+        return result;
     }
 
-    public static @NotNull Optional<ResourceLocation> ofOptional(@NotNull String namespace, @NotNull String key) {
-        if (!VALID_NAMESPACE.matcher(namespace).matches() || !VALID_PATH.matcher(key).matches()) {
-            return Optional.empty();
+    public static @Nullable ResourceLocation ofNullable(@NotNull String namespace, @NotNull String path) {
+        var length = namespace.length();
+        for (var i = 0; i < length; i++) {
+            var c = namespace.charAt(i);
+            if ((c < 'a' || c > 'z') && (c < '0' || c > '9') && c != '.' && c != '_' && c != '-') {
+                return null;
+            }
+        }
+        length = path.length();
+        for (var i = 0; i < length; i++) {
+            var c = path.charAt(i);
+            if ((c < 'a' || c > 'z') && (c < '0' || c > '9') && c != '.' && c != '_' && c != '-' && c != '/') {
+                return null;
+            }
         }
 
-        return Optional.of(new ResourceLocation(namespace, key));
+        return new ResourceLocation(namespace, path);
     }
 
-    public static @NotNull ResourceLocation of(@NotNull String namespace, @NotNull String key) {
-        return ofOptional(namespace, key).orElseThrow(() -> new IllegalArgumentException(namespace + ":" + key + " doesn't match validation patterns!"));
+    public static @NotNull ResourceLocation of(@NotNull String namespace, @NotNull String path) {
+        var result = ofNullable(namespace, path);
+        if (result == null) {
+            throw new IllegalArgumentException(namespace + ":" + path + " doesn't match validation patterns!");
+        }
+        return result;
     }
 
     @Override
