@@ -19,21 +19,19 @@ package org.screamingsandals.lib.item.meta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-import java.util.List;
-
-public interface EnchantmentHolder extends ComparableWrapper {
+public interface Enchantment extends RegistryItem {
 
     @NotNull String platformName();
 
     int level();
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull EnchantmentHolder withLevel(int level);
+    @NotNull Enchantment withLevel(int level);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Override
@@ -50,7 +48,7 @@ public interface EnchantmentHolder extends ComparableWrapper {
     boolean isSameType(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    static @NotNull EnchantmentHolder of(@NotNull Object enchantment) {
+    static @NotNull Enchantment of(@NotNull Object enchantment) {
         var result = ofNullable(enchantment);
         Preconditions.checkNotNullIllegal(result, "Could not find enchantment: " + enchantment);
         return result;
@@ -58,14 +56,14 @@ public interface EnchantmentHolder extends ComparableWrapper {
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Contract("null -> null")
-    static @Nullable EnchantmentHolder ofNullable(@Nullable Object enchantment) {
-        if (enchantment instanceof EnchantmentHolder) {
-            return (EnchantmentHolder) enchantment;
+    static @Nullable Enchantment ofNullable(@Nullable Object enchantment) {
+        if (enchantment instanceof Enchantment) {
+            return (Enchantment) enchantment;
         }
-        return EnchantmentMapping.resolve(enchantment);
+        return EnchantmentRegistry.getInstance().resolveMapping(enchantment);
     }
 
-    static @Unmodifiable @NotNull List<@NotNull EnchantmentHolder> all() {
-        return EnchantmentMapping.getValues();
+    static @NotNull RegistryItemStream<@NotNull Enchantment> all() {
+        return EnchantmentRegistry.getInstance().getRegistryItemStream();
     }
 }

@@ -189,14 +189,14 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
             if (!enchants.empty()) {
                 if (enchants.isMap()) {
                     enchants.childrenMap().entrySet().stream()
-                            .map(EnchantmentMapping::resolve)
+                            .map(Enchantment::ofNullable)
                             .filter(Objects::nonNull)
                             .forEach(builder::enchantment);
                 } else if (enchants.isList()) {
                     try {
                         //noinspection ConstantConditions
                         enchants.getList(Object.class).stream()
-                                .map(EnchantmentMapping::resolve)
+                                .map(Enchantment::ofNullable)
                                 .filter(Objects::nonNull)
                                 .forEach(builder::enchantment);
                     } catch (SerializationException e) {
@@ -204,7 +204,7 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
                     }
                 } else {
                     try {
-                        EnchantmentHolder.ofNullable(enchants.get(Object.class)).ifNotNull(builder::enchantment);
+                        Enchantment.ofNullable(enchants.get(Object.class)).ifNotNull(builder::enchantment);
                     } catch (SerializationException e) {
                         e.printStackTrace();
                     }

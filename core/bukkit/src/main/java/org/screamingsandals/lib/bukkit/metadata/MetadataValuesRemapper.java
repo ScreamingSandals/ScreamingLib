@@ -20,7 +20,7 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.NamespacedKey;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
-import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
@@ -60,9 +60,9 @@ public class MetadataValuesRemapper {
                     PotionEffectHolder::as
             ),
             new MetadataConverter<>(
-                    EnchantmentHolder.class,
-                    EnchantmentHolder::of,
-                    EnchantmentHolder::as
+                    Enchantment.class,
+                    Enchantment::of,
+                    Enchantment::as
             ),
             new MetadataConverter<>(
                     FireworkEffectHolder.class,

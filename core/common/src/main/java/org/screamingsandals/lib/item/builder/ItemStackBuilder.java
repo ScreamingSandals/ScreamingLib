@@ -27,7 +27,7 @@ import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemMeta;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.data.ItemData;
-import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
@@ -77,10 +77,10 @@ public interface ItemStackBuilder extends MetadataConsumer {
     @NotNull ItemStackBuilder hideFlag(@NotNull HideFlags flag);
 
     @Contract("_ -> this")
-    @NotNull ItemStackBuilder enchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments);
+    @NotNull ItemStackBuilder enchantments(@Nullable List<@NotNull Enchantment> enchantments);
 
     @Contract("_ -> this")
-    @NotNull ItemStackBuilder enchantment(@NotNull EnchantmentHolder enchantment);
+    @NotNull ItemStackBuilder enchantment(@NotNull Enchantment enchantment);
 
     @Contract("_ -> this")
     @NotNull ItemStackBuilder customModelData(@Nullable Integer data);
@@ -210,7 +210,7 @@ public interface ItemStackBuilder extends MetadataConsumer {
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Contract("_ -> this")
     default @NotNull ItemStackBuilder enchant(@NotNull Object enchant) {
-        var enchantment = EnchantmentHolder.ofNullable(enchant);
+        var enchantment = Enchantment.ofNullable(enchant);
         if (enchantment != null) {
             this.enchantment(enchantment);
         }

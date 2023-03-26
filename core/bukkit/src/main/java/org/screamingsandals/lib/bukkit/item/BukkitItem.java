@@ -40,7 +40,7 @@ import org.screamingsandals.lib.item.ItemStackView;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.data.ItemData;
-import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.nbt.CompoundTag;
@@ -126,17 +126,17 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
     }
 
     @Override
-    public @NotNull List<@NotNull EnchantmentHolder> getEnchantments() {
+    public @NotNull List<@NotNull Enchantment> getEnchantments() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
-            var list = new ArrayList<EnchantmentHolder>();
+            var list = new ArrayList<Enchantment>();
             if (meta instanceof EnchantmentStorageMeta) {
                 ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet().forEach(entry ->
-                        EnchantmentHolder.ofNullable(entry).ifNotNull(list::add)
+                        Enchantment.ofNullable(entry).ifNotNull(list::add)
                 );
             } else {
                 meta.getEnchants().entrySet().forEach(entry ->
-                        EnchantmentHolder.ofNullable(entry).ifNotNull(list::add)
+                        Enchantment.ofNullable(entry).ifNotNull(list::add)
                 );
             }
             return list;

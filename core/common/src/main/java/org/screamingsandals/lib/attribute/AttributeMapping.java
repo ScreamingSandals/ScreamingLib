@@ -72,7 +72,7 @@ public abstract class AttributeMapping {
         var operation = node.node("operation");
         var slot = node.node("slot");
 
-        var typeOpt = AttributeTypeRegistry.resolve(type.raw());
+        var typeOpt = AttributeType.ofNullable(type.raw());
 
         if (typeOpt == null) {
             return null;

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.ItemAttributeHolder;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
-import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.metadata.MetadataProvider;
 import org.screamingsandals.lib.nbt.*;
 import org.screamingsandals.lib.particle.ParticleData;
@@ -59,7 +59,7 @@ public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleDa
         return getAttributeModifiers();
     }
 
-    @NotNull List<@NotNull EnchantmentHolder> getEnchantments();
+    @NotNull List<@NotNull Enchantment> getEnchantments();
 
     @NotNull ItemData getData();
 
@@ -146,12 +146,12 @@ public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleDa
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default @NotNull ItemStack withEnchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments) {
+    default @NotNull ItemStack withEnchantments(@Nullable List<@NotNull Enchantment> enchantments) {
         return NullableExtension.orElseThrow(builder().enchantments(enchantments).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default @NotNull ItemStack withEnchantment(@NotNull EnchantmentHolder enchantment) {
+    default @NotNull ItemStack withEnchantment(@NotNull Enchantment enchantment) {
         return NullableExtension.orElseThrow(builder().enchantment(enchantment).build());
     }
 

@@ -27,7 +27,7 @@ import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
-import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.nbt.Tag;
@@ -52,7 +52,7 @@ public class SLibSerializers {
                 .register(DamageType.class, DamageCauseHolderSerializer.INSTANCE)
                 .register(DifficultyType.class, DifficultyHolderSerializer.INSTANCE)
                 .register(DimensionType.class, DimensionHolderSerializer.INSTANCE)
-                .register(EnchantmentHolder.class, EnchantmentHolderSerializer.INSTANCE)
+                .register(Enchantment.class, EnchantmentHolderSerializer.INSTANCE)
                 .register(EntityPose.class, EntityPoseHolderSerializer.INSTANCE)
                 .register(EntityType.class, EntityTypeHolderSerializer.INSTANCE)
                 .register(GameMode.class, GameModeHolderSerializer.INSTANCE)

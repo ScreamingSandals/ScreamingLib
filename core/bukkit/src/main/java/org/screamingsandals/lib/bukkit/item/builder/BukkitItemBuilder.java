@@ -19,7 +19,6 @@ package org.screamingsandals.lib.bukkit.item.builder;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -44,7 +43,7 @@ import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
-import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.nbt.CompoundTag;
@@ -262,7 +261,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     @Override
-    public @NotNull ItemStackBuilder enchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments) {
+    public @NotNull ItemStackBuilder enchantments(@Nullable List<@NotNull Enchantment> enchantments) {
         if (item == null) {
             return this;
         }
@@ -272,9 +271,9 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             if (enchantments != null) {
                 enchantments.forEach(e -> {
                     if (meta instanceof EnchantmentStorageMeta) {
-                        ((EnchantmentStorageMeta) meta).addStoredEnchant(e.as(Enchantment.class), e.level(), true);
+                        ((EnchantmentStorageMeta) meta).addStoredEnchant(e.as(org.bukkit.enchantments.Enchantment.class), e.level(), true);
                     } else {
-                        meta.addEnchant(e.as(Enchantment.class), e.level(), true);
+                        meta.addEnchant(e.as(org.bukkit.enchantments.Enchantment.class), e.level(), true);
                     }
                 });
             }
@@ -284,16 +283,16 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     @Override
-    public @NotNull ItemStackBuilder enchantment(@NotNull EnchantmentHolder enchantment) {
+    public @NotNull ItemStackBuilder enchantment(@NotNull Enchantment enchantment) {
         if (item == null) {
             return this;
         }
         var meta = item.getItemMeta();
         if (meta != null) {
             if (meta instanceof EnchantmentStorageMeta) {
-                ((EnchantmentStorageMeta) meta).addStoredEnchant(enchantment.as(Enchantment.class), enchantment.level(), true);
+                ((EnchantmentStorageMeta) meta).addStoredEnchant(enchantment.as(org.bukkit.enchantments.Enchantment.class), enchantment.level(), true);
             } else {
-                meta.addEnchant(enchantment.as(Enchantment.class), enchantment.level(), true);
+                meta.addEnchant(enchantment.as(org.bukkit.enchantments.Enchantment.class), enchantment.level(), true);
             }
             item.setItemMeta(meta);
         }
