@@ -23,7 +23,7 @@ import org.screamingsandals.lib.api.Wrapper;
 import java.util.List;
 
 public interface AttributeHolder extends Wrapper, RawValueHolder {
-    @NotNull AttributeTypeHolder getAttributeType();
+    @NotNull AttributeType getAttributeType();
 
     double getBaseValue();
 

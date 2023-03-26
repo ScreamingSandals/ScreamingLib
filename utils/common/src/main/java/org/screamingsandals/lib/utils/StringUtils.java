@@ -16,63 +16,36 @@
 
 package org.screamingsandals.lib.utils;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @UtilityClass
 public class StringUtils {
-    public String capitalizeFirst(String s) {
+    public @NotNull String capitalizeFirst(@NotNull String s) {
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
-    public interface Case {
-        Case LOWER_CAMEL = new LowerCamelCase();
-        Case SNAKE = new SnakeCase();
-
-        String toLowerCamel(String s);
-        String toSnake(String s);
+    public @NotNull String fromLowerCamelToSnake(@NotNull String s) {
+        final StringBuilder builder = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                builder.append("_");
+            }
+            builder.append(Character.toLowerCase(c));
+        }
+        return builder.toString();
     }
 
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    static final class LowerCamelCase implements Case {
-        @Override
-        public String toLowerCamel(String s) {
+    public @NotNull String fromSnakeToLowerCamel(@NotNull String s) {
+        final String[] split = s.split("_");
+        if (split.length == 1) {
             return s;
         }
-
-        @Override
-        public String toSnake(String s) {
-            final StringBuilder builder = new StringBuilder();
-            for (char c : s.toCharArray()) {
-                if (Character.isUpperCase(c)) {
-                    builder.append("_");
-                }
-                builder.append(Character.toLowerCase(c));
-            }
-            return builder.toString();
-        }
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    static final class SnakeCase implements Case {
-        @Override
-        public String toLowerCamel(String s) {
-            final String[] split = s.split("_");
-            if (split.length == 1) {
-                return s;
-            }
-            return split[0] + Arrays.stream(Arrays.copyOfRange(split, 1, split.length))
-                    .map(StringUtils::capitalizeFirst)
-                    .collect(Collectors.joining());
-        }
-
-        @Override
-        public String toSnake(String s) {
-            return s;
-        }
+        return split[0] + Arrays.stream(Arrays.copyOfRange(split, 1, split.length))
+                .map(StringUtils::capitalizeFirst)
+                .collect(Collectors.joining());
     }
 }

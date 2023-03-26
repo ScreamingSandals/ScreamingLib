@@ -26,7 +26,7 @@ import org.screamingsandals.lib.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.attribute.AttributeTypeMapping;
+import org.screamingsandals.lib.attribute.AttributeTypeRegistry;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.item.meta.EnchantmentMapping;
@@ -64,7 +64,7 @@ import org.screamingsandals.lib.world.weather.WeatherRegistry;
         Tasker.class,
         EntityTypeRegistry.class,
         Entities.class,
-        AttributeTypeMapping.class,
+        AttributeTypeRegistry.class,
         AttributeMapping.class,
         FireworkEffectMapping.class,
         EnchantmentMapping.class,

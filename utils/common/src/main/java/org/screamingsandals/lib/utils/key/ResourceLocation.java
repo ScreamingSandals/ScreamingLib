@@ -32,9 +32,9 @@ import java.util.regex.Pattern;
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResourceLocation implements MappingKey, ComparableWrapper {
-    public static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z0-9_.\\-]+):)?(?<key>[A-Za-z0-9_.\\-/ ]+)$");
+    public static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z0-9_.\\-]+):)?(?<path>[A-Za-z0-9_.\\-/ ]+)$");
     public static final @NotNull Pattern VALID_NAMESPACE = Pattern.compile("^[a-z0-9_.\\-]+$");
-    public static final @NotNull Pattern VALID_KEY = Pattern.compile("^[a-z0-9_.\\-/]+$");
+    public static final @NotNull Pattern VALID_PATH = Pattern.compile("^[a-z0-9_.\\-/]+$");
 
     private final @NotNull String namespace;
     private final @NotNull String key;
@@ -46,7 +46,7 @@ public class ResourceLocation implements MappingKey, ComparableWrapper {
         }
 
         var namespace = matcher.group("namespace") != null ? matcher.group("namespace").toLowerCase(Locale.ROOT) : "minecraft";
-        var key = matcher.group("key").replaceAll(" ", "_").toLowerCase(Locale.ROOT);
+        var key = matcher.group("path").replaceAll(" ", "_").toLowerCase(Locale.ROOT);
 
         return ofOptional(namespace, key);
     }
@@ -56,7 +56,7 @@ public class ResourceLocation implements MappingKey, ComparableWrapper {
     }
 
     public static @NotNull Optional<ResourceLocation> ofOptional(@NotNull String namespace, @NotNull String key) {
-        if (!VALID_NAMESPACE.matcher(namespace).matches() || !VALID_KEY.matcher(key).matches()) {
+        if (!VALID_NAMESPACE.matcher(namespace).matches() || !VALID_PATH.matcher(key).matches()) {
             return Optional.empty();
         }
 

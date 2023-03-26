@@ -30,10 +30,10 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
-public class BukkitInventoryTypeMapping extends InventoryTypeRegistry {
+public class BukkitInventoryTypeRegistry extends InventoryTypeRegistry {
     // TODO: Bukkit's inventory types doesn't exactly match the vanilla types, we should make correct translations
 
-    public BukkitInventoryTypeMapping() {
+    public BukkitInventoryTypeRegistry() {
         specialType(org.bukkit.event.inventory.InventoryType.class, BukkitInventoryType::new);
     }
 

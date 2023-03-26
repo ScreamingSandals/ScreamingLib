@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeHolder;
-import org.screamingsandals.lib.attribute.AttributeTypeHolder;
+import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.block.Block;
@@ -31,7 +31,7 @@ import java.util.List;
 
 public interface LivingEntity extends BasicEntity, ProjectileShooter {
 
-    @Nullable AttributeHolder getAttribute(@NotNull AttributeTypeHolder attributeType);
+    @Nullable AttributeHolder getAttribute(@NotNull AttributeType attributeType);
 
     double getEyeHeight();
 

@@ -18,7 +18,7 @@ package org.screamingsandals.lib.configurate;
 
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.attribute.AttributeTypeHolder;
+import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.entity.damage.DamageType;
@@ -48,7 +48,7 @@ public class SLibSerializers {
     public TypeSerializerCollection.@NotNull Builder appendSerializers(TypeSerializerCollection.@NotNull Builder builder) {
         return SpectatorSerializers.appendSerializers(builder)
                 .register(Tag.class, TagSerializer.INSTANCE)
-                .register(AttributeTypeHolder.class, AttributeTypeHolderSerializer.INSTANCE)
+                .register(AttributeType.class, AttributeTypeHolderSerializer.INSTANCE)
                 .register(DamageType.class, DamageCauseHolderSerializer.INSTANCE)
                 .register(DifficultyType.class, DifficultyHolderSerializer.INSTANCE)
                 .register(DimensionType.class, DimensionHolderSerializer.INSTANCE)

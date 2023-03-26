@@ -32,7 +32,7 @@ import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.attribute.AttributeTypeHolder;
+import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -52,7 +52,7 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
     }
 
     @Override
-    public @Nullable AttributeHolder getAttribute(@NotNull AttributeTypeHolder attributeType) {
+    public @Nullable AttributeHolder getAttribute(@NotNull AttributeType attributeType) {
         return AttributeMapping.wrapAttribute(((org.bukkit.entity.LivingEntity) wrappedObject).getAttribute(attributeType.as(Attribute.class)));
     }
 

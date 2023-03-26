@@ -40,7 +40,7 @@ import java.util.function.Supplier;
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @AbstractService
 @ServiceDependencies(dependsOn = {
-        AttributeTypeMapping.class,
+        AttributeTypeRegistry.class,
         EquipmentSlotRegistry.class
 })
 public abstract class AttributeMapping {
@@ -72,7 +72,7 @@ public abstract class AttributeMapping {
         var operation = node.node("operation");
         var slot = node.node("slot");
 
-        var typeOpt = AttributeTypeMapping.resolve(type.raw());
+        var typeOpt = AttributeTypeRegistry.resolve(type.raw());
 
         if (typeOpt == null) {
             return null;

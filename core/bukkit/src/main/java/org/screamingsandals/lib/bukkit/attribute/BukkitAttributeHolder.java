@@ -33,8 +33,8 @@ public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> imple
     }
 
     @Override
-    public @NotNull AttributeTypeHolder getAttributeType() {
-        return new BukkitAttributeTypeHolder(wrappedObject.getAttribute());
+    public @NotNull AttributeType getAttributeType() {
+        return new BukkitAttributeType(wrappedObject.getAttribute());
     }
 
     @Override

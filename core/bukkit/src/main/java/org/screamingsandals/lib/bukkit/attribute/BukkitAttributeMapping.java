@@ -71,7 +71,7 @@ public class BukkitAttributeMapping extends AttributeMapping {
                     .registerP2W(BukkitItemAttribute.class, bukkitItemAttribute -> {
                         try {
                             return new ItemAttributeHolder(
-                                    AttributeTypeHolder.of(bukkitItemAttribute.getAttribute()),
+                                    AttributeType.of(bukkitItemAttribute.getAttribute()),
                                     bukkitItemAttribute.getAttributeModifier().getUniqueId(),
                                     bukkitItemAttribute.getAttributeModifier().getName(),
                                     bukkitItemAttribute.getAttributeModifier().getAmount(),
@@ -80,7 +80,7 @@ public class BukkitAttributeMapping extends AttributeMapping {
                             );
                         } catch (Throwable throwable) {
                             return new ItemAttributeHolder(
-                                    AttributeTypeHolder.of(bukkitItemAttribute.getAttribute()),
+                                    AttributeType.of(bukkitItemAttribute.getAttribute()),
                                     bukkitItemAttribute.getAttributeModifier().getUniqueId(),
                                     bukkitItemAttribute.getAttributeModifier().getName(),
                                     bukkitItemAttribute.getAttributeModifier().getAmount(),

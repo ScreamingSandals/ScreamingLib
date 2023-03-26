@@ -16,23 +16,20 @@
 
 package org.screamingsandals.lib.attribute;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-import java.util.List;
+public interface AttributeType extends RegistryItem, RawValueHolder {
 
-public interface AttributeTypeHolder extends ComparableWrapper, RawValueHolder {
-
+    @ApiStatus.Experimental
     @NotNull String platformName();
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
-    static @NotNull AttributeTypeHolder of(@NotNull Object attributeType) {
+    static @NotNull AttributeType of(@NotNull Object attributeType) {
         var result = ofNullable(attributeType);
         Preconditions.checkNotNullIllegal(result, "Could not find attribute type: " + attributeType);
         return result;
@@ -40,15 +37,15 @@ public interface AttributeTypeHolder extends ComparableWrapper, RawValueHolder {
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
     @Contract("null -> null")
-    static @Nullable AttributeTypeHolder ofNullable(@Nullable Object attributeType) {
-        if (attributeType instanceof AttributeTypeHolder) {
-            return (AttributeTypeHolder) attributeType;
+    static @Nullable AttributeType ofNullable(@Nullable Object attributeType) {
+        if (attributeType instanceof AttributeType) {
+            return (AttributeType) attributeType;
         }
-        return AttributeTypeMapping.resolve(attributeType);
+        return AttributeTypeRegistry.getInstance().resolveMapping(attributeType);
     }
 
-    static @Unmodifiable @NotNull List<@NotNull AttributeTypeHolder> all() {
-        return AttributeTypeMapping.getValues();
+    static @NotNull RegistryItemStream<@NotNull AttributeType> all() {
+        return AttributeTypeRegistry.getInstance().getRegistryItemStream();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
