@@ -29,9 +29,12 @@ import java.util.Arrays;
 public class BukkitPotionMapping extends PotionMapping {
 
     public BukkitPotionMapping() {
+        potionConverter
+                .registerP2W(PotionType.class, BukkitPotionHolder::new);
+
+        // TODO: 1.8.8
         if (Version.isVersion(1, 9)) {
             potionConverter
-                    .registerP2W(PotionType.class, BukkitPotionHolder::new)
                     .registerP2W(PotionData.class, BukkitPotionHolder::new);
 
             Arrays.stream(PotionType.values()).forEach(potion -> {

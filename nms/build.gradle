@@ -225,8 +225,8 @@ nmsGen {
         reqField('ATTACK_ACTION')
     }
 
-    reqClass('net.minecraft.network.protocol.game.ServerboundInteractPacket$ActionType') {
-        reqField('ATTACK')
+    reqClass('net.minecraft.network.protocol.game.ServerboundInteractPacket$Action') {
+        reqEnumField('ATTACK')
     }
 
     reqClass('net.minecraft.network.syncher.EntityDataSerializers')

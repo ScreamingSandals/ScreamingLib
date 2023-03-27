@@ -62,7 +62,7 @@ public class ProtocolInjector {
 
     public void addPlayer(PlayerWrapper player, boolean onLogin) {
         try {
-            final var channel = player.getChannel();
+            final var channel = PlayerMapper.getNettyChannel(player);
             Preconditions.checkNotNull(channel, "Failed to find player channel!");
 
             final var handler = new PacketHandler(player);
@@ -82,7 +82,7 @@ public class ProtocolInjector {
 
     public void removePlayer(PlayerWrapper player) {
         try {
-            final var channel = player.getChannel();
+            final var channel = PlayerMapper.getNettyChannel(player);
             if (channel != null && channel.pipeline().get(CHANNEL_NAME) != null) {
                 channel.eventLoop()
                         .submit(() -> channel.pipeline().remove(CHANNEL_NAME));
@@ -96,37 +96,25 @@ public class ProtocolInjector {
         private final PlayerWrapper player;
 
         @Override
-        public void channelRead(ChannelHandlerContext ctx, Object packet) {
-            final var future = EventManager.fireAsync(new SPacketEvent(player, PacketMethod.INBOUND, packet));
+        public void channelRead(ChannelHandlerContext ctx, Object packet) throws Exception {
+            final var readEvent = EventManager.fire(new SPacketEvent(player, PacketMethod.INBOUND, packet));
+            if (readEvent.isCancelled()) {
+                return;
+            }
 
-            future.thenAccept(event -> {
-                if (event.cancelled()) {
-                    return;
-                }
-                var modifiedPacket = event.getPacket();
-                try {
-                    super.channelRead(ctx, modifiedPacket);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
-            });
+            final var modifiedPacket = readEvent.getPacket();
+            super.channelRead(ctx, modifiedPacket);
         }
 
         @Override
-        public void write(ChannelHandlerContext ctx, Object packet, ChannelPromise promise) {
-            final var future = EventManager.fireAsync(new SPacketEvent(player, PacketMethod.OUTBOUND, packet));
+        public void write(ChannelHandlerContext ctx, Object packet, ChannelPromise promise) throws Exception {
+            final var writeEvent = EventManager.fire(new SPacketEvent(player, PacketMethod.OUTBOUND, packet));
+            if (writeEvent.cancelled()) {
+                return;
+            }
 
-            future.thenAccept(event -> {
-                if (event.cancelled()) {
-                    return;
-                }
-                var modifiedPacket = event.getPacket();
-                try {
-                    super.write(ctx, modifiedPacket, promise);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
-            });
+            final var modifiedPacket = writeEvent.getPacket();
+            super.write(ctx, modifiedPacket, promise);
         }
     }
 }

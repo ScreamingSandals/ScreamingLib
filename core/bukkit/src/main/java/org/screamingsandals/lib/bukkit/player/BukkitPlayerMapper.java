@@ -16,22 +16,36 @@
 
 package org.screamingsandals.lib.bukkit.player;
 
+import io.netty.channel.Channel;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
+import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
+import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 import java.util.*;
 
 @Service
 public class BukkitPlayerMapper extends PlayerMapper {
+    protected final WeakHashMap<Player, Channel> channelCache = new WeakHashMap<>();
+
     public BukkitPlayerMapper() {
         offlinePlayerConverter
                 .registerP2W(OfflinePlayer.class, offlinePlayer -> new FinalOfflinePlayerWrapper(offlinePlayer.getUniqueId(), offlinePlayer.getName()))
@@ -54,6 +68,18 @@ public class BukkitPlayerMapper extends PlayerMapper {
                 });
     }
 
+    @OnPostEnable
+    public void onPostEnable() {
+        EventManager
+                .getDefaultEventManager()
+                .register(SPlayerLeaveEvent.class, leaveEvent -> channelCache.remove(leaveEvent.player().as(Player.class)), EventPriority.LOWEST);
+    }
+
+    @OnPreDisable
+    public void onPreDisable() {
+        Server.getConnectedPlayers().forEach(player -> channelCache.remove(player.as(Player.class)));
+    }
+
     @Override
     public Optional<PlayerWrapper> getPlayer0(String name) {
         return Optional.ofNullable(Bukkit.getPlayer(name)).map(BukkitEntityPlayer::new);
@@ -62,6 +88,24 @@ public class BukkitPlayerMapper extends PlayerMapper {
     @Override
     public Optional<PlayerWrapper> getPlayer0(UUID uuid) {
         return Optional.ofNullable(Bukkit.getPlayer(uuid)).map(BukkitEntityPlayer::new);
+    }
+
+    @Override
+    protected Channel getNettyChannel0(PlayerWrapper playerWrapper) {
+        final var bukkitPlayer = playerWrapper.as(Player.class);
+        final var cachedChannel = channelCache.get(bukkitPlayer);
+
+        if (cachedChannel != null) {
+            return cachedChannel;
+        }
+
+        final var channel = (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(playerWrapper.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
+                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
+                .getFieldResulted(ConnectionAccessor.getFieldChannel())
+                .raw();
+
+        channelCache.put(bukkitPlayer, channel);
+        return channel;
     }
 
     @Override

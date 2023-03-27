@@ -16,10 +16,11 @@
 
 package org.screamingsandals.lib.bukkit.packet.listener;
 
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
-import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacket_i_ActionTypeAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacket_i_ActionAccessor;
 import org.screamingsandals.lib.packet.event.SPacketEvent;
 import org.screamingsandals.lib.packet.event.SPlayerServerboundInteractEvent;
 import org.screamingsandals.lib.utils.InteractType;
@@ -29,8 +30,14 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 
 @Service
 public class ServerboundInteractPacketListener {
-    private static final Object ATTACK_ACTION_FIELD = Reflect.getField(ServerboundInteractPacketAccessor.getFieldATTACK_ACTION());
-    private static final Object ATTACK_FIELD = Reflect.getField(ServerboundInteractPacket_i_ActionTypeAccessor.getFieldATTACK());
+
+    private final Object ATTACK_ACTION_FIELD;
+
+    public ServerboundInteractPacketListener() {
+        ATTACK_ACTION_FIELD = Version.isVersion(1, 17)
+                ? Reflect.getField(ServerboundInteractPacketAccessor.getFieldATTACK_ACTION())
+                : ServerboundInteractPacket_i_ActionAccessor.getFieldATTACK();
+    }
 
     @OnEvent
     public void onServerboundInteract(SPacketEvent event) {
@@ -41,15 +48,11 @@ public class ServerboundInteractPacketListener {
         final var packet = event.getPacket();
         final var player = event.player();
         if (ServerboundInteractPacketAccessor.getType().isInstance(packet)) {
-            final var nmsEnum = Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldAction());
+            final var actionField = Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldAction());
             final var entityId = (int) Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldEntityId());
-
-            var interactType = (nmsEnum == ATTACK_FIELD  ||
-                    nmsEnum == ATTACK_ACTION_FIELD || (nmsEnum != null && nmsEnum.toString().equals("ATTACK")))
-                    ?  InteractType.LEFT_CLICK : InteractType.RIGHT_CLICK;
-
-            final var completableFuture = EventManager.fireAsync(new SPlayerServerboundInteractEvent(player, entityId, interactType));
-            completableFuture.thenAccept(sPlayerServerboundInteractEvent -> event.cancelled(sPlayerServerboundInteractEvent.cancelled()));
+            final var interactType = actionField == ATTACK_ACTION_FIELD ? InteractType.LEFT_CLICK : InteractType.RIGHT_CLICK;
+            final var interactEvent = EventManager.fire(new SPlayerServerboundInteractEvent(player, entityId, interactType));
+            event.cancelled(interactEvent.cancelled());
         }
     }
 }

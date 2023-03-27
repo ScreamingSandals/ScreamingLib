@@ -382,14 +382,6 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public Channel getChannel() {
-        return (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(wrappedObject), ServerPlayerAccessor.getFieldConnection())
-                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
-                .getFieldResulted(ConnectionAccessor.getFieldChannel())
-                .raw();
-    }
-
-    @Override
     public InetSocketAddress getAddress() {
         return ((Player) wrappedObject).getAddress();
     }

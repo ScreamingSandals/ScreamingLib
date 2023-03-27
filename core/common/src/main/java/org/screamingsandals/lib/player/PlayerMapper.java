@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.player;
 
+import io.netty.channel.Channel;
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
@@ -240,11 +241,22 @@ public abstract class PlayerMapper {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
-        
+
         return playerMapper.specialPlayerConverter;
     }
 
+    // TODO: ChannelWrapper (Minestom doesn't have Netty-backed channels).
+    public static Channel getNettyChannel(PlayerWrapper playerWrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+
+        return playerMapper.getNettyChannel0(playerWrapper);
+    }
+
     // abstract methods for implementations
+
+    protected abstract Channel getNettyChannel0(PlayerWrapper playerWrapper);
 
     protected abstract <T> CommandSenderWrapper wrapSender0(T sender);
 

@@ -346,13 +346,6 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     void showPlayer(PlayerWrapper player);
 
     /**
-     * Gets the player's {@link Channel}.
-     *
-     * @return the player connection
-     */
-    Channel getChannel();
-
-    /**
      * Gets the player's protocol version.
      *
      * @return the protocol version the player's client is connected with
