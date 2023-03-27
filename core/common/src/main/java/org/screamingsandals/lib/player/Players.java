@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.player;
 
+import io.netty.channel.Channel;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -194,7 +195,18 @@ public abstract class Players {
         return players.specialPlayerConverter;
     }
 
+    // TODO: ChannelWrapper (Minestom doesn't have Netty-backed channels).
+    public static @Nullable Channel getNettyChannel(@NotNull Player player) {
+        if (players == null) {
+            throw new UnsupportedOperationException("Players isn't initialized yet.");
+        }
+
+        return players.getNettyChannel0(player);
+    }
+
     // abstract methods for implementations
+
+    protected abstract @Nullable Channel getNettyChannel0(@NotNull Player player);
 
     protected abstract <T> @NotNull CommandSender wrapSender0(@NotNull T sender);
 

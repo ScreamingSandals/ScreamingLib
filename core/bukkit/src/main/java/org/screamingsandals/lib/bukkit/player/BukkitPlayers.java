@@ -16,23 +16,39 @@
 
 package org.screamingsandals.lib.bukkit.player;
 
+import io.netty.channel.Channel;
 import lombok.experimental.ExtensionMethod;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.player.OfflinePlayer;
 import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
+import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
+import org.screamingsandals.lib.utils.reflect.Reflect;
+
 import java.util.*;
 
 @Service
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPlayers extends Players {
+    protected final WeakHashMap<org.bukkit.entity.@NotNull Player, Channel> channelCache = new WeakHashMap<>();
+
     public BukkitPlayers() {
         offlinePlayerConverter
                 .registerP2W(org.bukkit.OfflinePlayer.class, BukkitOfflinePlayer::new)
@@ -52,6 +68,22 @@ public class BukkitPlayers extends Players {
                     return Player.Hand.MAIN;
                 });
     }
+
+    @OnPostEnable
+    public void onPostEnable(@NotNull Plugin plugin) {
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler(priority = EventPriority.MONITOR)
+            public void onQuit(@NotNull PlayerQuitEvent event) {
+                channelCache.remove(event.getPlayer());
+            }
+        }, plugin);
+    }
+
+    @OnPreDisable
+    public void onPreDisable() {
+        Bukkit.getOnlinePlayers().forEach(channelCache::remove);
+    }
+
 
     @Override
     public @Nullable Player getPlayer0(@NotNull String name) {
@@ -130,5 +162,23 @@ public class BukkitPlayers extends Players {
     @Override
     public @Nullable Player getPlayerExact0(@NotNull String name) {
         return Bukkit.getPlayerExact(name).mapOrNull(BukkitPlayer::new);
+    }
+
+    @Override
+    protected Channel getNettyChannel0(Player playerWrapper) {
+        final var bukkitPlayer = playerWrapper.as(org.bukkit.entity.Player.class);
+        final var cachedChannel = channelCache.get(bukkitPlayer);
+
+        if (cachedChannel != null) {
+            return cachedChannel;
+        }
+
+        final var channel = (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(playerWrapper.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
+                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
+                .getFieldResulted(ConnectionAccessor.getFieldChannel())
+                .raw();
+
+        channelCache.put(bukkitPlayer, channel);
+        return channel;
     }
 }

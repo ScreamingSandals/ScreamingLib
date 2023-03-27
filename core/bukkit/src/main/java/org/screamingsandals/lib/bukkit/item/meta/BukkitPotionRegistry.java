@@ -40,8 +40,9 @@ public class BukkitPotionRegistry extends PotionRegistry {
     // TODO: is there any bukkit-like server supporting custom values for this registry?
 
     public BukkitPotionRegistry() {
+        specialType(PotionType.class, BukkitPotion::new);
+
         if (IS_POTION_SUPPORTED) {
-            specialType(PotionType.class, BukkitPotion::new);
             specialType(PotionData.class, BukkitPotion::new);
         } else {
             // TODO: 1.8 support

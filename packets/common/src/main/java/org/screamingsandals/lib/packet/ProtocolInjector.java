@@ -65,7 +65,7 @@ public class ProtocolInjector {
 
     public void addPlayer(@NotNull Player player, boolean onLogin) {
         try {
-            final var channel = PlayerMapper.getNettyChannel(player);
+            final var channel = Players.getNettyChannel(player);
             Preconditions.checkNotNull(channel, "Failed to find player channel!");
 
             final var handler = new PacketHandler(player);
@@ -85,7 +85,7 @@ public class ProtocolInjector {
 
     public void removePlayer(@NotNull Player player) {
         try {
-            final var channel = PlayerMapper.getNettyChannel(player);
+            final var channel = Players.getNettyChannel(player);
             if (channel != null && channel.pipeline().get(CHANNEL_NAME) != null) {
                 channel.eventLoop()
                         .submit(() -> channel.pipeline().remove(CHANNEL_NAME));
