@@ -44,7 +44,7 @@ public abstract class SimpleRegistry<T extends RegistryItem> extends Registry<T>
         if (object instanceof ResourceLocation) {
             location = (ResourceLocation) object;
         } else {
-            location = ResourceLocation.ofOptional(object.toString().trim()).orElse(null);
+            location = ResourceLocation.ofNullable(object.toString().trim());
         }
 
         if (location == null) {

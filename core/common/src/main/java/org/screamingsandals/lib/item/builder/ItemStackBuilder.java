@@ -28,7 +28,7 @@ import org.screamingsandals.lib.item.ItemMeta;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.Enchantment;
-import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataConsumer;
@@ -238,11 +238,11 @@ public interface ItemStackBuilder extends MetadataConsumer {
     default @NotNull ItemStackBuilder effect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            list.forEach(effect1 -> NullableExtension.ifNotNull(PotionEffectHolder.ofNullable(effect1), potionEffectHolder -> this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder)));
+            list.forEach(effect1 -> NullableExtension.ifNotNull(PotionEffect.ofNullable(effect1), potionEffectHolder -> this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder)));
             return this;
         }
 
-        NullableExtension.ifNotNull(PotionEffectHolder.ofNullable(effect), potionEffectHolder -> this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder));
+        NullableExtension.ifNotNull(PotionEffect.ofNullable(effect), potionEffectHolder -> this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder));
         return this;
     }
 

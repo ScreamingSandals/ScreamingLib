@@ -23,7 +23,6 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
@@ -34,7 +33,7 @@ import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.Block;
@@ -162,33 +161,33 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
     }
 
     @Override
-    public boolean addPotionEffect(@NotNull PotionEffectHolder effect) {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).addPotionEffect(effect.as(PotionEffect.class));
+    public boolean addPotionEffect(@NotNull PotionEffect effect) {
+        return ((org.bukkit.entity.LivingEntity) wrappedObject).addPotionEffect(effect.as(org.bukkit.potion.PotionEffect.class));
     }
 
     @Override
-    public boolean addPotionEffects(@NotNull Collection<@NotNull PotionEffectHolder> effects) {
+    public boolean addPotionEffects(@NotNull Collection<@NotNull PotionEffect> effects) {
         return ((org.bukkit.entity.LivingEntity) wrappedObject).addPotionEffects(effects
                 .stream()
-                .map(effect -> effect.as(PotionEffect.class))
+                .map(effect -> effect.as(org.bukkit.potion.PotionEffect.class))
                 .collect(Collectors.toSet()));
     }
 
     @Override
-    public boolean hasPotionEffect(@NotNull PotionEffectHolder type) {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).hasPotionEffect(type.as(PotionEffect.class).getType());
+    public boolean hasPotionEffect(@NotNull PotionEffect type) {
+        return ((org.bukkit.entity.LivingEntity) wrappedObject).hasPotionEffect(type.as(org.bukkit.potion.PotionEffect.class).getType());
     }
 
     @Override
-    public void removePotionEffect(@NotNull PotionEffectHolder type) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).removePotionEffect(type.as(PotionEffect.class).getType());
+    public void removePotionEffect(@NotNull PotionEffect type) {
+        ((org.bukkit.entity.LivingEntity) wrappedObject).removePotionEffect(type.as(org.bukkit.potion.PotionEffect.class).getType());
     }
 
     @Override
-    public @NotNull List<@NotNull PotionEffectHolder> getActivePotionEffects() {
+    public @NotNull List<@NotNull PotionEffect> getActivePotionEffects() {
         return ((org.bukkit.entity.LivingEntity) wrappedObject).getActivePotionEffects()
                 .stream()
-                .map(PotionEffectHolder::of)
+                .map(PotionEffect::of)
                 .collect(Collectors.toList());
     }
 

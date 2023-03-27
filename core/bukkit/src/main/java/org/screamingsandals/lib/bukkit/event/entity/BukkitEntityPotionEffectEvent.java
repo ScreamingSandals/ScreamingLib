@@ -29,7 +29,7 @@ import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityPotionEffectEvent;
-import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
@@ -45,9 +45,9 @@ public class BukkitEntityPotionEffectEvent implements EntityPotionEffectEvent, B
 
     // Internal cache
     private @Nullable BasicEntity entity;
-    private @Nullable PotionEffectHolder oldEffect;
+    private @Nullable PotionEffect oldEffect;
     private boolean oldEffectCached;
-    private @Nullable PotionEffectHolder newEffect;
+    private @Nullable PotionEffect newEffect;
     private boolean newEffectCached;
     private @Nullable Cause cause;
     private @Nullable Action action;
@@ -61,10 +61,10 @@ public class BukkitEntityPotionEffectEvent implements EntityPotionEffectEvent, B
     }
 
     @Override
-    public @Nullable PotionEffectHolder oldEffect() {
+    public @Nullable PotionEffect oldEffect() {
         if (!oldEffectCached) {
             if (event.getOldEffect() != null) {
-                oldEffect = PotionEffectHolder.of(event.getOldEffect());
+                oldEffect = PotionEffect.of(event.getOldEffect());
             }
             oldEffectCached = true;
         }
@@ -72,10 +72,10 @@ public class BukkitEntityPotionEffectEvent implements EntityPotionEffectEvent, B
     }
 
     @Override
-    public @Nullable PotionEffectHolder newEffect() {
+    public @Nullable PotionEffect newEffect() {
         if (!newEffectCached) {
             if (event.getNewEffect() != null) {
-                newEffect = PotionEffectHolder.of(event.getNewEffect());
+                newEffect = PotionEffect.of(event.getNewEffect());
             }
             newEffectCached = true;
         }

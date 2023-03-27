@@ -21,15 +21,15 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
-import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionEffect;
 
 public interface EntityPotionEffectEvent extends SCancellableEvent, PlatformEvent {
 
     @NotNull BasicEntity entity();
 
-    @Nullable PotionEffectHolder oldEffect();
+    @Nullable PotionEffect oldEffect();
 
-    @Nullable PotionEffectHolder newEffect();
+    @Nullable PotionEffect newEffect();
 
     @NotNull Cause cause();
 

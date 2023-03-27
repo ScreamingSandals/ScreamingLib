@@ -22,13 +22,14 @@ import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.*;
 
+@Deprecated
 public abstract class AbstractTypeMapper<T extends Wrapper> {
     protected final Map<MappingKey, T> mapping = new HashMap<>();
     protected final List<T> values = new LinkedList<>();
 
     protected Optional<T> resolveFromMapping(Object key) {
         var namespaced = !(key instanceof MappingKey) ?
-                ResourceLocation.ofOptional(key.toString().trim()) : Optional.of((MappingKey) key);
+                Optional.ofNullable(ResourceLocation.ofNullable(key.toString().trim())) : Optional.of((MappingKey) key);
 
         if (namespaced.isPresent() && mapping.containsKey(namespaced.get())) {
             return Optional.ofNullable(mapping.get(namespaced.get()));

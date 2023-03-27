@@ -28,7 +28,7 @@ import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.meta.Enchantment;
-import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.nbt.Tag;
 import org.screamingsandals.lib.nbt.configurate.TagSerializer;
@@ -59,7 +59,7 @@ public class SLibSerializers {
                 .register(GameRuleType.class, GameRuleHolderSerializer.INSTANCE)
                 .register(InventoryType.class, InventoryTypeHolderSerializer.INSTANCE)
                 .register(ParticleType.class, ParticleTypeHolderSerializer.INSTANCE)
-                .register(PotionEffectHolder.class, PotionEffectHolderSerializer.INSTANCE)
+                .register(PotionEffect.class, PotionEffectHolderSerializer.INSTANCE)
                 .register(Potion.class, PotionHolderSerializer.INSTANCE)
                 .register(WeatherType.class, WeatherHolderSerializer.INSTANCE)
                 .register(FireworkEffectHolder.class, FireworkEffectHolderSerializer.INSTANCE)

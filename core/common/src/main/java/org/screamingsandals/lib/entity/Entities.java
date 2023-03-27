@@ -24,7 +24,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.meta.PotionEffectMapping;
+import org.screamingsandals.lib.item.meta.PotionEffectRegistry;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.Location;
@@ -36,7 +36,7 @@ import java.util.concurrent.CompletableFuture;
 @ServiceDependencies(dependsOn = {
         EntityTypeRegistry.class,
         Locations.class,
-        PotionEffectMapping.class
+        PotionEffectRegistry.class
 })
 public abstract class Entities {
 

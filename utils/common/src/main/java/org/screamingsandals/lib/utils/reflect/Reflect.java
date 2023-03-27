@@ -61,7 +61,7 @@ public class Reflect {
         return null;
     }
 
-    public static ClassMethod getMethod(String className, String names, Class<?>... params) {
+    public static ClassMethod getMethod(@Language(value = "JAVA", prefix = "class X { void m() { ", suffix = ".class; } }") String className, String names, Class<?>... params) {
         return getMethod(getClassSafe(className), names.split(","), params);
     }
 
@@ -69,7 +69,7 @@ public class Reflect {
         return getMethod(clazz, names.split(","), params);
     }
 
-    public static ClassMethod getMethod(String className, String[] names, Class<?>... params) {
+    public static ClassMethod getMethod(@Language(value = "JAVA", prefix = "class X { void m() { ", suffix = ".class; } }") String className, String[] names, Class<?>... params) {
         return getMethod(getClassSafe(className), names, params);
     }
 
@@ -169,6 +169,14 @@ public class Reflect {
 
     public static Object getField(Object instance, String[] names) {
         return getField(instance.getClass(), names, instance);
+    }
+
+    public static Object getField(@Language(value = "JAVA", prefix = "class X { void m() { ", suffix = ".class; } }") String className, String names) {
+        var clazz = getClassSafe(className);
+        if (clazz == null) {
+            return null;
+        }
+        return getField(clazz, names.split(","));
     }
 
     public static Object getField(Class<?> clazz, String names) {
@@ -409,7 +417,7 @@ public class Reflect {
         }
     }
 
-    public static boolean isInstance(Object instance, String className) {
+    public static boolean isInstance(Object instance, @Language(value = "JAVA", prefix = "class X { void m() { ", suffix = ".class; } }") String className) {
         return isInstance(instance, getClassSafe(className));
     }
 
@@ -429,7 +437,7 @@ public class Reflect {
         return clazz != null;
     }
 
-    public static boolean hasMethod(String className, String methodNames, Class<?>... arguments) {
+    public static boolean hasMethod(@Language(value = "JAVA", prefix = "class X { void m() { ", suffix = ".class; } }") String className, String methodNames, Class<?>... arguments) {
         return getMethod(className, methodNames, arguments).getMethod() != null;
     }
 
@@ -441,7 +449,7 @@ public class Reflect {
         return getMethod(type, methodNames, arguments).getMethod() != null;
     }
 
-    public static Constructor constructor(String className, Class<?>... arguments) {
+    public static Constructor constructor(@Language(value = "JAVA", prefix = "class X { void m() { ", suffix = ".class; } }") String className, Class<?>... arguments) {
         return constructor(getClassSafe(className), arguments);
     }
 
@@ -456,7 +464,7 @@ public class Reflect {
         return new Constructor(constructor);
     }
 
-    public static Object construct(String className) {
+    public static Object construct(@Language(value = "JAVA", prefix = "class X { void m() { ", suffix = ".class; } }") String className) {
         return construct(getClassSafe(className));
     }
 
@@ -468,7 +476,7 @@ public class Reflect {
         return constructor(constructor).construct(params);
     }
 
-    public static InvocationResult constructResulted(String className) {
+    public static InvocationResult constructResulted(@Language(value = "JAVA", prefix = "class X { void m() { ", suffix = ".class; } }") String className) {
         return constructResulted(getClassSafe(className));
     }
 

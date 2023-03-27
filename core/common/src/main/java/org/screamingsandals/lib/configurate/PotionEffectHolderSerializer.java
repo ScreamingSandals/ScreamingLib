@@ -18,14 +18,14 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class PotionEffectHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<PotionEffectHolder> {
+public class PotionEffectHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<PotionEffect> {
     private static final @NotNull String EFFECT_KEY = "effect";
     private static final @NotNull String DURATION_KEY = "duration";
     private static final @NotNull String AMPLIFIER_KEY = "amplifier";
@@ -36,10 +36,10 @@ public class PotionEffectHolderSerializer extends AbstractScreamingSerializer im
     public static final @NotNull PotionEffectHolderSerializer INSTANCE = new PotionEffectHolderSerializer();
 
     @Override
-    public @NotNull PotionEffectHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull PotionEffect deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             if (!node.isMap()) {
-                return PotionEffectHolder.of(node.getString());
+                return PotionEffect.of(node.getString());
             }
 
             var effectNode = node.node(EFFECT_KEY);
@@ -49,7 +49,7 @@ public class PotionEffectHolderSerializer extends AbstractScreamingSerializer im
             var particlesNode = node.node(PARTICLES_KEY);
             var iconNode = node.node(ICON_KEY);
 
-            var holder = PotionEffectHolder.of(effectNode.getString());
+            var holder = PotionEffect.of(effectNode.getString());
             return holder
                     .withDuration(durationNode.getInt(holder.duration()))
                     .withAmplifier(amplifierNode.getInt(holder.amplifier()))
@@ -62,7 +62,7 @@ public class PotionEffectHolderSerializer extends AbstractScreamingSerializer im
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable PotionEffectHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable PotionEffect obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

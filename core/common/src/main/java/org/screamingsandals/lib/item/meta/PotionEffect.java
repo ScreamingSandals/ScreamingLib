@@ -19,14 +19,12 @@ package org.screamingsandals.lib.item.meta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-import java.util.List;
-
-public interface PotionEffectHolder extends ComparableWrapper {
+public interface PotionEffect extends RegistryItem {
     @NotNull String platformName();
 
     int duration();
@@ -40,19 +38,19 @@ public interface PotionEffectHolder extends ComparableWrapper {
     boolean icon();
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull PotionEffectHolder withDuration(int duration);
+    @NotNull PotionEffect withDuration(int duration);
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull PotionEffectHolder withAmplifier(int amplifier);
+    @NotNull PotionEffect withAmplifier(int amplifier);
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull PotionEffectHolder withAmbient(boolean ambient);
+    @NotNull PotionEffect withAmbient(boolean ambient);
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull PotionEffectHolder withParticles(boolean particles);
+    @NotNull PotionEffect withParticles(boolean particles);
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull PotionEffectHolder withIcon(boolean icon);
+    @NotNull PotionEffect withIcon(boolean icon);
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     @Override
@@ -69,7 +67,7 @@ public interface PotionEffectHolder extends ComparableWrapper {
     boolean isSameType(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
-    static @NotNull PotionEffectHolder of(@NotNull Object effect) {
+    static @NotNull PotionEffect of(@NotNull Object effect) {
         var result = ofNullable(effect);
         Preconditions.checkNotNullIllegal(result, "Could not find potion effect: " + effect);
         return result;
@@ -77,14 +75,14 @@ public interface PotionEffectHolder extends ComparableWrapper {
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     @Contract("null -> null")
-    static @Nullable PotionEffectHolder ofNullable(@Nullable Object effect) {
-        if (effect instanceof PotionEffectHolder) {
-            return (PotionEffectHolder) effect;
+    static @Nullable PotionEffect ofNullable(@Nullable Object effect) {
+        if (effect instanceof PotionEffect) {
+            return (PotionEffect) effect;
         }
-        return PotionEffectMapping.resolve(effect);
+        return PotionEffectRegistry.getInstance().resolveMapping(effect);
     }
 
-    static @Unmodifiable @NotNull List<@NotNull PotionEffectHolder> all() {
-        return PotionEffectMapping.getValues();
+    static @NotNull RegistryItemStream<@NotNull PotionEffect> all() {
+        return PotionEffectRegistry.getInstance().getRegistryItemStream();
     }
 }

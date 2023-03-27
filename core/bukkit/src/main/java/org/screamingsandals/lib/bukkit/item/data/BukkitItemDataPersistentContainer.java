@@ -204,7 +204,7 @@ public class BukkitItemDataPersistentContainer implements ItemData {
     public boolean contains(@NotNull ResourceLocation key) {
         return dataContainer.getKeys()
                 .stream()
-                .anyMatch(next -> next.getNamespace().equalsIgnoreCase(key.getNamespace()) && next.getKey().equalsIgnoreCase(key.getKey()));
+                .anyMatch(next -> next.getNamespace().equalsIgnoreCase(key.namespace()) && next.getKey().equalsIgnoreCase(key.path()));
     }
 
     @Override

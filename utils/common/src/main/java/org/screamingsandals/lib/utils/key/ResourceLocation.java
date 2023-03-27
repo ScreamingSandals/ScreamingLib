@@ -19,26 +19,26 @@ package org.screamingsandals.lib.utils.key;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@Accessors(fluent = true)
 public class ResourceLocation implements MappingKey, ComparableWrapper {
     private final @NotNull String namespace;
-    private final @NotNull String key;
+    private final @NotNull String path;
 
-    @Deprecated(forRemoval = true)
-    public static @NotNull Optional<ResourceLocation> ofOptional(@NotNull String combinedString) {
-        return Optional.ofNullable(ofNullable(combinedString));
-    }
+    public static @Nullable ResourceLocation ofNullable(@Nullable String combinedString) {
+        if (combinedString == null) {
+            return null;
+        }
 
-    public static @Nullable ResourceLocation ofNullable(@NotNull String combinedString) {
         @Nullable String namespace = null;
         var builder = new StringBuilder(combinedString.length());
         var length = combinedString.length();
@@ -117,7 +117,7 @@ public class ResourceLocation implements MappingKey, ComparableWrapper {
 
     @Override
     public int hashCode() {
-        return Objects.hash(namespace, key);
+        return Objects.hash(namespace, path);
     }
 
     @Override
@@ -126,17 +126,17 @@ public class ResourceLocation implements MappingKey, ComparableWrapper {
             return false;
         }
         if (object instanceof ResourceLocation) {
-            return this.namespace.equals(((ResourceLocation) object).namespace) && this.key.equals(((ResourceLocation) object).key);
+            return this.namespace.equals(((ResourceLocation) object).namespace) && this.path.equals(((ResourceLocation) object).path);
         }
 
         var namespacedKey = ResourceLocation.of(object.toString());
 
-        return this.namespace.equals(namespacedKey.namespace) && this.key.equals(namespacedKey.key);
+        return this.namespace.equals(namespacedKey.namespace) && this.path.equals(namespacedKey.path);
     }
 
     @Override
     public @NotNull String toString() {
-        return namespace + ":" + key;
+        return namespace + ":" + path;
     }
 
     /**
@@ -154,16 +154,8 @@ public class ResourceLocation implements MappingKey, ComparableWrapper {
         throw new UnsupportedOperationException("Can't convert wrapper to " + type.getName());
     }
 
-    public @NotNull String path() {
-        return key;
-    }
-
     public @NotNull String asString() {
         return toString();
-    }
-
-    public @NotNull String namespace() {
-        return namespace;
     }
 
     @Override

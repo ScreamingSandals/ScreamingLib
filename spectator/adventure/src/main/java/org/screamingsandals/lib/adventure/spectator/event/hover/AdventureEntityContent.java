@@ -56,7 +56,7 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
     @SuppressWarnings("PatternValidation")
     @Override
     public @NotNull EntityContent withType(@NotNull ResourceLocation type) {
-        return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.getNamespace(), type.getKey()), wrappedObject.id(), wrappedObject.name()));
+        return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.namespace(), type.path()), wrappedObject.id(), wrappedObject.name()));
     }
 
     @Override
@@ -102,7 +102,7 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
         @Override
         public @NotNull EntityContent build() {
             Preconditions.checkArgument(id != null, "Id of the entity is not specified!");
-            return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.getNamespace(), type.getKey()), id, name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+            return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.namespace(), type.path()), id, name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
         }
     }
 }

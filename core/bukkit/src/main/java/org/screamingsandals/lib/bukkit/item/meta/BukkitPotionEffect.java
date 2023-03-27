@@ -17,24 +17,26 @@
 package org.screamingsandals.lib.bukkit.item.meta;
 
 import lombok.experimental.ExtensionMethod;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> implements PotionEffectHolder {
+public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEffect> implements PotionEffect {
 
-    public BukkitPotionEffectHolder(@NotNull PotionEffectType type) {
-        this(new PotionEffect(type, 0, 0));
+    public BukkitPotionEffect(@NotNull PotionEffectType type) {
+        this(new org.bukkit.potion.PotionEffect(type, 0, 0));
     }
 
-    public BukkitPotionEffectHolder(@NotNull PotionEffect wrappedObject) {
+    public BukkitPotionEffect(@NotNull org.bukkit.potion.PotionEffect wrappedObject) {
         super(wrappedObject);
     }
 
@@ -73,10 +75,10 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public @NotNull PotionEffectHolder withDuration(int duration) {
+    public @NotNull PotionEffect withDuration(int duration) {
         try {
-            return new BukkitPotionEffectHolder(
-                    new PotionEffect(
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
                             duration,
                             wrappedObject.getAmplifier(),
@@ -86,8 +88,8 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
                     )
             );
         } catch (Throwable ignored) {
-            return new BukkitPotionEffectHolder(
-                    new PotionEffect(
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
                             duration,
                             wrappedObject.getAmplifier(),
@@ -99,10 +101,10 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public @NotNull PotionEffectHolder withAmplifier(int amplifier) {
+    public @NotNull PotionEffect withAmplifier(int amplifier) {
         try {
-            return new BukkitPotionEffectHolder(
-                    new PotionEffect(
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
                             wrappedObject.getDuration(),
                             amplifier,
@@ -112,8 +114,8 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
                     )
             );
         } catch (Throwable ignored) {
-            return new BukkitPotionEffectHolder(
-                    new PotionEffect(
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
                             wrappedObject.getDuration(),
                             amplifier,
@@ -125,10 +127,10 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public @NotNull PotionEffectHolder withAmbient(boolean ambient) {
+    public @NotNull PotionEffect withAmbient(boolean ambient) {
         try {
-            return new BukkitPotionEffectHolder(
-                    new PotionEffect(
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
                             wrappedObject.getDuration(),
                             wrappedObject.getAmplifier(),
@@ -138,8 +140,8 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
                     )
             );
         } catch (Throwable ignored) {
-            return new BukkitPotionEffectHolder(
-                    new PotionEffect(
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
                             wrappedObject.getDuration(),
                             wrappedObject.getAmplifier(),
@@ -151,10 +153,10 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public @NotNull PotionEffectHolder withParticles(boolean particles) {
+    public @NotNull PotionEffect withParticles(boolean particles) {
         try {
-            return new BukkitPotionEffectHolder(
-                    new PotionEffect(
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
                             wrappedObject.getDuration(),
                             wrappedObject.getAmplifier(),
@@ -164,8 +166,8 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
                     )
             );
         } catch (Throwable ignored) {
-            return new BukkitPotionEffectHolder(
-                    new PotionEffect(
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
                             wrappedObject.getDuration(),
                             wrappedObject.getAmplifier(),
@@ -177,10 +179,10 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public @NotNull PotionEffectHolder withIcon(boolean icon) {
+    public @NotNull PotionEffect withIcon(boolean icon) {
         try {
-            return new BukkitPotionEffectHolder(
-                    new PotionEffect(
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
                             wrappedObject.getDuration(),
                             wrappedObject.getAmplifier(),
@@ -196,10 +198,10 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof PotionEffect || object instanceof PotionEffectHolder) {
+        if (object instanceof org.bukkit.potion.PotionEffect || object instanceof PotionEffect) {
             return equals(object);
         }
-        return equals(PotionEffectHolder.ofNullable(object));
+        return equals(PotionEffect.ofNullable(object));
     }
 
     @Override
@@ -209,18 +211,73 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
 
     @Override
     public boolean isSameType(@Nullable Object object) {
-        if (object instanceof PotionEffect) {
-            return ((PotionEffect) object).getType().equals(wrappedObject.getType());
-        } else if (object instanceof BukkitPotionEffectHolder) {
-            return ((BukkitPotionEffectHolder) object).wrappedObject.getType().equals(wrappedObject.getType());
+        if (object instanceof org.bukkit.potion.PotionEffect) {
+            return ((org.bukkit.potion.PotionEffect) object).getType().equals(wrappedObject.getType());
+        } else if (object instanceof BukkitPotionEffect) {
+            return ((BukkitPotionEffect) object).wrappedObject.getType().equals(wrappedObject.getType());
         } else if (object instanceof PotionEffectType) {
             return object.equals(wrappedObject.getType());
         }
-        return platformName().equals(PotionEffectHolder.ofNullable(object).mapOrNull(PotionEffectHolder::platformName));
+        return platformName().equals(PotionEffect.ofNullable(object).mapOrNull(PotionEffect::platformName));
     }
 
     @Override
     public boolean isSameType(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::isSameType);
+    }
+
+    @Override
+    public @NotNull ResourceLocation location() {
+        if (Server.isVersion(1, 18)) {
+            var namespacedKey = wrappedObject.getType().getKey();
+            return ResourceLocation.of(namespacedKey.getNamespace(), namespacedKey.getKey());
+        } else {
+            return ResourceLocation.of(getLocationPath(wrappedObject.getType()));
+        }
+    }
+
+    public static @NotNull String getLocationPath(@NotNull PotionEffectType effectType) {
+        String path = effectType.getName();
+        switch (path) {
+            //<editor-fold desc="Enum constants -> 1.18 flattening names" defaultstate="collapsed">
+            // @formatter:off
+
+            //case "SPEED": path = "speed"; break; - same
+            case "SLOW": path = "slowness"; break;
+            case "FAST_DIGGING": path = "haste"; break;
+            case "SLOW_DIGGING": path = "mining_fatigue"; break;
+            case "INCREASE_DAMAGE": path = "strength"; break;
+            case "HEAL": path = "instant_health"; break;
+            case "HARM": path = "instant_damage"; break;
+            case "JUMP": path = "jump_boost"; break;
+            case "CONFUSION": path = "nausea"; break;
+            //case "REGENERATION": path = "regeneration"; break; - same
+            case "DAMAGE_RESISTANCE": path = "resistance"; break;
+            //case "FIRE_RESISTANCE": path = "fire_resistance"; break; - same
+            //case "WATER_BREATHING": path = "water_breathing"; break; - same
+            //case "INVISIBILITY": path = "invisibility"; break; - same
+            //case "BLINDNESS": path = "blindness"; break; - same
+            //case "NIGHT_VISION": path = "night_vision"; break; - same
+            //case "HUNGER": path = "hunger"; break; - same
+            //case "WEAKNESS": path = "weakness"; break; - same
+            //case "POISON": path = "poison"; break; - same
+            //case "WITHER": path = "wither"; break; - same
+            //case "HEALTH_BOOST": path = "health_boost"; break; - same
+            //case "ABSORPTION": path = "absorption"; break; - same
+            //case "SATURATION": path = "saturation"; break; - same
+            //case "GLOWING": path = "glowing"; break; - same
+            //case "LEVITATION": path = "levitation"; break; - same
+            //case "LUCK": path = "luck"; break; - same
+            //case "UNLUCK": path = "unluck"; break; - same
+            //case "SLOW_FALLING": path = "slow_falling"; break; - same
+            //case "CONDUIT_POWER": path = "conduit_power"; break; - same
+            //case "DOLPHINS_GRACE": path = "dolphins_grace"; break; - same
+            //case "BAD_OMEN": path = "bad_omen"; break; - same
+            //case "HERO_OF_THE_VILLAGE": path = "hero_of_the_village"; break; - same
+
+            // @formatter:on
+            //</editor-fold>
+        }
+        return path.toLowerCase(Locale.ROOT);
     }
 }

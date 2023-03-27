@@ -44,7 +44,7 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
     @SuppressWarnings("PatternValidation")
     @Override
     public @NotNull ItemContent withId(@NotNull ResourceLocation id) {
-        return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), wrappedObject.count(), wrappedObject.nbt()));
+        return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.namespace(), id.path()), wrappedObject.count(), wrappedObject.nbt()));
     }
 
     @Override
@@ -103,7 +103,7 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
         @SuppressWarnings("PatternValidation")
         @Override
         public @NotNull ItemContent build() {
-            return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), count, tag == null ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
+            return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.namespace(), id.path()), count, tag == null ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
         }
     }
 }

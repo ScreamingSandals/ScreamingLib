@@ -22,7 +22,7 @@ import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.world.Location;
 
@@ -73,16 +73,16 @@ public interface LivingEntity extends BasicEntity, ProjectileShooter {
 
     @Nullable HumanEntity getHumanKiller();
 
-    boolean addPotionEffect(@NotNull PotionEffectHolder effect);
+    boolean addPotionEffect(@NotNull PotionEffect effect);
 
-    boolean addPotionEffects(@NotNull Collection<@NotNull PotionEffectHolder> effects);
+    boolean addPotionEffects(@NotNull Collection<@NotNull PotionEffect> effects);
 
-    boolean hasPotionEffect(@NotNull PotionEffectHolder type);
+    boolean hasPotionEffect(@NotNull PotionEffect type);
 
     /* Currently removes all potion effects of this type, should be changed */
-    void removePotionEffect(@NotNull PotionEffectHolder type);
+    void removePotionEffect(@NotNull PotionEffect type);
 
-    @NotNull List<@NotNull PotionEffectHolder> getActivePotionEffects();
+    @NotNull List<@NotNull PotionEffect> getActivePotionEffects();
 
     boolean getRemoveWhenFarAway();
 
