@@ -18,7 +18,10 @@ package org.screamingsandals.lib.packet;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -29,6 +32,12 @@ public class SClientboundAnimatePacket extends AbstractPacket {
 
     @Override
     public void write(PacketWriter writer) {
+        if (writer.protocol() >= 762 && animation.ordinal() == 1) {
+            // different packet for this version
+            writer.setCancelled(true);
+            writer.append(new ClientboundHurtAnimationPacket(entityId, 0));
+            return;
+        }
         writer.writeVarInt(entityId);
         writer.writeByte((byte) animation.ordinal());
     }
@@ -40,5 +49,18 @@ public class SClientboundAnimatePacket extends AbstractPacket {
         SWING_OFF_HAND,
         CRITICAL_EFFECT,
         MAGICAL_CRITICAL_EFFECT
+    }
+
+    @ApiStatus.Internal
+    @RequiredArgsConstructor
+    public static class ClientboundHurtAnimationPacket extends AbstractPacket {
+        private final int entityId;
+        private final float yaw;
+
+        @Override
+        public void write(@NotNull PacketWriter writer) {
+            writer.writeVarInt(entityId);
+            writer.writeFloat(yaw);
+        }
     }
 }
