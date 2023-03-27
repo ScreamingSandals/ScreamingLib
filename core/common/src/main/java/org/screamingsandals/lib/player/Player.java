@@ -343,13 +343,6 @@ public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudien
     void showPlayer(@NotNull Player player);
 
     /**
-     * Gets the player's {@link Channel}.
-     *
-     * @return the player connection
-     */
-    Channel getChannel();
-
-    /**
      * Gets the player's protocol version.
      *
      * @return the protocol version the player's client is connected with

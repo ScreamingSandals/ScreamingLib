@@ -28,6 +28,7 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.PacketMapper;
+import org.screamingsandals.lib.player.Players;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -58,6 +59,7 @@ public class BukkitPacketMapper extends PacketMapper {
             }
             writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(player, extraPacket));
         } catch (Throwable t) {
+            buffer.release();
             Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName());
             t.printStackTrace();
         }
@@ -76,7 +78,7 @@ public class BukkitPacketMapper extends PacketMapper {
 
     // TODO: Optimize: usage of write() instead and flushing manually at the end for multiple writes, also expose this method later on
     protected void sendRawPacket(Player player, ByteBuf buffer) {
-        var channel = player.getChannel();
+        var channel = Players.getNettyChannel(player);
         if (channel.isActive()) {
             var ctx = channel.pipeline().context("encoder");
             if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, soft-depend is sus

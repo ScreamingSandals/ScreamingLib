@@ -19,14 +19,14 @@ package org.screamingsandals.lib.packet.event;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.SCancellableAsyncEvent;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.event.player.PlayerEvent;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.PacketMethod;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class SPacketEvent implements PlayerEvent, SCancellableAsyncEvent {
+public class SPacketEvent implements PlayerEvent, SCancellableEvent {
     private final @NotNull Player player;
     private final @NotNull PacketMethod method;
     private final @NotNull Object packet;

@@ -376,14 +376,6 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     }
 
     @Override
-    public Channel getChannel() {
-        return (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(wrappedObject), ServerPlayerAccessor.getFieldConnection())
-                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
-                .getFieldResulted(ConnectionAccessor.getFieldChannel())
-                .raw();
-    }
-
-    @Override
     public @Nullable InetSocketAddress getAddress() {
         return ((org.bukkit.entity.Player) wrappedObject).getAddress();
     }
