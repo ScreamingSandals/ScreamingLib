@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.annotation.generators;
 
 import com.squareup.javapoet.*;
+import org.screamingsandals.lib.annotation.constants.Classes;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.Plugin;
@@ -40,14 +41,13 @@ public class MinestomMainClassGenerator extends MainClassGenerator {
     public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
         var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.MINESTOM);
 
-        var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
-        var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
-        var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
-        var screamingLoggerClass = ClassName.get("org.screamingsandals.lib.utils.logger", "Slf4jLoggerWrapper");
+        var pluginManagerClass = Classes.SLIB_PLUGINS;
+        var pluginDescriptionClass = Classes.SLIB_PLUGIN;
+        var screamingLoggerClass = Classes.SLIB_SLF4J_LOGGER_WRAPPER;
         var loggerClass = ClassName.get("org.slf4j", "Logger");
 
         var onLoadBuilder = preparePublicVoid("preInitialize")
-                .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"));
+                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLIB_CONTROLLABLE_IMPL);
 
 
         var serviceInitGenerator = ServiceInitGenerator
@@ -63,8 +63,7 @@ public class MinestomMainClassGenerator extends MainClassGenerator {
         sortedPair.getFirst().forEach(serviceInitGenerator::process);
 
         onLoadBuilder.addStatement("$T $N = this.getDescription().getName()", String.class, "name")
-                .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
-                .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key")
+                .addStatement("$T $N = $T.getPlugin($N)", pluginDescriptionClass, "description", pluginManagerClass, "name")
                 .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
                 .addStatement("$T $N = this.getLogger()", loggerClass, "slf4jLogger")
                 .addStatement("$T $N = new $T($N)", screamingLoggerClass, "screamingLogger", screamingLoggerClass, "slf4jLogger")

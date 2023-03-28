@@ -18,7 +18,6 @@ package org.screamingsandals.lib.annotation.utils;
 
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Types;
@@ -29,7 +28,6 @@ import java.util.List;
 public class ServiceContainer {
     private final Types types;
     private final @NotNull TypeElement service;
-    private final @Nullable TypeElement forwardedType;
 
     private final List<TypeElement> dependencies = new LinkedList<>();
     private final List<TypeElement> loadAfter = new LinkedList<>();
@@ -37,11 +35,19 @@ public class ServiceContainer {
     private final boolean earlyInitialization;
     private final boolean staticOnly;
     private final boolean coreService;
+    private final boolean provided;
 
     public boolean is(TypeElement typeElement) {
         if (typeElement == null) {
             return false;
         }
-        return types.isAssignable(service.asType(), typeElement.asType()) || (forwardedType != null && types.isSameType(typeElement.asType(), forwardedType.asType()));
+        return types.isAssignable(service.asType(), typeElement.asType());
+    }
+
+    public boolean isExactly(TypeElement typeElement) {
+        if (typeElement == null) {
+            return false;
+        }
+        return types.isSameType(service.asType(), typeElement.asType());
     }
 }

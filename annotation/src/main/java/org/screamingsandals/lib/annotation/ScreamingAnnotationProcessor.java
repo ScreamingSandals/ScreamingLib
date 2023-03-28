@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.annotation;
 
 import lombok.SneakyThrows;
+import org.screamingsandals.lib.annotation.constants.Classes;
 import org.screamingsandals.lib.annotation.generators.*;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
@@ -99,7 +100,7 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
             }
             var platformInitiators = new HashMap<PlatformType, List<ServiceContainer>>();
 
-            var platformManager = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.plugin.PluginManager");
+            var platformManager = processingEnv.getElementUtils().getTypeElement(Classes.SLIB_PLUGINS.canonicalName());
             var platformManagers = MiscUtils.getAllSpecificPlatformImplementations(
                     processingEnv,
                     platformManager,
@@ -112,7 +113,7 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
                     }
                 });
                 if (platformType.isServer()) {
-                    var core = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.Core");
+                    var core = processingEnv.getElementUtils().getTypeElement(Classes.SLIB_CORE.canonicalName());
                     platformInitiators.get(platformType).add(
                             MiscUtils.getAllSpecificPlatformImplementations(
                                     processingEnv,
@@ -123,7 +124,7 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
                     );
                 }
                 if (platformType.isProxy()) {
-                    var proxy = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.proxy.ProxyCore");
+                    var proxy = processingEnv.getElementUtils().getTypeElement(Classes.SLIB_PROXY_CORE.canonicalName());
                     platformInitiators.get(platformType).add(
                             MiscUtils.getAllSpecificPlatformImplementations(
                                     processingEnv,

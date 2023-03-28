@@ -29,11 +29,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public abstract class MainClassGenerator {
     public abstract void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException;
 
     protected Pair<List<ServiceContainer>, List<ServiceContainer>> sortServicesAndGetDependencies(ProcessingEnvironment processingEnvironment, List<ServiceContainer> autoInit, PlatformType platformType) {
+        var provided = new ArrayList<ServiceContainer>();
         var sorted = new ArrayList<ServiceContainer>();
         var waiting = new ArrayList<>(autoInit);
         while (!waiting.isEmpty()) {
@@ -41,13 +43,24 @@ public abstract class MainClassGenerator {
             waiting.clear();
             var delayEverything = new AtomicBoolean(false);
             copy.forEach(serviceContainer -> {
+                // if this is @ProvidedService, just save it to provided collection
+                if (serviceContainer.isProvided()) {
+                    provided.add(serviceContainer);
+                    return;
+                }
+                // If this implements any provided service, remove the provided service from the collection of provided services
+                provided.stream().filter(s -> s.is(serviceContainer.getService())).findFirst()
+                        .ifPresent(provided::remove);
+
                 var dependencies = serviceContainer.getDependencies();
                 var loadAfter = serviceContainer.getLoadAfter();
                 serviceContainer.getInit()
                         .stream()
                         .filter(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement))
                                 && copy.stream().noneMatch(s -> s.is(typeElement))
-                                && waiting.stream().noneMatch(s -> s.is(typeElement)))
+                                && waiting.stream().noneMatch(s -> s.is(typeElement))
+                                && provided.stream().noneMatch(s -> s.isExactly(typeElement))
+                        )
                         .map(typeElement ->
                                 MiscUtils.getAllSpecificPlatformImplementations(processingEnvironment,
                                         typeElement,
@@ -60,7 +73,8 @@ public abstract class MainClassGenerator {
                     dependencies.stream()
                             .filter(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement))
                                     && copy.stream().noneMatch(s -> s.is(typeElement))
-                                    && waiting.stream().noneMatch(s -> s.is(typeElement)))
+                                    && waiting.stream().noneMatch(s -> s.is(typeElement))
+                                    && provided.stream().noneMatch(s -> s.isExactly(typeElement)))
                             .map(typeElement -> MiscUtils.getAllSpecificPlatformImplementations(processingEnvironment,
                                     typeElement,
                                     List.of(platformType),
@@ -74,7 +88,7 @@ public abstract class MainClassGenerator {
                     }
                 } else if (!loadAfter.isEmpty()
                         && loadAfter.stream().anyMatch(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement))
-                        && (copy.stream().anyMatch(s -> s.is(typeElement)) || waiting.stream().anyMatch(s -> s.is(typeElement))))) {
+                        && (copy.stream().anyMatch(s -> s.is(typeElement)) || waiting.stream().anyMatch(s -> s.is(typeElement)) || provided.stream().anyMatch(s -> s.isExactly(typeElement))))) {
                     waiting.add(serviceContainer);
                     if (serviceContainer.isCoreService()) {
                         delayEverything.set(true);
@@ -87,6 +101,11 @@ public abstract class MainClassGenerator {
                     }
                 }
             });
+        }
+
+        if (!provided.isEmpty()) {
+            throw new UnsupportedOperationException("It is not possible to create a list of services: some @ProvidedServices remain unimplemented! "
+                    + provided.stream().map(s -> s.getService().getQualifiedName().toString()).collect(Collectors.joining(", ")));
         }
 
         var earlyInitialization = new ArrayList<ServiceContainer>();

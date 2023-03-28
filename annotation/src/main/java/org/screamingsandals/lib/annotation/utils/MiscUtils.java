@@ -127,16 +127,6 @@ public class MiscUtils {
         return List.of();
     }
 
-    public static TypeElement getForwardedType(ProcessingEnvironment environment, ForwardToService annotation) {
-        try {
-            annotation.value();
-        } catch (MirroredTypeException mte) {
-            var typeUtils = environment.getTypeUtils();
-            return (TypeElement) Objects.requireNonNull(typeUtils.asElement(mte.getTypeMirror()));
-        }
-        throw new UnsupportedOperationException("Can't resolve forwarded type!");
-    }
-
     public static List<TypeElement> getSafelyTypeElements(ProcessingEnvironment environment, Init annotation) {
         try {
             annotation.services();
@@ -150,10 +140,34 @@ public class MiscUtils {
         return List.of();
     }
 
-    public static Map<PlatformType, ServiceContainer> getAllSpecificPlatformImplementations(ProcessingEnvironment environment, TypeElement originalTypeElement, List<PlatformType> platformTypes, boolean strict) {
-        var forwardedAnnotation = originalTypeElement.getAnnotation(ForwardToService.class);
+    public static Map<PlatformType, ServiceContainer> getAllSpecificPlatformImplementations(ProcessingEnvironment environment, TypeElement typeElement, List<PlatformType> platformTypes, boolean strict) {
+        var abstractService = typeElement.getAnnotation(ProvidedService.class);
+        if (abstractService != null) {
+            if (typeElement.getModifiers().contains(Modifier.FINAL)) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": A service annotated with @ProvidedService cannot have final modifier on it!");
+            }
 
-        var typeElement = forwardedAnnotation != null ? getForwardedType(environment, forwardedAnnotation) : originalTypeElement;
+            if (typeElement.getAnnotation(Service.class) != null || typeElement.getAnnotation(AbstractService.class) != null) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": @ProvidedService annotation cannot be mixed with @Service or @AbstractService annotation!");
+            }
+
+            if (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": @ProvidedService annotation cannot be mixed with @lombok.UtilityClass annotation!");
+            }
+
+            var container = new ServiceContainer(
+                    environment.getTypeUtils(),
+                    typeElement,
+                    typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
+                    false,
+                    typeElement.getAnnotation(InternalCoreService.class) != null,
+                    true
+            );
+
+            return platformTypes
+                    .stream()
+                    .collect(Collectors.toMap(s -> s, o -> container));
+        }
 
         var mappingAnnotation = typeElement.getAnnotation(AbstractService.class);
         if (mappingAnnotation == null) {
@@ -162,14 +176,14 @@ public class MiscUtils {
                 var container = new ServiceContainer(
                         environment.getTypeUtils(),
                         typeElement,
-                        forwardedAnnotation != null ? originalTypeElement : null,
                         typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
                         service.staticOnly() || (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null)
                                 || (typeElement.getKind() == ElementKind.CLASS && typeElement.getEnclosedElements().stream()
                                 .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
                                 .allMatch(element -> element.getModifiers().contains(Modifier.PRIVATE))
                                 && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))),
-                        typeElement.getAnnotation(InternalCoreService.class) != null
+                        typeElement.getAnnotation(InternalCoreService.class) != null,
+                        false
                 );
                 container.getDependencies().addAll(getSafelyTypeElements(environment, service));
                 container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, service));
@@ -228,14 +242,14 @@ public class MiscUtils {
                 var container = new ServiceContainer(
                         environment.getTypeUtils(),
                         resolvedElement,
-                        forwardedAnnotation != null ? originalTypeElement : null,
                         resolvedElement.getAnnotation(InternalEarlyInitialization.class) != null || typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
                         (resolvedElementService != null && resolvedElementService.staticOnly()) || (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null),
                         resolvedElement.getAnnotation(InternalCoreService.class) != null || typeElement.getAnnotation(InternalCoreService.class) != null
                                 || (typeElement.getKind() == ElementKind.CLASS && typeElement.getEnclosedElements().stream()
                                 .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
                                 .allMatch(element -> element.getModifiers().contains(Modifier.PRIVATE))
-                                && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString())))
+                                && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))),
+                        false
                 );
                 if (resolvedElementService != null) {
                     container.getDependencies().addAll(getSafelyTypeElements(environment, resolvedElement.getAnnotation(Service.class)));
@@ -318,7 +332,7 @@ public class MiscUtils {
                 var type = argument.asType();
                 if (type.getKind() == TypeKind.DECLARED) {
                     var el = (TypeElement) environment.getTypeUtils().asElement(type);
-                    if ((el.getAnnotation(Service.class) != null || el.getAnnotation(AbstractService.class) != null) && !container.getDependencies().contains(el)) {
+                    if ((el.getAnnotation(Service.class) != null || el.getAnnotation(AbstractService.class) != null || el.getAnnotation(ProvidedService.class) != null) && !container.getDependencies().contains(el)) {
                         container.getDependencies().add(el);
                     }
                 }

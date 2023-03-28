@@ -21,13 +21,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation is similar to {@link Service}, however instead of instantiating the class,
+ * the annotation processor will just register it and expect child service to be provided.
+ * <p>
+ * If not child service is provided and service annotated with this annotation is requested,
+ * the annotation processor should throw an exception.
+ * <p>
+ * This service cannot be static service and cannot have final modifier
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-public @interface ForwardToService {
-    /**
-     * Contains service or abstract service which should be initialized instead of this.
-     *
-     * @return class annotated with service or abstract service
-     */
-    Class<?> value();
+public @interface ProvidedService {
 }

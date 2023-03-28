@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.annotation.generators;
 
 import com.squareup.javapoet.*;
+import org.screamingsandals.lib.annotation.constants.Classes;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.Plugin;
@@ -38,10 +39,9 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
     public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
         var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.VELOCITY);
 
-        var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
-        var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
-        var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
-        var screamingLoggerClass = ClassName.get("org.screamingsandals.lib.utils.logger", "Slf4jLoggerWrapper");
+        var pluginManagerClass = Classes.SLIB_PLUGINS;
+        var pluginDescriptionClass = Classes.SLIB_PLUGIN;
+        var screamingLoggerClass = Classes.SLIB_SLF4J_LOGGER_WRAPPER;
         var loggerClass = ClassName.get("org.slf4j", "Logger");
 
         var velocityProxyServerClass = ClassName.get("com.velocitypowered.api.proxy", "ProxyServer");
@@ -53,7 +53,7 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                 .addParameter(ParameterSpec.builder(velocityProxyServerClass, "proxyServer").build())
                 .addParameter(ParameterSpec.builder(loggerClass, "slf4jLogger").build())
                 .addParameter(ParameterSpec.builder(guiceInjectorClass, "guice").build())
-                .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"))
+                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLIB_CONTROLLABLE_IMPL)
                 .addStatement("this.$N = $N", "guiceInjector", "guice")
                 .addStatement("this.$N = new $T($N)", "screamingLogger", screamingLoggerClass, "slf4jLogger");
 
@@ -91,8 +91,8 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
         sortedPair.getSecond().forEach(serviceInitGenerator::process);
 
         //build container
-        onEnableBuilder.addStatement("$T $N = $T.createKey($S).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, pluginAnnotation.id())
-                .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key");
+        onEnableBuilder
+                .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, pluginAnnotation.id());
 
         if (pluginContainer.getEnclosedElements().stream().filter(element -> element.getKind() == ElementKind.CONSTRUCTOR).map(el -> (ExecutableElement) el).anyMatch(el -> el.getParameters().size() == 1 && "com.google.inject.Injector".equals(el.getParameters().get(0).asType().toString()))) {
             onEnableBuilder.addStatement("this.$N = new $T(guiceInjector)", "pluginContainer", pluginContainer);

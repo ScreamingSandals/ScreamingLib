@@ -20,6 +20,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import lombok.RequiredArgsConstructor;
+import org.screamingsandals.lib.annotation.constants.Classes;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.event.OnEvent;
@@ -163,23 +164,23 @@ public final class ServiceInitGenerator {
     };
     private final Map<String, BiConsumer<StringBuilder, List<Object>>> initArguments = new HashMap<>() {
         {
-            put("org.screamingsandals.lib.utils.ControllableImpl", (statement, processedArguments) -> {
+            put(Classes.SLIB_CONTROLLABLE_IMPL.canonicalName(), (statement, processedArguments) -> {
                 statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N.child()");
                 processedArguments.add("pluginControllable");
             });
-            put("org.screamingsandals.lib.utils.Controllable", (statement, processedArguments) -> {
+            put(Classes.SLIB_CONTROLLABLE.canonicalName(), (statement, processedArguments) -> {
                 statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N.child()");
                 processedArguments.add("pluginControllable");
             });
-            put("org.screamingsandals.lib.plugin.PluginContainer", (statement, processedArguments) -> {
+            put(Classes.SLIB_PLUGIN_CONTAINER.canonicalName(), (statement, processedArguments) -> {
                 statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N");
                 processedArguments.add("pluginContainer");
             });
-            put("org.screamingsandals.lib.plugin.PluginDescription", (statement, processedArguments) -> {
+            put(Classes.SLIB_PLUGIN.canonicalName(), (statement, processedArguments) -> {
                 statement.append("$N");
                 processedArguments.add("description");
             });
-            put("org.screamingsandals.lib.utils.logger.LoggerWrapper", (statement, processedArguments) -> {
+            put(Classes.SLIB_LOGGER_WRAPPER.canonicalName(), (statement, processedArguments) -> {
                 statement.append("$N");
                 processedArguments.add("screamingLogger");
             });
