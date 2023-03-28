@@ -28,7 +28,7 @@ import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeRegistry;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
-import org.screamingsandals.lib.firework.FireworkEffectMapping;
+import org.screamingsandals.lib.firework.FireworkEffectRegistry;
 import org.screamingsandals.lib.item.meta.EnchantmentRegistry;
 import org.screamingsandals.lib.item.meta.PotionEffectRegistry;
 import org.screamingsandals.lib.item.meta.PotionRegistry;
@@ -66,7 +66,7 @@ import org.screamingsandals.lib.world.weather.WeatherRegistry;
         Entities.class,
         AttributeTypeRegistry.class,
         AttributeMapping.class,
-        FireworkEffectMapping.class,
+        FireworkEffectRegistry.class,
         EnchantmentRegistry.class,
         PotionEffectRegistry.class,
         PotionRegistry.class,

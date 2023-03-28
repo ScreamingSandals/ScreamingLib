@@ -32,7 +32,7 @@ import java.util.function.Function;
 public abstract class Registry<T extends RegistryItem> {
     protected final @NotNull Class<T> type;
     private final @NotNull Cache<@NotNull Object, @NotNull T> cache = new LFUCache<>(200);
-    private final @NotNull Map<@NotNull Class<?>, Function<@NotNull Object, @NotNull T>> specialMapping = new HashMap<>();
+    private final @NotNull Map<@NotNull Class<?>, Function<@NotNull Object, @Nullable T>> specialMapping = new HashMap<>();
     private @Nullable RegistryItemStream<T> cachedBasicStream;
 
     @Contract("null -> null")
@@ -73,7 +73,7 @@ public abstract class Registry<T extends RegistryItem> {
 
     @SuppressWarnings("unchecked")
     @ApiStatus.Internal
-    protected <E> void specialType(@NotNull Class<E> eClass, @NotNull Function<@NotNull E, @NotNull T> function) {
+    protected <E> void specialType(@NotNull Class<E> eClass, @NotNull Function<@NotNull E, @Nullable T> function) {
         specialMapping.put(eClass, (Function<Object, T>) function);
     }
 

@@ -17,22 +17,22 @@
 package org.screamingsandals.lib.bukkit.firework;
 
 import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.firework.FireworkEffectHolder;
+import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> implements FireworkEffectHolder {
-    public BukkitFireworkEffectHolder(FireworkEffect.@NotNull Type type) {
-        this(FireworkEffect.builder().with(type).withColor(Color.WHITE).build());
+public class BukkitFireworkEffect extends BasicWrapper<org.bukkit.FireworkEffect> implements FireworkEffect {
+    public BukkitFireworkEffect(org.bukkit.FireworkEffect.@NotNull Type type) {
+        this(org.bukkit.FireworkEffect.builder().with(type).withColor(Color.WHITE).build());
     }
 
-    public BukkitFireworkEffectHolder(@NotNull FireworkEffect wrappedObject) {
+    public BukkitFireworkEffect(@NotNull org.bukkit.FireworkEffect wrappedObject) {
         super(wrappedObject);
     }
 
@@ -68,10 +68,10 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public @NotNull FireworkEffectHolder withColors(@NotNull List<org.screamingsandals.lib.spectator.@NotNull Color> colors) {
+    public @NotNull FireworkEffect withColors(@NotNull List<org.screamingsandals.lib.spectator.@NotNull Color> colors) {
         /* Dear Bukkit API, I hate your inconsistency so much */
-        return new BukkitFireworkEffectHolder(
-                FireworkEffect.builder()
+        return new BukkitFireworkEffect(
+                org.bukkit.FireworkEffect.builder()
                         .with(wrappedObject.getType())
                         .withColor(colors.stream().map(rgbLike -> Color.fromRGB(rgbLike.red(), rgbLike.green(), rgbLike.blue())).collect(Collectors.toList()))
                         .withFade(wrappedObject.getFadeColors())
@@ -82,10 +82,10 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public @NotNull FireworkEffectHolder withFadeColors(@NotNull List<org.screamingsandals.lib.spectator.@NotNull Color> fadeColors) {
+    public @NotNull FireworkEffect withFadeColors(@NotNull List<org.screamingsandals.lib.spectator.@NotNull Color> fadeColors) {
         /* Dear Bukkit API, I hate your inconsistency so much */
-        return new BukkitFireworkEffectHolder(
-                FireworkEffect.builder()
+        return new BukkitFireworkEffect(
+                org.bukkit.FireworkEffect.builder()
                         .with(wrappedObject.getType())
                         .withColor(wrappedObject.getColors())
                         .withFade(fadeColors.stream().map(rgbLike -> Color.fromRGB(rgbLike.red(), rgbLike.green(), rgbLike.blue())).collect(Collectors.toList()))
@@ -96,10 +96,10 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public @NotNull FireworkEffectHolder withFlicker(boolean flicker) {
+    public @NotNull FireworkEffect withFlicker(boolean flicker) {
         /* Dear Bukkit API, I hate your inconsistency so much */
-        return new BukkitFireworkEffectHolder(
-                FireworkEffect.builder()
+        return new BukkitFireworkEffect(
+                org.bukkit.FireworkEffect.builder()
                         .with(wrappedObject.getType())
                         .withColor(wrappedObject.getColors())
                         .withFade(wrappedObject.getFadeColors())
@@ -110,10 +110,10 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public @NotNull FireworkEffectHolder withTrail(boolean trail) {
+    public @NotNull FireworkEffect withTrail(boolean trail) {
         /* Dear Bukkit API, I hate your inconsistency so much */
-        return new BukkitFireworkEffectHolder(
-                FireworkEffect.builder()
+        return new BukkitFireworkEffect(
+                org.bukkit.FireworkEffect.builder()
                         .with(wrappedObject.getType())
                         .withColor(wrappedObject.getColors())
                         .withFade(wrappedObject.getFadeColors())
@@ -125,13 +125,13 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof FireworkEffect.Type) {
+        if (object instanceof org.bukkit.FireworkEffect.Type) {
             return wrappedObject.getType() == object;
         }
-        if (object instanceof FireworkEffect || object instanceof FireworkEffectHolder) {
+        if (object instanceof org.bukkit.FireworkEffect || object instanceof FireworkEffect) {
             return equals(object);
         }
-        return equals(FireworkEffectHolder.ofNullable(object));
+        return equals(FireworkEffect.ofNullable(object));
     }
 
     @Override
@@ -142,9 +142,23 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     @SuppressWarnings("unchecked")
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
-        if (type == FireworkEffect.Type.class) {
+        if (type == org.bukkit.FireworkEffect.Type.class) {
             return (T) wrappedObject.getType();
         }
         return super.as(type);
+    }
+
+    @Override
+    public @NotNull ResourceLocation location() {
+        return ResourceLocation.of(getLocationPath(wrappedObject.getType()));
+    }
+
+    public static @NotNull String getLocationPath(org.bukkit.FireworkEffect.@NotNull Type type) {
+        if (type == org.bukkit.FireworkEffect.Type.BALL) {
+            return "small_ball";
+        } else if (type == org.bukkit.FireworkEffect.Type.BALL_LARGE) {
+            return "large_ball";
+        }
+        return type.name();
     }
 }

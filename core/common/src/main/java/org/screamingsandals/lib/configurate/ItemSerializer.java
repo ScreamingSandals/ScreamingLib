@@ -20,8 +20,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.firework.FireworkEffectHolder;
-import org.screamingsandals.lib.firework.FireworkEffectMapping;
+import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
@@ -43,7 +42,6 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
@@ -261,20 +259,21 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
             var color = node.node(COLOR_KEY);
             if (!color.empty()) {
                 var c = Color.hexOrName(color.getString(""));
-                if (c != null) {
-                    builder.color(c);
-                }
+                builder.color(c);
             }
 
             var fireworkEffects = node.node(FIREWORK_EFFECTS_KEY);
             if (!fireworkEffects.empty()) {
                 if (fireworkEffects.isList()) {
                     builder.fireworkEffect(fireworkEffects.childrenList().stream()
-                            .map(FireworkEffectMapping::resolve)
+                            .map(FireworkEffect::ofNullable)
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList()));
                 } else {
-                    FireworkEffectHolder.ofNullable(fireworkEffects).ifNotNull(builder::fireworkEffect);
+                    var fireworkEffect = FireworkEffect.ofNullable(fireworkEffects);
+                    if (fireworkEffect != null) {
+                        builder.fireworkEffect(fireworkEffect);
+                    }
                 }
             }
 

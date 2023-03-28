@@ -16,19 +16,21 @@
 
 package org.screamingsandals.lib.firework;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.spectator.Color;
-import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 import java.util.List;
 
-public interface FireworkEffectHolder extends ComparableWrapper {
+public interface FireworkEffect extends RegistryItem {
 
+    @ApiStatus.Experimental
     @NotNull String platformName();
 
     @NotNull List<@NotNull Color> colors();
@@ -40,16 +42,16 @@ public interface FireworkEffectHolder extends ComparableWrapper {
     boolean trail();
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull FireworkEffectHolder withColors(@NotNull List<@NotNull Color> colors);
+    @NotNull FireworkEffect withColors(@NotNull List<@NotNull Color> colors);
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull FireworkEffectHolder withFadeColors(@NotNull List<@NotNull Color> fadeColors);
+    @NotNull FireworkEffect withFadeColors(@NotNull List<@NotNull Color> fadeColors);
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull FireworkEffectHolder withFlicker(boolean flicker);
+    @NotNull FireworkEffect withFlicker(boolean flicker);
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull FireworkEffectHolder withTrail(boolean trail);
+    @NotNull FireworkEffect withTrail(boolean trail);
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
     boolean is(@Nullable Object @NotNull... objects);
@@ -59,7 +61,7 @@ public interface FireworkEffectHolder extends ComparableWrapper {
     boolean is(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    static @NotNull FireworkEffectHolder of(@NotNull Object effect) {
+    static @NotNull FireworkEffect of(@NotNull Object effect) {
         var result = ofNullable(effect);
         Preconditions.checkNotNullIllegal(result, "Could not find firework effect: " + effect);
         return result;
@@ -67,14 +69,14 @@ public interface FireworkEffectHolder extends ComparableWrapper {
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
     @Contract("null -> null")
-    static @Nullable FireworkEffectHolder ofNullable(@Nullable Object effect) {
-        if (effect instanceof FireworkEffectHolder) {
-            return (FireworkEffectHolder) effect;
+    static @Nullable FireworkEffect ofNullable(@Nullable Object effect) {
+        if (effect instanceof FireworkEffect) {
+            return (FireworkEffect) effect;
         }
-        return FireworkEffectMapping.resolve(effect);
+        return FireworkEffectRegistry.getInstance().resolveMapping(effect);
     }
 
-    static @Unmodifiable @NotNull List<@NotNull FireworkEffectHolder> all() {
-        return FireworkEffectMapping.getValues();
+    static @NotNull RegistryItemStream<@NotNull FireworkEffect> all() {
+        return FireworkEffectRegistry.getInstance().getRegistryItemStream();
     }
 }

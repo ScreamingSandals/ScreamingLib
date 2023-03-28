@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.ItemAttributeHolder;
-import org.screamingsandals.lib.firework.FireworkEffectHolder;
+import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemMeta;
@@ -292,11 +292,11 @@ public interface ItemStackBuilder extends MetadataConsumer {
     default @NotNull ItemStackBuilder fireworkEffect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            list.forEach(effect1 -> NullableExtension.ifNotNull(FireworkEffectHolder.ofNullable(effect1), fireworkEffectHolder -> this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder)));
+            list.forEach(effect1 -> NullableExtension.ifNotNull(FireworkEffect.ofNullable(effect1), fireworkEffectHolder -> this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder)));
             return this;
         }
 
-        NullableExtension.ifNotNull(FireworkEffectHolder.ofNullable(effect), fireworkEffectHolder -> {
+        NullableExtension.ifNotNull(FireworkEffect.ofNullable(effect), fireworkEffectHolder -> {
             if (this.supportsMetadata(ItemMeta.FIREWORK_EFFECTS)) {
                 this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder);
             } else {

@@ -18,7 +18,7 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.firework.FireworkEffectHolder;
+import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.spectator.Color;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<FireworkEffectHolder> {
+public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<FireworkEffect> {
     private static final @NotNull String TYPE_KEY = "type";
     private static final @NotNull String FLICKER_KEY = "flicker";
     private static final @NotNull String TRAIL_KEY = "trail";
@@ -39,10 +39,10 @@ public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer 
     public static final @NotNull FireworkEffectHolderSerializer INSTANCE = new FireworkEffectHolderSerializer();
 
     @Override
-    public @NotNull FireworkEffectHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull FireworkEffect deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             if (!node.isMap()) {
-                return FireworkEffectHolder.of(node.getString());
+                return FireworkEffect.of(node.getString());
             }
 
             var effectNode = node.node(TYPE_KEY);
@@ -51,7 +51,7 @@ public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer 
             var colorsNode = node.node(COLORS_KEY);
             var fadeColorsNode = node.node(FADE_COLORS_KEY);
 
-            var holder = FireworkEffectHolder.of(effectNode.getString())
+            var holder = FireworkEffect.of(effectNode.getString())
                     .withFlicker(flickerNode.getBoolean(true))
                     .withTrail(trailNode.getBoolean(true));
 
@@ -92,7 +92,7 @@ public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer 
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable FireworkEffectHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable FireworkEffect obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

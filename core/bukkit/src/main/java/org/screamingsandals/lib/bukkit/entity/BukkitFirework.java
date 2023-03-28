@@ -16,10 +16,9 @@
 
 package org.screamingsandals.lib.bukkit.entity;
 
-import org.bukkit.FireworkEffect;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Firework;
-import org.screamingsandals.lib.firework.FireworkEffectHolder;
+import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.utils.Pair;
 
 import java.util.List;
@@ -31,17 +30,17 @@ public class BukkitFirework extends BukkitProjectileEntity implements Firework {
     }
 
     @Override
-    public void setEffect(@NotNull List<@NotNull FireworkEffectHolder> fireworkEffect, int power) {
+    public void setEffect(@NotNull List<@NotNull FireworkEffect> fireworkEffect, int power) {
         var meta = ((org.bukkit.entity.Firework) wrappedObject).getFireworkMeta();
         meta.setPower(power);
-        meta.addEffects(fireworkEffect.stream().map(p -> p.as(FireworkEffect.class)).collect(Collectors.toList()));
+        meta.addEffects(fireworkEffect.stream().map(p -> p.as(org.bukkit.FireworkEffect.class)).collect(Collectors.toList()));
         ((org.bukkit.entity.Firework) wrappedObject).setFireworkMeta(meta);
     }
 
     @Override
-    public @NotNull Pair<@NotNull List<@NotNull FireworkEffectHolder>, @NotNull Integer> getEffect() {
+    public @NotNull Pair<@NotNull List<@NotNull FireworkEffect>, @NotNull Integer> getEffect() {
         var meta = ((org.bukkit.entity.Firework) wrappedObject).getFireworkMeta();
-        return Pair.of(meta.getEffects().stream().map(FireworkEffectHolder::of).collect(Collectors.toList()), meta.getPower());
+        return Pair.of(meta.getEffects().stream().map(FireworkEffect::of).collect(Collectors.toList()), meta.getPower());
     }
 
     @Override

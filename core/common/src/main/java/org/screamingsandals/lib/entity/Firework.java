@@ -17,16 +17,16 @@
 package org.screamingsandals.lib.entity;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.firework.FireworkEffectHolder;
+import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.utils.Pair;
 
 import java.util.List;
 
 public interface Firework extends ProjectileEntity {
 
-    void setEffect(@NotNull List<@NotNull FireworkEffectHolder> fireworkEffect, int power);
+    void setEffect(@NotNull List<@NotNull FireworkEffect> fireworkEffect, int power);
 
-    @NotNull Pair<@NotNull List<@NotNull FireworkEffectHolder>, @NotNull Integer> getEffect();
+    @NotNull Pair<@NotNull List<@NotNull FireworkEffect>, @NotNull Integer> getEffect();
 
     void detonate();
 
