@@ -18,6 +18,7 @@ package org.screamingsandals.lib.annotation.utils;
 
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Types;
@@ -26,25 +27,32 @@ import java.util.List;
 
 @Data
 public class ServiceContainer {
-    private final Types types;
+    private final @NotNull Types types;
     private final @NotNull TypeElement service;
 
-    private final List<TypeElement> dependencies = new LinkedList<>();
-    private final List<TypeElement> loadAfter = new LinkedList<>();
-    private final List<TypeElement> init = new LinkedList<>();
+    private final @NotNull List<@NotNull TypeElement> dependencies = new LinkedList<>();
+    private final @NotNull List<@NotNull TypeElement> loadAfter = new LinkedList<>();
+    private final @NotNull List<@NotNull TypeElement> init = new LinkedList<>();
     private final boolean earlyInitialization;
     private final boolean staticOnly;
     private final boolean coreService;
     private final boolean provided;
+    private boolean delayControllables;
 
-    public boolean is(TypeElement typeElement) {
+    public static @NotNull ServiceContainer createPluginService(@NotNull Types types, @NotNull TypeElement plugin) {
+        var service = new ServiceContainer(types, plugin, false, false, false, false);
+        service.delayControllables = true;
+        return service;
+    }
+
+    public boolean is(@Nullable TypeElement typeElement) {
         if (typeElement == null) {
             return false;
         }
         return types.isAssignable(service.asType(), typeElement.asType());
     }
 
-    public boolean isExactly(TypeElement typeElement) {
+    public boolean isExactly(@Nullable TypeElement typeElement) {
         if (typeElement == null) {
             return false;
         }

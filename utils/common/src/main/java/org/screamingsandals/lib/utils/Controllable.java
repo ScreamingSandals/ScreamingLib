@@ -20,13 +20,15 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Controllable {
 
-    Controllable enable(@NotNull Runnable enableMethod);
+    @NotNull Controllable pluginLoad(@NotNull Runnable pluginLoadMethod);
 
-    Controllable postEnable(@NotNull Runnable postEnable);
+    @NotNull Controllable enable(@NotNull Runnable enableMethod);
 
-    Controllable preDisable(@NotNull Runnable preDisable);
+    @NotNull Controllable postEnable(@NotNull Runnable postEnable);
 
-    Controllable disable(@NotNull Runnable disableMethod);
+    @NotNull Controllable preDisable(@NotNull Runnable preDisable);
 
-    Controllable child();
+    @NotNull Controllable disable(@NotNull Runnable disableMethod);
+
+    @NotNull Controllable child();
 }

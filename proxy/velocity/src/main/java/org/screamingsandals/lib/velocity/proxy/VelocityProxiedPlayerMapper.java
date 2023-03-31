@@ -27,6 +27,7 @@ import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 import org.screamingsandals.lib.proxy.ServerWrapper;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.internal.PlatformPluginObject;
 import org.screamingsandals.lib.velocity.proxy.event.ChatEventHandlerFactory;
 import org.screamingsandals.lib.velocity.proxy.event.PlayerLeaveEventFactory;
 import org.screamingsandals.lib.velocity.proxy.event.PlayerLoginEventFactory;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
 public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     private final @NotNull ProxyServer proxyServer;
 
-    public VelocityProxiedPlayerMapper(@NotNull Object plugin, @NotNull ProxyServer proxyServer) {
+    public VelocityProxiedPlayerMapper(@PlatformPluginObject @NotNull Object plugin, @NotNull ProxyServer proxyServer) {
         this.proxyServer = proxyServer;
         var backend = new AdventureBackend();
         new ChatEventHandlerFactory(plugin, proxyServer);

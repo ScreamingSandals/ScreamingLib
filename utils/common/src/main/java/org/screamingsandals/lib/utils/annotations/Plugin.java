@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * An annotation specifying the main plugin class.
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.PACKAGE})
 public @interface Plugin {
     /**
      * Defines a plugin identifier, should be your plugin's name.

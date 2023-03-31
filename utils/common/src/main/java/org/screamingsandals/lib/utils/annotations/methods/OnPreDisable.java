@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * The OnPreDisable annotation is used to mark method in {@link org.screamingsandals.lib.utils.annotations.Service}
  * which can be bound into Controllable.
- * Each service can have only OnPreDisable method.
+ * Each service can have only one OnPreDisable method.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * The OnEnable annotation is used to mark method in {@link org.screamingsandals.lib.utils.annotations.Service}
  * which can be bound into Controllable.
- * Each service can have only OnEnable method.
+ * Each service can have only one OnEnable method.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

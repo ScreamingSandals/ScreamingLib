@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * The OnPostConstruct annotation is used to mark method in {@link org.screamingsandals.lib.utils.annotations.Service}
  * which has to be called immediately after construction.
- * Each service can have only OnPostConstruct method.
+ * Each service can have only one OnPostConstruct method.
  *
  * This annotation is mainly used for internal ScreamingLib services and may not have any utilization outside.
  */

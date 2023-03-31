@@ -21,22 +21,25 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
+import org.screamingsandals.lib.utils.annotations.methods.OnPluginLoad;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
+import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.api.Wrapper;
 import org.slf4j.Logger;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.file.Path;
 
 @Getter
+@Deprecated
 public abstract class PluginContainer implements Wrapper {
     private Plugin pluginDescription;
     private LoggerWrapper logger;
 
     @ApiStatus.Internal
-    public void init(@NotNull Plugin pluginDescription, @NotNull LoggerWrapper logger) {
+    @OnPostConstruct
+    public final void init(@NotNull Plugin pluginDescription, @NotNull LoggerWrapper logger) {
         if (this.pluginDescription != null) {
             throw new UnsupportedOperationException(pluginDescription.name() + " is already initialized!");
         }
@@ -44,41 +47,8 @@ public abstract class PluginContainer implements Wrapper {
         this.logger = logger;
     }
 
-    // stolen from bukkit api ;)
     public void saveResource(@NotNull String resourcePath, boolean replace) {
-        if ("".equals(resourcePath)) {
-            throw new IllegalArgumentException("ResourcePath cannot be null or empty");
-        }
-
-        resourcePath = resourcePath.replace('\\', '/');
-        var in = getClass().getResourceAsStream("/" + resourcePath);
-        if (in == null) {
-            throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in classpath");
-        }
-
-        var outFile = pluginDescription.dataFolder().resolve(resourcePath).toFile();
-        var outDir = outFile.getParentFile();
-
-        if (!outDir.exists()) {
-            outDir.mkdirs();
-        }
-
-        try {
-            if (!outFile.exists() || replace) {
-                var out = new FileOutputStream(outFile);
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-                out.close();
-                in.close();
-            } else {
-                getLogger().warn("Could not save " + outFile.getName() + " to " + outFile + " because " + outFile.getName() + " already exists.");
-            }
-        } catch (IOException ex) {
-            getLogger().error("Could not save " + outFile.getName() + " to " + outFile, ex);
-        }
+        PluginUtils.saveResource(getPluginDescription(), getLogger(), resourcePath, replace);
     }
 
     public @NotNull Path getDataFolder() {
@@ -98,6 +68,8 @@ public abstract class PluginContainer implements Wrapper {
         return getPluginDescription().as(type);
     }
 
+    @OnPluginLoad
+    @ApiStatus.OverrideOnly
     public void load() {
     }
 
@@ -111,7 +83,7 @@ public abstract class PluginContainer implements Wrapper {
     public void postEnable() {
     }
 
-    @OnPostEnable
+    @OnPreDisable
     @ApiStatus.OverrideOnly
     public void preDisable() {
     }

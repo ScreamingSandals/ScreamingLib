@@ -24,6 +24,7 @@ import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.internal.PlatformPluginObject;
 import org.screamingsandals.lib.velocity.tasker.task.VelocityTaskerTask;
 
 @Service
@@ -31,7 +32,7 @@ public class VelocityTasker extends Tasker {
     private final @NotNull Object owner;
     private final @NotNull Scheduler scheduler;
 
-    public VelocityTasker(@NotNull Object owner, @NotNull Scheduler scheduler) {
+    public VelocityTasker(@PlatformPluginObject @NotNull Object owner, @NotNull Scheduler scheduler) {
         this.owner = owner;
         this.scheduler = scheduler;
     }

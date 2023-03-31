@@ -29,6 +29,7 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.nio.file.Files;
@@ -43,7 +44,7 @@ import java.util.*;
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
 public class ScreamingAnnotationProcessor extends AbstractProcessor {
-    private TypeElement pluginContainer;
+    private QualifiedNameable pluginContainer;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -66,11 +67,13 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
                     throw new RuntimeException("@Plugin can be used only once");
                 }
                 var element = elements.iterator().next(); // why it's not list
-                if (element.getKind() != ElementKind.CLASS || element.getModifiers().contains(Modifier.ABSTRACT)) {
-                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@Plugin can be applied only too non-abstract class");
-                    throw new RuntimeException("@Plugin can be applied only too non-abstract class");
+                if (element.getKind() != ElementKind.PACKAGE) {
+                    if (element.getKind() != ElementKind.CLASS || element.getModifiers().contains(Modifier.ABSTRACT)) {
+                        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@Plugin can be applied only too non-abstract class");
+                        throw new RuntimeException("@Plugin can be applied only too non-abstract class");
+                    }
                 }
-                pluginContainer = (TypeElement) element;
+                pluginContainer = (QualifiedNameable) element;
             }
         }
 
@@ -100,7 +103,7 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
             }
             var platformInitiators = new HashMap<PlatformType, List<ServiceContainer>>();
 
-            var platformManager = processingEnv.getElementUtils().getTypeElement(Classes.SLIB_PLUGINS.canonicalName());
+            var platformManager = processingEnv.getElementUtils().getTypeElement(Classes.SLib.PLUGINS_SERVICE.canonicalName());
             var platformManagers = MiscUtils.getAllSpecificPlatformImplementations(
                     processingEnv,
                     platformManager,
@@ -113,7 +116,7 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
                     }
                 });
                 if (platformType.isServer()) {
-                    var core = processingEnv.getElementUtils().getTypeElement(Classes.SLIB_CORE.canonicalName());
+                    var core = processingEnv.getElementUtils().getTypeElement(Classes.SLib.CORE.canonicalName());
                     platformInitiators.get(platformType).add(
                             MiscUtils.getAllSpecificPlatformImplementations(
                                     processingEnv,
@@ -124,7 +127,7 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
                     );
                 }
                 if (platformType.isProxy()) {
-                    var proxy = processingEnv.getElementUtils().getTypeElement(Classes.SLIB_PROXY_CORE.canonicalName());
+                    var proxy = processingEnv.getElementUtils().getTypeElement(Classes.SLib.PROXY_CORE.canonicalName());
                     platformInitiators.get(platformType).add(
                             MiscUtils.getAllSpecificPlatformImplementations(
                                     processingEnv,

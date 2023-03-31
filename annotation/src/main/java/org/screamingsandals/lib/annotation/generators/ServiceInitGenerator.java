@@ -20,11 +20,14 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.annotation.constants.Classes;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.*;
+import org.screamingsandals.lib.utils.annotations.internal.PlatformPluginObject;
 import org.screamingsandals.lib.utils.annotations.methods.*;
 import org.screamingsandals.lib.utils.annotations.parameters.ConfigFile;
 import org.screamingsandals.lib.utils.annotations.parameters.DataFolder;
@@ -48,162 +51,163 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor(staticName = "builder")
 public final class ServiceInitGenerator {
     private long index;
 
-    private final String platformClassName;
-    private final MethodSpec.Builder methodSpec;
-    private final Types types;
-    private final Elements elements;
-    private final Map<TypeMirror, String> instancedServices = new HashMap<>();
-    private final Map<Pair<TypeElement, TypeElement>, Pair<Provider.Level, String>> providers = new HashMap<>();
-    private final Map<Triple<CheckType, String, Class<? extends Annotation>>, QuadConsumer<StringBuilder, List<Object>, Annotation, TypeElement>> annotatedInitArguments = new HashMap<>() {
-        {
-            put(Triple.of(CheckType.ONLY_SAME, "java.nio.file.Path", DataFolder.class), (statement, processedArguments, annotation, variableType) -> {
-                var dataFolder = (DataFolder) annotation;
-                statement.append("$N.getDataFolder()");
-                processedArguments.add("description");
-                if (!dataFolder.value().isEmpty()) {
-                    statement.append(".resolve($S)");
-                    processedArguments.add(dataFolder.value());
-                }
-            });
-            put(Triple.of(CheckType.ONLY_SAME, "java.io.File", DataFolder.class), (statement, processedArguments, annotation, variableType) -> {
-                var dataFolder = (DataFolder) annotation;
-                statement.append("$N.getDataFolder()");
-                processedArguments.add("description");
-                if (!dataFolder.value().isEmpty()) {
-                    statement.append(".resolve($S)");
-                    processedArguments.add(dataFolder.value());
-                }
-                statement.append(".toFile()");
-            });
-            put(Triple.of(CheckType.ONLY_SAME, "java.nio.file.Path", ConfigFile.class), (statement, processedArguments, annotation, variableType) -> {
-                var configFile = (ConfigFile) annotation;
-                statement.append("$N.getDataFolder().resolve($S)");
-                processedArguments.add("description");
-                processedArguments.add(configFile.value());
-            });
-            put(Triple.of(CheckType.ONLY_SAME, "java.io.File", ConfigFile.class), (statement, processedArguments, annotation, variableType) -> {
-                var configFile = (ConfigFile) annotation;
-                statement.append("$N.getDataFolder().resolve($S).toFile()");
-                processedArguments.add("description");
-                processedArguments.add(configFile.value());
-            });
-            put(Triple.of(CheckType.ALLOW_CHILDREN, "org.spongepowered.configurate.loader.ConfigurationLoader", ConfigFile.class), (statement, processedArguments, annotation, variableType) -> {
-                var configFile = (ConfigFile) annotation;
-                if (!configFile.old().isEmpty()) {
-                    var oldIndex = index++;
-                    var newIndex = index++;
+    private final @NotNull String platformClassName;
+    private final MethodSpec.@NotNull Builder methodSpec;
+    private final @NotNull Types types;
+    private final @NotNull Elements elements;
+    private final @NotNull Map<@NotNull TypeMirror, String> instancedServices = new HashMap<>();
+    private final @NotNull Queue<@NotNull Pair<@NotNull ServiceContainer, @Nullable String>> delayedControllables = new LinkedList<>();
+    private final @NotNull Map<@NotNull Pair<@NotNull TypeElement, @NotNull TypeElement>, Pair<Provider.Level, String>> providers = new HashMap<>();
+    private final @NotNull Map<@NotNull Triple<@NotNull CheckType, @NotNull String, @NotNull Class<? extends Annotation>>, QuadConsumer<@NotNull StringBuilder, @NotNull List<Object>, @NotNull Annotation, @NotNull TypeElement>> annotatedInitArguments = new HashMap<>();
+    private final @NotNull Map<@NotNull String, BiConsumer<@NotNull StringBuilder, @NotNull List<@NotNull Object>>> initArguments = new HashMap<>();
 
-                    ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $N.getDataFolder().resolve($S)", Path.class, "indexedVariable" + oldIndex, "description", configFile.old());
-                    ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $N.getDataFolder().resolve($S)", Path.class, "indexedVariable" + newIndex, "description", configFile.value());
+    public ServiceInitGenerator(@NotNull String platformClassName, MethodSpec.@NotNull Builder methodSpec, @NotNull Types types, @NotNull Elements elements) {
+        this.platformClassName = platformClassName;
+        this.methodSpec = methodSpec;
+        this.types = types;
+        this.elements = elements;
 
-                    ServiceInitGenerator.this.methodSpec
-                            .beginControlFlow("if ($T.exists($N) && !$T.exists($N))", Files.class, "indexedVariable" + oldIndex, Files.class, "indexedVariable" + newIndex)
-                            .beginControlFlow("try")
-                            .addStatement("$T.move($N, $N)", Files.class, "indexedVariable" + oldIndex, "indexedVariable" + newIndex)
-                            .nextControlFlow("catch ($T $N)", Exception.class, "ex")
-                            .addStatement("$N.printStackTrace()", "ex")
-                            .endControlFlow()
-                            .endControlFlow();
-                }
+        // default annotated parameters
 
-                statement.append("$T.builder().path($N.getDataFolder().resolve($S))");
-                processedArguments.add(variableType);
-                processedArguments.add("description");
-                processedArguments.add(configFile.value());
-                variableType.getEnclosedElements()
-                        .stream()
-                        .filter(element -> element.getKind() == ElementKind.CLASS && element.getSimpleName().toString().contains("Builder"))
-                        .findFirst()
-                        .flatMap(builder -> builder
-                                .getEnclosedElements()
-                                .stream()
-                                .filter(element -> element.getKind() == ElementKind.METHOD && element.getSimpleName().contentEquals("nodeStyle"))
-                                .map(element -> (ExecutableElement) element)
-                                .findFirst()
-                        )
-                        .ifPresent(element -> {
-                            var parameters = element.getParameters();
-                            if (parameters.size() == 1) {
-                                statement.append(".nodeStyle($T.$N)");
-                                processedArguments.add(parameters.get(0).asType());
-                                processedArguments.add("BLOCK");
-                            }
-                        });
-                if (configFile.screamingLibSerializers()) {
-                    if (ServiceInitGenerator.this.elements.getTypeElement("org.screamingsandals.lib.configurate.SLibSerializers") != null) { // only for Core (includes Spectator serializers as well)
-                        statement.append(".defaultOptions(t -> t.serializers($T::makeSerializers))");
-                        processedArguments.add(ClassName.get("org.screamingsandals.lib.configurate", "SLibSerializers"));
-                    } else if (ServiceInitGenerator.this.elements.getTypeElement("org.screamingsandals.lib.spectator.configurate.SpectatorSerializers") != null) { // Proxies currently have only spectator serializers
-                        statement.append(".defaultOptions(t -> t.serializers($T::makeSerializers))");
-                        processedArguments.add(ClassName.get("org.screamingsandals.lib.spectator.configurate", "SpectatorSerializers"));
-                    }
+        add(CheckType.ONLY_SAME, Classes.Java.NIO_PATH.canonicalName(), DataFolder.class, (statement, processedArguments, annotation, variableType) -> {
+            statement.append("$N.getDataFolder()");
+            processedArguments.add("description");
+            if (!annotation.value().isEmpty()) {
+                statement.append(".resolve($S)");
+                processedArguments.add(annotation.value());
+            }
+        });
+        add(CheckType.ONLY_SAME, Classes.Java.FILE.canonicalName(), DataFolder.class, (statement, processedArguments, annotation, variableType) -> {
+            statement.append("$N.getDataFolder()");
+            processedArguments.add("description");
+            if (!annotation.value().isEmpty()) {
+                statement.append(".resolve($S)");
+                processedArguments.add(annotation.value());
+            }
+            statement.append(".toFile()");
+        });
+        add(CheckType.ONLY_SAME, Classes.Java.NIO_PATH.canonicalName(), ConfigFile.class, (statement, processedArguments, annotation, variableType) -> {
+            statement.append("$N.getDataFolder().resolve($S)");
+            processedArguments.add("description");
+            processedArguments.add(annotation.value());
+        });
+        add(CheckType.ONLY_SAME, Classes.Java.FILE.canonicalName(), ConfigFile.class, (statement, processedArguments, annotation, variableType) -> {
+            statement.append("$N.getDataFolder().resolve($S).toFile()");
+            processedArguments.add("description");
+            processedArguments.add(annotation.value());
+        });
+        add(CheckType.ALLOW_CHILDREN, Classes.Configurate.CONFIGURATION_LOADER.canonicalName(), ConfigFile.class, (statement, processedArguments, annotation, variableType) -> {
+            if (!annotation.old().isEmpty()) {
+                var oldIndex = index++;
+                var newIndex = index++;
+
+                ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $N.getDataFolder().resolve($S)", Path.class, "indexedVariable" + oldIndex, "description", annotation.old());
+                ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $N.getDataFolder().resolve($S)", Path.class, "indexedVariable" + newIndex, "description", annotation.value());
+
+                ServiceInitGenerator.this.methodSpec
+                        .beginControlFlow("if ($T.exists($N) && !$T.exists($N))", Files.class, "indexedVariable" + oldIndex, Files.class, "indexedVariable" + newIndex)
+                        .beginControlFlow("try")
+                        .addStatement("$T.move($N, $N)", Files.class, "indexedVariable" + oldIndex, "indexedVariable" + newIndex)
+                        .nextControlFlow("catch ($T $N)", Exception.class, "ex")
+                        .addStatement("$N.printStackTrace()", "ex")
+                        .endControlFlow()
+                        .endControlFlow();
+            }
+
+            statement.append("$T.builder().path($N.getDataFolder().resolve($S))");
+            processedArguments.add(variableType);
+            processedArguments.add("description");
+            processedArguments.add(annotation.value());
+            variableType.getEnclosedElements()
+                    .stream()
+                    .filter(element -> element.getKind() == ElementKind.CLASS && element.getSimpleName().toString().contains("Builder"))
+                    .findFirst()
+                    .flatMap(builder -> builder
+                            .getEnclosedElements()
+                            .stream()
+                            .filter(element -> element.getKind() == ElementKind.METHOD && element.getSimpleName().contentEquals("nodeStyle"))
+                            .map(element -> (ExecutableElement) element)
+                            .findFirst()
+                    )
+                    .ifPresent(element -> {
+                        var parameters = element.getParameters();
+                        if (parameters.size() == 1) {
+                            statement.append(".nodeStyle($T.$N)");
+                            processedArguments.add(parameters.get(0).asType());
+                            processedArguments.add("BLOCK");
+                        }
+                    });
+            if (annotation.screamingLibSerializers()) {
+                if (ServiceInitGenerator.this.elements.getTypeElement(Classes.SLib.SERIALIZERS.canonicalName()) != null) { // only for Core (includes Spectator serializers as well)
+                    statement.append(".defaultOptions(t -> t.serializers($T::makeSerializers))");
+                    processedArguments.add(Classes.SLib.SERIALIZERS);
+                } else if (ServiceInitGenerator.this.elements.getTypeElement(Classes.SLib.SPECTATOR_SERIALIZERS.canonicalName()) != null) { // Proxies currently have only spectator serializers
+                    statement.append(".defaultOptions(t -> t.serializers($T::makeSerializers))");
+                    processedArguments.add(Classes.SLib.SPECTATOR_SERIALIZERS);
                 }
-                statement.append(".build()");
-            });
-            put(Triple.of(CheckType.ALLOW_CHILDREN, "java.lang.Object", ProvidedBy.class), (statement, processedArguments, annotation, variableType) -> {
-                var providerClass = MiscUtils.getSafelyTypeElement(ServiceInitGenerator.this.types, (ProvidedBy) annotation);
-                var provider = Pair.of(providerClass, variableType);
-                var provided = providers.get(provider);
-                if (provided != null) {
-                    if (provided.getFirst() == Provider.Level.INIT) {
-                        statement.append("($T) $N");
-                    } else {
-                        statement.append("($T) $N.get()");
-                    }
-                    processedArguments.add(toClassName(variableType)); // fucking generics
-                    processedArguments.add(provided.getSecond());
+            }
+            statement.append(".build()");
+        });
+        add(CheckType.ALLOW_CHILDREN, Classes.Java.OBJECT.canonicalName(), ProvidedBy.class, (statement, processedArguments, annotation, variableType) -> {
+            var providerClass = MiscUtils.getSafelyTypeElement(ServiceInitGenerator.this.types, annotation);
+            var provider = Pair.of(providerClass, variableType);
+            var provided = providers.get(provider);
+            if (provided != null) {
+                if (provided.getFirst() == Provider.Level.INIT) {
+                    statement.append("($T) $N");
                 } else {
-                    throw new UnsupportedOperationException("Can't provide from " + providerClass  + "! Are you sure every dependencies are configured correctly?");
+                    statement.append("($T) $N.get()");
                 }
-            });
-        }
-    };
-    private final Map<String, BiConsumer<StringBuilder, List<Object>>> initArguments = new HashMap<>() {
-        {
-            put(Classes.SLIB_CONTROLLABLE_IMPL.canonicalName(), (statement, processedArguments) -> {
-                statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N.child()");
-                processedArguments.add("pluginControllable");
-            });
-            put(Classes.SLIB_CONTROLLABLE.canonicalName(), (statement, processedArguments) -> {
-                statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N.child()");
-                processedArguments.add("pluginControllable");
-            });
-            put(Classes.SLIB_PLUGIN_CONTAINER.canonicalName(), (statement, processedArguments) -> {
-                statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N");
-                processedArguments.add("pluginContainer");
-            });
-            put(Classes.SLIB_PLUGIN.canonicalName(), (statement, processedArguments) -> {
-                statement.append("$N");
-                processedArguments.add("description");
-            });
-            put(Classes.SLIB_LOGGER_WRAPPER.canonicalName(), (statement, processedArguments) -> {
-                statement.append("$N");
-                processedArguments.add("screamingLogger");
-            });
-            put("org.slf4j.Logger", (statement, processedArguments) -> {
-                // LoggerWrapper or lombok's @Slf4j should be used instead of this
-                statement.append("($T) $N");
-                processedArguments.add(ClassName.get("org.slf4j", "Logger"));
-                processedArguments.add("slf4jLogger");
-            });
-        }
-    };
+                processedArguments.add(toRawClassName(variableType)); // fucking generics
+                processedArguments.add(provided.getSecond());
+            } else {
+                throw new UnsupportedOperationException("Can't provide from " + providerClass  + "! Are you sure every dependencies are configured correctly?");
+            }
+        });
+        add(CheckType.ONLY_SAME, Classes.Java.OBJECT.canonicalName(), PlatformPluginObject.class, (statement, processedArguments, annotation, variableType) -> {
+            statement.append(ServiceInitGenerator.this.platformClassName).append(".this");
+        });
 
-    public ServiceInitGenerator add(String name, BiConsumer<StringBuilder, List<Object>> initArgGen) {
+        // default parameters
+
+        add(Classes.SLib.CONTROLLABLE_IMPL.canonicalName(), (statement, processedArguments) -> {
+            statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N.child()");
+            processedArguments.add("pluginControllable");
+        });
+        add(Classes.SLib.CONTROLLABLE.canonicalName(), (statement, processedArguments) -> {
+            statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N.child()");
+            processedArguments.add("pluginControllable");
+        });
+        add(Classes.SLib.PLUGIN.canonicalName(), (statement, processedArguments) -> {
+            statement.append("$N");
+            processedArguments.add("description");
+        });
+        add(Classes.SLib.LOGGER_WRAPPER.canonicalName(), (statement, processedArguments) -> {
+            statement.append("$N");
+            processedArguments.add("screamingLogger");
+        });
+        add(Classes.Slf4j.LOGGER.canonicalName(), (statement, processedArguments) -> {
+            // LoggerWrapper or lombok's @Slf4j should be used instead of this
+            statement.append("($T) $N");
+            processedArguments.add(Classes.Slf4j.LOGGER);
+            processedArguments.add("slf4jLogger");
+        });
+    }
+
+    public @NotNull ServiceInitGenerator add(@NotNull String name, @NotNull BiConsumer<@NotNull StringBuilder, @NotNull List<Object>> initArgGen) {
         return add(List.of(name), initArgGen);
     }
 
-    public ServiceInitGenerator add(List<String> names, BiConsumer<StringBuilder, List<Object>> initArgGen) {
+    public @NotNull ServiceInitGenerator add(@NotNull List<@NotNull String> names, @NotNull BiConsumer<@NotNull StringBuilder, @NotNull List<Object>> initArgGen) {
         names.forEach(s -> initArguments.put(s, initArgGen));
         return this;
     }
 
     @SuppressWarnings("unchecked")
-    public <A extends Annotation> ServiceInitGenerator add(CheckType type, String name, Class<A> annotationClass, QuadConsumer<StringBuilder, List<Object>, A, TypeElement> initArgGen) {
+    public <A extends Annotation> @NotNull ServiceInitGenerator add(@NotNull CheckType type, @NotNull String name, @NotNull Class<A> annotationClass, @NotNull QuadConsumer<@NotNull StringBuilder, @NotNull List<Object>, @NotNull A, @NotNull TypeElement> initArgGen) {
         annotatedInitArguments.put(Triple.of(type, name, annotationClass), (QuadConsumer<StringBuilder, List<Object>, Annotation, TypeElement>) initArgGen);
         return this;
     }
@@ -311,33 +315,53 @@ public final class ServiceInitGenerator {
             }
 
             if (!serviceContainer.isStaticOnly() && returnedName != null) {
-                methodSpec.addStatement("$T.$N($N)", ClassName.get("org.screamingsandals.lib.plugin", "ServiceManager"), "putService", returnedName);
+                methodSpec.addStatement("$T.$N($N)", Classes.SLib.SERVICE_MANAGER, "putService", returnedName);
                 instancedServices.put(typeElement.asType(), returnedName);
             }
 
-            var shouldRunControllable = processShouldRunControllable(typeElement, returnedName);
+            if (serviceContainer.isDelayControllables()) {
+                delayedControllables.add(Pair.of(serviceContainer, returnedName));
+                return;
+            }
 
-            var controllableForMethods = new AtomicReference<String>();
+            processControllablesOfService(serviceContainer, returnedName);
 
-            processMethodAnnotation(
-                    Map.of(
-                            OnEnable.class, "enable",
-                            OnPostEnable.class, "postEnable",
-                            OnPreDisable.class, "preDisable",
-                            OnDisable.class, "disable"
-                    ),
-                    typeElement,
-                    returnedName,
-                    controllableForMethods,
-                    shouldRunControllable
-            );
-
-            processProviders(typeElement, returnedName, shouldRunControllable);
-
-            processEventAnnotations(typeElement, returnedName, shouldRunControllable);
         } else {
             throw new UnsupportedOperationException("Can't auto initialize " + typeElement.getQualifiedName() + " without init method");
         }
+    }
+
+    public void processDelayedControllables() {
+        Pair<@NotNull ServiceContainer, @Nullable String> pair;
+        while ((pair = delayedControllables.poll()) != null) {
+            processControllablesOfService(pair.first(), pair.second());
+        }
+    }
+
+    private void processControllablesOfService(@NotNull ServiceContainer serviceContainer, @Nullable String returnedName) {
+        var typeElement = serviceContainer.getService();
+
+        var shouldRunControllable = processShouldRunControllable(typeElement, returnedName);
+
+        var controllableForMethods = new AtomicReference<String>();
+
+        processMethodAnnotation(
+                Map.of(
+                        OnPluginLoad.class, "pluginLoad",
+                        OnEnable.class, "enable",
+                        OnPostEnable.class, "postEnable",
+                        OnPreDisable.class, "preDisable",
+                        OnDisable.class, "disable"
+                ),
+                typeElement,
+                returnedName,
+                controllableForMethods,
+                shouldRunControllable
+        );
+
+        processProviders(typeElement, returnedName, shouldRunControllable);
+
+        processEventAnnotations(typeElement, returnedName, shouldRunControllable);
     }
 
     private void processMethodAnnotation(Map<Class<? extends Annotation>, String> map, TypeElement typeElement, String returnedName, AtomicReference<String> controllableName, Pair<String, List<Object>> shouldRunControllable) {
@@ -504,19 +528,62 @@ public final class ServiceInitGenerator {
 
         if (result1.size() == 1) {
             var method = (ExecutableElement) result1.get(0);
-            if (!method.getParameters().isEmpty()) {
-                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @OnPostConstruct can't have parameters");
-            }
+
+            var processedArguments = new ArrayList<>();
+            var statement = new StringBuilder();
+            var arguments = method.getParameters();
             if (method.getModifiers().contains(Modifier.STATIC)) {
-                return Pair.of("$T.$N()", List.of(typeElement, method.getSimpleName()));
+                statement.append("$T.$N(");
+                processedArguments.add(typeElement);
             } else {
                 if (returnedName == null) {
                     throw new UnsupportedOperationException(
                             typeElement.getQualifiedName() + ": Can't dynamically add non-static @OnPostConstruct method because init method doesn't return any instance"
                     );
                 }
-                return Pair.of("$N.$N()", List.of(returnedName, method.getSimpleName()));
+                statement.append("$N.$N(");
+                processedArguments.add(returnedName);
             }
+            processedArguments.add(method.getSimpleName());
+            var first = new AtomicBoolean(true);
+            arguments.forEach(variableElement -> {
+                if (!first.get()) {
+                    statement.append(",");
+                } else {
+                    first.set(false);
+                }
+                Optional<TypeMirror> typeMirror;
+                var annotatedParameter = annotatedInitArguments.entrySet().stream()
+                        .filter(entry -> entry.getKey().getFirst().function
+                                .apply(
+                                        types,
+                                        variableElement.asType(),
+                                        types.erasure(elements.getTypeElement(entry.getKey().getSecond()).asType())
+                                )
+                                && variableElement.getAnnotation(entry.getKey().getThird()) != null
+                        )
+                        .findFirst();
+
+                if (annotatedParameter.isPresent()) {
+                    annotatedParameter.get().getValue()
+                            .accept(
+                                    statement,
+                                    processedArguments,
+                                    variableElement.getAnnotation(annotatedParameter.get().getKey().getThird()),
+                                    (TypeElement) types.asElement(variableElement.asType())
+                            );
+                } else if (initArguments.containsKey(variableElement.asType().toString())) {
+                    initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
+                } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
+                    statement.append("$N");
+                    processedArguments.add(instancedServices.get(typeMirror.get()));
+                } else {
+                    throw new UnsupportedOperationException("Method " +   method.getSimpleName() + " of " + typeElement.getQualifiedName() + " has wrong argument!");
+                }
+            });
+            statement.append(")");
+
+            return Pair.of(statement.toString(), processedArguments);
         }
 
         return Pair.empty();
@@ -704,10 +771,10 @@ public final class ServiceInitGenerator {
             return;
         }
 
-        var abstractEventClass = elements.getTypeElement("org.screamingsandals.lib.event.SEvent");
-        var eventManagerClass = ClassName.get("org.screamingsandals.lib.event", "EventManager");
-        var eventHandlerClass = ClassName.get("org.screamingsandals.lib.event", "EventHandler");
-        var eventPriorityClass = ClassName.get("org.screamingsandals.lib.event", "EventPriority");
+        var abstractEventClass = elements.getTypeElement(Classes.SLib.EVENT.canonicalName());
+        var eventManagerClass = Classes.SLib.EVENT_MANAGER;
+        var eventHandlerClass = Classes.SLib.EVENT_HANDLER;
+        var eventPriorityClass = Classes.SLib.EVENT_PRIORITY;
 
         var methodBuilder = MethodSpec.methodBuilder("run")
                 .addModifiers(Modifier.PUBLIC)
@@ -774,16 +841,16 @@ public final class ServiceInitGenerator {
         if (controllableName.get() == null) {
             var name = "genericControllable" + (index++);
             controllableName.set(name);
-            methodSpec.addStatement("$T $N = this.$N.child()", ClassName.get("org.screamingsandals.lib.utils", "Controllable"), name, "pluginControllable");
+            methodSpec.addStatement("$T $N = this.$N.child()", Classes.SLib.CONTROLLABLE, name, "pluginControllable");
         }
     }
 
-    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+    public static <T> @NotNull Predicate<T> distinctByKey(@NotNull Function<? super T, ?> keyExtractor) {
         var seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(keyExtractor.apply(t));
     }
 
-    public static ClassName toClassName(TypeElement typeElement) {
+    public static @NotNull ClassName toRawClassName(@NotNull TypeElement typeElement) {
         var list = new ArrayList<String>();
         list.add(typeElement.getSimpleName().toString());
         Element cur = typeElement;
@@ -807,6 +874,6 @@ public final class ServiceInitGenerator {
         ALLOW_SUPERCLASS((types, typeMirror, typeMirror2) -> types.isAssignable(typeMirror2, typeMirror)),
         ALLOW_CHILDREN(Types::isSubtype);
 
-        private final TriFunction<Types, TypeMirror, TypeMirror, Boolean> function;
+        private final @NotNull TriFunction<@NotNull Types, @NotNull TypeMirror, @NotNull TypeMirror, @NotNull Boolean> function;
     }
 }

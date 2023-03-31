@@ -22,11 +22,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The OnPostEnable annotation is used to mark method in {@link org.screamingsandals.lib.utils.annotations.Service}
+ * The OnPluginLoad annotation is used to mark method in {@link org.screamingsandals.lib.utils.annotations.Service}
  * which can be bound into Controllable.
- * Each service can have only one OnPostEnable method.
+ * Each service can have only one OnPluginLoad method.
+ * <p>
+ * This annotation should be used only in main class of the plugin.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-public @interface OnPostEnable {
+public @interface OnPluginLoad {
 }

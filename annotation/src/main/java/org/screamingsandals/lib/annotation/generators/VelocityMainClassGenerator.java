@@ -36,101 +36,86 @@ import java.util.Locale;
 
 public class VelocityMainClassGenerator extends MainClassGenerator {
     @Override
-    public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
+    public void generate(ProcessingEnvironment processingEnvironment, QualifiedNameable pluginContainer, List<ServiceContainer> autoInit) throws IOException {
         var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.VELOCITY);
 
-        var pluginManagerClass = Classes.SLIB_PLUGINS;
-        var pluginDescriptionClass = Classes.SLIB_PLUGIN;
-        var screamingLoggerClass = Classes.SLIB_SLF4J_LOGGER_WRAPPER;
-        var loggerClass = ClassName.get("org.slf4j", "Logger");
+        var pluginDescriptionClass = Classes.SLib.PLUGIN;
+        var screamingLoggerClass = Classes.SLib.SLF4J_LOGGER_WRAPPER;
+        var loggerClass = Classes.Slf4j.LOGGER;
 
-        var velocityProxyServerClass = ClassName.get("com.velocitypowered.api.proxy", "ProxyServer");
-        var guiceInjectorClass = ClassName.get("com.google.inject", "Injector");
+        var velocityProxyServerClass = Classes.Velocity.PROXY_SERVER;
+        var guiceInjectorClass = Classes.Guice.INJECTOR;
 
         var constructorBuilder = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(ClassName.get("com.google.inject", "Inject"))
+                .addAnnotation(Classes.Guice.INJECT)
                 .addParameter(ParameterSpec.builder(velocityProxyServerClass, "proxyServer").build())
                 .addParameter(ParameterSpec.builder(loggerClass, "slf4jLogger").build())
                 .addParameter(ParameterSpec.builder(guiceInjectorClass, "guice").build())
-                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLIB_CONTROLLABLE_IMPL)
+                .addParameter(ParameterSpec.builder(Classes.Velocity.PLUGIN_CONTAINER, "velocityContainer").build())
+                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLib.CONTROLLABLE_IMPL)
                 .addStatement("this.$N = $N", "guiceInjector", "guice")
-                .addStatement("this.$N = new $T($N)", "screamingLogger", screamingLoggerClass, "slf4jLogger");
+                .addStatement("this.$N = new $T($N)", "screamingLogger", screamingLoggerClass, "slf4jLogger")
+                .addStatement("this.$N = $N", "velocityContainer", "velocityContainer");
 
+        var newClassName = pluginContainer.getSimpleName() + "_VelocityImpl";
 
-        var serviceInitGenerator = ServiceInitGenerator
-                .builder(pluginContainer.getSimpleName() + "_VelocityImpl", constructorBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
+        var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
+
+        var onEnableBuilder = preparePublicVoid("onEnable")
+                .addAnnotation(Classes.Velocity.SUBSCRIBE)
+                .addParameter(ParameterSpec.builder(Classes.Velocity.PROXY_INIT_EVENT, "event").build());
+
+        var onDisableBuilder = preparePublicVoid("onDisable")
+                .addAnnotation(Classes.Velocity.SUBSCRIBE)
+                .addParameter(ParameterSpec.builder(Classes.Velocity.PROXY_SHUTDOWN_EVENT, "event").build());
+
+        var serviceInitGenerator = new ServiceInitGenerator(newClassName, onEnableBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
                 .add(velocityProxyServerClass.canonicalName(), (statement, objects) -> {
                     statement.append("$N");
                     objects.add("proxyServer");
                 })
-                .add("com.velocitypowered.api.plugin.PluginManager", (statement, objects) -> {
+                .add(Classes.Velocity.PLUGIN_MANAGER.canonicalName(), (statement, objects) -> {
                     statement.append("$N.getPluginManager()");
                     objects.add("proxyServer");
-                })
-                .add("java.lang.Object", (statement, objects) -> // probably plugin
-                        statement.append(pluginContainer.getSimpleName()).append("_VelocityImpl.this")
-                )
-                .add(pluginContainer.asType().toString(), (statement, processedArguments) -> {
-                    statement.append(pluginContainer.getSimpleName()).append("_VelocityImpl.this.$N");
-                    processedArguments.add("pluginContainer");
                 });
 
         sortedPair.getFirst().forEach(serviceInitGenerator::process);
 
-        var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
-        var onEnableBuilder = preparePublicVoid("onEnable")
-                .addAnnotation(ClassName.get("com.velocitypowered.api.event", "Subscribe"))
-                .addParameter(ParameterSpec.builder(ClassName.get("com.velocitypowered.api.event.proxy", "ProxyInitializeEvent"), "event").build());
+        onEnableBuilder
+                .addStatement("$T $N = new $T($N)", pluginDescriptionClass, "description", Classes.SLib.VELOCITY_PLUGIN, "velocityContainer");
 
-        var onDisableBuilder = preparePublicVoid("onDisable")
-                .addAnnotation(ClassName.get("com.velocitypowered.api.event", "Subscribe"))
-                .addParameter(ParameterSpec.builder(ClassName.get("com.velocitypowered.api.event.proxy", "ProxyShutdownEvent"), "event").build());
-
+        if (pluginContainer instanceof TypeElement) {
+            serviceInitGenerator.process(ServiceContainer.createPluginService(processingEnvironment.getTypeUtils(), (TypeElement) pluginContainer));
+        }
 
         sortedPair.getSecond().forEach(serviceInitGenerator::process);
 
-        //build container
-        onEnableBuilder
-                .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, pluginAnnotation.id());
-
-        if (pluginContainer.getEnclosedElements().stream().filter(element -> element.getKind() == ElementKind.CONSTRUCTOR).map(el -> (ExecutableElement) el).anyMatch(el -> el.getParameters().size() == 1 && "com.google.inject.Injector".equals(el.getParameters().get(0).asType().toString()))) {
-            onEnableBuilder.addStatement("this.$N = new $T(guiceInjector)", "pluginContainer", pluginContainer);
-        } else {
-            onEnableBuilder.addStatement("this.$N = new $T()", "pluginContainer", pluginContainer);
-        }
-
-        //init
-        onEnableBuilder
-                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
+        serviceInitGenerator.processDelayedControllables();
 
         //load the container first
         onEnableBuilder
-                .addStatement("this.$N.load()", "pluginContainer");
+                .addStatement("this.$N.pluginLoad()", "pluginControllable");
 
         //then enable
         onEnableBuilder.addStatement("this.$N.enable()", "pluginControllable")
-                .addStatement("this.$N.enable()", "pluginContainer")
-                .addStatement("this.$N.postEnable()", "pluginControllable")
-                .addStatement("this.$N.postEnable()", "pluginContainer");
+                .addStatement("this.$N.postEnable()", "pluginControllable");
 
         onDisableBuilder
-                .addStatement("this.$N.preDisable()", "pluginContainer")
                 .addStatement("this.$N.preDisable()", "pluginControllable")
-                .addStatement("this.$N.disable()", "pluginContainer")
                 .addStatement("this.$N.disable()", "pluginControllable");
 
-        var velocityMainClass = TypeSpec.classBuilder(pluginContainer.getSimpleName() + "_VelocityImpl")
+        var velocityMainClass = TypeSpec.classBuilder(newClassName)
                 .addModifiers(Modifier.PUBLIC)
                 .addField(FieldSpec
-                        .builder(TypeName.get(pluginContainer.asType()), "pluginContainer", Modifier.PRIVATE)
-                        .build())
-                .addField(FieldSpec
-                        .builder(ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"), "pluginControllable",
+                        .builder(Classes.SLib.CONTROLLABLE_IMPL, "pluginControllable",
                                 Modifier.PRIVATE)
                         .build())
                 .addField(FieldSpec
                         .builder(screamingLoggerClass, "screamingLogger", Modifier.PRIVATE)
+                        .build())
+                .addField(FieldSpec
+                        .builder(Classes.Velocity.PLUGIN_CONTAINER, "velocityContainer", Modifier.PRIVATE)
                         .build())
                 .addField(FieldSpec
                         .builder(guiceInjectorClass, "guiceInjector", Modifier.PRIVATE)
@@ -140,7 +125,14 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                 .addMethod(onDisableBuilder.build())
                 .build();
 
-        JavaFile.builder(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString(), velocityMainClass)
+        String newPackageName;
+        if (pluginContainer instanceof TypeElement) { // class
+            newPackageName = ((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString();
+        } else { // package
+            newPackageName = pluginContainer.getQualifiedName().toString();
+        }
+
+        JavaFile.builder(newPackageName, velocityMainClass)
                 .build()
                 .writeTo(processingEnvironment.getFiler());
 
@@ -148,9 +140,8 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                 .path(Path.of(processingEnvironment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "velocity-plugin.json").toUri()))
                 .build();
 
-
         var node = loader.createNode();
-        node.node("main").set(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString() + "." + pluginContainer.getSimpleName() + "_VelocityImpl");
+        node.node("main").set(newPackageName + "." + newClassName);
         node.node("id").set(pluginAnnotation.id().toLowerCase(Locale.ROOT));
         node.node("name").set(pluginAnnotation.name());
         node.node("version").set(pluginAnnotation.version());

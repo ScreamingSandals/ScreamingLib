@@ -27,6 +27,7 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import javax.tools.StandardLocation;
 import java.io.IOException;
@@ -38,83 +39,79 @@ import java.util.stream.Collectors;
 
 public class BungeeMainClassGenerator extends MainClassGenerator {
     @Override
-    public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
+    public void generate(ProcessingEnvironment processingEnvironment, QualifiedNameable pluginContainer, List<ServiceContainer> autoInit) throws IOException {
         var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.BUNGEE);
 
-        var pluginManagerClass = Classes.SLIB_PLUGINS;
-        var pluginDescriptionClass = Classes.SLIB_PLUGIN;
-        var screamingLoggerClass = Classes.SLIB_LOGGER_WRAPPER;
-        var julScreamingLoggerClass = Classes.SLIB_JUL_LOGGER_WRAPPER;
-        var slf4jScreamingLoggerClass = Classes.SLIB_SLF4J_LOGGER_WRAPPER;
-        var dualScreamingLoggerClass = Classes.SLIB_DUAL_LOGGER_WRAPPER;
-        var reflectClass = Classes.SLIB_REFLECT;
+        var pluginManagerClass = Classes.SLib.PLUGINS_SERVICE;
+        var pluginDescriptionClass = Classes.SLib.PLUGIN;
+        var screamingLoggerClass = Classes.SLib.LOGGER_WRAPPER;
+        var julScreamingLoggerClass = Classes.SLib.JUL_LOGGER_WRAPPER;
+        var slf4jScreamingLoggerClass = Classes.SLib.SLF4J_LOGGER_WRAPPER;
+        var dualScreamingLoggerClass = Classes.SLib.DUAL_LOGGER_WRAPPER;
+        var reflectClass = Classes.SLib.REFLECT;
 
         var onLoadBuilder = preparePublicVoid("onLoad")
-                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLIB_CONTROLLABLE_IMPL);
+                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLib.CONTROLLABLE_IMPL);
 
+        var newClassName = pluginContainer.getSimpleName() + "_BungeeImpl";
 
-        var serviceInitGenerator = ServiceInitGenerator
-                .builder(pluginContainer.getSimpleName() + "_BungeeImpl", onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
-                .add("net.md_5.bungee.api.plugin.Plugin", (statement, objects) ->
-                        statement.append(pluginContainer.getSimpleName()).append("_BungeeImpl.this")
-                )
-                .add(pluginContainer.asType().toString(), (statement, processedArguments) -> {
-                    statement.append(pluginContainer.getSimpleName()).append("_BungeeImpl.this.$N");
-                    processedArguments.add("pluginContainer");
-                });
+        var serviceInitGenerator = new ServiceInitGenerator(newClassName, onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
+                .add(Classes.Bungee.PLUGIN.canonicalName(), (statement, objects) ->
+                        statement.append(newClassName).append(".this")
+                );
 
         sortedPair.getFirst().forEach(serviceInitGenerator::process);
 
-        onLoadBuilder.addStatement("$T $N = this.getDescription().getName()", String.class, "name")
-                .addStatement("$T $N = $T.getPlugin($N)", pluginDescriptionClass, "description", pluginManagerClass, "name")
-                .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
+        onLoadBuilder
+                .addStatement("$T $N = new $T(this)", pluginDescriptionClass, "description", Classes.SLib.BUNGEE_PLUGIN)
                 .addStatement("$T $N = null", Object.class, "slf4jLogger")
                 .addStatement("$T $N = new $T(this.getLogger())", screamingLoggerClass, "screamingLogger", julScreamingLoggerClass)
                 .beginControlFlow("if ($T.hasMethod(this, $S))", reflectClass, "getSLF4JLogger")
                     .addStatement("$N = this.getSLF4JLogger()", "slf4jLogger")
                     .addStatement("$N = new $T(new $T(this.getSLF4JLogger()), $N)", "screamingLogger", dualScreamingLoggerClass, slf4jScreamingLoggerClass, "screamingLogger")
-                .endControlFlow()
-                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
+                .endControlFlow();
+
+        if (pluginContainer instanceof TypeElement) {
+            serviceInitGenerator.process(ServiceContainer.createPluginService(processingEnvironment.getTypeUtils(), (TypeElement) pluginContainer));
+        }
 
         var onEnableBuilder = preparePublicVoid("onEnable");
         var onDisableBuilder = preparePublicVoid("onDisable");
 
         sortedPair.getSecond().forEach(serviceInitGenerator::process);
 
+        serviceInitGenerator.processDelayedControllables();
+
         onLoadBuilder
-                .addStatement("this.$N.load()", "pluginContainer");
+                .addStatement("this.$N.pluginLoad()", "pluginControllable");
 
         onEnableBuilder
-                .beginControlFlow("if (this.$N == null)", "pluginContainer")
-                .addStatement("throw new $T($S)", UnsupportedOperationException.class, "Plugin must be loaded before enabling!")
-                .endControlFlow()
                 .addStatement("this.$N.enable()", "pluginControllable")
-                .addStatement("this.$N.enable()", "pluginContainer")
-                .addStatement("this.$N.postEnable()", "pluginControllable")
-                .addStatement("this.$N.postEnable()", "pluginContainer");
+                .addStatement("this.$N.postEnable()", "pluginControllable");
 
         onDisableBuilder
-                .addStatement("this.$N.preDisable()", "pluginContainer")
                 .addStatement("this.$N.preDisable()", "pluginControllable")
-                .addStatement("this.$N.disable()", "pluginContainer")
                 .addStatement("this.$N.disable()", "pluginControllable");
 
-        var bungeeMainClass = TypeSpec.classBuilder(pluginContainer.getSimpleName() + "_BungeeImpl")
+        var bungeeMainClass = TypeSpec.classBuilder(newClassName)
                 .addModifiers(Modifier.PUBLIC)
-                .superclass(ClassName.get("net.md_5.bungee.api.plugin", "Plugin"))
+                .superclass(Classes.Bungee.PLUGIN)
                 .addField(FieldSpec
-                        .builder(TypeName.get(pluginContainer.asType()), "pluginContainer", Modifier.PRIVATE)
-                        .build())
-                .addField(FieldSpec
-                        .builder(ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"), "pluginControllable",
-                                Modifier.PRIVATE)
+                        .builder(Classes.SLib.CONTROLLABLE_IMPL, "pluginControllable", Modifier.PRIVATE)
                         .build())
                 .addMethod(onLoadBuilder.build())
                 .addMethod(onEnableBuilder.build())
                 .addMethod(onDisableBuilder.build())
                 .build();
 
-        JavaFile.builder(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString(), bungeeMainClass)
+        String newPackageName;
+        if (pluginContainer instanceof TypeElement) { // class
+            newPackageName = ((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString();
+        } else { // package
+            newPackageName = pluginContainer.getQualifiedName().toString();
+        }
+
+        JavaFile.builder(newPackageName, bungeeMainClass)
                 .build()
                 .writeTo(processingEnvironment.getFiler());
 
@@ -126,7 +123,7 @@ public class BungeeMainClassGenerator extends MainClassGenerator {
         var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
 
         var node = loader.createNode();
-        node.node("main").set(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString() + "." + pluginContainer.getSimpleName() + "_BungeeImpl");
+        node.node("main").set(newPackageName + "." + newClassName);
         node.node("name").set(pluginAnnotation.id());
         node.node("version").set(pluginAnnotation.version());
         if (!pluginAnnotation.description().isBlank()) {

@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.utils.annotations.methods;
+package org.screamingsandals.lib.utils.annotations.internal;
+
+import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * The OnPostEnable annotation is used to mark method in {@link org.screamingsandals.lib.utils.annotations.Service}
- * which can be bound into Controllable.
- * Each service can have only one OnPostEnable method.
- */
+@ApiStatus.Internal
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.METHOD)
-public @interface OnPostEnable {
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+public @interface PlatformPluginObject {
 }

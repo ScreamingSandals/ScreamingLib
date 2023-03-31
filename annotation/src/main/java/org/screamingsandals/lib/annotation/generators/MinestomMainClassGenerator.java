@@ -27,6 +27,7 @@ import org.spongepowered.configurate.gson.GsonConfigurationLoader;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import javax.tools.StandardLocation;
 import java.io.IOException;
@@ -38,36 +39,34 @@ import java.util.stream.Collectors;
 
 public class MinestomMainClassGenerator extends MainClassGenerator {
     @Override
-    public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
+    public void generate(ProcessingEnvironment processingEnvironment, QualifiedNameable pluginContainer, List<ServiceContainer> autoInit) throws IOException {
         var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.MINESTOM);
 
-        var pluginManagerClass = Classes.SLIB_PLUGINS;
-        var pluginDescriptionClass = Classes.SLIB_PLUGIN;
-        var screamingLoggerClass = Classes.SLIB_SLF4J_LOGGER_WRAPPER;
-        var loggerClass = ClassName.get("org.slf4j", "Logger");
+        var pluginManagerClass = Classes.SLib.PLUGINS_SERVICE;
+        var pluginDescriptionClass = Classes.SLib.PLUGIN;
+        var screamingLoggerClass = Classes.SLib.SLF4J_LOGGER_WRAPPER;
+        var loggerClass = Classes.Slf4j.LOGGER;
 
         var onLoadBuilder = preparePublicVoid("preInitialize")
-                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLIB_CONTROLLABLE_IMPL);
+                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLib.CONTROLLABLE_IMPL);
 
+        var newClassName = pluginContainer.getSimpleName() + "_MinestomImpl";
 
-        var serviceInitGenerator = ServiceInitGenerator
-                .builder(pluginContainer.getSimpleName() + "_MinestomImpl", onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
-                .add("net.minestom.server.extensions.Extension", (statement, objects) ->
-                        statement.append(pluginContainer.getSimpleName()).append("_MinestomImpl.this")
-                )
-                .add(pluginContainer.asType().toString(), (statement, processedArguments) -> {
-                    statement.append(pluginContainer.getSimpleName()).append("_MinestomImpl.this.$N");
-                    processedArguments.add("pluginContainer");
-                });
+        var serviceInitGenerator = new ServiceInitGenerator(newClassName, onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
+                .add(Classes.Minestom.EXTENSION.canonicalName(), (statement, objects) ->
+                        statement.append(newClassName).append(".this")
+                );
 
         sortedPair.getFirst().forEach(serviceInitGenerator::process);
 
         onLoadBuilder.addStatement("$T $N = this.getDescription().getName()", String.class, "name")
                 .addStatement("$T $N = $T.getPlugin($N)", pluginDescriptionClass, "description", pluginManagerClass, "name")
-                .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
                 .addStatement("$T $N = this.getLogger()", loggerClass, "slf4jLogger")
-                .addStatement("$T $N = new $T($N)", screamingLoggerClass, "screamingLogger", screamingLoggerClass, "slf4jLogger")
-                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
+                .addStatement("$T $N = new $T($N)", screamingLoggerClass, "screamingLogger", screamingLoggerClass, "slf4jLogger");
+
+        if (pluginContainer instanceof TypeElement) {
+            serviceInitGenerator.process(ServiceContainer.createPluginService(processingEnvironment.getTypeUtils(), (TypeElement) pluginContainer));
+        }
 
 
         var onEnableBuilder = preparePublicVoid("initialize");
@@ -75,40 +74,38 @@ public class MinestomMainClassGenerator extends MainClassGenerator {
 
         sortedPair.getSecond().forEach(serviceInitGenerator::process);
 
+        serviceInitGenerator.processDelayedControllables();
+
         onLoadBuilder
-                .addStatement("this.$N.load()", "pluginContainer");
+                .addStatement("this.$N.pluginLoad()", "pluginControllable");
 
         onEnableBuilder
-                .beginControlFlow("if (this.$N == null)", "pluginContainer")
-                .addStatement("throw new $T($S)", UnsupportedOperationException.class, "Plugin must be loaded before enabling!")
-                .endControlFlow()
                 .addStatement("this.$N.enable()", "pluginControllable")
-                .addStatement("this.$N.enable()", "pluginContainer")
-                .addStatement("this.$N.postEnable()", "pluginControllable")
-                .addStatement("this.$N.postEnable()", "pluginContainer");
+                .addStatement("this.$N.postEnable()", "pluginControllable");
 
         onDisableBuilder
-                .addStatement("this.$N.preDisable()", "pluginContainer")
                 .addStatement("this.$N.preDisable()", "pluginControllable")
-                .addStatement("this.$N.disable()", "pluginContainer")
                 .addStatement("this.$N.disable()", "pluginControllable");
 
-        var minestomMainClass = TypeSpec.classBuilder(pluginContainer.getSimpleName() + "_MinestomImpl")
+        var minestomMainClass = TypeSpec.classBuilder(newClassName)
                 .addModifiers(Modifier.PUBLIC)
-                .superclass(ClassName.get("net.minestom.server.extensions", "Extension"))
+                .superclass(Classes.Minestom.EXTENSION)
                 .addField(FieldSpec
-                        .builder(TypeName.get(pluginContainer.asType()), "pluginContainer", Modifier.PRIVATE)
-                        .build())
-                .addField(FieldSpec
-                        .builder(ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"), "pluginControllable",
-                                Modifier.PRIVATE)
+                        .builder(Classes.SLib.CONTROLLABLE_IMPL, "pluginControllable", Modifier.PRIVATE)
                         .build())
                 .addMethod(onLoadBuilder.build())
                 .addMethod(onEnableBuilder.build())
                 .addMethod(onDisableBuilder.build())
                 .build();
 
-        JavaFile.builder(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString(), minestomMainClass)
+        String newPackageName;
+        if (pluginContainer instanceof TypeElement) { // class
+            newPackageName = ((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString();
+        } else { // package
+            newPackageName = pluginContainer.getQualifiedName().toString();
+        }
+
+        JavaFile.builder(newPackageName, minestomMainClass)
                 .build()
                 .writeTo(processingEnvironment.getFiler());
 
@@ -119,7 +116,7 @@ public class MinestomMainClassGenerator extends MainClassGenerator {
         var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
 
         var node = loader.createNode();
-        node.node("entrypoint").set(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString() + "." + pluginContainer.getSimpleName() + "_MinestomImpl");
+        node.node("entrypoint").set(newPackageName + "." + newClassName);
         node.node("name").set(pluginAnnotation.id());
         node.node("version").set(pluginAnnotation.version());
         if (pluginAnnotation.authors().length > 0) {

@@ -36,83 +36,78 @@ import java.util.stream.Collectors;
 
 public class BukkitMainClassGenerator extends MainClassGenerator {
     @Override
-    public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
+    public void generate(ProcessingEnvironment processingEnvironment, QualifiedNameable pluginContainer, List<ServiceContainer> autoInit) throws IOException {
         var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.BUKKIT);
 
-        var pluginManagerClass = Classes.SLIB_PLUGINS;
-        var pluginDescriptionClass = Classes.SLIB_PLUGIN;
-        var screamingLoggerClass = Classes.SLIB_LOGGER_WRAPPER;
-        var julScreamingLoggerClass = Classes.SLIB_JUL_LOGGER_WRAPPER;
-        var slf4jScreamingLoggerClass = Classes.SLIB_SLF4J_LOGGER_WRAPPER;
-        var dualScreamingLoggerClass = Classes.SLIB_DUAL_LOGGER_WRAPPER;
-        var reflectClass = Classes.SLIB_REFLECT;
+        var pluginDescriptionClass = Classes.SLib.PLUGIN;
+        var screamingLoggerClass = Classes.SLib.LOGGER_WRAPPER;
+        var julScreamingLoggerClass = Classes.SLib.JUL_LOGGER_WRAPPER;
+        var slf4jScreamingLoggerClass = Classes.SLib.SLF4J_LOGGER_WRAPPER;
+        var dualScreamingLoggerClass = Classes.SLib.DUAL_LOGGER_WRAPPER;
+        var reflectClass = Classes.SLib.REFLECT;
 
         var onLoadBuilder = preparePublicVoid("onLoad")
-                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLIB_CONTROLLABLE_IMPL);
+                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLib.CONTROLLABLE_IMPL);
 
+        var newClassName = pluginContainer.getSimpleName() + "_BukkitImpl";
 
-        var serviceInitGenerator = ServiceInitGenerator
-                .builder(pluginContainer.getSimpleName() + "_BukkitImpl", onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
-                .add(List.of("org.bukkit.plugin.java.JavaPlugin", "org.bukkit.plugin.Plugin"), (statement, objects) ->
-                        statement.append(pluginContainer.getSimpleName()).append("_BukkitImpl.this")
-                )
-                .add(pluginContainer.asType().toString(), (statement, processedArguments) -> {
-                    statement.append(pluginContainer.getSimpleName()).append("_BukkitImpl.this.$N");
-                    processedArguments.add("pluginContainer");
-                });
+        var serviceInitGenerator = new ServiceInitGenerator(newClassName, onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
+                .add(List.of(Classes.Bukkit.JAVA_PLUGIN.canonicalName(), Classes.Bukkit.PLUGIN_BASE.canonicalName(), Classes.Bukkit.PLUGIN.canonicalName()), (statement, objects) ->
+                        statement.append(newClassName).append(".this")
+                );
 
         sortedPair.getFirst().forEach(serviceInitGenerator::process);
 
-        onLoadBuilder.addStatement("$T $N = this.getName()", String.class, "name")
-                .addStatement("$T $N = $T.getPlugin($N)", pluginDescriptionClass, "description", pluginManagerClass, "name")
-                .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
+        onLoadBuilder
+                .addStatement("$T $N = new $T(this)", pluginDescriptionClass, "description", Classes.SLib.BUKKIT_PLUGIN)
                 .addStatement("$T $N = null", Object.class, "slf4jLogger")
                 .addStatement("$T $N = new $T(this.getLogger())", screamingLoggerClass, "screamingLogger", julScreamingLoggerClass)
                 .beginControlFlow("if ($T.hasMethod(this, $S))", reflectClass, "getSLF4JLogger")
                     .addStatement("$N = this.getSLF4JLogger()", "slf4jLogger")
                     .addStatement("$N = new $T(new $T(this.getSLF4JLogger()), $N)", "screamingLogger", dualScreamingLoggerClass, slf4jScreamingLoggerClass, "screamingLogger")
-                .endControlFlow()
-                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
+                .endControlFlow();
+
+        if (pluginContainer instanceof TypeElement) {
+            serviceInitGenerator.process(ServiceContainer.createPluginService(processingEnvironment.getTypeUtils(), (TypeElement) pluginContainer));
+        }
 
         var onEnableBuilder = preparePublicVoid("onEnable");
         var onDisableBuilder = preparePublicVoid("onDisable");
 
         sortedPair.getSecond().forEach(serviceInitGenerator::process);
 
+        serviceInitGenerator.processDelayedControllables();
+
         onLoadBuilder
-                .addStatement("this.$N.load()", "pluginContainer");
+                .addStatement("this.$N.pluginLoad()", "pluginControllable");
 
         onEnableBuilder
-                .beginControlFlow("if (this.$N == null)", "pluginContainer")
-                    .addStatement("throw new $T($S)", UnsupportedOperationException.class, "Plugin must be loaded before enabling!")
-                .endControlFlow()
                 .addStatement("this.$N.enable()", "pluginControllable")
-                .addStatement("this.$N.enable()", "pluginContainer")
-                .addStatement("this.$N.postEnable()", "pluginControllable")
-                .addStatement("this.$N.postEnable()", "pluginContainer");
+                .addStatement("this.$N.postEnable()", "pluginControllable");
 
         onDisableBuilder
-                .addStatement("this.$N.preDisable()", "pluginContainer")
                 .addStatement("this.$N.preDisable()", "pluginControllable")
-                .addStatement("this.$N.disable()", "pluginContainer")
                 .addStatement("this.$N.disable()", "pluginControllable");
 
-        var bukkitMainClass = TypeSpec.classBuilder(pluginContainer.getSimpleName() + "_BukkitImpl")
+        var bukkitMainClass = TypeSpec.classBuilder(newClassName)
                 .addModifiers(Modifier.PUBLIC)
-                .superclass(ClassName.get("org.bukkit.plugin.java", "JavaPlugin"))
+                .superclass(Classes.Bukkit.JAVA_PLUGIN)
                 .addField(FieldSpec
-                        .builder(TypeName.get(pluginContainer.asType()), "pluginContainer", Modifier.PRIVATE)
-                        .build())
-                .addField(FieldSpec
-                        .builder(ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"), "pluginControllable",
-                                Modifier.PRIVATE)
+                        .builder(Classes.SLib.CONTROLLABLE_IMPL, "pluginControllable", Modifier.PRIVATE)
                         .build())
                 .addMethod(onLoadBuilder.build())
                 .addMethod(onEnableBuilder.build())
                 .addMethod(onDisableBuilder.build())
                 .build();
 
-        JavaFile.builder(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString(), bukkitMainClass)
+        String newClassPackage;
+        if (pluginContainer instanceof TypeElement) { // class
+            newClassPackage = ((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString();
+        } else { // package
+            newClassPackage = pluginContainer.getQualifiedName().toString();
+        }
+
+        JavaFile.builder(newClassPackage, bukkitMainClass)
                 .build()
                 .writeTo(processingEnvironment.getFiler());
 
@@ -124,7 +119,7 @@ public class BukkitMainClassGenerator extends MainClassGenerator {
         var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
 
         var node = loader.createNode();
-        node.node("main").set(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString() + "." + pluginContainer.getSimpleName() + "_BukkitImpl");
+        node.node("main").set(newClassPackage + "." + newClassName);
         node.node("name").set(pluginAnnotation.id());
         node.node("version").set(pluginAnnotation.version());
         node.node("api-version").set("1.13");

@@ -17,47 +17,62 @@
 package org.screamingsandals.lib.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class ControllableImpl implements Controllable {
-    private final List<ControllableImpl> controllableList = new LinkedList<>();
+    private final @NotNull List<@NotNull ControllableImpl> controllableList = new LinkedList<>();
 
-    private Runnable enableMethod;
-    private Runnable postEnableMethod;
-    private Runnable preDisableMethod;
-    private Runnable disableMethod;
+    private @Nullable Runnable pluginLoadMethod;
+    private @Nullable Runnable enableMethod;
+    private @Nullable Runnable postEnableMethod;
+    private @Nullable Runnable preDisableMethod;
+    private @Nullable Runnable disableMethod;
 
     @Override
-    public Controllable enable(@NotNull Runnable enableMethod) {
+    public @NotNull Controllable pluginLoad(@NotNull Runnable pluginLoadMethod) {
+        this.pluginLoadMethod = pluginLoadMethod;
+        return this;
+    }
+
+    @Override
+    public @NotNull Controllable enable(@NotNull Runnable enableMethod) {
         this.enableMethod = enableMethod;
         return this;
     }
 
     @Override
-    public Controllable postEnable(@NotNull Runnable postEnableMethod) {
+    public @NotNull Controllable postEnable(@NotNull Runnable postEnableMethod) {
         this.postEnableMethod = postEnableMethod;
         return this;
     }
 
     @Override
-    public Controllable preDisable(@NotNull Runnable preDisableMethod) {
+    public @NotNull Controllable preDisable(@NotNull Runnable preDisableMethod) {
         this.preDisableMethod = preDisableMethod;
         return this;
     }
 
     @Override
-    public Controllable disable(@NotNull Runnable disableMethod) {
+    public @NotNull Controllable disable(@NotNull Runnable disableMethod) {
         this.disableMethod = disableMethod;
         return this;
     }
 
     @Override
-    public Controllable child() {
+    public @NotNull Controllable child() {
         var controllable = new ControllableImpl();
         controllableList.add(controllable);
         return controllable;
+    }
+
+    public void pluginLoad() {
+        controllableList.forEach(ControllableImpl::pluginLoad);
+        if (pluginLoadMethod != null) {
+            pluginLoadMethod.run();
+        }
     }
 
     public void enable() {
