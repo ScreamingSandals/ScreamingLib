@@ -20,12 +20,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.registry.SimpleRegistry;
 
-@AbstractService(
-        pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
-)
+@ProvidedService
 public abstract class GameModeRegistry extends SimpleRegistry<GameMode> {
     private static @Nullable GameModeRegistry registry;
 

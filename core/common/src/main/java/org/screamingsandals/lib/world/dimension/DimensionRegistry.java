@@ -18,12 +18,10 @@ package org.screamingsandals.lib.world.dimension;
 
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.registry.SimpleRegistry;
 
-@AbstractService(
-        pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
-)
+@ProvidedService
 @ApiStatus.Internal
 public abstract class DimensionRegistry extends SimpleRegistry<DimensionType> {
     private static @Nullable DimensionRegistry registry;

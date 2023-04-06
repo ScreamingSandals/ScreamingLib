@@ -22,12 +22,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.Locations;
 
-@AbstractService
+@ProvidedService
 @ServiceDependencies(dependsOn = {
         Locations.class,
         BlockTypeMapper.class

@@ -16,7 +16,11 @@
 
 package org.screamingsandals.lib.annotation.generators;
 
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.annotation.constants.Classes;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.PlatformType;
@@ -34,28 +38,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class VelocityMainClassGenerator extends MainClassGenerator {
+public class VelocityMainClassGenerator extends StandardMainClassGenerator {
     @Override
-    public void generate(ProcessingEnvironment processingEnvironment, QualifiedNameable pluginContainer, List<ServiceContainer> autoInit) throws IOException {
-        var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.VELOCITY);
-
-        var pluginDescriptionClass = Classes.SLib.PLUGIN;
-        var screamingLoggerClass = Classes.SLib.SLF4J_LOGGER_WRAPPER;
-        var loggerClass = Classes.Slf4j.LOGGER;
-
-        var velocityProxyServerClass = Classes.Velocity.PROXY_SERVER;
-        var guiceInjectorClass = Classes.Guice.INJECTOR;
-
+    public void generate(@NotNull ProcessingEnvironment processingEnvironment, @NotNull QualifiedNameable pluginContainer, @NotNull List<ServiceContainer> autoInit) throws IOException {
         var constructorBuilder = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Classes.Guice.INJECT)
-                .addParameter(ParameterSpec.builder(velocityProxyServerClass, "proxyServer").build())
-                .addParameter(ParameterSpec.builder(loggerClass, "slf4jLogger").build())
-                .addParameter(ParameterSpec.builder(guiceInjectorClass, "guice").build())
+                .addParameter(ParameterSpec.builder(Classes.Velocity.PROXY_SERVER, "proxyServer").build())
+                .addParameter(ParameterSpec.builder(Classes.Slf4j.LOGGER, "slf4jLogger").build())
+                .addParameter(ParameterSpec.builder(Classes.Guice.INJECTOR, "guice").build())
                 .addParameter(ParameterSpec.builder(Classes.Velocity.PLUGIN_CONTAINER, "velocityContainer").build())
-                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLib.CONTROLLABLE_IMPL)
                 .addStatement("this.$N = $N", "guiceInjector", "guice")
-                .addStatement("this.$N = new $T($N)", "screamingLogger", screamingLoggerClass, "slf4jLogger")
+                .addStatement("this.$N = $N", "slf4jLogger", "slf4jLogger")
                 .addStatement("this.$N = $N", "velocityContainer", "velocityContainer");
 
         var newClassName = pluginContainer.getSimpleName() + "_VelocityImpl";
@@ -70,69 +64,28 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                 .addAnnotation(Classes.Velocity.SUBSCRIBE)
                 .addParameter(ParameterSpec.builder(Classes.Velocity.PROXY_SHUTDOWN_EVENT, "event").build());
 
-        var serviceInitGenerator = new ServiceInitGenerator(newClassName, onEnableBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
-                .add(velocityProxyServerClass.canonicalName(), (statement, objects) -> {
-                    statement.append("$N");
-                    objects.add("proxyServer");
-                })
-                .add(Classes.Velocity.PLUGIN_MANAGER.canonicalName(), (statement, objects) -> {
-                    statement.append("$N.getPluginManager()");
-                    objects.add("proxyServer");
-                });
+        fillInOnLoadMethod(pluginContainer, autoInit, processingEnvironment, newClassName, onEnableBuilder); // there's no load method in Velocity, process earlier in on enable
+        fillInOnEnableMethod(onEnableBuilder);
+        fillInOnDisableMethod(onDisableBuilder);
 
-        sortedPair.getFirst().forEach(serviceInitGenerator::process);
-
-        onEnableBuilder
-                .addStatement("$T $N = new $T($N)", pluginDescriptionClass, "description", Classes.SLib.VELOCITY_PLUGIN, "velocityContainer");
-
-        if (pluginContainer instanceof TypeElement) {
-            serviceInitGenerator.process(ServiceContainer.createPluginService(processingEnvironment.getTypeUtils(), (TypeElement) pluginContainer));
-        }
-
-        sortedPair.getSecond().forEach(serviceInitGenerator::process);
-
-        serviceInitGenerator.processDelayedControllables();
-
-        //load the container first
-        onEnableBuilder
-                .addStatement("this.$N.pluginLoad()", "pluginControllable");
-
-        //then enable
-        onEnableBuilder.addStatement("this.$N.enable()", "pluginControllable")
-                .addStatement("this.$N.postEnable()", "pluginControllable");
-
-        onDisableBuilder
-                .addStatement("this.$N.preDisable()", "pluginControllable")
-                .addStatement("this.$N.disable()", "pluginControllable");
-
-        var velocityMainClass = TypeSpec.classBuilder(newClassName)
-                .addModifiers(Modifier.PUBLIC)
+        var velocityMainClass = prepareType(newClassName)
                 .addField(FieldSpec
-                        .builder(Classes.SLib.CONTROLLABLE_IMPL, "pluginControllable",
-                                Modifier.PRIVATE)
-                        .build())
-                .addField(FieldSpec
-                        .builder(screamingLoggerClass, "screamingLogger", Modifier.PRIVATE)
+                        .builder(Classes.Slf4j.LOGGER, "slf4jLogger", Modifier.PRIVATE)
                         .build())
                 .addField(FieldSpec
                         .builder(Classes.Velocity.PLUGIN_CONTAINER, "velocityContainer", Modifier.PRIVATE)
                         .build())
                 .addField(FieldSpec
-                        .builder(guiceInjectorClass, "guiceInjector", Modifier.PRIVATE)
+                        .builder(Classes.Guice.INJECTOR, "guiceInjector", Modifier.PRIVATE)
                         .build())
                 .addMethod(constructorBuilder.build())
                 .addMethod(onEnableBuilder.build())
                 .addMethod(onDisableBuilder.build())
                 .build();
 
-        String newPackageName;
-        if (pluginContainer instanceof TypeElement) { // class
-            newPackageName = ((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString();
-        } else { // package
-            newPackageName = pluginContainer.getQualifiedName().toString();
-        }
+        String newClassPackage = getPackage(pluginContainer);
 
-        JavaFile.builder(newPackageName, velocityMainClass)
+        JavaFile.builder(newClassPackage, velocityMainClass)
                 .build()
                 .writeTo(processingEnvironment.getFiler());
 
@@ -141,7 +94,7 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                 .build();
 
         var node = loader.createNode();
-        node.node("main").set(newPackageName + "." + newClassName);
+        node.node("main").set(newClassPackage + "." + newClassName);
         node.node("id").set(pluginAnnotation.id().toLowerCase(Locale.ROOT));
         node.node("name").set(pluginAnnotation.name());
         node.node("version").set(pluginAnnotation.version());
@@ -161,5 +114,34 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
         });
 
         loader.save(node);
+    }
+
+    @Override
+    protected void prepareCustomDependencyInjectionTypes(@NotNull ServiceInitGenerator generator) {
+        generator.add(Classes.Velocity.PROXY_SERVER.canonicalName(), (statement, objects) -> {
+                    statement.append("$N");
+                    objects.add("proxyServer");
+                })
+                .add(Classes.Velocity.PLUGIN_MANAGER.canonicalName(), (statement, objects) -> {
+                    statement.append("$N.getPluginManager()");
+                    objects.add("proxyServer");
+                });
+    }
+
+    @Override
+    protected void wrapPluginDescription(MethodSpec.@NotNull Builder builder) {
+        builder.addStatement("$T $N = new $T($N)", Classes.SLib.PLUGIN, "description", Classes.SLib.VELOCITY_PLUGIN, "velocityContainer");
+    }
+
+    @Override
+    protected void wrapLoggers(MethodSpec.@NotNull Builder builder, boolean requiredScreamingLogger, boolean requiredSlf4jLogger) {
+        if (requiredScreamingLogger) {
+            builder.addStatement("this.$N = new $T($N)", "screamingLogger", Classes.SLib.SLF4J_LOGGER_WRAPPER, "slf4jLogger");
+        }
+    }
+
+    @Override
+    protected @NotNull PlatformType getPlatform() {
+        return PlatformType.VELOCITY;
     }
 }

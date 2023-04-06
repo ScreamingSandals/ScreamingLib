@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.tasker.task.TaskBase;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 
 import java.util.Map;
@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@AbstractService
+@ProvidedService
 public abstract class Tasker {
     private static @Nullable Tasker instance;
 

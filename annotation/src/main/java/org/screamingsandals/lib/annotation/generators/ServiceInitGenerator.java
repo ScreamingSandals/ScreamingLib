@@ -17,8 +17,10 @@
 package org.screamingsandals.lib.annotation.generators;
 
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,14 +28,29 @@ import org.screamingsandals.lib.annotation.constants.Classes;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.event.OnEvent;
-import org.screamingsandals.lib.utils.*;
+import org.screamingsandals.lib.utils.Pair;
+import org.screamingsandals.lib.utils.QuadConsumer;
+import org.screamingsandals.lib.utils.TriFunction;
+import org.screamingsandals.lib.utils.Triple;
 import org.screamingsandals.lib.utils.annotations.internal.PlatformPluginObject;
-import org.screamingsandals.lib.utils.annotations.methods.*;
+import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
+import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
+import org.screamingsandals.lib.utils.annotations.methods.OnPluginLoad;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
+import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
+import org.screamingsandals.lib.utils.annotations.methods.Provider;
+import org.screamingsandals.lib.utils.annotations.methods.ShouldRunControllable;
 import org.screamingsandals.lib.utils.annotations.parameters.ConfigFile;
 import org.screamingsandals.lib.utils.annotations.parameters.DataFolder;
 import org.screamingsandals.lib.utils.annotations.parameters.ProvidedBy;
 
-import javax.lang.model.element.*;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -42,7 +59,14 @@ import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -54,8 +78,9 @@ import java.util.stream.Collectors;
 public final class ServiceInitGenerator {
     private long index;
 
+    @Getter
     private final @NotNull String platformClassName;
-    private final MethodSpec.@NotNull Builder methodSpec;
+    private final CodeBlock.@NotNull Builder methodSpec;
     private final @NotNull Types types;
     private final @NotNull Elements elements;
     private final @NotNull Map<@NotNull TypeMirror, String> instancedServices = new HashMap<>();
@@ -64,7 +89,14 @@ public final class ServiceInitGenerator {
     private final @NotNull Map<@NotNull Triple<@NotNull CheckType, @NotNull String, @NotNull Class<? extends Annotation>>, QuadConsumer<@NotNull StringBuilder, @NotNull List<Object>, @NotNull Annotation, @NotNull TypeElement>> annotatedInitArguments = new HashMap<>();
     private final @NotNull Map<@NotNull String, BiConsumer<@NotNull StringBuilder, @NotNull List<@NotNull Object>>> initArguments = new HashMap<>();
 
-    public ServiceInitGenerator(@NotNull String platformClassName, MethodSpec.@NotNull Builder methodSpec, @NotNull Types types, @NotNull Elements elements) {
+    @Getter
+    private boolean requiredDescription;
+    @Getter
+    private boolean requiredScreamingLogger;
+    @Getter
+    private boolean requiredSlf4jLogger;
+
+    public ServiceInitGenerator(@NotNull String platformClassName, CodeBlock.@NotNull Builder methodSpec, @NotNull Types types, @NotNull Elements elements) {
         this.platformClassName = platformClassName;
         this.methodSpec = methodSpec;
         this.types = types;
@@ -79,6 +111,7 @@ public final class ServiceInitGenerator {
                 statement.append(".resolve($S)");
                 processedArguments.add(annotation.value());
             }
+            ServiceInitGenerator.this.requiredDescription = true;
         });
         add(CheckType.ONLY_SAME, Classes.Java.FILE.canonicalName(), DataFolder.class, (statement, processedArguments, annotation, variableType) -> {
             statement.append("$N.getDataFolder()");
@@ -88,16 +121,19 @@ public final class ServiceInitGenerator {
                 processedArguments.add(annotation.value());
             }
             statement.append(".toFile()");
+            ServiceInitGenerator.this.requiredDescription = true;
         });
         add(CheckType.ONLY_SAME, Classes.Java.NIO_PATH.canonicalName(), ConfigFile.class, (statement, processedArguments, annotation, variableType) -> {
             statement.append("$N.getDataFolder().resolve($S)");
             processedArguments.add("description");
             processedArguments.add(annotation.value());
+            ServiceInitGenerator.this.requiredDescription = true;
         });
         add(CheckType.ONLY_SAME, Classes.Java.FILE.canonicalName(), ConfigFile.class, (statement, processedArguments, annotation, variableType) -> {
             statement.append("$N.getDataFolder().resolve($S).toFile()");
             processedArguments.add("description");
             processedArguments.add(annotation.value());
+            ServiceInitGenerator.this.requiredDescription = true;
         });
         add(CheckType.ALLOW_CHILDREN, Classes.Configurate.CONFIGURATION_LOADER.canonicalName(), ConfigFile.class, (statement, processedArguments, annotation, variableType) -> {
             if (!annotation.old().isEmpty()) {
@@ -150,6 +186,7 @@ public final class ServiceInitGenerator {
                 }
             }
             statement.append(".build()");
+            ServiceInitGenerator.this.requiredDescription = true;
         });
         add(CheckType.ALLOW_CHILDREN, Classes.Java.OBJECT.canonicalName(), ProvidedBy.class, (statement, processedArguments, annotation, variableType) -> {
             var providerClass = MiscUtils.getSafelyTypeElement(ServiceInitGenerator.this.types, annotation);
@@ -184,16 +221,19 @@ public final class ServiceInitGenerator {
         add(Classes.SLib.PLUGIN.canonicalName(), (statement, processedArguments) -> {
             statement.append("$N");
             processedArguments.add("description");
+            ServiceInitGenerator.this.requiredDescription = true;
         });
         add(Classes.SLib.LOGGER_WRAPPER.canonicalName(), (statement, processedArguments) -> {
             statement.append("$N");
             processedArguments.add("screamingLogger");
+            ServiceInitGenerator.this.requiredScreamingLogger = true;
         });
         add(Classes.Slf4j.LOGGER.canonicalName(), (statement, processedArguments) -> {
             // LoggerWrapper or lombok's @Slf4j should be used instead of this
             statement.append("($T) $N");
             processedArguments.add(Classes.Slf4j.LOGGER);
             processedArguments.add("slf4jLogger");
+            ServiceInitGenerator.this.requiredSlf4jLogger = true;
         });
     }
 
@@ -445,9 +485,7 @@ public final class ServiceInitGenerator {
             });
             statement.append(")");
 
-            var methodBuilder = MethodSpec.methodBuilder("run")
-                    .addModifiers(Modifier.PUBLIC)
-                    .returns(void.class);
+            var methodBuilder = CodeBlock.builder().beginControlFlow("() -> "); // lambda block
             if (shouldRunControllable.areBothPresent()) {
                 methodBuilder.beginControlFlow("if (" + shouldRunControllable.getFirst() + ")", shouldRunControllable.getSecond().toArray());
             }
@@ -460,10 +498,7 @@ public final class ServiceInitGenerator {
                     "$N.$N($L)",
                     controllableName.get(),
                     controllableMethod,
-                    TypeSpec.anonymousClassBuilder("")
-                            .addSuperinterface(Runnable.class)
-                            .addMethod(methodBuilder.build())
-                            .build()
+                    methodBuilder.endControlFlow().build().toString()
             );
         }
     }
@@ -690,9 +725,7 @@ public final class ServiceInitGenerator {
                 providers.put(Pair.of(typeElement, (TypeElement) types.asElement(returnType)), Pair.of(Provider.Level.INIT, indexv));
             } else if (annotation.level() == Provider.Level.ENABLE) {
                 methodSpec.addStatement("$T $N = new $T()", AtomicReference.class, indexv, AtomicReference.class);
-                var methodBuilder = MethodSpec.methodBuilder("run")
-                        .addModifiers(Modifier.PUBLIC)
-                        .returns(void.class);
+                var methodBuilder = CodeBlock.builder().beginControlFlow("() -> "); // lambda block
                 if (shouldRunControllable.areBothPresent()) {
                     methodBuilder.beginControlFlow("if (" + shouldRunControllable.getFirst() + ")", shouldRunControllable.getSecond().toArray());
                 }
@@ -706,17 +739,12 @@ public final class ServiceInitGenerator {
                 methodSpec.addStatement(
                         "this.$N.child().enable($L)",
                         "pluginControllable",
-                        TypeSpec.anonymousClassBuilder("")
-                                .addSuperinterface(Runnable.class)
-                                .addMethod(methodBuilder.build())
-                                .build()
+                        methodBuilder.endControlFlow().build().toString()
                 );
                 providers.put(Pair.of(typeElement, (TypeElement) types.asElement(returnType)), Pair.of(Provider.Level.ENABLE, indexv));
             } else if (annotation.level() == Provider.Level.POST_ENABLE) {
                 methodSpec.addStatement("$T $N = new $T()", AtomicReference.class, indexv, AtomicReference.class);
-                var methodBuilder = MethodSpec.methodBuilder("run")
-                        .addModifiers(Modifier.PUBLIC)
-                        .returns(void.class);
+                var methodBuilder = CodeBlock.builder().beginControlFlow("() -> "); // lambda block
                 if (shouldRunControllable.areBothPresent()) {
                     methodBuilder.beginControlFlow("if (" + shouldRunControllable.getFirst() + ")", shouldRunControllable.getSecond().toArray());
                 }
@@ -730,10 +758,7 @@ public final class ServiceInitGenerator {
                 methodSpec.addStatement(
                         "this.$N.child().postEnable($L)",
                         "pluginControllable",
-                        TypeSpec.anonymousClassBuilder("")
-                                .addSuperinterface(Runnable.class)
-                                .addMethod(methodBuilder.build())
-                                .build()
+                        methodBuilder.endControlFlow().build().toString()
                 );
                 providers.put(Pair.of(typeElement, (TypeElement)  types.asElement(returnType)), Pair.of(Provider.Level.POST_ENABLE, indexv));
             }
@@ -776,9 +801,7 @@ public final class ServiceInitGenerator {
         var eventHandlerClass = Classes.SLib.EVENT_HANDLER;
         var eventPriorityClass = Classes.SLib.EVENT_PRIORITY;
 
-        var methodBuilder = MethodSpec.methodBuilder("run")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(void.class);
+        var methodBuilder = CodeBlock.builder().beginControlFlow("() -> "); // lambda block
         if (shouldRunControllable.areBothPresent()) {
             methodBuilder.beginControlFlow("if (" + shouldRunControllable.getFirst() + ")", shouldRunControllable.getSecond().toArray());
         }
@@ -830,10 +853,7 @@ public final class ServiceInitGenerator {
         methodSpec.addStatement(
                 "this.$N.child().postEnable($L)",
                 "pluginControllable",
-                TypeSpec.anonymousClassBuilder("")
-                        .addSuperinterface(Runnable.class)
-                        .addMethod(methodBuilder.build())
-                        .build()
+                methodBuilder.endControlFlow().build().toString()
         );
     }
 

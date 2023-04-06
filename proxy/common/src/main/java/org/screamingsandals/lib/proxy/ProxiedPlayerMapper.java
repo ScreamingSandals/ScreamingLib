@@ -19,12 +19,12 @@ package org.screamingsandals.lib.proxy;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 
 import java.util.List;
 import java.util.UUID;
 
-@AbstractService
+@ProvidedService
 public abstract class ProxiedPlayerMapper {
 
     private static @Nullable ProxiedPlayerMapper proxiedPlayerMapper;

@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.annotation.generators;
 
 import com.squareup.javapoet.MethodSpec;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.Pair;
@@ -32,15 +33,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public abstract class MainClassGenerator {
-    public abstract void generate(ProcessingEnvironment processingEnvironment, QualifiedNameable pluginContainer, List<ServiceContainer> autoInit) throws IOException;
+    public abstract void generate(@NotNull ProcessingEnvironment processingEnvironment, @NotNull QualifiedNameable pluginContainer, @NotNull List<@NotNull ServiceContainer> autoInit) throws IOException;
 
-    protected Pair<List<ServiceContainer>, List<ServiceContainer>> sortServicesAndGetDependencies(ProcessingEnvironment processingEnvironment, List<ServiceContainer> autoInit, PlatformType platformType) {
+    protected @NotNull Pair<@NotNull List<@NotNull ServiceContainer>, @NotNull List<@NotNull ServiceContainer>> sortServicesAndGetDependencies(@NotNull ProcessingEnvironment processingEnvironment, @NotNull List<@NotNull ServiceContainer> autoInit, PlatformType platformType) {
+        // TODO: probably rewrite this f*cking sh*t
+        var checkedDeps = new ArrayList<ServiceContainer>();
         var provided = new ArrayList<ServiceContainer>();
         var sorted = new ArrayList<ServiceContainer>();
         var waiting = new ArrayList<>(autoInit);
         while (!waiting.isEmpty()) {
             var copy = List.copyOf(waiting);
             waiting.clear();
+            if (checkedDeps.containsAll(copy) && !provided.isEmpty()) {
+                throw new UnsupportedOperationException("It is not possible to create a list of services: some @ProvidedServices remain unimplemented! "
+                        + provided.stream().map(s -> s.getService().getQualifiedName().toString()).collect(Collectors.joining(", ")));
+            }
             var delayEverything = new AtomicBoolean(false);
             copy.forEach(serviceContainer -> {
                 // if this is @ProvidedService, just save it to provided collection
@@ -68,6 +75,10 @@ public abstract class MainClassGenerator {
                                         true
                                 ).get(platformType))
                         .forEach(waiting::add);
+
+                if (!checkedDeps.contains(serviceContainer)) {
+                    checkedDeps.add(serviceContainer);
+                }
 
                 if (!dependencies.isEmpty() && dependencies.stream().anyMatch(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement)))) {
                     dependencies.stream()
@@ -121,7 +132,7 @@ public abstract class MainClassGenerator {
         return Pair.of(earlyInitialization, sorted);
     }
 
-    protected MethodSpec.Builder preparePublicVoid(String name) {
+    protected MethodSpec.@NotNull Builder preparePublicVoid(@NotNull String name) {
         return MethodSpec.methodBuilder(name)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class);

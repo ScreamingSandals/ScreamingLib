@@ -20,10 +20,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.registry.SimpleRegistry;
 
-@AbstractService
+@ProvidedService
 @ApiStatus.Internal
 public abstract class AttributeTypeRegistry extends SimpleRegistry<AttributeType> {
     private static @Nullable AttributeTypeRegistry registry;

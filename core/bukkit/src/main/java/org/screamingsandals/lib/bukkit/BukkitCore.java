@@ -23,20 +23,192 @@ import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Core;
+import org.screamingsandals.lib.bukkit.attribute.BukkitAttributeMapping;
+import org.screamingsandals.lib.bukkit.attribute.BukkitAttributeTypeRegistry;
+import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeMapper;
+import org.screamingsandals.lib.bukkit.block.BukkitBlocks;
+import org.screamingsandals.lib.bukkit.block.state.BukkitBlockSnapshots;
+import org.screamingsandals.lib.bukkit.container.BukkitContainerFactory;
+import org.screamingsandals.lib.bukkit.container.type.BukkitInventoryTypeRegistry;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntities;
+import org.screamingsandals.lib.bukkit.entity.damage.BukkitDamageTypeRegistry;
+import org.screamingsandals.lib.bukkit.entity.pose.BukkitEntityPoseRegistry;
+import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityTypeRegistry;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
-import org.screamingsandals.lib.bukkit.event.block.*;
-import org.screamingsandals.lib.bukkit.event.chunk.*;
-import org.screamingsandals.lib.bukkit.event.entity.*;
-import org.screamingsandals.lib.bukkit.event.player.*;
-import org.screamingsandals.lib.bukkit.event.world.*;
+import org.screamingsandals.lib.bukkit.event.BukkitEventManager;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockBurnEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockCookEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockDispenseEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockDropItemEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockExperienceEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockExplodeEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockFadeEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockFertilizeEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockFormEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockFormedByEntityEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockFromToEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockGrowEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockIgniteEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockPhysicsEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockPistonExtendEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockPistonRetractEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockReceivedGameEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockShearEntityEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitBlockSpreadEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitCauldronLevelChangeEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitFluidLevelChangeEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitLeavesDecayEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitMoistureChangeEvent;
+import org.screamingsandals.lib.bukkit.event.block.BukkitRedstoneEvent;
+import org.screamingsandals.lib.bukkit.event.chunk.BukkitChunkLoadEvent;
+import org.screamingsandals.lib.bukkit.event.chunk.BukkitChunkPopulateEvent;
+import org.screamingsandals.lib.bukkit.event.chunk.BukkitChunkUnloadEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitAreaEffectCloudApplyEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitArrowBodyCountChangeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitBatToggleSleepEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitCreatureSpawnEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitCreeperPowerEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEnderDragonChangePhaseEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityAirChangeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityBreedEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityChangeBlockEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityCombustByBlockEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityCombustByEntityEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityCombustEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityCreatePortalEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityDamageByBlockEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityDamageByEntityEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityDamageEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityDeathEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityDropItemEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityEnterBlockEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityEnterLoveModeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityExhaustionEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityExplodeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityInteractEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityPickupItemEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityPlaceEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityPortalEnterEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityPortalEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityPortalExitEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityPoseChangeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityPotionEffectEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityRegainHealthEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityResurrectEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityShootBowEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntitySpawnEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityTameEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityTargetEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityTargetLivingEntityEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityTeleportEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityToggleGlideEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityToggleSwimEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitEntityUnleashEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitExpBottleEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitExplosionPrimeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitFireworkExplodeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitFoodLevelChangeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitHorseJumpEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitItemDespawnEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitItemMergeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitItemSpawnEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitLegacyPlayerPickupItemEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitModernPlayerPickupItemEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitProjectileHitEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitProjectileLaunchEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitSheepDyeWoolEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitSheepRegrowWoolEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitSlimeSplitEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitStriderTemperatureChangeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitVehicleCreateEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitVillagerAcquireTradeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitVillagerCareerChangeEvent;
+import org.screamingsandals.lib.bukkit.event.entity.BukkitVillagerReplenishTradeEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitAsyncPlayerPreLoginEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerAnimationEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerArmorStandManipulateEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerBedEnterEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerBedLeaveEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerBlockBreakEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerBlockDamageEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerBlockPlaceEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerBucketEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerChatEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerCommandPreprocessEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerCommandSendEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerCraftItemEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerDeathEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerDropItemEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerEggThrowEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerExpChangeEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerFishEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerFoodLevelChangeEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerGameModeChangeEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerHarvestBlockEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerInteractAtEntityEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerInteractEntityEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerInteractEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerInventoryClickEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerInventoryCloseEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerInventoryOpenEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerItemConsumeEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerItemDamageEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerItemHeldEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerItemMendEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerJoinEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerKickEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerLeaveEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerLevelChangeEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerLocaleChangeEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerLoginEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerMoveEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerPortalEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerProjectileLaunchEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerRespawnEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerShearEntityEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerSwapHandItemsEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerTeleportEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerToggleFlightEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerToggleSneakEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerToggleSprintEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerUnleashEntityEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerUpdateSignEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerVelocityChangeEvent;
+import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerWorldChangeEvent;
+import org.screamingsandals.lib.bukkit.event.world.BukkitPlantGrowEvent;
+import org.screamingsandals.lib.bukkit.event.world.BukkitSpawnChangeEvent;
+import org.screamingsandals.lib.bukkit.event.world.BukkitSpongeAbsorbEvent;
+import org.screamingsandals.lib.bukkit.event.world.BukkitTimeSkipEvent;
+import org.screamingsandals.lib.bukkit.event.world.BukkitWorldInitEvent;
+import org.screamingsandals.lib.bukkit.event.world.BukkitWorldLoadEvent;
+import org.screamingsandals.lib.bukkit.event.world.BukkitWorldSaveEvent;
+import org.screamingsandals.lib.bukkit.event.world.BukkitWorldUnloadEvent;
+import org.screamingsandals.lib.bukkit.firework.BukkitFireworkEffectRegistry;
+import org.screamingsandals.lib.bukkit.item.BukkitItemTypeMapper;
+import org.screamingsandals.lib.bukkit.item.builder.BukkitItemStackFactory;
+import org.screamingsandals.lib.bukkit.item.meta.BukkitEnchantmentRegistry;
+import org.screamingsandals.lib.bukkit.item.meta.BukkitPotionEffectRegistry;
+import org.screamingsandals.lib.bukkit.item.meta.BukkitPotionRegistry;
+import org.screamingsandals.lib.bukkit.particle.BukkitParticleTypeRegistry;
+import org.screamingsandals.lib.bukkit.player.BukkitPlayers;
+import org.screamingsandals.lib.bukkit.player.gamemode.BukkitGameModeRegistry;
+import org.screamingsandals.lib.bukkit.slot.BukkitEquipmentSlotRegistry;
 import org.screamingsandals.lib.bukkit.spectator.SpigotBackend;
+import org.screamingsandals.lib.bukkit.tasker.BukkitTasker;
+import org.screamingsandals.lib.bukkit.world.BukkitLocations;
+import org.screamingsandals.lib.bukkit.world.BukkitWorlds;
+import org.screamingsandals.lib.bukkit.world.chunk.BukkitChunks;
+import org.screamingsandals.lib.bukkit.world.difficulty.BukkitDifficultyRegistry;
+import org.screamingsandals.lib.bukkit.world.dimension.BukkitDimensionRegistry;
+import org.screamingsandals.lib.bukkit.world.gamerule.BukkitGameRuleRegistry;
+import org.screamingsandals.lib.bukkit.world.weather.BukkitWeatherRegistry;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.SEvent;
-import org.screamingsandals.lib.event.block.*;
 import org.screamingsandals.lib.event.block.BlockBurnEvent;
 import org.screamingsandals.lib.event.block.BlockCookEvent;
 import org.screamingsandals.lib.event.block.BlockDispenseEvent;
 import org.screamingsandals.lib.event.block.BlockDropItemEvent;
+import org.screamingsandals.lib.event.block.BlockExperienceEvent;
 import org.screamingsandals.lib.event.block.BlockExplodeEvent;
 import org.screamingsandals.lib.event.block.BlockFadeEvent;
 import org.screamingsandals.lib.event.block.BlockFertilizeEvent;
@@ -45,15 +217,16 @@ import org.screamingsandals.lib.event.block.BlockGrowEvent;
 import org.screamingsandals.lib.event.block.BlockIgniteEvent;
 import org.screamingsandals.lib.event.block.BlockPhysicsEvent;
 import org.screamingsandals.lib.event.block.BlockPistonEvent;
+import org.screamingsandals.lib.event.block.BlockReceivedGameEvent;
 import org.screamingsandals.lib.event.block.BlockShearEntityEvent;
 import org.screamingsandals.lib.event.block.CauldronLevelChangeEvent;
 import org.screamingsandals.lib.event.block.FluidLevelChangeEvent;
 import org.screamingsandals.lib.event.block.LeavesDecayEvent;
 import org.screamingsandals.lib.event.block.MoistureChangeEvent;
+import org.screamingsandals.lib.event.block.RedstoneEvent;
 import org.screamingsandals.lib.event.chunk.ChunkLoadEvent;
 import org.screamingsandals.lib.event.chunk.ChunkPopulateEvent;
 import org.screamingsandals.lib.event.chunk.ChunkUnloadEvent;
-import org.screamingsandals.lib.event.entity.*;
 import org.screamingsandals.lib.event.entity.AreaEffectCloudApplyEvent;
 import org.screamingsandals.lib.event.entity.ArrowBodyCountChangeEvent;
 import org.screamingsandals.lib.event.entity.BatToggleSleepEvent;
@@ -99,14 +272,16 @@ import org.screamingsandals.lib.event.entity.SheepDyeWoolEvent;
 import org.screamingsandals.lib.event.entity.SheepRegrowWoolEvent;
 import org.screamingsandals.lib.event.entity.SlimeSplitEvent;
 import org.screamingsandals.lib.event.entity.StriderTemperatureChangeEvent;
+import org.screamingsandals.lib.event.entity.VehicleCreateEvent;
 import org.screamingsandals.lib.event.entity.VillagerAcquireTradeEvent;
 import org.screamingsandals.lib.event.entity.VillagerCareerChangeEvent;
 import org.screamingsandals.lib.event.entity.VillagerReplenishTradeEvent;
-import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.event.player.AsyncPlayerPreLoginEvent;
 import org.screamingsandals.lib.event.player.PlayerAnimationEvent;
 import org.screamingsandals.lib.event.player.PlayerBedEnterEvent;
 import org.screamingsandals.lib.event.player.PlayerBedLeaveEvent;
+import org.screamingsandals.lib.event.player.PlayerBlockDamageEvent;
+import org.screamingsandals.lib.event.player.PlayerBlockPlaceEvent;
 import org.screamingsandals.lib.event.player.PlayerBucketEvent;
 import org.screamingsandals.lib.event.player.PlayerChatEvent;
 import org.screamingsandals.lib.event.player.PlayerCommandPreprocessEvent;
@@ -115,16 +290,21 @@ import org.screamingsandals.lib.event.player.PlayerDropItemEvent;
 import org.screamingsandals.lib.event.player.PlayerEggThrowEvent;
 import org.screamingsandals.lib.event.player.PlayerExpChangeEvent;
 import org.screamingsandals.lib.event.player.PlayerFishEvent;
+import org.screamingsandals.lib.event.player.PlayerFoodLevelChangeEvent;
 import org.screamingsandals.lib.event.player.PlayerGameModeChangeEvent;
 import org.screamingsandals.lib.event.player.PlayerHarvestBlockEvent;
 import org.screamingsandals.lib.event.player.PlayerInteractEntityEvent;
 import org.screamingsandals.lib.event.player.PlayerInteractEvent;
+import org.screamingsandals.lib.event.player.PlayerInventoryClickEvent;
+import org.screamingsandals.lib.event.player.PlayerInventoryCloseEvent;
+import org.screamingsandals.lib.event.player.PlayerInventoryOpenEvent;
 import org.screamingsandals.lib.event.player.PlayerItemConsumeEvent;
 import org.screamingsandals.lib.event.player.PlayerItemDamageEvent;
 import org.screamingsandals.lib.event.player.PlayerItemHeldEvent;
 import org.screamingsandals.lib.event.player.PlayerItemMendEvent;
 import org.screamingsandals.lib.event.player.PlayerJoinEvent;
 import org.screamingsandals.lib.event.player.PlayerKickEvent;
+import org.screamingsandals.lib.event.player.PlayerLeaveEvent;
 import org.screamingsandals.lib.event.player.PlayerLevelChangeEvent;
 import org.screamingsandals.lib.event.player.PlayerLocaleChangeEvent;
 import org.screamingsandals.lib.event.player.PlayerLoginEvent;
@@ -135,7 +315,10 @@ import org.screamingsandals.lib.event.player.PlayerSwapHandItemsEvent;
 import org.screamingsandals.lib.event.player.PlayerToggleFlightEvent;
 import org.screamingsandals.lib.event.player.PlayerToggleSneakEvent;
 import org.screamingsandals.lib.event.player.PlayerToggleSprintEvent;
-import org.screamingsandals.lib.event.world.*;
+import org.screamingsandals.lib.event.player.PlayerUpdateSignEvent;
+import org.screamingsandals.lib.event.player.PlayerVelocityChangeEvent;
+import org.screamingsandals.lib.event.player.PlayerWorldChangeEvent;
+import org.screamingsandals.lib.event.world.PlantGrowEvent;
 import org.screamingsandals.lib.event.world.SpawnChangeEvent;
 import org.screamingsandals.lib.event.world.SpongeAbsorbEvent;
 import org.screamingsandals.lib.event.world.TimeSkipEvent;
@@ -146,20 +329,57 @@ import org.screamingsandals.lib.event.world.WorldUnloadEvent;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
-import static org.screamingsandals.lib.utils.reflect.Reflect.has;
-
-@Service
+@Service(dependsOn = {
+        BukkitServer.class,
+        BukkitCustomPayload.class,
+        BukkitEventManager.class,
+        BukkitTasker.class,
+        BukkitEntityTypeRegistry.class,
+        BukkitEntities.class,
+        BukkitAttributeTypeRegistry.class,
+        BukkitAttributeMapping.class,
+        BukkitFireworkEffectRegistry.class,
+        BukkitEnchantmentRegistry.class,
+        BukkitPotionEffectRegistry.class,
+        BukkitPotionRegistry.class,
+        BukkitEquipmentSlotRegistry.class,
+        BukkitItemTypeMapper.class,
+        BukkitBlockTypeMapper.class,
+        BukkitItemBlockIdsRemapper.class,
+        BukkitItemStackFactory.class,
+        BukkitPlayers.class,
+        BukkitLocations.class,
+        BukkitBlocks.class,
+        BukkitBlockSnapshots.class,
+        BukkitDamageTypeRegistry.class,
+        BukkitGameModeRegistry.class,
+        BukkitInventoryTypeRegistry.class,
+        BukkitEntityPoseRegistry.class,
+        BukkitDifficultyRegistry.class,
+        BukkitDimensionRegistry.class,
+        BukkitChunks.class,
+        BukkitGameRuleRegistry.class,
+        BukkitWeatherRegistry.class,
+        BukkitParticleTypeRegistry.class,
+        BukkitGameRuleRegistry.class,
+        BukkitWorlds.class,
+        BukkitContainerFactory.class
+})
 public class BukkitCore extends Core {
     @Getter
     private static SpigotBackend spectatorBackend;
     @Getter
     private static Plugin plugin;
 
-    public BukkitCore(Plugin plugin) {
+    public BukkitCore(@NotNull Plugin plugin) {
         BukkitCore.plugin = plugin;
         spectatorBackend = new SpigotBackend();
         Spectator.setBackend(spectatorBackend);
@@ -168,23 +388,23 @@ public class BukkitCore extends Core {
     @OnEnable
     public void onEnable() {
         // entity
-        if (has("org.bukkit.event.entity.AreaCloudApplyEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.AreaCloudApplyEvent")) {
             constructDefaultListener(org.bukkit.event.entity.AreaEffectCloudApplyEvent.class, AreaEffectCloudApplyEvent.class, BukkitAreaEffectCloudApplyEvent::new);
         }
-        if (has("org.bukkit.event.entity.ArrowBodyCountChangeEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.ArrowBodyCountChangeEvent")) {
             constructDefaultListener(org.bukkit.event.entity.ArrowBodyCountChangeEvent.class, ArrowBodyCountChangeEvent.class, BukkitArrowBodyCountChangeEvent::new);
         }
-        if (has("org.bukkit.event.entity.BatToggleSleepEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.BatToggleSleepEvent")) {
             constructDefaultListener(org.bukkit.event.entity.BatToggleSleepEvent.class, BatToggleSleepEvent.class, BukkitBatToggleSleepEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.CreeperPowerEvent.class, CreeperPowerEvent.class, BukkitCreeperPowerEvent::new);
-        if (has("org.bukkit.event.entity.EnderDragonChangePhaseEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EnderDragonChangePhaseEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EnderDragonChangePhaseEvent.class, EnderDragonChangePhaseEvent.class, BukkitEnderDragonChangePhaseEvent::new);
         }
-        if (has("org.bukkit.event.entity.EntityAirChangeEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityAirChangeEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityAirChangeEvent.class, EntityAirChangeEvent.class, BukkitEntityAirChangeEvent::new);
         }
-        if (has("org.bukkit.event.entity.EntityBreedEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityBreedEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityBreedEvent.class, EntityBreedEvent.class, BukkitEntityBreedEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.EntityChangeBlockEvent.class, EntityChangeBlockEvent.class, BukkitEntityChangeBlockEvent::new);
@@ -200,21 +420,21 @@ public class BukkitCore extends Core {
         constructDefaultListener(org.bukkit.event.entity.EntityDeathEvent.class, EntityDeathEvent.class, factory(BukkitEntityDeathEvent::new)
                 .sub(org.bukkit.event.entity.PlayerDeathEvent.class, BukkitPlayerDeathEvent::new)
         );
-        if (has("org.bukkit.event.entity.EntityDropItemEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityDropItemEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityDropItemEvent.class, EntityDropItemEvent.class, BukkitEntityDropItemEvent::new);
         }
-        if (has("org.bukkit.event.entity.EntityEnterBlockEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityEnterBlockEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityEnterBlockEvent.class, EntityEnterBlockEvent.class, BukkitEntityEnterBlockEvent::new);
         }
-        if (has("org.bukkit.event.entity.EntityEnterLoveModeEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityEnterLoveModeEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityEnterLoveModeEvent.class, EntityEnterLoveModeEvent.class, BukkitEntityEnterLoveModeEvent::new);
         }
-        if (has("org.bukkit.event.entity.EntityExhaustionEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityExhaustionEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityExhaustionEvent.class, EntityExhaustionEvent.class, BukkitEntityExhaustionEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.EntityExplodeEvent.class, EntityExplodeEvent.class, BukkitEntityExplodeEvent::new);
         constructDefaultListener(org.bukkit.event.entity.EntityInteractEvent.class, EntityInteractEvent.class, BukkitEntityInteractEvent::new);
-        if (has("org.bukkit.event.entity.EntityPickupItemEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityPickupItemEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityPickupItemEvent.class, EntityPickupItemEvent.class, event -> {
                 if (event.getEntity() instanceof Player) {
                     return new BukkitModernPlayerPickupItemEvent(event);
@@ -224,7 +444,7 @@ public class BukkitCore extends Core {
         } else {
             constructDefaultListener(org.bukkit.event.player.PlayerPickupItemEvent.class, EntityPickupItemEvent.class, BukkitLegacyPlayerPickupItemEvent::new);
         }
-        if (has("org.bukkit.event.entity.EntityPlaceEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityPlaceEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityPlaceEvent.class, EntityPlaceEvent.class, BukkitEntityPlaceEvent::new);
         }
 
@@ -234,14 +454,14 @@ public class BukkitCore extends Core {
 
         constructDefaultListener(org.bukkit.event.entity.EntityPortalEnterEvent.class, EntityPortalEnterEvent.class, BukkitEntityPortalEnterEvent::new);
         constructDefaultListener(org.bukkit.event.entity.EntityPortalExitEvent.class, EntityPortalExitEvent.class, BukkitEntityPortalExitEvent::new);
-        if (has("org.bukkit.event.entity.EntityPoseChangeEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityPoseChangeEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityPoseChangeEvent.class, EntityPoseChangeEvent.class, BukkitEntityPoseChangeEvent::new);
         }
-        if (has("org.bukkit.event.entity.EntityPotionEffectEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityPotionEffectEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityPotionEffectEvent.class, EntityPotionEffectEvent.class, BukkitEntityPotionEffectEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.EntityRegainHealthEvent.class, EntityRegainHealthEvent.class, BukkitEntityRegainHealthEvent::new);
-        if (has("org.bukkit.event.entity.EntityResurrectEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityResurrectEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityResurrectEvent.class, EntityResurrectEvent.class, BukkitEntityResurrectEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.EntityShootBowEvent.class, EntityShootBowEvent.class, BukkitEntityShootBowEvent::new);
@@ -266,29 +486,29 @@ public class BukkitCore extends Core {
 
         // ProjectileHitEvent is a weird event, the child has its own HandlerList
         constructDefaultListener(org.bukkit.event.entity.ProjectileHitEvent.class, ProjectileHitEvent.class, BukkitProjectileHitEvent::new);
-        if (has("org.bukkit.event.entity.ExpBottleEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.ExpBottleEvent")) {
             constructDefaultListener(org.bukkit.event.entity.ExpBottleEvent.class, ProjectileHitEvent.class, BukkitExpBottleEvent::new);
         }
 
         constructDefaultListener(org.bukkit.event.entity.SheepDyeWoolEvent.class, SheepDyeWoolEvent.class, BukkitSheepDyeWoolEvent::new);
         constructDefaultListener(org.bukkit.event.entity.SheepRegrowWoolEvent.class, SheepRegrowWoolEvent.class, BukkitSheepRegrowWoolEvent::new);
         constructDefaultListener(org.bukkit.event.entity.SlimeSplitEvent.class, SlimeSplitEvent.class, BukkitSlimeSplitEvent::new);
-        if (has("org.bukkit.event.entity.StriderTemperatureChangeEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.StriderTemperatureChangeEvent")) {
             constructDefaultListener(org.bukkit.event.entity.StriderTemperatureChangeEvent.class, StriderTemperatureChangeEvent.class, BukkitStriderTemperatureChangeEvent::new);
         }
-        if (has("org.bukkit.event.entity.VillagerAcquireTradeEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.VillagerAcquireTradeEvent")) {
             constructDefaultListener(org.bukkit.event.entity.VillagerAcquireTradeEvent.class, VillagerAcquireTradeEvent.class, BukkitVillagerAcquireTradeEvent::new);
         }
-        if (has("org.bukkit.event.entity.VillagerCareerChangeEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.VillagerCareerChangeEvent")) {
             constructDefaultListener(org.bukkit.event.entity.VillagerCareerChangeEvent.class, VillagerCareerChangeEvent.class, BukkitVillagerCareerChangeEvent::new);
         }
-        if (has("org.bukkit.event.entity.VillagerReplenishTradeEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.VillagerReplenishTradeEvent")) {
             constructDefaultListener(org.bukkit.event.entity.VillagerReplenishTradeEvent.class, VillagerReplenishTradeEvent.class, BukkitVillagerReplenishTradeEvent::new);
         }
-        if (has("org.bukkit.event.entity.EntityToggleGlideEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityToggleGlideEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityToggleGlideEvent.class, EntityToggleGlideEvent.class, BukkitEntityToggleGlideEvent::new);
         }
-        if (has("org.bukkit.event.entity.EntityToggleSwimEvent")) {
+        if (Reflect.has("org.bukkit.event.entity.EntityToggleSwimEvent")) {
             constructDefaultListener(org.bukkit.event.entity.EntityToggleSwimEvent.class, EntityToggleSwimEvent.class, BukkitEntityToggleSwimEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.EntityUnleashEvent.class, EntityUnleashEvent.class, factory(BukkitEntityUnleashEvent::new)
@@ -321,7 +541,7 @@ public class BukkitCore extends Core {
         constructDefaultListener(org.bukkit.event.player.PlayerRespawnEvent.class, PlayerRespawnEvent.class, BukkitPlayerRespawnEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerCommandPreprocessEvent.class, PlayerCommandPreprocessEvent.class, BukkitPlayerCommandPreprocessEvent::new);
         constructDefaultListener(org.bukkit.event.inventory.InventoryClickEvent.class, PlayerInventoryClickEvent.class, factory(BukkitPlayerInventoryClickEvent::new)
-                        .sub(org.bukkit.event.inventory.CraftItemEvent.class, BukkitPlayerCraftItemEvent::new)
+                .sub(org.bukkit.event.inventory.CraftItemEvent.class, BukkitPlayerCraftItemEvent::new)
         );
         constructDefaultListener(org.bukkit.event.entity.FoodLevelChangeEvent.class, PlayerFoodLevelChangeEvent.class, BukkitPlayerFoodLevelChangeEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerDropItemEvent.class, PlayerDropItemEvent.class, BukkitPlayerDropItemEvent::new);
@@ -331,7 +551,7 @@ public class BukkitCore extends Core {
         // PlayerInteractEntityEvent is a weird event, each child has its own HandlerList
         constructDefaultListener(org.bukkit.event.player.PlayerInteractEntityEvent.class, PlayerInteractEntityEvent.class, BukkitPlayerInteractEntityEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerInteractAtEntityEvent.class, PlayerInteractEntityEvent.class, BukkitPlayerInteractAtEntityEvent::new);
-        if (has("org.bukkit.event.player.PlayerArmorStandManipulateEvent")) {
+        if (Reflect.has("org.bukkit.event.player.PlayerArmorStandManipulateEvent")) {
             constructDefaultListener(org.bukkit.event.player.PlayerArmorStandManipulateEvent.class, PlayerInteractEntityEvent.class, BukkitPlayerArmorStandManipulateEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerBedLeaveEvent.class, PlayerBedLeaveEvent.class, BukkitPlayerBedLeaveEvent::new);
@@ -340,31 +560,31 @@ public class BukkitCore extends Core {
         constructDefaultListener(org.bukkit.event.player.PlayerBucketEmptyEvent.class, PlayerBucketEvent.class, BukkitPlayerBucketEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerBucketFillEvent.class, PlayerBucketEvent.class, BukkitPlayerBucketEvent::new);
 
-        if (has("org.bukkit.event.player.PlayerCommandSendEvent")) {
+        if (Reflect.has("org.bukkit.event.player.PlayerCommandSendEvent")) {
             constructDefaultListener(org.bukkit.event.player.PlayerCommandSendEvent.class, PlayerCommandSendEvent.class, BukkitPlayerCommandSendEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerEggThrowEvent.class, PlayerEggThrowEvent.class, BukkitPlayerEggThrowEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerExpChangeEvent.class, PlayerExpChangeEvent.class, BukkitPlayerExpChangeEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerFishEvent.class, PlayerFishEvent.class, BukkitPlayerFishEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerGameModeChangeEvent.class, PlayerGameModeChangeEvent.class, BukkitPlayerGameModeChangeEvent::new);
-        if (has("org.bukkit.event.player.PlayerHarvestBlockEvent")) {
+        if (Reflect.has("org.bukkit.event.player.PlayerHarvestBlockEvent")) {
             constructDefaultListener(org.bukkit.event.player.PlayerHarvestBlockEvent.class, PlayerHarvestBlockEvent.class, BukkitPlayerHarvestBlockEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerInteractEvent.class, PlayerInteractEvent.class, BukkitPlayerInteractEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerItemConsumeEvent.class, PlayerItemConsumeEvent.class, BukkitPlayerItemConsumeEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerItemDamageEvent.class, PlayerItemDamageEvent.class, BukkitPlayerItemDamageEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerItemHeldEvent.class, PlayerItemHeldEvent.class, BukkitPlayerItemHeldEvent::new);
-        if (has("org.bukkit.event.player.PlayerItemMendEvent")) {
+        if (Reflect.has("org.bukkit.event.player.PlayerItemMendEvent")) {
             constructDefaultListener(org.bukkit.event.player.PlayerItemMendEvent.class, PlayerItemMendEvent.class, BukkitPlayerItemMendEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerKickEvent.class, PlayerKickEvent.class, BukkitPlayerKickEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerLevelChangeEvent.class, PlayerLevelChangeEvent.class, BukkitPlayerLevelChangeEvent::new);
-        if (has("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
+        if (Reflect.has("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
             constructDefaultListener(org.bukkit.event.player.PlayerLocaleChangeEvent.class, PlayerLocaleChangeEvent.class, BukkitPlayerLocaleChangeEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerLoginEvent.class, PlayerLoginEvent.class, BukkitPlayerLoginEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerShearEntityEvent.class, PlayerShearEntityEvent.class, BukkitPlayerShearEntityEvent::new);
-        if (has("org.bukkit.event.player.PlayerSwapHandItemsEvent")) {
+        if (Reflect.has("org.bukkit.event.player.PlayerSwapHandItemsEvent")) {
             constructDefaultListener(org.bukkit.event.player.PlayerSwapHandItemsEvent.class, PlayerSwapHandItemsEvent.class, BukkitPlayerSwapHandItemsEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerToggleFlightEvent.class, PlayerToggleFlightEvent.class, BukkitPlayerToggleFlightEvent::new);
@@ -376,11 +596,11 @@ public class BukkitCore extends Core {
 
         // block
         constructDefaultListener(org.bukkit.event.block.BlockBurnEvent.class, BlockBurnEvent.class, BukkitBlockBurnEvent::new);
-        if (has("org.bukkit.event.block.BlockCookEvent")) {
+        if (Reflect.has("org.bukkit.event.block.BlockCookEvent")) {
             constructDefaultListener(org.bukkit.event.block.BlockCookEvent.class, BlockCookEvent.class, BukkitBlockCookEvent::new);
         }
         constructDefaultListener(org.bukkit.event.block.BlockDispenseEvent.class, BlockDispenseEvent.class, BukkitBlockDispenseEvent::new);
-        if (has("org.bukkit.event.block.BlockDropItemEvent")) {
+        if (Reflect.has("org.bukkit.event.block.BlockDropItemEvent")) {
             constructDefaultListener(org.bukkit.event.block.BlockDropItemEvent.class, BlockDropItemEvent.class, BukkitBlockDropItemEvent::new);
         }
         constructDefaultListener(org.bukkit.event.block.BlockExpEvent.class, BlockExperienceEvent.class, factory(BukkitBlockExperienceEvent::new)
@@ -388,7 +608,7 @@ public class BukkitCore extends Core {
         );
         constructDefaultListener(org.bukkit.event.block.BlockExplodeEvent.class, BlockExplodeEvent.class, BukkitBlockExplodeEvent::new);
         constructDefaultListener(org.bukkit.event.block.BlockFadeEvent.class, BlockFadeEvent.class, BukkitBlockFadeEvent::new);
-        if (has("org.bukkit.event.block.BlockFertilizeEvent")) {
+        if (Reflect.has("org.bukkit.event.block.BlockFertilizeEvent")) {
             constructDefaultListener(org.bukkit.event.block.BlockFertilizeEvent.class, BlockFertilizeEvent.class, BukkitBlockFertilizeEvent::new);
         }
 
@@ -409,29 +629,29 @@ public class BukkitCore extends Core {
         constructDefaultListener(org.bukkit.event.block.BlockPistonExtendEvent.class, BlockPistonEvent.class, BukkitBlockPistonExtendEvent::new);
         constructDefaultListener(org.bukkit.event.block.BlockPistonRetractEvent.class, BlockPistonEvent.class, BukkitBlockPistonRetractEvent::new);
 
-        if (has("org.bukkit.event.block.BlockShearEntityEvent")) {
+        if (Reflect.has("org.bukkit.event.block.BlockShearEntityEvent")) {
             constructDefaultListener(org.bukkit.event.block.BlockShearEntityEvent.class, BlockShearEntityEvent.class, BukkitBlockShearEntityEvent::new);
         }
-        if (has("org.bukkit.event.block.CauldronLevelChangeEvent")) {
+        if (Reflect.has("org.bukkit.event.block.CauldronLevelChangeEvent")) {
             constructDefaultListener(org.bukkit.event.block.CauldronLevelChangeEvent.class, CauldronLevelChangeEvent.class, BukkitCauldronLevelChangeEvent::new);
         }
-        if (has("org.bukkit.event.block.FluidLevelChangeEvent")) {
+        if (Reflect.has("org.bukkit.event.block.FluidLevelChangeEvent")) {
             constructDefaultListener(org.bukkit.event.block.FluidLevelChangeEvent.class, FluidLevelChangeEvent.class, BukkitFluidLevelChangeEvent::new);
         }
-        if (has("org.bukkit.event.block.MoistureChangeEvent")) {
+        if (Reflect.has("org.bukkit.event.block.MoistureChangeEvent")) {
             constructDefaultListener(org.bukkit.event.block.MoistureChangeEvent.class, MoistureChangeEvent.class, BukkitMoistureChangeEvent::new);
         }
         constructDefaultListener(org.bukkit.event.world.StructureGrowEvent.class, PlantGrowEvent.class, BukkitPlantGrowEvent::new);
-        if (has("org.bukkit.event.block.SpongeAbsorbEvent")) {
+        if (Reflect.has("org.bukkit.event.block.SpongeAbsorbEvent")) {
             constructDefaultListener(org.bukkit.event.block.SpongeAbsorbEvent.class, SpongeAbsorbEvent.class, BukkitSpongeAbsorbEvent::new);
         }
-        if (has("org.bukkit.event.block.BlockReceiveGameEvent")) {
+        if (Reflect.has("org.bukkit.event.block.BlockReceiveGameEvent")) {
             constructDefaultListener(org.bukkit.event.block.BlockReceiveGameEvent.class, BlockReceivedGameEvent.class, BukkitBlockReceivedGameEvent::new);
         }
 
         // world
         constructDefaultListener(org.bukkit.event.world.SpawnChangeEvent.class, SpawnChangeEvent.class, BukkitSpawnChangeEvent::new);
-        if (has("org.bukkit.event.world.TimeSkipEvent")) {
+        if (Reflect.has("org.bukkit.event.world.TimeSkipEvent")) {
             constructDefaultListener(org.bukkit.event.world.TimeSkipEvent.class, TimeSkipEvent.class, BukkitTimeSkipEvent::new);
         }
         constructDefaultListener(org.bukkit.event.world.WorldInitEvent.class, WorldInitEvent.class, BukkitWorldInitEvent::new);
@@ -446,9 +666,9 @@ public class BukkitCore extends Core {
     }
 
     /**
-     * @param bukkitEvent the bukkit event
+     * @param bukkitEvent    the bukkit event
      * @param screamingEvent screaming event class, must be the interface from core module!!! (if it's a child event, you should specify the parent here)
-     * @param function which returns the constructed screaming event
+     * @param function       which returns the constructed screaming event
      */
     private <S extends SEvent, B extends Event> void constructDefaultListener(Class<B> bukkitEvent, Class<S> screamingEvent, Function<B, ? extends S> function) {
         new AbstractBukkitEventHandlerFactory<>(bukkitEvent, screamingEvent, plugin) {
@@ -460,9 +680,9 @@ public class BukkitCore extends Core {
     }
 
     /**
-     * @param bukkitEvent the bukkit event
+     * @param bukkitEvent    the bukkit event
      * @param screamingEvent screaming event class, must be the abstract class from core module!!!
-     * @param factory which constructs screaming event
+     * @param factory        which constructs screaming event
      */
     private <S extends SEvent, B extends Event> void constructDefaultListener(Class<B> bukkitEvent, Class<S> screamingEvent, EventFactory<? extends S, B> factory) {
         constructDefaultListener(bukkitEvent, screamingEvent, factory.finish());
@@ -473,7 +693,7 @@ public class BukkitCore extends Core {
     }
 
     @Data
-    private static class EventFactory<S extends SEvent, B extends Event>  {
+    private static class EventFactory<S extends SEvent, B extends Event> {
         private final Function<B, S> defaultOne;
         private final List<Map.Entry<Class<?>, Function<? extends B, S>>> customSubEvents = new ArrayList<>();
 
@@ -487,7 +707,7 @@ public class BukkitCore extends Core {
             return event -> {
                 for (var entry : customSubEvents) {
                     if (entry.getKey().isInstance(event)) {
-                        return ((Function<B,S>) entry.getValue()).apply(event);
+                        return ((Function<B, S>) entry.getValue()).apply(event);
                     }
                 }
                 return defaultOne.apply(event);

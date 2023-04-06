@@ -24,12 +24,12 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 
 import java.util.*;
 
-@AbstractService
+@ProvidedService
 public abstract class Players {
     protected final @NotNull BidirectionalConverter<OfflinePlayer> offlinePlayerConverter = BidirectionalConverter.build();
     protected final @NotNull BidirectionalConverter<Player> specialPlayerConverter = BidirectionalConverter.build();

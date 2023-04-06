@@ -24,7 +24,7 @@ import org.screamingsandals.lib.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.configurate.ItemTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.ComplexMappingKey;
@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-@AbstractService
+@ProvidedService
 public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> {
 
     private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");

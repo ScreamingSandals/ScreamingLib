@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.UUID;
@@ -30,7 +30,7 @@ import java.util.UUID;
 /**
  * Class responsible for converting platform worlds to wrappers.
  */
-@AbstractService
+@ProvidedService
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public abstract class Worlds {
     protected final @NotNull BidirectionalConverter<World> converter = BidirectionalConverter.<World>build()

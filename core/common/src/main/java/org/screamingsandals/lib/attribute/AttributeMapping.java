@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.slot.EquipmentSlotRegistry;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.spongepowered.configurate.BasicConfigurationNode;
@@ -38,7 +38,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-@AbstractService
+@ProvidedService
 @ServiceDependencies(dependsOn = {
         AttributeTypeRegistry.class,
         EquipmentSlotRegistry.class

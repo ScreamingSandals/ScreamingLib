@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.ReceiverConsumer;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.executor.ExecutorProvider;
 
 import java.util.*;
@@ -40,7 +40,7 @@ import java.util.stream.Stream;
  * <p>
  * Always call {@link EventManager#destroy()} when shutting down!
  */
-@AbstractService
+@ProvidedService
 @NoArgsConstructor
 public abstract class EventManager {
     private static @Nullable ExecutorService executor;

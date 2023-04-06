@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.EnchantmentHolderSerializer;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RomanToDecimal;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.Registry;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -31,7 +31,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-@AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
+@ProvidedService
 @ApiStatus.Internal
 public abstract class EnchantmentRegistry extends Registry<Enchantment> {
 

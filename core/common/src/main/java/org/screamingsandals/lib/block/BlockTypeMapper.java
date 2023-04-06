@@ -26,7 +26,7 @@ import org.screamingsandals.lib.configurate.BlockTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.*;
@@ -39,7 +39,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-@AbstractService
+@ProvidedService
 public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder> {
     private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?<blockState>:\\d*|\\[[^]]*])?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
     @Getter

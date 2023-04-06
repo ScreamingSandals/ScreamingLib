@@ -20,12 +20,12 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.registry.SimpleRegistry;
 
 @ApiStatus.Internal
-@AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
+@ProvidedService
 public abstract class PotionRegistry extends SimpleRegistry<Potion> {
     private static @Nullable PotionRegistry registry;
 

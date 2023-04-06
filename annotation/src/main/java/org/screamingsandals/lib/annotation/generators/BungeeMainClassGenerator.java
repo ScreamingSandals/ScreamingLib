@@ -16,7 +16,9 @@
 
 package org.screamingsandals.lib.annotation.generators;
 
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.annotation.constants.Classes;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.PlatformType;
@@ -25,10 +27,7 @@ import org.screamingsandals.lib.utils.annotations.PluginDependencies;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.QualifiedNameable;
-import javax.lang.model.element.TypeElement;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -37,81 +36,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BungeeMainClassGenerator extends MainClassGenerator {
+public class BungeeMainClassGenerator extends StandardMainClassGenerator {
     @Override
-    public void generate(ProcessingEnvironment processingEnvironment, QualifiedNameable pluginContainer, List<ServiceContainer> autoInit) throws IOException {
-        var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.BUNGEE);
-
-        var pluginManagerClass = Classes.SLib.PLUGINS_SERVICE;
-        var pluginDescriptionClass = Classes.SLib.PLUGIN;
-        var screamingLoggerClass = Classes.SLib.LOGGER_WRAPPER;
-        var julScreamingLoggerClass = Classes.SLib.JUL_LOGGER_WRAPPER;
-        var slf4jScreamingLoggerClass = Classes.SLib.SLF4J_LOGGER_WRAPPER;
-        var dualScreamingLoggerClass = Classes.SLib.DUAL_LOGGER_WRAPPER;
-        var reflectClass = Classes.SLib.REFLECT;
-
-        var onLoadBuilder = preparePublicVoid("onLoad")
-                .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLib.CONTROLLABLE_IMPL);
-
+    public void generate(@NotNull ProcessingEnvironment processingEnvironment, @NotNull QualifiedNameable pluginContainer, @NotNull List<ServiceContainer> autoInit) throws IOException {
         var newClassName = pluginContainer.getSimpleName() + "_BungeeImpl";
 
-        var serviceInitGenerator = new ServiceInitGenerator(newClassName, onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
-                .add(Classes.Bungee.PLUGIN.canonicalName(), (statement, objects) ->
-                        statement.append(newClassName).append(".this")
-                );
-
-        sortedPair.getFirst().forEach(serviceInitGenerator::process);
-
-        onLoadBuilder
-                .addStatement("$T $N = new $T(this)", pluginDescriptionClass, "description", Classes.SLib.BUNGEE_PLUGIN)
-                .addStatement("$T $N = null", Object.class, "slf4jLogger")
-                .addStatement("$T $N = new $T(this.getLogger())", screamingLoggerClass, "screamingLogger", julScreamingLoggerClass)
-                .beginControlFlow("if ($T.hasMethod(this, $S))", reflectClass, "getSLF4JLogger")
-                    .addStatement("$N = this.getSLF4JLogger()", "slf4jLogger")
-                    .addStatement("$N = new $T(new $T(this.getSLF4JLogger()), $N)", "screamingLogger", dualScreamingLoggerClass, slf4jScreamingLoggerClass, "screamingLogger")
-                .endControlFlow();
-
-        if (pluginContainer instanceof TypeElement) {
-            serviceInitGenerator.process(ServiceContainer.createPluginService(processingEnvironment.getTypeUtils(), (TypeElement) pluginContainer));
-        }
-
+        var onLoadBuilder = preparePublicVoid("onLoad");
         var onEnableBuilder = preparePublicVoid("onEnable");
         var onDisableBuilder = preparePublicVoid("onDisable");
 
-        sortedPair.getSecond().forEach(serviceInitGenerator::process);
+        fillInOnLoadMethod(pluginContainer, autoInit, processingEnvironment, newClassName, onLoadBuilder);
+        fillInOnEnableMethod(onEnableBuilder);
+        fillInOnDisableMethod(onDisableBuilder);
 
-        serviceInitGenerator.processDelayedControllables();
-
-        onLoadBuilder
-                .addStatement("this.$N.pluginLoad()", "pluginControllable");
-
-        onEnableBuilder
-                .addStatement("this.$N.enable()", "pluginControllable")
-                .addStatement("this.$N.postEnable()", "pluginControllable");
-
-        onDisableBuilder
-                .addStatement("this.$N.preDisable()", "pluginControllable")
-                .addStatement("this.$N.disable()", "pluginControllable");
-
-        var bungeeMainClass = TypeSpec.classBuilder(newClassName)
-                .addModifiers(Modifier.PUBLIC)
+        var bungeeMainClass = prepareType(newClassName)
                 .superclass(Classes.Bungee.PLUGIN)
-                .addField(FieldSpec
-                        .builder(Classes.SLib.CONTROLLABLE_IMPL, "pluginControllable", Modifier.PRIVATE)
-                        .build())
                 .addMethod(onLoadBuilder.build())
                 .addMethod(onEnableBuilder.build())
                 .addMethod(onDisableBuilder.build())
                 .build();
 
-        String newPackageName;
-        if (pluginContainer instanceof TypeElement) { // class
-            newPackageName = ((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString();
-        } else { // package
-            newPackageName = pluginContainer.getQualifiedName().toString();
-        }
+        String newClassPackage = getPackage(pluginContainer);
 
-        JavaFile.builder(newPackageName, bungeeMainClass)
+        JavaFile.builder(newClassPackage, bungeeMainClass)
                 .build()
                 .writeTo(processingEnvironment.getFiler());
 
@@ -119,11 +66,10 @@ public class BungeeMainClassGenerator extends MainClassGenerator {
                 .path(Path.of(processingEnvironment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "bungee.yml").toUri()))
                 .build();
 
-
         var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
 
         var node = loader.createNode();
-        node.node("main").set(newPackageName + "." + newClassName);
+        node.node("main").set(newClassPackage + "." + newClassName);
         node.node("name").set(pluginAnnotation.id());
         node.node("version").set(pluginAnnotation.version());
         if (!pluginAnnotation.description().isBlank()) {
@@ -154,5 +100,43 @@ public class BungeeMainClassGenerator extends MainClassGenerator {
         }
 
         loader.save(node);
+    }
+
+    @Override
+    protected void prepareCustomDependencyInjectionTypes(@NotNull ServiceInitGenerator generator) {
+        generator.add(Classes.Bungee.PLUGIN.canonicalName(), (statement, objects) ->
+                statement.append(generator.getPlatformClassName()).append(".this")
+        );
+    }
+
+    @Override
+    protected void wrapPluginDescription(MethodSpec.@NotNull Builder builder) {
+        builder
+                .addStatement("$T $N = new $T(this)", Classes.SLib.PLUGIN, "description", Classes.SLib.BUNGEE_PLUGIN);
+    }
+
+    @Override
+    protected void wrapLoggers(MethodSpec.@NotNull Builder builder, boolean requiredScreamingLogger, boolean requiredSlf4jLogger) {
+        if (requiredScreamingLogger) { // works for requiredScreamingLogger && requiredSlf4jLogger as well
+            builder
+                    .addStatement("$T $N = null", Object.class, "slf4jLogger")
+                    .addStatement("$T $N = new $T(this.getLogger())", Classes.SLib.LOGGER_WRAPPER, "screamingLogger", Classes.SLib.JUL_LOGGER_WRAPPER)
+                    .beginControlFlow("if ($T.hasMethod(this, $S))", Classes.SLib.REFLECT, "getSLF4JLogger")
+                        .addStatement("$N = this.getSLF4JLogger()", "slf4jLogger")
+                        .addStatement("$N = new $T(new $T(this.getSLF4JLogger()), $N)", "screamingLogger", Classes.SLib.DUAL_LOGGER_WRAPPER, Classes.SLib.SLF4J_LOGGER_WRAPPER, "screamingLogger")
+                    .endControlFlow();
+        } else if (requiredSlf4jLogger) {
+            builder
+                    .addStatement("$T $N = null", Object.class, "slf4jLogger")
+                    .beginControlFlow("if ($T.hasMethod(this, $S))", Classes.SLib.REFLECT, "getSLF4JLogger")
+                        .addStatement("$N = this.getSLF4JLogger()", "slf4jLogger")
+                    .endControlFlow();
+
+        }
+    }
+
+    @Override
+    protected @NotNull PlatformType getPlatform() {
+        return PlatformType.BUNGEE;
     }
 }

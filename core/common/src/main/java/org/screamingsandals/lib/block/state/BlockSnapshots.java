@@ -19,12 +19,10 @@ package org.screamingsandals.lib.block.state;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 
-@AbstractService(
-        pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
-)
+@ProvidedService
 public abstract class BlockSnapshots {
 
     private static @Nullable BlockSnapshots blockSnapshots;

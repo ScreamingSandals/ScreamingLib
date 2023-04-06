@@ -18,7 +18,13 @@ package org.screamingsandals.lib.velocity.proxy;
 
 import org.screamingsandals.lib.proxy.ProxyCore;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.velocity.event.VelocityEventManager;
+import org.screamingsandals.lib.velocity.tasker.VelocityTasker;
 
-@Service
+@Service(dependsOn = {
+        VelocityEventManager.class,
+        VelocityTasker.class,
+        VelocityProxiedPlayerMapper.class
+})
 public class VelocityProxyCore extends ProxyCore {
 }

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.FireworkEffectHolderSerializer;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.registry.SimpleRegistry;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -29,7 +29,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.*;
 
-@AbstractService
+@ProvidedService
 @ApiStatus.Internal
 public abstract class FireworkEffectRegistry extends SimpleRegistry<FireworkEffect> {
     private static @Nullable FireworkEffectRegistry registry;

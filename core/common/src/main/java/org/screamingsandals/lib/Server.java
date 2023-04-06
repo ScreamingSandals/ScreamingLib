@@ -25,6 +25,7 @@ import org.screamingsandals.lib.player.Sender;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.world.World;
 
 import java.util.List;
@@ -32,10 +33,7 @@ import java.util.List;
 /**
  * Class holding various methods for manipulating with the Minecraft server.
  */
-@AbstractService(
-        pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
-        replaceRule = "{basePackage}.{platform}.{Platform}{className}"
-)
+@ProvidedService
 public abstract class Server {
     private static @Nullable Server server;
     private static @Nullable Integer PROTOCOL_VERSION;

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.annotation.generators;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class SpongeMainClassGenerator extends MainClassGenerator {
     @Override
-    public void generate(ProcessingEnvironment processingEnvironment, QualifiedNameable pluginContainer, List<ServiceContainer> autoInit) {
-
+    public void generate(@NotNull ProcessingEnvironment processingEnvironment, @NotNull QualifiedNameable pluginContainer, @NotNull List<ServiceContainer> autoInit) {
+        // TODO
     }
 }

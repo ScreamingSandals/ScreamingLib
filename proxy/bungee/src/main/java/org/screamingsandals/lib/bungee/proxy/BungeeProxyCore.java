@@ -16,9 +16,15 @@
 
 package org.screamingsandals.lib.bungee.proxy;
 
+import org.screamingsandals.lib.bungee.event.BungeeEventManager;
+import org.screamingsandals.lib.bungee.tasker.BungeeTasker;
 import org.screamingsandals.lib.proxy.ProxyCore;
 import org.screamingsandals.lib.utils.annotations.Service;
 
-@Service
+@Service(dependsOn = {
+        BungeeEventManager.class,
+        BungeeTasker.class,
+        BungeeProxiedPlayerMapper.class
+})
 public class BungeeProxyCore extends ProxyCore {
 }

@@ -25,7 +25,7 @@ import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.utils.Platform;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.key.*;
@@ -38,10 +38,7 @@ import java.util.function.Predicate;
  * Class responsible for remapping item and block id's.
  */
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-@AbstractService(
-        pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
-        replaceRule = "{basePackage}.{platform}.{Platform}{className}"
-)
+@ProvidedService
 @RequiredArgsConstructor
 public abstract class ItemBlockIdsRemapper {
     protected final @NotNull ItemTypeMapper itemTypeMapper;

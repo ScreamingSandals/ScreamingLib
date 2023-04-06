@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.ItemSerializer;
 import org.screamingsandals.lib.item.*;
 import org.screamingsandals.lib.utils.*;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -39,9 +39,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-@AbstractService(
-        pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
-)
+@ProvidedService
 @ServiceDependencies(dependsOn = ItemTypeMapper.class)
 public abstract class ItemStackFactory {
 

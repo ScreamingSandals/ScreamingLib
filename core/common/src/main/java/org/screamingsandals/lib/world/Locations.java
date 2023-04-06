@@ -24,13 +24,13 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.block.Blocks;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 /**
  * Class responsible for converting platform locations to wrappers.
  */
-@AbstractService
+@ProvidedService
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public abstract class Locations {
     protected final @NotNull BidirectionalConverter<Location> converter = BidirectionalConverter.<Location>build()

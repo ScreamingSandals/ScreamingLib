@@ -22,15 +22,12 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.api.Wrapper;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 
 import java.util.Collection;
 import java.util.function.BiConsumer;
 
-@AbstractService(
-        pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
-        replaceRule = "{basePackage}.{platform}.{Platform}{className}"
-)
+@ProvidedService
 public abstract class CustomPayload {
     private static @Nullable CustomPayload customPayload;
 

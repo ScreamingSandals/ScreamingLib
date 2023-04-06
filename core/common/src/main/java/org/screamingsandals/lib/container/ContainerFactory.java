@@ -21,9 +21,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ProvidedService;
 
-@AbstractService
+@ProvidedService
 public abstract class ContainerFactory {
 
     private static @Nullable ContainerFactory factory;
