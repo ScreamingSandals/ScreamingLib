@@ -20,7 +20,7 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.item.meta.PotionRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;

@@ -328,6 +328,7 @@ import org.screamingsandals.lib.event.world.WorldSaveEvent;
 import org.screamingsandals.lib.event.world.WorldUnloadEvent;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -337,42 +338,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-@Service(dependsOn = {
-        BukkitServer.class,
-        BukkitCustomPayload.class,
-        BukkitEventManager.class,
-        BukkitTasker.class,
-        BukkitEntityTypeRegistry.class,
-        BukkitEntities.class,
-        BukkitAttributeTypeRegistry.class,
-        BukkitAttributeMapping.class,
-        BukkitFireworkEffectRegistry.class,
-        BukkitEnchantmentRegistry.class,
-        BukkitPotionEffectRegistry.class,
-        BukkitPotionRegistry.class,
-        BukkitEquipmentSlotRegistry.class,
-        BukkitItemTypeMapper.class,
-        BukkitBlockTypeMapper.class,
-        BukkitItemBlockIdsRemapper.class,
-        BukkitItemStackFactory.class,
-        BukkitPlayers.class,
-        BukkitLocations.class,
-        BukkitBlocks.class,
-        BukkitBlockSnapshots.class,
-        BukkitDamageTypeRegistry.class,
-        BukkitGameModeRegistry.class,
-        BukkitInventoryTypeRegistry.class,
-        BukkitEntityPoseRegistry.class,
-        BukkitDifficultyRegistry.class,
-        BukkitDimensionRegistry.class,
-        BukkitChunks.class,
-        BukkitGameRuleRegistry.class,
-        BukkitWeatherRegistry.class,
-        BukkitParticleTypeRegistry.class,
-        BukkitGameRuleRegistry.class,
-        BukkitWorlds.class,
-        BukkitContainerFactory.class
-})
+@Service
+@ServiceDependencies(
+        dependsOn = {
+            BukkitServer.class,
+            BukkitCustomPayload.class,
+            BukkitEventManager.class,
+            BukkitTasker.class,
+            BukkitEntityTypeRegistry.class,
+            BukkitEntities.class,
+            BukkitAttributeTypeRegistry.class,
+            BukkitAttributeMapping.class,
+            BukkitFireworkEffectRegistry.class,
+            BukkitEnchantmentRegistry.class,
+            BukkitPotionEffectRegistry.class,
+            BukkitPotionRegistry.class,
+            BukkitEquipmentSlotRegistry.class,
+            BukkitItemTypeMapper.class,
+            BukkitBlockTypeMapper.class,
+            BukkitItemBlockIdsRemapper.class,
+            BukkitItemStackFactory.class,
+            BukkitPlayers.class,
+            BukkitLocations.class,
+            BukkitBlocks.class,
+            BukkitBlockSnapshots.class,
+            BukkitDamageTypeRegistry.class,
+            BukkitGameModeRegistry.class,
+            BukkitInventoryTypeRegistry.class,
+            BukkitEntityPoseRegistry.class,
+            BukkitDifficultyRegistry.class,
+            BukkitDimensionRegistry.class,
+            BukkitChunks.class,
+            BukkitGameRuleRegistry.class,
+            BukkitWeatherRegistry.class,
+            BukkitParticleTypeRegistry.class,
+            BukkitGameRuleRegistry.class,
+            BukkitWorlds.class,
+            BukkitContainerFactory.class
+    }
+)
 public class BukkitCore extends Core {
     @Getter
     private static SpigotBackend spectatorBackend;

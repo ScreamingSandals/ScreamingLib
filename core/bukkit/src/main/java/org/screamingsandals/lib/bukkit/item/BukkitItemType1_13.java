@@ -16,59 +16,63 @@
 
 package org.screamingsandals.lib.bukkit.item;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeLegacyHolder;
+import org.screamingsandals.lib.bukkit.block.BukkitBlockType1_13;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Short>> implements ItemTypeHolder {
+public class BukkitItemType1_13 extends BasicWrapper<Material> implements ItemTypeHolder {
 
-    public BukkitItemTypeLegacyHolder(@NotNull Material material) {
-        this(Pair.of(material, (short) 0));
-    }
+    // Because people can be stupid + it's also used in our current code for deserializing items ;)
+    private short forcedDurability;
 
-    public BukkitItemTypeLegacyHolder(@NotNull Material material, short forcedDurability) {
-        this(Pair.of(material, forcedDurability));
-    }
-
-    public BukkitItemTypeLegacyHolder(@NotNull Pair<@NotNull Material, @NotNull Short> wrappedObject) {
+    public BukkitItemType1_13(@NotNull Material wrappedObject) {
         super(wrappedObject);
+        if (!wrappedObject.isItem()) {
+            throw new UnsupportedOperationException("BukkitItemTypeHolder can wrap only item types!!!");
+        }
     }
 
     @Override
     public @NotNull String platformName() {
-        return wrappedObject.first().name();
+        return wrappedObject.name();
     }
 
     @Override
     public short forcedDurability() {
-        return wrappedObject.second();
+        return forcedDurability;
     }
 
     @Override
     public int maxStackSize() {
-        return wrappedObject.first().getMaxStackSize();
+        return wrappedObject.getMaxStackSize();
     }
 
     @Override
     public @NotNull ItemTypeHolder withForcedDurability(short durability) {
-        return new BukkitItemTypeLegacyHolder(Pair.of(wrappedObject.first(), durability));
+        var holder = new BukkitItemType1_13(wrappedObject);
+        holder.forcedDurability = durability;
+        return holder;
     }
 
     @Override
     public @Nullable BlockTypeHolder block() {
-        if (!wrappedObject.first().isBlock()) {
+        if (!wrappedObject.isBlock()) {
             return null;
         }
-        return new BukkitBlockTypeLegacyHolder(wrappedObject.first(), wrappedObject.second().byteValue());
+        return new BukkitBlockType1_13(wrappedObject);
     }
 
     @Override
@@ -79,19 +83,22 @@ public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Shor
         } else {
             key = ResourceLocation.of(tag.toString());
         }
+        // native tags
+        var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ITEMS, new NamespacedKey(key.namespace(), key.path()), Material.class);
+        if (bukkitTag != null) {
+            return bukkitTag.isTagged(wrappedObject);
+        }
+        // backported tags
         if (!"minecraft".equals(key.namespace())) {
             return false;
         }
         var value = key.path();
-        return BukkitItemTypeMapper.hasTagInBackPorts(wrappedObject.first(), value);
+        return BukkitItemTypeMapper.hasTagInBackPorts(wrappedObject, value);
     }
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof Material && wrappedObject.second() == 0) {
-            return wrappedObject.first() == object;
-        }
-        if (object instanceof ItemTypeHolder) {
+        if (object instanceof Material || object instanceof ItemTypeHolder) {
             return equals(object);
         }
         if (object instanceof String) {
@@ -112,10 +119,17 @@ public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Shor
     @SuppressWarnings("unchecked")
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
-        if (type == Material.class) { // the wrapped type is Pair, so we will help the BasicWrapper a little with unwrapping Material
-            return (T) wrappedObject.first();
-        } else if (type == ItemStack.class) {
-            return (T) new ItemStack(wrappedObject.first(), 1, wrappedObject.second());
+        if (type == ItemStack.class) {
+            ItemStack stack = new ItemStack(wrappedObject);
+            if (forcedDurability != 0) {
+                // it's somehow still supported because people can be stupid sometimes
+                ItemMeta meta = stack.getItemMeta();
+                if (meta instanceof Damageable) {
+                    ((Damageable) meta).setDamage(forcedDurability);
+                    stack.setItemMeta(meta);
+                }
+            }
+            return (T) stack;
         }
         return super.as(type);
     }

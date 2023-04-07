@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.bukkit.packet.listener;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;

@@ -23,11 +23,11 @@ import org.bukkit.Sound;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
+import org.screamingsandals.lib.bukkit.block.BukkitBlockType1_13;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.player.GenericCommandSender;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.player.Sender;
@@ -180,7 +180,7 @@ public class BukkitServer extends Server {
     public void UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage0() {
         if (isVersion0(1,13)) {
             ClassStorage.CB.UNSAFE_EVIL_GET_OUT_getCraftLegacy();
-            BukkitBlockTypeHolder.NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED = true;
+            BukkitBlockType1_13.NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED = true;
         }
     }
 }

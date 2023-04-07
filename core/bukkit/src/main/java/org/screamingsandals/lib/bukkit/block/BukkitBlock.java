@@ -24,7 +24,7 @@ import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.block.state.BlockSnapshot;
 import org.screamingsandals.lib.block.state.BlockSnapshots;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.ext.paperlib.PaperLib;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;

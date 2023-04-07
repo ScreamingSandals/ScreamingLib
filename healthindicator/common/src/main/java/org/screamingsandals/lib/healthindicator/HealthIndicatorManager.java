@@ -25,6 +25,7 @@ import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.event.player.PlayerLeaveEvent;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 import org.screamingsandals.lib.visuals.Visual;
 
@@ -32,7 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Service(dependsOn = {
+@Service
+@ServiceDependencies(dependsOn = {
         Core.class,
         PacketMapper.class
 })

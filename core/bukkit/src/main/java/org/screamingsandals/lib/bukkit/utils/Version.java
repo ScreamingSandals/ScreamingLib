@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.bukkit.utils.nms;
+package org.screamingsandals.lib.bukkit.utils;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;

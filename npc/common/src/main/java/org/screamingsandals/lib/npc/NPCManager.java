@@ -28,6 +28,7 @@ import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.visuals.AbstractVisualsManager;
 import org.screamingsandals.lib.visuals.LocatableVisual;
 import org.screamingsandals.lib.world.Location;
@@ -35,7 +36,8 @@ import org.screamingsandals.lib.world.Location;
 import java.util.Map;
 import java.util.UUID;
 
-@Service(dependsOn = HologramManager.class)
+@Service
+@ServiceDependencies(dependsOn = HologramManager.class)
 public class NPCManager extends AbstractVisualsManager<NPC> {
     private static @Nullable NPCManager manager;
 

@@ -18,8 +18,6 @@ package org.screamingsandals.lib.annotation.generators;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +30,7 @@ import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.QuadConsumer;
 import org.screamingsandals.lib.utils.TriFunction;
 import org.screamingsandals.lib.utils.Triple;
+import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 import org.screamingsandals.lib.utils.annotations.internal.PlatformPluginObject;
 import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
@@ -254,26 +253,48 @@ public final class ServiceInitGenerator {
 
     public void process(ServiceContainer serviceContainer) {
         var typeElement = serviceContainer.getService();
-        var initMethod = typeElement.getEnclosedElements()
+        var initMethodList = typeElement.getEnclosedElements()
                 .stream()
-                .filter(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))
-                .findFirst();
+                .filter(element -> (element.getKind() == ElementKind.METHOD || element.getKind() == ElementKind.CONSTRUCTOR) && element.getAnnotation(ServiceInitializer.class) != null)
+                .collect(Collectors.toList());
 
-        if (initMethod.isEmpty() && !serviceContainer.isStaticOnly()) {
-            initMethod = typeElement.getEnclosedElements()
+        @Nullable Element initMethod = null;
+        if (!initMethodList.isEmpty()) {
+            if (initMethodList.size() > 1) {
+                throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Only one method or constructor can be annotated with @ServiceInitializer annotation!");
+            }
+            initMethod = initMethodList.get(0);
+            if (initMethod.getKind() == ElementKind.CONSTRUCTOR) {
+                if (!initMethod.getModifiers().contains(Modifier.PUBLIC)) {
+                    throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Constructor annotated with @ServiceInitializer must be public!");
+                }
+            } else {
+                if (!initMethod.getModifiers().contains(Modifier.STATIC) || !initMethod.getModifiers().contains(Modifier.PUBLIC)) {
+                    throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Method annotated with @ServiceInitializer must be public and static!");
+                }
+            }
+        } else if (!serviceContainer.isStaticOnly()) {
+            var constructorList = typeElement.getEnclosedElements()
                     .stream()
-                    .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
-                    .findFirst();
+                    .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR && element.getModifiers().contains(Modifier.PUBLIC))
+                    .collect(Collectors.toList());
+
+            if (!constructorList.isEmpty()) {
+                if (constructorList.size() > 1) {
+                    throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Multiple public constructors have been found! Please make sure there is just one constructor or annotate one using @ServiceInitializer annotation");
+                }
+                initMethod = constructorList.get(0);
+            }
         }
 
-        if (initMethod.isPresent() || serviceContainer.isStaticOnly()) {
+        if (initMethod != null || serviceContainer.isStaticOnly()) {
             String returnedName = null;
-            if (initMethod.isPresent()) {
+            if (initMethod != null) {
                 var processedArguments = new ArrayList<>();
                 var statement = new StringBuilder();
-                var method = (ExecutableElement) initMethod.get();
+                var method = (ExecutableElement) initMethod;
                 var arguments = method.getParameters();
-                if (method.getKind() == ElementKind.CONSTRUCTOR || types.isSameType(method.getReturnType(), typeElement.asType())) {
+                if (method.getKind() == ElementKind.CONSTRUCTOR || types.isAssignable(method.getReturnType(), typeElement.asType())) {
                     statement.append("$T $N = ");
                     processedArguments.add(typeElement);
                     returnedName = "indexedVariable" + (index++);
@@ -367,7 +388,7 @@ public final class ServiceInitGenerator {
             processControllablesOfService(serviceContainer, returnedName);
 
         } else {
-            throw new UnsupportedOperationException("Can't auto initialize " + typeElement.getQualifiedName() + " without init method");
+            throw new UnsupportedOperationException("Can't auto initialize " + typeElement.getQualifiedName() + " without @ServiceInitializer method or constructor");
         }
     }
 

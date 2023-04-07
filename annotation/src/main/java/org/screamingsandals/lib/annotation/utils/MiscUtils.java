@@ -54,18 +54,6 @@ public class MiscUtils {
         LOMBOK_UTILITY_CLASS = lombok;
     }
 
-    public static List<TypeElement> getSafelyTypeElements(ProcessingEnvironment environment, Service annotation) {
-        try {
-            annotation.dependsOn();
-        } catch (MirroredTypesException mte) {
-            var typeUtils = environment.getTypeUtils();
-            return mte.getTypeMirrors()
-                    .stream()
-                    .map(typeMirror -> (TypeElement) typeUtils.asElement(typeMirror))
-                    .collect(Collectors.toList());
-        }
-        return List.of();
-    }
     public static TypeElement getSafelyTypeElement(Types typeUtils, ProvidedBy annotation) {
         try {
             annotation.value();
@@ -88,20 +76,7 @@ public class MiscUtils {
         return List.of();
     }
 
-    public static List<TypeElement> getSafelyTypeElementsLoadAfter(ProcessingEnvironment environment, Service annotation) {
-        try {
-            annotation.loadAfter();
-        } catch (MirroredTypesException mte) {
-            var typeUtils = environment.getTypeUtils();
-            return mte.getTypeMirrors()
-                    .stream()
-                    .map(typeMirror -> (TypeElement) typeUtils.asElement(typeMirror))
-                    .collect(Collectors.toList());
-        }
-        return List.of();
-    }
-
-    public static List<TypeElement> getSafelyTypeElementsInit(ProcessingEnvironment environment, Service annotation) {
+    public static List<TypeElement> getSafelyTypeElementsInit(ProcessingEnvironment environment, ServiceDependencies annotation) {
         try {
             annotation.initAnother();
         } catch (MirroredTypesException mte) {
@@ -185,12 +160,9 @@ public class MiscUtils {
                         typeElement.getAnnotation(InternalCoreService.class) != null,
                         false
                 );
-                container.getDependencies().addAll(getSafelyTypeElements(environment, service));
-                container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, service));
-                container.getInit().addAll(getSafelyTypeElementsInit(environment, service));
-                checkEventManagerRequirement(environment, typeElement, container);
                 checkServiceDependencies(environment, typeElement, container);
                 checkConstructorDependencies(environment, typeElement, container);
+                checkEventManagerRequirement(environment, typeElement, container);
 
                 return platformTypes
                         .stream()
@@ -251,15 +223,12 @@ public class MiscUtils {
                                 && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))),
                         false
                 );
-                if (resolvedElementService != null) {
-                    container.getDependencies().addAll(getSafelyTypeElements(environment, resolvedElement.getAnnotation(Service.class)));
-                    container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, resolvedElement.getAnnotation(Service.class)));
-                } else {
+                if (resolvedElementService == null) {
                     environment.getMessager().printMessage(Diagnostic.Kind.WARNING, resolvedElement.getQualifiedName() + " should have @Service annotation (ignoring that because was resolved with @AbstractService)");
                 }
-                checkEventManagerRequirement(environment, typeElement, container);
-                checkServiceDependencies(environment, typeElement, container);
-                checkConstructorDependencies(environment, typeElement, container);
+                checkServiceDependencies(environment, resolvedElement, container);
+                checkConstructorDependencies(environment, resolvedElement, container);
+                checkEventManagerRequirement(environment, resolvedElement, container);
                 map.put(platformType, container);
             }
         });
@@ -305,6 +274,14 @@ public class MiscUtils {
                                     environment.getTypeUtils().isAssignable(typeElement2.asType(), typeElement1.asType()))
                             ) {
                                 container.getLoadAfter().add(typeElement1);
+                            }
+                        });
+
+                        getSafelyTypeElementsInit(environment, annotation).forEach(typeElement1 -> {
+                            if (container.getInit().stream().noneMatch(typeElement2 ->
+                                    environment.getTypeUtils().isAssignable(typeElement2.asType(), typeElement1.asType()))
+                            ) {
+                                container.getInit().add(typeElement1);
                             }
                         });
                     });

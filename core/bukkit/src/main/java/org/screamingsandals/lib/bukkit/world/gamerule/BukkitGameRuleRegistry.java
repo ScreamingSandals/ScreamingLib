@@ -51,7 +51,7 @@ public class BukkitGameRuleRegistry extends GameRuleRegistry {
         } else {
             compat = List.of();
 
-            specialType(GameRule.class, BukkitGameRuleType::new);
+            specialType(GameRule.class, BukkitGameRuleType1_13::new);
         }
     }
 
@@ -64,12 +64,12 @@ public class BukkitGameRuleRegistry extends GameRuleRegistry {
         if (hasGameRule) {
             var g = GameRule.getByName(location.path());
             if (g != null) {
-                return new BukkitGameRuleType(g);
+                return new BukkitGameRuleType1_13(g);
             }
         } else {
             var str = compat.stream().filter(s -> s.equalsIgnoreCase(location.path())).findFirst();
             if (str.isPresent()) {
-                return new BukkitLegacyGameRuleType(str.get());
+                return new BukkitGameRuleType1_8(str.get());
             }
         }
 
@@ -82,7 +82,7 @@ public class BukkitGameRuleRegistry extends GameRuleRegistry {
         if (hasGameRule) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(GameRule.values()),
-                    BukkitGameRuleType::new,
+                    BukkitGameRuleType1_13::new,
                     gameRule -> ResourceLocation.of(gameRule.getName()),
                     (gameRule, literal) -> gameRule.getName().toLowerCase(Locale.ROOT).contains(literal),
                     (gameRule, namespace) -> "minecraft".equals(namespace),
@@ -91,7 +91,7 @@ public class BukkitGameRuleRegistry extends GameRuleRegistry {
         } else {
             return new SimpleRegistryItemStream<>(
                     compat::stream,
-                    BukkitLegacyGameRuleType::new,
+                    BukkitGameRuleType1_8::new,
                     ResourceLocation::of,
                     (environment, literal) -> environment.toLowerCase(Locale.ROOT).contains(literal),
                     (environment, namespace) -> "minecraft".equals(namespace),

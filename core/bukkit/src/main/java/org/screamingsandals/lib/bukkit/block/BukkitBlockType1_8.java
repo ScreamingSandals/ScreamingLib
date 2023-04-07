@@ -32,17 +32,17 @@ import java.util.Arrays;
 import java.util.Map;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> implements BlockTypeHolder {
+public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements BlockTypeHolder {
 
-    public BukkitBlockTypeLegacyHolder(@NotNull Material material) {
+    public BukkitBlockType1_8(@NotNull Material material) {
         this(material.getNewData((byte) 0));
     }
 
-    public BukkitBlockTypeLegacyHolder(@NotNull Material material, byte legacyData) {
+    public BukkitBlockType1_8(@NotNull Material material, byte legacyData) {
         this(material.getNewData(legacyData));
     }
 
-    public BukkitBlockTypeLegacyHolder(@NotNull MaterialData wrappedObject) {
+    public BukkitBlockType1_8(@NotNull MaterialData wrappedObject) {
         super(wrappedObject);
         if (!wrappedObject.getItemType().isBlock()) {
             throw new UnsupportedOperationException("Material must be a block!");
@@ -63,7 +63,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     public @NotNull BlockTypeHolder withLegacyData(byte legacyData) {
         var clone = wrappedObject.clone();
         clone.setData(legacyData);
-        return new BukkitBlockTypeLegacyHolder(clone);
+        return new BukkitBlockType1_8(clone);
     }
 
     @Override
@@ -168,22 +168,22 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
         for (var e : flatteningData.entrySet()) {
             materialData = LegacyMaterialDataToFlatteningConverter.set(materialData, e.getKey(), e.getValue());
         }
-        return new BukkitBlockTypeLegacyHolder(materialData);
+        return new BukkitBlockType1_8(materialData);
     }
 
     @Override
     public @NotNull BlockTypeHolder with(@NotNull String attribute, @NotNull String value) {
-        return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, value));
+        return new BukkitBlockType1_8(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, value));
     }
 
     @Override
     public @NotNull BlockTypeHolder with(@NotNull String attribute, int value) {
-        return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, String.valueOf(value)));
+        return new BukkitBlockType1_8(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, String.valueOf(value)));
     }
 
     @Override
     public @NotNull BlockTypeHolder with(@NotNull String attribute, boolean value) {
-        return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, String.valueOf(value)));
+        return new BukkitBlockType1_8(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, String.valueOf(value)));
     }
 
     @Override
@@ -261,14 +261,14 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
         MaterialData material;
         if (object instanceof MaterialData) {
             material = (MaterialData) object;
-        } else if (object instanceof BukkitBlockTypeLegacyHolder) {
-            material = ((BukkitBlockTypeLegacyHolder) object).wrappedObject;
+        } else if (object instanceof BukkitBlockType1_8) {
+            material = ((BukkitBlockType1_8) object).wrappedObject;
         } else {
             var block = BlockTypeHolder.ofNullable(object);
             if (block == null) {
                 return false;
             }
-            material = ((BukkitBlockTypeLegacyHolder) block).wrappedObject;
+            material = ((BukkitBlockType1_8) block).wrappedObject;
         }
         var materialName = material.getItemType().name();
         var ourMaterialName = wrappedObject.getItemType().name();
@@ -404,7 +404,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof MaterialData || object instanceof BukkitBlockTypeLegacyHolder) {
+        if (object instanceof MaterialData || object instanceof BukkitBlockType1_8) {
             return equals(object);
         }
         if (object instanceof String) {

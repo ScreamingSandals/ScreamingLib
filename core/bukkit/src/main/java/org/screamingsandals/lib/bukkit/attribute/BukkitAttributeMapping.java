@@ -22,7 +22,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.*;
 import org.screamingsandals.lib.slot.EquipmentSlot;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service

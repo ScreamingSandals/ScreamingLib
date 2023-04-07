@@ -40,19 +40,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements BlockTypeHolder {
+public class BukkitBlockType1_13 extends BasicWrapper<BlockData> implements BlockTypeHolder {
 
     public static boolean NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED;
     private static final @NotNull String NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED_MESSAGE = "Nag author/s of this plugin about usage of BlockTypeHolder#legacyData() or #withLegacyData() in non-legacy environment!";
 
-    public BukkitBlockTypeHolder(@NotNull Material type) {
+    public BukkitBlockType1_13(@NotNull Material type) {
         this(type.createBlockData());
         if (!type.isBlock()) {
             throw new UnsupportedOperationException("Material must be a block!");
         }
     }
 
-    public BukkitBlockTypeHolder(@NotNull BlockData wrappedObject) {
+    public BukkitBlockType1_13(@NotNull BlockData wrappedObject) {
         super(wrappedObject);
     }
 
@@ -88,11 +88,11 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
         try {
             var legacy = Bukkit.getUnsafe().toLegacy(wrappedObject.getMaterial());
             if (legacy != null && legacy.isLegacy() && legacy != Material.LEGACY_AIR) {
-                return new BukkitBlockTypeHolder(Bukkit.getUnsafe().fromLegacy(legacy, legacyData));
+                return new BukkitBlockType1_13(Bukkit.getUnsafe().fromLegacy(legacy, legacyData));
             }
         } catch (Throwable ignored) {
         }
-        return new BukkitBlockTypeHolder(wrappedObject.clone());
+        return new BukkitBlockType1_13(wrappedObject.clone());
     }
 
     @Override
@@ -122,7 +122,7 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
                     .collect(Collectors.joining(",")));
             builder.append(']');
         }
-        return new BukkitBlockTypeHolder(wrappedObject.getMaterial().createBlockData(builder.toString()));
+        return new BukkitBlockType1_13(wrappedObject.getMaterial().createBlockData(builder.toString()));
     }
 
     @Override
@@ -229,8 +229,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
         if (object instanceof Material) {
             return wrappedObject.getMaterial() == object;
         }
-        if (object instanceof BukkitBlockTypeHolder) {
-            return wrappedObject.getMaterial() == ((BukkitBlockTypeHolder) object).wrappedObject.getMaterial();
+        if (object instanceof BukkitBlockType1_13) {
+            return wrappedObject.getMaterial() == ((BukkitBlockType1_13) object).wrappedObject.getMaterial();
         }
         if (object instanceof BlockData) {
             return wrappedObject.getMaterial() == ((BlockData) object).getMaterial();
@@ -249,7 +249,7 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof BlockData || object instanceof BukkitBlockTypeHolder) {
+        if (object instanceof BlockData || object instanceof BukkitBlockType1_13) {
             return equals(object);
         }
         if (object instanceof String) {

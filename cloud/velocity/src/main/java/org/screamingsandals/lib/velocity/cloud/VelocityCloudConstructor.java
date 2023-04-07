@@ -26,11 +26,13 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.cloud.CloudConstructor;
 import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.velocity.proxy.VelocityProxiedPlayerMapper;
 
 import java.util.function.Function;
 
-@Service(dependsOn = VelocityProxiedPlayerMapper.class)
+@Service
+@ServiceDependencies(dependsOn = VelocityProxiedPlayerMapper.class)
 @RequiredArgsConstructor
 public class VelocityCloudConstructor extends CloudConstructor {
     private final @NotNull PluginContainer plugin;

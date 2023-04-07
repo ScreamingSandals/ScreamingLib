@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.utils.annotations;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,7 +39,7 @@ public @interface AbstractService {
      *
      * @return regex pattern
      */
-    String pattern() default "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+)\\.(?<className>.+)$";
+    @NotNull String pattern() default "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+)\\.(?<className>.+)$";
 
     /**
      * Contains replace rule which will be used to resolve PlatformMapping
@@ -53,5 +55,5 @@ public @interface AbstractService {
      *
      * @return replace rule
      */
-    String replaceRule() default "{basePackage}.{platform}.{subPackage}.{Platform}{className}";
+    @NotNull String replaceRule() default "{basePackage}.{platform}.{subPackage}.{Platform}{className}";
 }

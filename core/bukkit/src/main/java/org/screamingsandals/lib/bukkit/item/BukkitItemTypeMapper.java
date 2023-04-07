@@ -38,15 +38,15 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
     public BukkitItemTypeMapper() {
         if (Server.isVersion(1, 13)) {
             itemTypeConverter
-                    .registerP2W(Material.class, BukkitItemTypeHolder::new)
-                    .registerP2W(ItemStack.class, stack -> new BukkitItemTypeHolder(stack.getType()));
+                    .registerP2W(Material.class, BukkitItemType1_13::new)
+                    .registerP2W(ItemStack.class, stack -> new BukkitItemType1_13(stack.getType()));
 
 
             Arrays.stream(Material.values())
                     .filter(t -> !t.name().startsWith("LEGACY"))
                     .filter(Material::isItem)
                     .forEach(material -> {
-                        var holder = new BukkitItemTypeHolder(material);
+                        var holder = new BukkitItemType1_13(material);
                         var namespaced = material.getKey();
                         /* In case this is a hybrid server and it actually works correctly (unlike Mohist), we should not assume everything is in minecraft namespace */
                         mapping.put(ResourceLocation.of(namespaced.getNamespace(), namespaced.getKey()), holder);
@@ -63,12 +63,12 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
                     });
         } else {
             itemTypeConverter
-                    .registerP2W(Material.class, BukkitItemTypeLegacyHolder::new)
-                    .registerP2W(ItemStack.class, stack -> new BukkitItemTypeLegacyHolder(stack.getType(), stack.getDurability()));
+                    .registerP2W(Material.class, BukkitItemType1_8::new)
+                    .registerP2W(ItemStack.class, stack -> new BukkitItemType1_8(stack.getType(), stack.getDurability()));
 
             Arrays.stream(Material.values())
                     .forEach(material -> {
-                        var holder = new BukkitItemTypeLegacyHolder(material);
+                        var holder = new BukkitItemType1_8(material);
                         /* In legacy we are not able to determine the namespace :( but hybrid servers require java 8 for 1.12.2 and less, so we can't run on them anyway */
                         mapping.put(ResourceLocation.of(material.name()), holder);
                         values.add(holder);

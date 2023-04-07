@@ -29,12 +29,14 @@ import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 import org.screamingsandals.lib.proxy.ServerWrapper;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service(dependsOn = EventManager.class)
+@Service
+@ServiceDependencies(dependsOn = EventManager.class)
 public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
 
     public BungeeProxiedPlayerMapper(@NotNull Plugin plugin) {

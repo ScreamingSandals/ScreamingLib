@@ -21,7 +21,7 @@ import org.bukkit.Registry;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.item.meta.PotionEffectRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;

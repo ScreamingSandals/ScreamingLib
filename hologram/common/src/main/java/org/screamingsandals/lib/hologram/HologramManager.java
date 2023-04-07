@@ -26,13 +26,15 @@ import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.visuals.AbstractVisualsManager;
 import org.screamingsandals.lib.world.Location;
 
 import java.util.Map;
 import java.util.UUID;
 
-@Service(dependsOn = {
+@Service
+@ServiceDependencies(dependsOn = {
         Core.class,
         PacketMapper.class
 })

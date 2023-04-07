@@ -25,9 +25,11 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.block.state.BlockSnapshot;
 import org.screamingsandals.lib.block.state.BlockSnapshots;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-@Service(dependsOn = BukkitBlocks.class)
+@Service
+@ServiceDependencies(dependsOn = BukkitBlocks.class)
 public class BukkitBlockSnapshots extends BlockSnapshots {
     public static final boolean HAS_TILE_STATE = Reflect.has("org.bukkit.block.TileState");
 

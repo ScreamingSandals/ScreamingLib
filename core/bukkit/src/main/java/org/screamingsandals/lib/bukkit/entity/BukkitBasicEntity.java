@@ -19,7 +19,8 @@ package org.screamingsandals.lib.bukkit.entity;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityType;
+import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityType1_11;
+import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityType1_8;
 import org.screamingsandals.lib.bukkit.entity.type.InternalEntityLegacyConstants;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.ext.paperlib.PaperLib;
@@ -62,37 +63,39 @@ public class BukkitBasicEntity extends BasicWrapper<Entity> implements BasicEnti
                 var variant = ((Horse) wrappedObject).getVariant();
                 switch (variant) {
                     case DONKEY:
-                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_DONKEY);
+                        return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_DONKEY);
                     case MULE:
-                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_MULE);
+                        return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_MULE);
                     case SKELETON_HORSE:
-                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_SKELETON);
+                        return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_SKELETON);
                     case UNDEAD_HORSE:
-                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_ZOMBIE);
+                        return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_ZOMBIE);
                 }
             } else if (wrappedObject instanceof Zombie) {
                 if (((Zombie) wrappedObject).isVillager()) {
-                    return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER);
+                    return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER);
                 }
                 if (Server.isVersion(1, 10)) {
                     var villager = Reflect.fastInvoke(ZombieAccessor.getMethodGetVillagerType1(), ClassStorage.getHandle(wrappedObject));
                     if (villager != null && villager == EnumZombieTypeAccessor.getFieldHUSK()) {
-                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK);
+                        return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK);
                     }
                 }
             } else if (wrappedObject instanceof Skeleton) {
                 var variant = ((Skeleton) wrappedObject).getSkeletonType();
                 switch (variant.name()) {
                     case "WITHER":
-                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.SKELETON_VARIANT_WITHER);
+                        return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.SKELETON_VARIANT_WITHER);
                     case "STRAY": // not present in 1.8-1.9
-                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.SKELETON_VARIANT_STRAY);
+                        return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.SKELETON_VARIANT_STRAY);
                 }
             } else if (wrappedObject instanceof Guardian && ((Guardian) wrappedObject).isElder()) {
-                return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.ELDER_GUARDIAN);
+                return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.ELDER_GUARDIAN);
+            } else {
+                return new BukkitEntityType1_8(wrappedObject.getType());
             }
         }
-        return new BukkitEntityType(wrappedObject.getType());
+        return new BukkitEntityType1_11(wrappedObject.getType());
     }
 
     @Override

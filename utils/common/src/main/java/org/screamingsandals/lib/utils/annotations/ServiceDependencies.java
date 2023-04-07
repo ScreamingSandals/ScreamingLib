@@ -16,10 +16,18 @@
 
 package org.screamingsandals.lib.utils.annotations;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
- * An annotation for specifying service dependencies without using a {@link Service} annotation.
- * An example usage would be declaring service dependencies for abstract classes, which are yet to be subclassed.
+ * An annotation for specifying service dependencies for a service and can be used on its superclasses as well.
  */
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE)
 public @interface ServiceDependencies {
     /**
      * Defines services which are required by this service to run.
@@ -27,7 +35,7 @@ public @interface ServiceDependencies {
      *
      * @return the service dependencies
      */
-    Class<?>[] dependsOn() default {};
+    @NotNull Class<?> @NotNull [] dependsOn() default {};
 
     /**
      * Defines services which are not required by this service, but can be loaded optionally.
@@ -35,5 +43,13 @@ public @interface ServiceDependencies {
      *
      * @return the services
      */
-    Class<?>[] loadAfter() default {};
+    @NotNull Class<?> @NotNull [] loadAfter() default {};
+
+    /**
+     * Defines services which should also be initialized. Equivalent to {@link Init} (you can't use Init for services yet)
+     * These services will be automatically initialized if the annotation module is declared as an annotation processor in your build system.
+     *
+     * @return the services, which should be initialized independently of this service
+     */
+    @NotNull Class<?> @NotNull [] initAnother() default {};
 }

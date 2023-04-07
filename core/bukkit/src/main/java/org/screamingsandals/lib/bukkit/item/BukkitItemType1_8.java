@@ -16,63 +16,59 @@
 
 package org.screamingsandals.lib.bukkit.item;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
+import org.screamingsandals.lib.bukkit.block.BukkitBlockType1_8;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitItemTypeHolder extends BasicWrapper<Material> implements ItemTypeHolder {
+public class BukkitItemType1_8 extends BasicWrapper<Pair<Material, Short>> implements ItemTypeHolder {
 
-    // Because people can be stupid + it's also used in our current code for deserializing items ;)
-    private short forcedDurability;
+    public BukkitItemType1_8(@NotNull Material material) {
+        this(Pair.of(material, (short) 0));
+    }
 
-    public BukkitItemTypeHolder(@NotNull Material wrappedObject) {
+    public BukkitItemType1_8(@NotNull Material material, short forcedDurability) {
+        this(Pair.of(material, forcedDurability));
+    }
+
+    public BukkitItemType1_8(@NotNull Pair<@NotNull Material, @NotNull Short> wrappedObject) {
         super(wrappedObject);
-        if (!wrappedObject.isItem()) {
-            throw new UnsupportedOperationException("BukkitItemTypeHolder can wrap only item types!!!");
-        }
     }
 
     @Override
     public @NotNull String platformName() {
-        return wrappedObject.name();
+        return wrappedObject.first().name();
     }
 
     @Override
     public short forcedDurability() {
-        return forcedDurability;
+        return wrappedObject.second();
     }
 
     @Override
     public int maxStackSize() {
-        return wrappedObject.getMaxStackSize();
+        return wrappedObject.first().getMaxStackSize();
     }
 
     @Override
     public @NotNull ItemTypeHolder withForcedDurability(short durability) {
-        var holder = new BukkitItemTypeHolder(wrappedObject);
-        holder.forcedDurability = durability;
-        return holder;
+        return new BukkitItemType1_8(Pair.of(wrappedObject.first(), durability));
     }
 
     @Override
     public @Nullable BlockTypeHolder block() {
-        if (!wrappedObject.isBlock()) {
+        if (!wrappedObject.first().isBlock()) {
             return null;
         }
-        return new BukkitBlockTypeHolder(wrappedObject);
+        return new BukkitBlockType1_8(wrappedObject.first(), wrappedObject.second().byteValue());
     }
 
     @Override
@@ -83,22 +79,19 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
         } else {
             key = ResourceLocation.of(tag.toString());
         }
-        // native tags
-        var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ITEMS, new NamespacedKey(key.namespace(), key.path()), Material.class);
-        if (bukkitTag != null) {
-            return bukkitTag.isTagged(wrappedObject);
-        }
-        // backported tags
         if (!"minecraft".equals(key.namespace())) {
             return false;
         }
         var value = key.path();
-        return BukkitItemTypeMapper.hasTagInBackPorts(wrappedObject, value);
+        return BukkitItemTypeMapper.hasTagInBackPorts(wrappedObject.first(), value);
     }
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof Material || object instanceof ItemTypeHolder) {
+        if (object instanceof Material && wrappedObject.second() == 0) {
+            return wrappedObject.first() == object;
+        }
+        if (object instanceof ItemTypeHolder) {
             return equals(object);
         }
         if (object instanceof String) {
@@ -119,17 +112,10 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
     @SuppressWarnings("unchecked")
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
-        if (type == ItemStack.class) {
-            ItemStack stack = new ItemStack(wrappedObject);
-            if (forcedDurability != 0) {
-                // it's somehow still supported because people can be stupid sometimes
-                ItemMeta meta = stack.getItemMeta();
-                if (meta instanceof Damageable) {
-                    ((Damageable) meta).setDamage(forcedDurability);
-                    stack.setItemMeta(meta);
-                }
-            }
-            return (T) stack;
+        if (type == Material.class) { // the wrapped type is Pair, so we will help the BasicWrapper a little with unwrapping Material
+            return (T) wrappedObject.first();
+        } else if (type == ItemStack.class) {
+            return (T) new ItemStack(wrappedObject.first(), 1, wrappedObject.second());
         }
         return super.as(type);
     }

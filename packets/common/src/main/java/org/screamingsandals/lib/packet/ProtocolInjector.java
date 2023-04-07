@@ -38,7 +38,7 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 
-@Service(dependsOn = EventManager.class)
+@Service
 @ServiceDependencies(dependsOn = {
         EventManager.class,
         Players.class,

@@ -26,10 +26,12 @@ import org.screamingsandals.lib.bungee.proxy.BungeeProxiedPlayerMapper;
 import org.screamingsandals.lib.cloud.CloudConstructor;
 import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
 import java.util.function.Function;
 
-@Service(dependsOn = BungeeProxiedPlayerMapper.class)
+@Service
+@ServiceDependencies(dependsOn = BungeeProxiedPlayerMapper.class)
 @RequiredArgsConstructor
 public class BungeeCloudConstructor extends CloudConstructor {
     private final @NotNull Plugin plugin;

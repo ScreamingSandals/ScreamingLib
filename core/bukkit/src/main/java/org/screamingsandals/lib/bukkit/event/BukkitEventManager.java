@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 
 @Service
 public class BukkitEventManager extends EventManager {
@@ -28,6 +29,7 @@ public class BukkitEventManager extends EventManager {
         super(controllable);
     }
 
+    @ServiceInitializer
     public static void init(Controllable controllable) {
         EventManager.init(() -> new BukkitEventManager(controllable));
     }

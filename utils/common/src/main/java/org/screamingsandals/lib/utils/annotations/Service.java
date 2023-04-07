@@ -26,15 +26,18 @@ import java.lang.annotation.Target;
  * The annotation module needs to be declared as an annotation processor in your build system for services to function.
  * <p>
  * Services employ a concept of "autowiring", a form of constructor/method dependency injection.
- * You can have the annotation processor automatically inject an object into your service's constructor or a method marked with @OnPostConstruct/@On[Post]Enable/@On[Pre]Disable.
+ * You can have the annotation processor automatically inject an object into your service's constructor or a method marked with @OnPostConstruct/@On[Post]Enable/@On[Pre]Disable/@OnPluginLoad.
  * <p>
  * Above-mentioned injectable objects include:
  * <ul>
- *  <li>a <strong>org.screamingsandals.lib.plugin.PluginContainer</strong> of your plugin</li>
- *  <li>a <strong>org.screamingsandals.lib.plugin.PluginDescription</strong> of your plugin</li>
+ *  <li>a <strong>org.screamingsandals.lib.plugin.PluginContainer</strong> of your plugin if your plugin still uses it</li>
+ *  <li>a <strong>org.screamingsandals.lib.plugin.Plugin</strong> of your plugin, which is a class describing the plugin</li>
  *  <li>the platform class of your plugin - not recommended, unless this is platform specific service</li>
- *  <li>a {@link org.screamingsandals.lib.utils.Controllable}</li>
- *  <li>an another service defined in {@link Service#dependsOn()}</li>
+ *  <li>
+ *      a {@link org.screamingsandals.lib.utils.Controllable} or {@link org.screamingsandals.lib.utils.ControllableImpl},
+ *      yet we highly discourage from using controllables in favor of annotations from {@link org.screamingsandals.lib.utils.annotations}
+ *  </li>
+ *  <li>an another service defined in {@link ServiceDependencies#dependsOn()} or {@link ServiceDependencies#dependsOnConditioned()}</li>
  *  <li>a {@link org.screamingsandals.lib.utils.logger.LoggerWrapper} or a SLF4J logger, if supported</li>
  *  <li>
  *      a {@link java.nio.file.Path} or a {@link java.io.File} annotated with
@@ -45,34 +48,12 @@ import java.lang.annotation.Target;
  *      {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}
  *  </li>
  * </ul>
+ * <p>
+ * Services required by constructor or lombok generated constructor don't need to be specified here unless they are conditioned.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface Service {
-    /**
-     * Defines services which are required by this service to run.
-     * These services will be automatically initialized if the annotation module is declared as an annotation processor in your build system.
-     *
-     * @return the service dependencies
-     */
-    Class<?>[] dependsOn() default {};
-
-    /**
-     * Defines services which are not required by this service, but can be loaded optionally.
-     * These services won't be loaded automatically if they are not specified as a required dependency anywhere else.
-     *
-     * @return the services, which should be loaded optionally
-     */
-    Class<?>[] loadAfter() default {};
-
-    /**
-     * Defines services which should also be initialized. Equivalent to {@link Init} (you can't use Init for services yet)
-     * These services will be automatically initialized if the annotation module is declared as an annotation processor in your build system.
-     *
-     * @return the services, which should be initialized independently of this service
-     */
-    Class<?>[] initAnother() default {};
-
     /**
      * Defines if this service should be registered to a <strong>org.screamingsandals.lib.plugin.ServiceManager</strong>.
      * If set to true, an object won't be constructed.

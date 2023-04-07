@@ -22,7 +22,7 @@ import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.particle.DustOptions;

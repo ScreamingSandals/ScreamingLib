@@ -41,13 +41,13 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
     public BukkitBlockTypeMapper() {
         if (Server.isVersion(1, 13)) {
             blockTypeConverter
-                    .registerP2W(Material.class, BukkitBlockTypeHolder::new)
-                    .registerP2W(BlockData.class, BukkitBlockTypeHolder::new);
+                    .registerP2W(Material.class, BukkitBlockType1_13::new)
+                    .registerP2W(BlockData.class, BukkitBlockType1_13::new);
 
             Arrays.stream(Material.values())
                     .filter(t -> !t.name().startsWith("LEGACY") && t.isBlock())
                     .forEach(material -> {
-                        var holder = new BukkitBlockTypeHolder(material);
+                        var holder = new BukkitBlockType1_13(material);
                         var namespaced = material.getKey();
                         /* In case this is a hybrid server and it actually works correctly (unlike Mohist), we should not assume everything is in minecraft namespace */
                         mapping.put(ResourceLocation.of(namespaced.getNamespace(), namespaced.getKey()), holder);
@@ -64,13 +64,13 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                     });
         } else {
             blockTypeConverter
-                    .registerP2W(Material.class, BukkitBlockTypeLegacyHolder::new)
-                    .registerP2W(MaterialData.class, BukkitBlockTypeLegacyHolder::new);
+                    .registerP2W(Material.class, BukkitBlockType1_8::new)
+                    .registerP2W(MaterialData.class, BukkitBlockType1_8::new);
 
             Arrays.stream(Material.values())
                     .filter(Material::isBlock)
                     .forEach(material -> {
-                        var holder = new BukkitBlockTypeLegacyHolder(material);
+                        var holder = new BukkitBlockType1_8(material);
                         /* In legacy we are not able to determine the namespace :( but hybrid servers require java 8 for 1.12.2 and less, so we can't run on them anyway */
                         mapping.put(ResourceLocation.of(material.name()), holder);
                         values.add(holder);

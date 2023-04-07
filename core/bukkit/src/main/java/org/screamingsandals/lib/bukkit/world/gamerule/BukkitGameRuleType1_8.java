@@ -24,8 +24,8 @@ import org.screamingsandals.lib.world.gamerule.GameRuleType;
 
 import java.util.Arrays;
 
-public class BukkitLegacyGameRuleType extends BasicWrapper<String> implements GameRuleType {
-    protected BukkitLegacyGameRuleType(@NotNull String wrappedObject) {
+public class BukkitGameRuleType1_8 extends BasicWrapper<String> implements GameRuleType {
+    protected BukkitGameRuleType1_8(@NotNull String wrappedObject) {
         super(wrappedObject);
     }
 

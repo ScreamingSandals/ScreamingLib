@@ -21,7 +21,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityType;
+import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityType1_8;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.ExperienceOrb;
@@ -105,8 +105,8 @@ public class BukkitEntities extends Entities {
             if (world != null) {
                 // TODO: test all entity types
                 var entity = world.spawnEntity(bukkitLoc, entityType1);
-                if (!Server.isVersion(1, 11) && entityType instanceof BukkitEntityType && ((BukkitEntityType) entityType).getAdditionalLegacyData() != 0) {
-                    var data = ((BukkitEntityType) entityType).getAdditionalLegacyData();
+                if (!Server.isVersion(1, 11) && entityType instanceof BukkitEntityType1_8 && ((BukkitEntityType1_8) entityType).getAdditionalLegacyData() != 0) {
+                    var data = ((BukkitEntityType1_8) entityType).getAdditionalLegacyData();
                     if (entity instanceof Horse) {
                         switch (data) {
                             case InternalEntityLegacyConstants.HORSE_VARIANT_DONKEY:

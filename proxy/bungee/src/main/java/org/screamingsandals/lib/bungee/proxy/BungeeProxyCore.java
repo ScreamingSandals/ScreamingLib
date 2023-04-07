@@ -20,8 +20,10 @@ import org.screamingsandals.lib.bungee.event.BungeeEventManager;
 import org.screamingsandals.lib.bungee.tasker.BungeeTasker;
 import org.screamingsandals.lib.proxy.ProxyCore;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
-@Service(dependsOn = {
+@Service
+@ServiceDependencies(dependsOn = {
         BungeeEventManager.class,
         BungeeTasker.class,
         BungeeProxiedPlayerMapper.class

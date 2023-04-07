@@ -30,7 +30,7 @@ import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundSource;
 import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundStart;
 import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundStop;
 import org.screamingsandals.lib.bukkit.spectator.title.BukkitTitle;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.sender.CommandSender;

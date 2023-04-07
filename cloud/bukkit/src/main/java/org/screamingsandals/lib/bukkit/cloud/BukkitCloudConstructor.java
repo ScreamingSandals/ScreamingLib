@@ -26,10 +26,12 @@ import org.screamingsandals.lib.bukkit.player.BukkitPlayers;
 import org.screamingsandals.lib.cloud.CloudConstructor;
 import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
 import java.util.function.Function;
 
-@Service(dependsOn = BukkitPlayers.class)
+@Service
+@ServiceDependencies(dependsOn = BukkitPlayers.class)
 @RequiredArgsConstructor
 public class BukkitCloudConstructor extends CloudConstructor {
     private final @NotNull Plugin plugin;
