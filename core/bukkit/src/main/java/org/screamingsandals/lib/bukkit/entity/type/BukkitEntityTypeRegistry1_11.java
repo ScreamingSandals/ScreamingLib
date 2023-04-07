@@ -172,7 +172,7 @@ public class BukkitEntityTypeRegistry1_11 extends BukkitEntityTypeRegistry {
         }
 
         try {
-            return new BukkitEntityType1_11(org.bukkit.entity.EntityType.valueOf(location.path().toUpperCase(Locale.ROOT)));
+            return new BukkitEntityType1_11(org.bukkit.entity.EntityType.valueOf(path.toUpperCase(Locale.ROOT)));
         } catch (IllegalArgumentException ignored) {
         }
 
