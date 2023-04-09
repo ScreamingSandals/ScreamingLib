@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.item.meta;
 
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,21 +25,21 @@ import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitPotion extends BasicWrapper<PotionData> implements Potion {
+public class BukkitPotion1_8 extends BasicWrapper<org.bukkit.potion.Potion> implements Potion {
 
-    public BukkitPotion(@NotNull PotionType type) {
-        this(new PotionData(type));
+    public BukkitPotion1_8(@NotNull PotionType type) {
+        this(new org.bukkit.potion.Potion(type));
     }
 
-    public BukkitPotion(@NotNull PotionData wrappedObject) {
+    public BukkitPotion1_8(@NotNull org.bukkit.potion.Potion wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public @NotNull String platformName() {
-        if (wrappedObject.isExtended()) {
+        if (wrappedObject.hasExtendedDuration()) {
             return "LONG_" + wrappedObject.getType().name();
-        } else if (wrappedObject.isUpgraded()) {
+        } else if (wrappedObject.getLevel() == 2) {
             return "STRONG_" + wrappedObject.getType().name();
         }
         return wrappedObject.getType().name();
@@ -48,7 +47,7 @@ public class BukkitPotion extends BasicWrapper<PotionData> implements Potion {
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof PotionData || object instanceof Potion) {
+        if (object instanceof org.bukkit.potion.Potion || object instanceof Potion) {
             return equals(object);
         }
         return equals(Potion.ofNullable(object));
@@ -73,13 +72,10 @@ public class BukkitPotion extends BasicWrapper<PotionData> implements Potion {
         return constructKey(wrappedObject);
     }
 
-    public static @NotNull ResourceLocation constructKey(@NotNull PotionData data) {
+    public static @NotNull ResourceLocation constructKey(@NotNull org.bukkit.potion.Potion data) {
         var bukkitName = data.getType().name();
         String name;
         switch (bukkitName) {
-            case "UNCRAFTABLE":
-                name = "WATER";
-                break;
             case "JUMP":
                 name = "LEAPING";
                 break;
@@ -99,9 +95,9 @@ public class BukkitPotion extends BasicWrapper<PotionData> implements Potion {
                 name = bukkitName;
         }
 
-        if (data.isExtended()) {
+        if (data.getLevel() == 2) {
             name = "STRONG_" + name;
-        } else if (data.isUpgraded()) {
+        } else if (data.hasExtendedDuration()) {
             name = "LONG_" + name;
         }
 

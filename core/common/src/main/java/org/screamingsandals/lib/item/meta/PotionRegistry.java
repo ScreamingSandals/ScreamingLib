@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
-import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.registry.SimpleRegistry;
 
 @ApiStatus.Internal
@@ -37,21 +36,5 @@ public abstract class PotionRegistry extends SimpleRegistry<Potion> {
 
     public static @NotNull PotionRegistry getInstance() {
         return Preconditions.checkNotNull(registry, "PotionRegistry is not initialized yet!");
-    }
-
-    @OnPostConstruct
-    public void bukkit2minecraftMapping() {
-        mapAlias("EMPTY", "UNCRAFTABLE");
-        mapAlias("LEAPING", "JUMP");
-        mapAlias("SWIFTNESS", "SPEED");
-        mapAlias("HEALING", "INSTANT_HEAL");
-        mapAlias("HARMING", "INSTANT_DAMAGE");
-        mapAlias("REGENERATION", "REGEN");
-    }
-
-    protected void mapAlias(@NotNull String potion, @NotNull String potionBukkit) {
-        super.mapAlias(potion, potionBukkit);
-        super.mapAlias("long_" + potion, "long_" + potionBukkit);
-        super.mapAlias("strong_" + potion, "strong_" + potionBukkit);
     }
 }
