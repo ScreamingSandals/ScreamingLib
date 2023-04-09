@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.ItemTagKeys;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nbt.StringTag;
@@ -249,7 +249,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
             pages.add(new StringTag(page.toJavaJson()));
         }
         var item = ItemStackFactory.builder()
-                .type(ItemTypeHolder.of("minecraft:written_book"))
+                .type(ItemType.of("minecraft:written_book"))
                 .tag(CompoundTag.EMPTY
                         .with(ItemTagKeys.TITLE, book.title().toJavaJson())
                         .with(ItemTagKeys.AUTHOR, book.author().toJavaJson())

@@ -19,7 +19,7 @@ package org.screamingsandals.lib.particle;
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -33,23 +33,19 @@ public interface ParticleType extends RegistryItem, RawValueHolder {
      * {@inheritDoc}
      */
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.PARTICLE_TYPE) @Nullable Object object);
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.PARTICLE_TYPE) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    static @NotNull ParticleType of(@NotNull Object particle) {
+    static @NotNull ParticleType of(@MinecraftType(MinecraftType.Type.PARTICLE_TYPE) @NotNull Object particle) {
         var result = ofNullable(particle);
         Preconditions.checkNotNullIllegal(result, "Could not find particle type: " + particle);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
     @Contract("null -> null")
-    static @Nullable ParticleType ofNullable(@Nullable Object particle) {
+    static @Nullable ParticleType ofNullable(@MinecraftType(MinecraftType.Type.PARTICLE_TYPE) @Nullable Object particle) {
         if (particle instanceof ParticleType) {
             return (ParticleType) particle;
         }

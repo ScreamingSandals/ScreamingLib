@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.attribute;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.jetbrains.annotations.Nullable;
@@ -66,11 +65,11 @@ public class BukkitAttributeMapping extends AttributeMapping {
                                     AttributeModifier.Operation.values()[holder.getOperation().ordinal()]
                             );
                         }
-                        return new BukkitItemAttribute(holder.getType().as(Attribute.class), modifier);
+                        return new BukkitItemAttribute(holder.getType().as(org.bukkit.attribute.Attribute.class), modifier);
                     })
                     .registerP2W(BukkitItemAttribute.class, bukkitItemAttribute -> {
                         try {
-                            return new ItemAttributeHolder(
+                            return new ItemAttribute(
                                     AttributeType.of(bukkitItemAttribute.getAttribute()),
                                     bukkitItemAttribute.getAttributeModifier().getUniqueId(),
                                     bukkitItemAttribute.getAttributeModifier().getName(),
@@ -79,7 +78,7 @@ public class BukkitAttributeMapping extends AttributeMapping {
                                     EquipmentSlot.ofNullable(bukkitItemAttribute.getAttributeModifier().getOperation())
                             );
                         } catch (Throwable throwable) {
-                            return new ItemAttributeHolder(
+                            return new ItemAttribute(
                                     AttributeType.of(bukkitItemAttribute.getAttribute()),
                                     bukkitItemAttribute.getAttributeModifier().getUniqueId(),
                                     bukkitItemAttribute.getAttributeModifier().getName(),
@@ -89,13 +88,15 @@ public class BukkitAttributeMapping extends AttributeMapping {
                             );
                         }
                     });
+        } else {
+            // TODO: 1.8.8
         }
     }
 
     @Override
-    protected @Nullable AttributeHolder wrapAttribute0(@Nullable Object attribute) {
+    protected @Nullable Attribute wrapAttribute0(@Nullable Object attribute) {
         if (attribute instanceof AttributeInstance) {
-            return new BukkitAttributeHolder((AttributeInstance) attribute);
+            return new BukkitAttribute((AttributeInstance) attribute);
         }
         return null;
     }

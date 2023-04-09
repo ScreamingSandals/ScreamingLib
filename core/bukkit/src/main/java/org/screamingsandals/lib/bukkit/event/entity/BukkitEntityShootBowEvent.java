@@ -72,10 +72,16 @@ public class BukkitEntityShootBowEvent implements EntityShootBowEvent, BukkitCan
     @Override
     public @Nullable ItemStack consumable() {
         if (!consumableCached) {
-            if (event.getConsumable() != null) {
-                consumable = new BukkitItem(event.getConsumable());
+            try {
+                if (event.getConsumable() != null) {
+                    consumable = new BukkitItem(event.getConsumable());
+                }
+                consumableCached = true;
+            } catch (Throwable ignored) {
+                // <= 1.16.1
+                consumable = null;
+                consumableCached = true;
             }
-            consumableCached = true;
         }
         return consumable;
     }
@@ -88,7 +94,11 @@ public class BukkitEntityShootBowEvent implements EntityShootBowEvent, BukkitCan
     @Override
     public @NotNull EquipmentSlot hand() {
         if (hand == null) {
-            hand = EquipmentSlot.of(event.getHand());
+            try {
+                hand = EquipmentSlot.of(event.getHand());
+            } catch (Throwable ignored) {
+                hand = EquipmentSlot.of("main_hand"); // event#getHand added to the event in 1.16.2
+            }
         }
         return hand;
     }
@@ -100,11 +110,19 @@ public class BukkitEntityShootBowEvent implements EntityShootBowEvent, BukkitCan
 
     @Override
     public boolean consumeItem() {
-        return event.shouldConsumeItem();
+        try {
+            return event.shouldConsumeItem();
+        } catch (Throwable ignored) {
+            return false; // <= 1.16.1
+        }
     }
 
     @Override
     public void consumeItem(boolean consumeItem) {
-        event.setConsumeItem(consumeItem);
+        try {
+            event.setConsumeItem(consumeItem);
+        } catch (Throwable ignored) {
+            // <= 1.16.1
+        }
     }
 }

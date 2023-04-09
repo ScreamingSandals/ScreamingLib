@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.block.Block;
 
@@ -33,7 +33,7 @@ public interface PlayerBucketEvent extends SCancellableEvent, PlayerEvent, Platf
 
     @NotNull BlockFace blockFace();
 
-    @NotNull ItemTypeHolder bucket();
+    @NotNull ItemType bucket();
 
     @Nullable ItemStack item();
 

@@ -19,7 +19,7 @@ package org.screamingsandals.lib.player.gamemode;
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -30,23 +30,19 @@ public interface GameMode extends RegistryItem, RawValueHolder {
     int id();
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
-    boolean is(@Nullable Object gameMode);
+    boolean is(@MinecraftType(MinecraftType.Type.GAME_MODE) @Nullable Object gameMode);
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
-    boolean is(@Nullable Object @NotNull... gameModes);
+    boolean is(@MinecraftType(MinecraftType.Type.GAME_MODE) @Nullable Object @NotNull... gameModes);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
-    static @NotNull GameMode of(@NotNull Object gameMode) {
+    static @NotNull GameMode of(@MinecraftType(MinecraftType.Type.GAME_MODE) @NotNull Object gameMode) {
         var result = ofNullable(gameMode);
         Preconditions.checkNotNullIllegal(result, "Could not find game mode: " + gameMode);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
     @Contract("null -> null")
-    static @Nullable GameMode ofNullable(@Nullable Object gameMode) {
+    static @Nullable GameMode ofNullable(@MinecraftType(MinecraftType.Type.GAME_MODE) @Nullable Object gameMode) {
         if (gameMode instanceof GameMode) {
             return (GameMode) gameMode;
         }

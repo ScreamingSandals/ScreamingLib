@@ -19,7 +19,7 @@ package org.screamingsandals.lib.slot;
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -27,24 +27,20 @@ public interface EquipmentSlot extends RegistryItem, RawValueHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();
 
-    @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
     @Override
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.EQUIPMENT_SLOT) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
     @Override
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.EQUIPMENT_SLOT) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
-    static @NotNull EquipmentSlot of(@NotNull Object slot) {
+    static @NotNull EquipmentSlot of(@MinecraftType(MinecraftType.Type.EQUIPMENT_SLOT) @NotNull Object slot) {
         var result = ofNullable(slot);
         Preconditions.checkNotNullIllegal(result, "Could not find equipment slot: " + slot);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
     @Contract("null -> null")
-    static @Nullable EquipmentSlot ofNullable(@Nullable Object slot) {
+    static @Nullable EquipmentSlot ofNullable(@MinecraftType(MinecraftType.Type.EQUIPMENT_SLOT) @Nullable Object slot) {
         if (slot instanceof EquipmentSlot) {
             return (EquipmentSlot) slot;
         }

@@ -31,13 +31,13 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -693,10 +693,10 @@ public class BukkitEntityMetadataMapper {
             return (T) value;
         }
 
-        if (valueClass == BlockTypeHolder.class) {
-            return (T) BlockTypeHolder.of(value);
-        } else if (valueClass == ItemTypeHolder.class) {
-            return (T) ItemTypeHolder.of(value);
+        if (valueClass == BlockType.class) {
+            return (T) BlockType.of(value);
+        } else if (valueClass == ItemType.class) {
+            return (T) ItemType.of(value);
         } else if (BasicEntity.class.isAssignableFrom(valueClass) && value instanceof Entity) {
             return (T) Entities.wrapEntity(value).orElseThrow();
         } else if (value instanceof org.bukkit.inventory.ItemStack && valueClass == ItemStack.class) {

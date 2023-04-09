@@ -23,7 +23,7 @@ import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.builder.ShortStackDeserializer;
 import org.screamingsandals.lib.item.meta.*;
@@ -293,7 +293,7 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
         node.set(null);
 
         if (obj != null) {
-            ItemTypeHolderSerializer.INSTANCE.serialize(ItemTypeHolder.class, obj.getType(), node.node(TYPE_KEY));
+            ItemTypeHolderSerializer.INSTANCE.serialize(ItemType.class, obj.getType(), node.node(TYPE_KEY));
             node.node(AMOUNT_KEY).set(obj.getAmount());
             var tag = obj.getTag();
             if (!tag.isEmpty()) {

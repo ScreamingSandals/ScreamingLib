@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -53,23 +53,19 @@ public interface FireworkEffect extends RegistryItem {
     @Contract(value = "_ -> new", pure = true)
     @NotNull FireworkEffect withTrail(boolean trail);
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.FIREWORK_EFFECT) @Nullable Object @NotNull... objects);
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.FIREWORK_EFFECT) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    static @NotNull FireworkEffect of(@NotNull Object effect) {
+    static @NotNull FireworkEffect of(@MinecraftType(MinecraftType.Type.FIREWORK_EFFECT) @NotNull Object effect) {
         var result = ofNullable(effect);
         Preconditions.checkNotNullIllegal(result, "Could not find firework effect: " + effect);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
     @Contract("null -> null")
-    static @Nullable FireworkEffect ofNullable(@Nullable Object effect) {
+    static @Nullable FireworkEffect ofNullable(@MinecraftType(MinecraftType.Type.FIREWORK_EFFECT) @Nullable Object effect) {
         if (effect instanceof FireworkEffect) {
             return (FireworkEffect) effect;
         }

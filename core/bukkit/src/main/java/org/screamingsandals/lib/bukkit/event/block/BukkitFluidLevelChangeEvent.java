@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.FluidLevelChangeEvent;
@@ -39,7 +39,7 @@ public class BukkitFluidLevelChangeEvent implements FluidLevelChangeEvent, Bukki
 
     // Internal cache
     private @Nullable Block block;
-    private @Nullable BlockTypeHolder blockType;
+    private @Nullable BlockType blockType;
 
     @Override
     public @NotNull Block block() {
@@ -50,9 +50,9 @@ public class BukkitFluidLevelChangeEvent implements FluidLevelChangeEvent, Bukki
     }
 
     @Override
-    public @NotNull BlockTypeHolder newBlockData() {
+    public @NotNull BlockType newBlockData() {
         if (blockType == null) {
-            blockType = BlockTypeHolder.of(event.getNewData());
+            blockType = BlockType.of(event.getNewData());
         }
         return blockType;
     }

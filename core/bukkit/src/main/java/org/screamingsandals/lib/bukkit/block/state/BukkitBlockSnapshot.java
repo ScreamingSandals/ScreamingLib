@@ -22,7 +22,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.container.BukkitContainer;
 import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.container.Container;
@@ -36,16 +36,16 @@ public class BukkitBlockSnapshot extends BasicWrapper<BlockState> implements Blo
     }
 
     @Override
-    public @NotNull BlockTypeHolder getType() {
+    public @NotNull BlockType getType() {
         if (!Version.isVersion(1,13)) {
-            return BlockTypeHolder.of(wrappedObject.getData());
+            return BlockType.of(wrappedObject.getData());
         } else {
-            return BlockTypeHolder.of(wrappedObject.getBlockData());
+            return BlockType.of(wrappedObject.getBlockData());
         }
     }
 
     @Override
-    public void setType(@NotNull BlockTypeHolder type) {
+    public void setType(@NotNull BlockType type) {
         if (!Version.isVersion(1,13)) {
             wrappedObject.setType(type.as(Material.class));
             wrappedObject.setRawData(type.legacyData());

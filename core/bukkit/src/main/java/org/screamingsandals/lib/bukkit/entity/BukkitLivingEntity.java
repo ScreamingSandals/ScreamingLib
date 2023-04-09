@@ -17,22 +17,24 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import lombok.experimental.ExtensionMethod;
+import org.bukkit.entity.ArmorStand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.util.Vector;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityType;
-import org.screamingsandals.lib.attribute.AttributeHolder;
+import org.screamingsandals.lib.attribute.Attribute;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.item.ItemStack;
+import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -51,8 +53,13 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
     }
 
     @Override
-    public @Nullable AttributeHolder getAttribute(@NotNull AttributeType attributeType) {
-        return AttributeMapping.wrapAttribute(((org.bukkit.entity.LivingEntity) wrappedObject).getAttribute(attributeType.as(Attribute.class)));
+    public @Nullable Attribute getAttribute(@NotNull AttributeType attributeType) {
+        try {
+            return AttributeMapping.wrapAttribute(((org.bukkit.entity.LivingEntity) wrappedObject).getAttribute(attributeType.as(org.bukkit.attribute.Attribute.class)));
+        } catch (Throwable ignored) {
+            // TODO: 1.8.8
+            return null;
+        }
     }
 
     @Override
@@ -71,7 +78,7 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
     }
 
     @Override
-    public @NotNull Block getTargetBlock(@Nullable Collection<@NotNull BlockTypeHolder> transparent, int maxDistance) {
+    public @NotNull Block getTargetBlock(@Nullable Collection<@NotNull BlockType> transparent, int maxDistance) {
         return new BukkitBlock(((org.bukkit.entity.LivingEntity) wrappedObject)
                 .getTargetBlock((transparent == null) ? null : transparent
                         .stream()
@@ -107,22 +114,40 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
 
     @Override
     public int getArrowCooldown() {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).getArrowCooldown();
+        try {
+            return ((org.bukkit.entity.LivingEntity) wrappedObject).getArrowCooldown();
+        } catch (Throwable ignored) {
+            // TODO: <= 1.16.2
+            return 0;
+        }
     }
 
     @Override
     public void setArrowCooldown(int ticks) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).setArrowCooldown(ticks);
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).setArrowCooldown(ticks);
+        } catch (Throwable ignored) {
+            // TODO: <= 1.16.2
+        }
     }
 
     @Override
     public int getArrowsInBody() {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).getArrowsInBody();
+        try {
+            return ((org.bukkit.entity.LivingEntity) wrappedObject).getArrowsInBody();
+        } catch (Throwable ignored) {
+            // TODO: <= 1.16.2
+            return 0;
+        }
     }
 
     @Override
     public void setArrowsInBody(int count) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).setArrowsInBody(count);
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).setArrowsInBody(count);
+        } catch (Throwable ignored) {
+            // TODO: <= 1.16.2
+        }
     }
 
     @Override
@@ -236,77 +261,149 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
 
     @Override
     public boolean isGliding() {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).isGliding();
+        try {
+            return ((org.bukkit.entity.LivingEntity) wrappedObject).isGliding();
+        } catch (Throwable ignored) {
+            return false; // 1.8.8: no Elytra
+        }
     }
 
     @Override
     public void setGliding(boolean gliding) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).setGliding(gliding);
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).setGliding(gliding);
+        } catch (Throwable ignored) {
+            // 1.8.8: no Elytra
+        }
     }
 
     @Override
     public boolean isSwimming() {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).isSwimming();
+        try {
+            return ((org.bukkit.entity.LivingEntity) wrappedObject).isSwimming();
+        } catch (Throwable ignored) {
+            return false; // <= 1.12.2: no swimming animation
+        }
     }
 
     @Override
     public void setSwimming(boolean swimming) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).setSwimming(swimming);
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).setSwimming(swimming);
+        } catch (Throwable ignored) {
+            // <= 1.12.2: no swimming animation
+        }
     }
 
     @Override
     public boolean isRiptiding() {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).isRiptiding();
+        try {
+            return ((org.bukkit.entity.LivingEntity) wrappedObject).isRiptiding();
+        } catch (Throwable ignored) {
+            return false; // <= 1.12.2: not supported
+        }
     }
 
     @Override
     public boolean isSleeping() {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).isSleeping();
+        try {
+            return ((org.bukkit.entity.LivingEntity) wrappedObject).isSleeping();
+        } catch (Throwable ignored) {
+            // <= 1.13.2: Only HumanEntity (Player) can sleep
+            if (wrappedObject instanceof org.bukkit.entity.HumanEntity) {
+                return ((org.bukkit.entity.HumanEntity) wrappedObject).isSleeping();
+            } else {
+                return false;
+            }
+        }
     }
 
     @Override
     public void setAI(boolean ai) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).setAI(ai);
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).setAI(ai);
+        } catch (Throwable ignored) {
+            // TODO: 1.8.8
+        }
     }
 
     @Override
     public boolean hasAI() {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).hasAI();
+        try {
+            return ((org.bukkit.entity.LivingEntity) wrappedObject).hasAI();
+        } catch (Throwable ignored) {
+            return true; // TODO: 1.8.8: who knows
+        }
     }
 
     @Override
     public void attack(@NotNull BasicEntity target) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).attack(target.as(Entity.class));
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).attack(target.as(Entity.class));
+        } catch (Throwable ignored) {
+            // TODO: <= 1.15.2
+        }
     }
 
     @Override
     public void swingMainHand() {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).swingMainHand();
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).swingMainHand();
+        } catch (Throwable ignored) {
+            // TODO: <= 1.15.2
+        }
     }
 
     @Override
     public void swingOffHand() {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).swingOffHand();
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).swingOffHand();
+        } catch (Throwable ignored) {
+            // TODO: <= 1.15.2
+        }
     }
 
     @Override
     public void setCollidable(boolean collidable) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).setCollidable(collidable);
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).setCollidable(collidable);
+        } catch (Throwable ignored) {
+            // 1.8.8: Collisions can't be controlled
+        }
     }
 
     @Override
     public boolean isCollidable() {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).isCollidable();
+        try {
+            return ((org.bukkit.entity.LivingEntity) wrappedObject).isCollidable();
+        } catch (Throwable ignored) {
+            // TODO: 1.8.8: how am I supposed to figure this out? Players don't have collisions, but some living entities do
+            return !(wrappedObject instanceof org.bukkit.entity.HumanEntity);
+        }
     }
 
     @Override
     public void setInvisible(boolean invisible) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).setInvisible(invisible);
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).setInvisible(invisible);
+        } catch (Throwable ignored) {
+            if (wrappedObject instanceof ArmorStand) {
+                ((ArmorStand) wrappedObject).setVisible(!invisible);
+            }
+            // TODO: <= 1.16.3
+        }
     }
 
     @Override
     public boolean isInvisible() {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).isInvisible();
+        try {
+            return ((org.bukkit.entity.LivingEntity) wrappedObject).isInvisible();
+        } catch (Throwable ignored) {
+            if (wrappedObject instanceof ArmorStand) {
+                return !((ArmorStand) wrappedObject).isVisible();
+            }
+            return false; // TODO: <= 1.16.3
+        }
     }
 
     @Override
@@ -321,7 +418,11 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
 
     @Override
     public double getAbsorptionAmount() {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).getAbsorptionAmount();
+        try {
+            return ((org.bukkit.entity.LivingEntity) wrappedObject).getAbsorptionAmount();
+        } catch (Throwable ignored) {
+            return 0; // TODO: <= 1.15.2
+        }
     }
 
     @Override
@@ -331,7 +432,11 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
 
     @Override
     public void setAbsorptionAmount(double amount) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).setAbsorptionAmount(amount);
+        try {
+            ((org.bukkit.entity.LivingEntity) wrappedObject).setAbsorptionAmount(amount);
+        } catch (Throwable ignored) {
+            // TODO: <= 1.14.4
+        }
     }
 
     @Override
@@ -442,7 +547,11 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
             return null;
         }
 
-        return new BukkitItem(eq.getItemInMainHand());
+        if (Version.isVersion(1, 9)) {
+            return new BukkitItem(eq.getItemInMainHand());
+        } else {
+            return new BukkitItem(eq.getItemInHand());
+        }
     }
 
     @Override
@@ -452,10 +561,18 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
             return;
         }
 
-        if (item == null) {
-            eq.setItemInMainHand(null);
+        if (Version.isVersion(1, 9)) {
+            if (item == null) {
+                eq.setItemInMainHand(null);
+            } else {
+                eq.setItemInMainHand(item.as(org.bukkit.inventory.ItemStack.class));
+            }
         } else {
-            eq.setItemInMainHand(item.as(org.bukkit.inventory.ItemStack.class));
+            if (item == null) {
+                eq.setItemInHand(null);
+            } else {
+                eq.setItemInHand(item.as(org.bukkit.inventory.ItemStack.class));
+            }
         }
     }
 
@@ -466,7 +583,11 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
             return null;
         }
 
-        return new BukkitItem(eq.getItemInOffHand());
+        if (Version.isVersion(1, 9)) {
+            return new BukkitItem(eq.getItemInOffHand());
+        } else {
+            return ItemStackFactory.getAir();
+        }
     }
 
     @Override
@@ -476,10 +597,27 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
             return;
         }
 
-        if (item == null) {
-            eq.setItemInOffHand(null);
-        } else {
-            eq.setItemInOffHand(item.as(org.bukkit.inventory.ItemStack.class));
+        if (Version.isVersion(1, 9)) {
+            if (item == null) {
+                eq.setItemInOffHand(null);
+            } else {
+                eq.setItemInOffHand(item.as(org.bukkit.inventory.ItemStack.class));
+            }
+        } else if (item != null && !item.isAir()) {
+            // I have no idea where we should put the item, so I just pass it to the addItem method and drop it in case of failure.
+            var inv = getInventory();
+            if (inv != null) {
+                var failure = inv.addItem(item);
+                if (!failure.isEmpty()) {
+                    var loc = wrappedObject.getLocation();
+                    for (var fail : failure) {
+                        loc.getWorld().dropItem(loc, fail.as(org.bukkit.inventory.ItemStack.class));
+                    }
+                }
+            } else {
+                var loc = wrappedObject.getLocation();
+                loc.getWorld().dropItem(loc, item.as(org.bukkit.inventory.ItemStack.class));
+            }
         }
     }
 

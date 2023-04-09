@@ -19,7 +19,7 @@ package org.screamingsandals.lib.world.difficulty;
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -27,22 +27,18 @@ public interface DifficultyType extends RegistryItem, RawValueHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();
 
-    @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.DIFFICULTY_TYPE) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.DIFFICULTY_TYPE) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
-    static @NotNull DifficultyType of(@NotNull Object difficulty) {
+    static @NotNull DifficultyType of(@MinecraftType(MinecraftType.Type.DIFFICULTY_TYPE) @NotNull Object difficulty) {
         var result = ofNullable(difficulty);
         Preconditions.checkNotNullIllegal(result, "Could not find difficulty: " + difficulty);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
     @Contract("null -> null")
-    static @Nullable DifficultyType ofNullable(@Nullable Object difficulty) {
+    static @Nullable DifficultyType ofNullable(@MinecraftType(MinecraftType.Type.DIFFICULTY_TYPE) @Nullable Object difficulty) {
         if (difficulty instanceof DifficultyType) {
             return (DifficultyType) difficulty;
         }

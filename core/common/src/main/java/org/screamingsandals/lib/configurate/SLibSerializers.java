@@ -19,14 +19,14 @@ package org.screamingsandals.lib.configurate;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.attribute.AttributeType;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.entity.damage.DamageType;
 import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.item.meta.Potion;
@@ -63,8 +63,8 @@ public class SLibSerializers {
                 .register(Potion.class, PotionHolderSerializer.INSTANCE)
                 .register(WeatherType.class, WeatherHolderSerializer.INSTANCE)
                 .register(FireworkEffect.class, FireworkEffectHolderSerializer.INSTANCE)
-                .register(ItemTypeHolder.class, ItemTypeHolderSerializer.INSTANCE)
-                .register(BlockTypeHolder.class, BlockTypeHolderSerializer.INSTANCE)
+                .register(ItemType.class, ItemTypeHolderSerializer.INSTANCE)
+                .register(BlockType.class, BlockTypeHolderSerializer.INSTANCE)
                 .register(EquipmentSlot.class, EquipmentSlotHolderSerializer.INSTANCE)
                 .register(ItemStack.class, ItemSerializer.INSTANCE)
                 .register(Location.class, LocationHolderSerializer.INSTANCE);

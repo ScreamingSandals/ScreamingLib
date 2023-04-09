@@ -21,7 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.world.Location;
 
 @EqualsAndHashCode(callSuper = true)
@@ -32,7 +32,7 @@ public class ClientboundBlockEventPacket extends AbstractPacket {
     private final @NotNull Location location;
     private final byte actionId;
     private final byte actionParameter;
-    private final @NotNull BlockTypeHolder blockData;
+    private final @NotNull BlockType blockData;
 
     @Override
     public void write(@NotNull PacketWriter writer) {

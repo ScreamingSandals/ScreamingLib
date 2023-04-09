@@ -39,6 +39,7 @@ import org.screamingsandals.lib.event.player.PlayerBlockPlaceEvent;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.player.Players;
 import org.screamingsandals.lib.player.Player;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.utils.ImmutableCollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
@@ -59,7 +60,7 @@ public class BukkitPlayerBlockPlaceEvent implements PlayerBlockPlaceEvent, Bukki
     // Internal cache;
     private @Nullable Player player;
     private @Nullable Collection<@NotNull BlockSnapshot> replacedBlockStates;
-    private Player.@Nullable Hand playerHand;
+    private @Nullable EquipmentSlot playerHand;
     private @Nullable Block block;
     private @Nullable BlockSnapshot replacedBlockState;
     private @Nullable ItemStack itemInHand;
@@ -81,9 +82,13 @@ public class BukkitPlayerBlockPlaceEvent implements PlayerBlockPlaceEvent, Bukki
     }
 
     @Override
-    public Player.@NotNull Hand playerHand() {
+    public @NotNull EquipmentSlot playerHand() {
         if (playerHand == null) {
-            playerHand = Players.wrapHand(event.getHand());
+            try {
+                playerHand = EquipmentSlot.of(event.getHand());
+            } catch (Throwable ignored) {
+                playerHand = EquipmentSlot.of("main_hand"); // 1.8.8
+            }
         }
         return playerHand;
     }

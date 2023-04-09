@@ -20,12 +20,12 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.attribute.ItemAttributeHolder;
+import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemMeta;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.item.meta.PotionEffect;
@@ -37,7 +37,7 @@ import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 
@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 public interface ItemStackBuilder extends MetadataConsumer {
     @Contract("_ -> this")
-    @NotNull ItemStackBuilder type(@NotNull ItemTypeHolder type);
+    @NotNull ItemStackBuilder type(@NotNull ItemType type);
 
     @Contract("_ -> this")
     @NotNull ItemStackBuilder durability(int durability);
@@ -62,10 +62,10 @@ public interface ItemStackBuilder extends MetadataConsumer {
     @NotNull ItemStackBuilder itemLore(@Nullable List<@NotNull Component> lore);
 
     @Contract("_ -> this")
-    @NotNull ItemStackBuilder attributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers);
+    @NotNull ItemStackBuilder attributeModifiers(@Nullable List<@NotNull ItemAttribute> modifiers);
 
     @Contract("_ -> this")
-    @NotNull ItemStackBuilder attributeModifier(@NotNull ItemAttributeHolder modifier);
+    @NotNull ItemStackBuilder attributeModifier(@NotNull ItemAttribute modifier);
 
     @Contract("_ -> this")
     @NotNull ItemStackBuilder data(@NotNull ItemData data);
@@ -103,11 +103,10 @@ public interface ItemStackBuilder extends MetadataConsumer {
 
     // DSL
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder type(@NotNull Object type) {
-        if (type instanceof ItemTypeHolder) {
-            return type((ItemTypeHolder) type);
+    default @NotNull ItemStackBuilder type(@MinecraftType(MinecraftType.Type.ITEM_TYPE) @NotNull Object type) {
+        if (type instanceof ItemType) {
+            return type((ItemType) type);
         }
         ShortStackDeserializer.deserializeShortStack(this, type);
         return this;
@@ -189,9 +188,8 @@ public interface ItemStackBuilder extends MetadataConsumer {
         );
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Contract("_,_ -> this")
-    default @NotNull ItemStackBuilder enchant(@NotNull Object enchant, int level) {
+    default @NotNull ItemStackBuilder enchant(@MinecraftType(MinecraftType.Type.ENCHANTMENT) @NotNull Object enchant, int level) {
         return enchant(enchant + " " + level);
     }
 
@@ -207,9 +205,8 @@ public interface ItemStackBuilder extends MetadataConsumer {
         return this;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder enchant(@NotNull Object enchant) {
+    default @NotNull ItemStackBuilder enchant(@MinecraftType(MinecraftType.Type.ENCHANTMENT) @NotNull Object enchant) {
         var enchantment = Enchantment.ofNullable(enchant);
         if (enchantment != null) {
             this.enchantment(enchantment);
@@ -217,9 +214,8 @@ public interface ItemStackBuilder extends MetadataConsumer {
         return this;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder potion(@NotNull Object potion) {
+    default @NotNull ItemStackBuilder potion(@MinecraftType(MinecraftType.Type.POTION) @NotNull Object potion) {
         NullableExtension.ifNotNull(Potion.ofNullable(potion), potionHolder -> this.setMetadata(ItemMeta.POTION_TYPE, potionHolder));
         return this;
     }
@@ -233,9 +229,8 @@ public interface ItemStackBuilder extends MetadataConsumer {
         return this;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder effect(@NotNull Object effect) {
+    default @NotNull ItemStackBuilder effect(@MinecraftType(MinecraftType.Type.POTION_EFFECT) @NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
             list.forEach(effect1 -> NullableExtension.ifNotNull(PotionEffect.ofNullable(effect1), potionEffectHolder -> this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder)));

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -33,30 +33,24 @@ public interface Enchantment extends RegistryItem {
     @Contract(value = "_ -> new", pure = true)
     @NotNull Enchantment withLevel(int level);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Override
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.ENCHANTMENT) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Override
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.ENCHANTMENT) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    boolean isSameType(@Nullable Object object);
+    boolean isSameType(@MinecraftType(MinecraftType.Type.ENCHANTMENT_TYPE) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    boolean isSameType(@Nullable Object @NotNull... objects);
+    boolean isSameType(@MinecraftType(MinecraftType.Type.ENCHANTMENT_TYPE) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    static @NotNull Enchantment of(@NotNull Object enchantment) {
+    static @NotNull Enchantment of(@MinecraftType(MinecraftType.Type.ENCHANTMENT) @NotNull Object enchantment) {
         var result = ofNullable(enchantment);
         Preconditions.checkNotNullIllegal(result, "Could not find enchantment: " + enchantment);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Contract("null -> null")
-    static @Nullable Enchantment ofNullable(@Nullable Object enchantment) {
+    static @Nullable Enchantment ofNullable(@MinecraftType(MinecraftType.Type.ENCHANTMENT) @Nullable Object enchantment) {
         if (enchantment instanceof Enchantment) {
             return (Enchantment) enchantment;
         }

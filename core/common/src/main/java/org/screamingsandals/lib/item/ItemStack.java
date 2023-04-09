@@ -19,7 +19,7 @@ package org.screamingsandals.lib.item;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.attribute.ItemAttributeHolder;
+import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.Enchantment;
@@ -30,7 +30,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContentLike;
 import org.screamingsandals.lib.utils.*;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 
@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
  * Represents an immutable Item.
  */
 public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, CompoundTagLike, CompoundTagTreeInspector, ItemContentLike, MetadataProvider {
-    @NotNull ItemTypeHolder getType();
+    @NotNull ItemType getType();
 
-    default @NotNull ItemTypeHolder getMaterial() { // alternative getter (old name)
+    default @NotNull ItemType getMaterial() { // alternative getter (old name)
         return getType();
     }
 
@@ -53,9 +53,9 @@ public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleDa
 
     @NotNull List<@NotNull Component> getLore();
 
-    @NotNull List<@NotNull ItemAttributeHolder> getAttributeModifiers();
+    @NotNull List<@NotNull ItemAttribute> getAttributeModifiers();
 
-    default @NotNull List<@NotNull ItemAttributeHolder> getItemAttributes() { // alternative getter (old name)
+    default @NotNull List<@NotNull ItemAttribute> getItemAttributes() { // alternative getter (old name)
         return getAttributeModifiers();
     }
 
@@ -86,22 +86,20 @@ public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleDa
         return getType().isAir();
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    default boolean is(@Nullable Object @NotNull... objects) {
+    default boolean is(@MinecraftType(MinecraftType.Type.ITEM_TYPE) @Nullable Object @NotNull... objects) {
         return getType().is(objects);
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    default boolean is(@Nullable Object object) {
+    default boolean is(@MinecraftType(MinecraftType.Type.ITEM_TYPE) @Nullable Object object) {
         return getType().is(object);
     }
 
     boolean isSimilar(@NotNull ItemStack item);
 
     @Contract(value = "_ -> new", pure = true)
-    default @NotNull ItemStack withType(@NotNull ItemTypeHolder type) {
+    default @NotNull ItemStack withType(@NotNull ItemType type) {
         return NullableExtension.orElseThrow(builder().type(type).build());
     }
 
@@ -121,12 +119,12 @@ public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleDa
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default @NotNull ItemStack withAttributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers) {
+    default @NotNull ItemStack withAttributeModifiers(@Nullable List<@NotNull ItemAttribute> modifiers) {
         return NullableExtension.orElseThrow(builder().attributeModifiers(modifiers).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default @NotNull ItemStack withAttributeModifier(@NotNull ItemAttributeHolder modifier) {
+    default @NotNull ItemStack withAttributeModifier(@NotNull ItemAttribute modifier) {
         return NullableExtension.orElseThrow(builder().attributeModifier(modifier).build());
     }
 

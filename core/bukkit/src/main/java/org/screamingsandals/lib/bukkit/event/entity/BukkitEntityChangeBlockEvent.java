@@ -26,7 +26,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.BasicEntity;
@@ -48,7 +48,7 @@ public class BukkitEntityChangeBlockEvent implements EntityChangeBlockEvent, Buk
     // Internal cache
     private @Nullable BasicEntity entity;
     private @Nullable Block block;
-    private @Nullable BlockTypeHolder to;
+    private @Nullable BlockType to;
 
     @Override
     public @NotNull BasicEntity entity() {
@@ -67,12 +67,12 @@ public class BukkitEntityChangeBlockEvent implements EntityChangeBlockEvent, Buk
     }
 
     @Override
-    public @NotNull BlockTypeHolder to() {
+    public @NotNull BlockType to() {
         if (to == null) {
             try {
-                to = BlockTypeHolder.of(event.getBlockData());
+                to = BlockType.of(event.getBlockData());
             } catch (Throwable ignored) {
-                to = BlockTypeHolder.of(event.getTo().getNewData((byte) 0));
+                to = BlockType.of(event.getTo().getNewData((byte) 0));
             }
         }
         return to;

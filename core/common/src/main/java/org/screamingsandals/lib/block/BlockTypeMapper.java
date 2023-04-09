@@ -27,8 +27,6 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.*;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -40,12 +38,12 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 @ProvidedService
-public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder> {
+public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockType> {
     private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?<blockState>:\\d*|\\[[^]]*])?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
     @Getter
     protected final @NotNull Map<@NotNull Predicate<@NotNull ResourceLocation>, Pair<Function<Byte, Map<String, String>>, Function<Map<String, String>, Byte>>> blockDataTranslators = new HashMap<>();
-    protected final @NotNull BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
-            .registerP2W(BlockTypeHolder.class, i -> i)
+    protected final @NotNull BidirectionalConverter<BlockType> blockTypeConverter = BidirectionalConverter.<BlockType>build()
+            .registerP2W(BlockType.class, i -> i)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {
                     return BlockTypeHolderSerializer.INSTANCE.deserialize(BlockTypeMapper.class, node);
@@ -56,7 +54,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
             });
 
     private static @Nullable BlockTypeMapper blockTypeMapper;
-    private static @Nullable BlockTypeHolder cachedAir;
+    private static @Nullable BlockType cachedAir;
 
     @ApiStatus.Internal
     public BlockTypeMapper() {
@@ -67,10 +65,8 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
         blockTypeMapper = this;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "ofNullable")
     @Contract("null -> null")
-    public static @Nullable BlockTypeHolder resolve(@Nullable Object materialObject) {
+    public static @Nullable BlockType resolve(@Nullable Object materialObject) {
         if (blockTypeMapper == null) {
             throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
         }
@@ -186,15 +182,14 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
         }).orElse(null);
     }
 
-    @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "all")
-    public static @NotNull List<@NotNull BlockTypeHolder> getValues() {
+    public static @NotNull List<@NotNull BlockType> getValues() {
         if (blockTypeMapper == null) {
             throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
         }
         return Collections.unmodifiableList(blockTypeMapper.values);
     }
 
-    public static @NotNull BlockTypeHolder colorize(@NotNull BlockTypeHolder holder, @NotNull String color) {
+    public static @NotNull BlockType colorize(@NotNull BlockType holder, @NotNull String color) {
         if (blockTypeMapper == null) {
             throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
         }
@@ -206,8 +201,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                 .orElse(holder);
     }
 
-    @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "air")
-    public static @NotNull BlockTypeHolder getCachedAir() {
+    public static @NotNull BlockType getCachedAir() {
         if (cachedAir == null) {
             cachedAir = resolve("minecraft:air");
             Preconditions.checkNotNull(cachedAir, "Could not find block type: minecraft:air");
@@ -215,7 +209,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
         return cachedAir;
     }
 
-    public @NotNull Map<@NotNull MappingKey, BlockTypeHolder> getUNSAFE_mapping() {
+    public @NotNull Map<@NotNull MappingKey, BlockType> getUNSAFE_mapping() {
         return mapping;
     }
 

@@ -19,7 +19,7 @@ package org.screamingsandals.lib.world.weather;
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -28,23 +28,19 @@ public interface WeatherType extends RegistryItem, RawValueHolder {
     @NotNull String platformName();
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.WEATHER) @Nullable Object object);
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.WEATHER) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
-    static @NotNull WeatherType of(@NotNull Object weather) {
+    static @NotNull WeatherType of(@MinecraftType(MinecraftType.Type.WEATHER) @NotNull Object weather) {
         var result = ofNullable(weather);
         Preconditions.checkNotNullIllegal(result, "Could not find weather: " + weather);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
     @Contract("null -> null")
-    static @Nullable WeatherType ofNullable(@Nullable Object weather) {
+    static @Nullable WeatherType ofNullable(@MinecraftType(MinecraftType.Type.WEATHER) @Nullable Object weather) {
         if (weather instanceof WeatherType) {
             return (WeatherType) weather;
         }

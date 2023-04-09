@@ -18,8 +18,8 @@ package org.screamingsandals.lib.vanilla.packet;
 
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.packet.PacketWriter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -30,17 +30,17 @@ public abstract class VanillaPacketWriter extends PacketWriter {
     }
 
     @Override
-    protected int getItemId(@NotNull ItemTypeHolder material) {
+    protected int getItemId(@NotNull ItemType material) {
         return Reflect.fastInvokeResulted(ItemAccessor.getMethodGetId1(), materialHolderToItem(material)).as(Integer.class);
     }
 
     @Override
-    protected int getBlockStateId(@NotNull BlockTypeHolder blockDataHolder) {
+    protected int getBlockStateId(@NotNull BlockType blockDataHolder) {
         return Reflect.fastInvokeResulted(BlockAccessor.getMethodGetId1(), blockDataToBlockState(blockDataHolder)).as(Integer.class);
         // TODO: check if this works for legacy too
     }
 
-    protected abstract @NotNull Object materialHolderToItem(@NotNull ItemTypeHolder material);
+    protected abstract @NotNull Object materialHolderToItem(@NotNull ItemType material);
 
-    protected abstract @NotNull Object blockDataToBlockState(@NotNull BlockTypeHolder blockData);
+    protected abstract @NotNull Object blockDataToBlockState(@NotNull BlockType blockData);
 }

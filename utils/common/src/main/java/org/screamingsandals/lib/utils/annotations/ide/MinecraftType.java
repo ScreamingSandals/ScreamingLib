@@ -16,39 +16,49 @@
 
 package org.screamingsandals.lib.utils.annotations.ide;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.METHOD)
-public @interface CustomAutocompletion {
-    Type value();
+@Target(ElementType.PARAMETER)
+@Documented
+public @interface MinecraftType {
+    @NotNull Type value();
 
     enum Type {
-        MATERIAL,
+        ATTRIBUTE_TYPE,
+        BLOCK_TYPE,
+        BLOCK_TYPE_ONLY,
+        BLOCK_TYPE_OR_TAG,
+        BLOCK_TYPE_TAG,
+        DAMAGE_TYPE,
+        DIFFICULTY_TYPE,
+        DIMENSION_TYPE,
         ENCHANTMENT,
-        POTION_EFFECT,
-        POTION,
+        ENCHANTMENT_TYPE,
+        ENTITY_POSE,
+        ENTITY_TYPE,
+        ENTITY_TYPE_OR_TAG,
+        ENTITY_TYPE_TAG,
         EQUIPMENT_SLOT,
         FIREWORK_EFFECT,
-        ENTITY_TYPE,
-        DAMAGE_CAUSE,
-        ATTRIBUTE_TYPE,
         GAME_MODE,
+        GAME_RULE_TYPE,
         INVENTORY_TYPE,
-        ENTITY_POSE,
-        DIFFICULTY,
-        DIMENSION,
-        BLOCK,
-        GAME_RULE,
-        WEATHER,
+        ITEM_TYPE,
+        ITEM_TYPE_OR_TAG,
+        ITEM_TYPE_TAG,
         PARTICLE_TYPE,
+        POTION,
+        POTION_EFFECT,
+        POTION_EFFECT_TYPE,
         SOUND,
         SOUND_SOURCE,
-        BLOCK_TYPE_TAG,
-        ITEM_TYPE_TAG,
-        ENTITY_TYPE_TAG
+        WEATHER;
     }
 }

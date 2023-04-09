@@ -32,7 +32,7 @@ public interface Block extends Wrapper {
      *
      * @param type new material
      */
-    void type(@NotNull BlockTypeHolder type);
+    void type(@NotNull BlockType type);
 
     /**
      * Sets this block to a new material without applying physics.
@@ -40,14 +40,14 @@ public interface Block extends Wrapper {
      * @param type new material
      */
     @ApiStatus.Experimental
-    void alterTypeWithoutPhysics(@NotNull BlockTypeHolder type);
+    void alterTypeWithoutPhysics(@NotNull BlockType type);
 
     /**
      * Gets the current material at the location of this block.
      *
      * @return current material
      */
-    @NotNull BlockTypeHolder type();
+    @NotNull BlockType type();
 
     /**
      * Gets the {@link BlockSnapshot} of this block.

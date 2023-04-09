@@ -21,9 +21,9 @@ import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.nms.accessors.BlockAccessor;
@@ -43,12 +43,12 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
     }
 
     @Override
-    protected @NotNull Object materialHolderToItem(@NotNull ItemTypeHolder material) {
+    protected @NotNull Object materialHolderToItem(@NotNull ItemType material) {
         return Reflect.getMethod(ClassStorage.CB.CraftMagicNumbers, "getItem", Material.class).invokeStatic(material.as(Material.class));
     }
 
     @Override
-    protected @NotNull Object blockDataToBlockState(@NotNull BlockTypeHolder blockData) {
+    protected @NotNull Object blockDataToBlockState(@NotNull BlockType blockData) {
         if (Reflect.has("org.bukkit.block.data.BlockData")) {
             return Reflect.fastInvoke(blockData.as(BlockData.class), "getState");
         } else {

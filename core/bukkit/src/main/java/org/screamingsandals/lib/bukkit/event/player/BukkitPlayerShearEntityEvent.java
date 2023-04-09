@@ -69,7 +69,11 @@ public class BukkitPlayerShearEntityEvent implements PlayerShearEntityEvent, Buk
     @Override
     public @NotNull ItemStack item() {
         if (item == null) {
-            item = new BukkitItem(event.getItem());
+            try {
+                item = new BukkitItem(event.getItem());
+            } catch (Throwable ignored) {
+                item = new BukkitItem(event.getPlayer().getItemInHand()); // <= 1.15.1: let's assume he used the item in his main hand (deprecated method used for 1.8.8 compat)
+            }
         }
         return item;
     }
@@ -77,7 +81,11 @@ public class BukkitPlayerShearEntityEvent implements PlayerShearEntityEvent, Buk
     @Override
     public @NotNull EquipmentSlot hand() {
         if (hand == null) {
-            hand = EquipmentSlot.of(event.getHand());
+            try {
+                hand = EquipmentSlot.of(event.getHand());
+            } catch (Throwable ignored) {
+                hand = EquipmentSlot.of("main_hand"); // <= 1.15.1
+            }
         }
         return hand;
     }

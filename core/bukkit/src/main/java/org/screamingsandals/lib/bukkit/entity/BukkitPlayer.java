@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import com.viaversion.viaversion.api.Via;
-import io.netty.channel.Channel;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -27,6 +26,8 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
+import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter1_8;
+import org.screamingsandals.lib.bukkit.particle.BukkitParticleTypeRegistry;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
@@ -34,8 +35,8 @@ import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
-import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
+import org.screamingsandals.lib.nms.accessors.ClientboundLevelParticlesPacketAccessor;
+import org.screamingsandals.lib.nms.accessors.EnumParticleAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.Players;
@@ -299,7 +300,11 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
 
     @Override
     public void sendParticle(@NotNull ParticleHolder particle, @NotNull Location location) {
-        try {
+        if (!this.getLocation().getWorld().equals(location.getWorld())) {
+            throw new IllegalArgumentException("The location of the sent particle is not in the correct world!");
+        }
+
+        if (BukkitParticleTypeRegistry.HAS_PARTICLES_API) {
             // 1.9.+
             ((org.bukkit.entity.Player) wrappedObject).spawnParticle(
                     particle.particleType().as(Particle.class),
@@ -310,11 +315,26 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
                     particle.offset().getZ(),
                     particle.particleData(),
                     particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null
-                    // hey bukkit api, where's the last argument?
+                    // hey bukkit api, where's the last argument? (the official implementation set this always to true when send to a specific player)
             );
-        } catch (Throwable ignored) {
+        } else {
             // 1.8.8
-            // TODO: implement for 1.8.8
+            var enumParticle = particle.particleType().as(EnumParticleAccessor.getType());
+            var packet = Reflect.construct(
+                    ClientboundLevelParticlesPacketAccessor.getConstructor0(),
+                    enumParticle,
+                    particle.longDistance(),
+                    (float) location.getX(),
+                    (float) location.getY(),
+                    (float) location.getZ(),
+                    (float) particle.offset().getX(),
+                    (float) particle.offset().getY(),
+                    (float) particle.offset().getZ(),
+                    (float) particle.particleData(),
+                    particle.count(),
+                    particle.specialData() != null ? BukkitParticleConverter1_8.convertParticleData(particle.specialData()) : new int[0]
+            );
+            ClassStorage.sendNMSConstructedPacket((org.bukkit.entity.Player) wrappedObject, packet);
         }
     }
 

@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.Event;
+import org.bukkit.event.block.Action;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
@@ -123,10 +124,16 @@ public class BukkitPlayerInteractEvent implements PlayerInteractEvent, NoAutoCan
     @Override
     public @Nullable EquipmentSlot hand() {
         if (!handCached) {
-            if (event.getHand() != null) {
-                hand = EquipmentSlot.of(event.getHand());
+            try {
+                if (event.getHand() != null) {
+                    hand = EquipmentSlot.of(event.getHand());
+                }
+                handCached = true;
+            } catch (Throwable ignored) {
+                // 1.8.8
+                hand = event.getAction() == org.bukkit.event.block.Action.PHYSICAL ? null : EquipmentSlot.of("main_hand");
+                handCached = true;
             }
-            handCached = true;
         }
         return hand;
     }

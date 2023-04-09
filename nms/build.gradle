@@ -398,6 +398,21 @@ nmsGen {
         reqMethod('spigot:setVillagerType', '@EnumZombieType')
         reqMethod('spigot:getVillagerType')
     }
+
+    /* 1.8.8 compat start */
+    // Particles
+    reqClass('spigot:EnumParticle') {
+        reqMethod('obfuscated:a', int)
+    }
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket') {
+        reqConstructor('@EnumParticle', boolean, float, float, float, float, float, float, float, int, int[])
+    }
+
+    reqClass('net.minecraft.server.level.ServerLevel') {
+        reqMethod('obfuscated:a:1.8.8', '@EnumParticle', boolean, double, double, double, int, double, double, double, double, int[])
+    }
+    /* 1.8.8 compat end */
 }
 
 tasks.getByName('compileJava').dependsOn('generateNmsComponents')

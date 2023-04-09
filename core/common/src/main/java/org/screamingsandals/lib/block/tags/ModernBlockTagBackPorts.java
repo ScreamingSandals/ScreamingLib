@@ -21,7 +21,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.tags.TagPortHelper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 @ApiStatus.Internal
 @UtilityClass
 public class ModernBlockTagBackPorts {
-    public static @Nullable List<@NotNull String> getPortedTags(@NotNull BlockTypeHolder blockType, @NotNull Predicate<@NotNull String> nativeTagChecker) {
+    public static @Nullable List<@NotNull String> getPortedTags(@NotNull BlockType blockType, @NotNull Predicate<@NotNull String> nativeTagChecker) {
         if (!Server.isVersion(1, 13)) {
             /* This file doesn't support legacy version backports (these are supported by Bukkit-specific implementation, because Bukkit is the only legacy platform) */
             return List.of();

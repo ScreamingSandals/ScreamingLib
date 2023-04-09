@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.Block;
@@ -26,7 +26,7 @@ public interface BlockPhysicsEvent extends SCancellableEvent, PlatformEvent {
 
     @NotNull Block block();
 
-    @NotNull BlockTypeHolder material();
+    @NotNull BlockType material();
 
     @NotNull Block causingBlock();
 }

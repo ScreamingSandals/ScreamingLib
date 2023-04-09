@@ -23,7 +23,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,26 +46,12 @@ import java.util.*;
 @Service
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPlayers extends Players {
-    protected final WeakHashMap<org.bukkit.entity.@NotNull Player, Channel> channelCache = new WeakHashMap<>();
+    protected final @NotNull WeakHashMap<org.bukkit.entity.@NotNull Player, Channel> channelCache = new WeakHashMap<>();
 
     public BukkitPlayers() {
         offlinePlayerConverter
                 .registerP2W(org.bukkit.OfflinePlayer.class, BukkitOfflinePlayer::new)
                 .registerP2W(Player.class, playerWrapper -> new BukkitOfflinePlayer(Bukkit.getOfflinePlayer(playerWrapper.getUuid())));
-
-        handConverter
-                .registerW2P(EquipmentSlot.class, wrapper -> {
-                    if (wrapper == Player.Hand.OFF) {
-                        return EquipmentSlot.OFF_HAND;
-                    }
-                    return EquipmentSlot.HAND;
-                })
-                .registerP2W(EquipmentSlot.class, hand -> {
-                    if (hand == EquipmentSlot.OFF_HAND) {
-                        return Player.Hand.OFF;
-                    }
-                    return Player.Hand.MAIN;
-                });
     }
 
     @OnPostEnable

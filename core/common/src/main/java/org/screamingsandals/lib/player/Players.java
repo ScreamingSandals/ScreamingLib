@@ -25,7 +25,6 @@ import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
-import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 
 import java.util.*;
 
@@ -33,7 +32,6 @@ import java.util.*;
 public abstract class Players {
     protected final @NotNull BidirectionalConverter<OfflinePlayer> offlinePlayerConverter = BidirectionalConverter.build();
     protected final @NotNull BidirectionalConverter<Player> specialPlayerConverter = BidirectionalConverter.build();
-    protected final @NotNull BidirectionalConverter<Player.Hand> handConverter = BidirectionalConverter.build();
     private static @Nullable Players players;
 
     @ApiStatus.Internal
@@ -42,12 +40,6 @@ public abstract class Players {
             throw new UnsupportedOperationException("Players is already initialized.");
         }
         players = this;
-    }
-
-    @OnPostConstruct
-    public void postConstruct() {
-        handConverter
-                .registerP2W(Player.Hand.class, e -> e);
     }
 
     public static <T> @NotNull Player wrapPlayer(@NotNull T player) {
@@ -77,30 +69,6 @@ public abstract class Players {
             throw new UnsupportedOperationException("Players isn't initialized yet.");
         }
         return players.wrapSender0(sender);
-    }
-
-    public static <T> Player.@NotNull Hand wrapHand(@NotNull T hand) {
-        if (players == null) {
-            throw new UnsupportedOperationException("Players isn't initialized yet.");
-        }
-        return players.handConverter.convert(hand);
-    }
-
-    public static <T> Player.@Nullable Hand resolveHand(@Nullable T hand) {
-        if (players == null) {
-            throw new UnsupportedOperationException("Players isn't initialized yet.");
-        }
-        if (hand == null) {
-            return null;
-        }
-        return players.handConverter.convertNullable(hand);
-    }
-
-    public static <T> T convertHand(Player.@NotNull Hand hand, @NotNull Class<T> type) {
-        if (players == null) {
-            throw new UnsupportedOperationException("Players isn't initialized yet.");
-        }
-        return players.handConverter.convert(hand, type);
     }
 
     public static <T> T convertOfflinePlayer(@NotNull OfflinePlayer player, @NotNull Class<T> type) {

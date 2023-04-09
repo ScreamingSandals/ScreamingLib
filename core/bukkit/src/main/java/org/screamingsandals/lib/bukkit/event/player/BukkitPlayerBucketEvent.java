@@ -29,7 +29,7 @@ import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.PlayerBucketEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.BlockFace;
 
@@ -48,7 +48,7 @@ public class BukkitPlayerBucketEvent implements PlayerBucketEvent, BukkitCancell
     private @Nullable Block block;
     private @Nullable Block blockClicked;
     private @Nullable BlockFace blockFace;
-    private @Nullable ItemTypeHolder bucket;
+    private @Nullable ItemType bucket;
 
     @Override
     public @NotNull Player player() {
@@ -83,9 +83,9 @@ public class BukkitPlayerBucketEvent implements PlayerBucketEvent, BukkitCancell
     }
 
     @Override
-    public @NotNull ItemTypeHolder bucket() {
+    public @NotNull ItemType bucket() {
         if (bucket == null) {
-            bucket = ItemTypeHolder.of(event.getBucket());
+            bucket = ItemType.of(event.getBucket());
         }
         return bucket;
     }

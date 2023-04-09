@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -117,7 +117,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public boolean contains(@NotNull ItemTypeHolder materialHolder) {
+    public boolean contains(@NotNull ItemType materialHolder) {
         return wrappedObject.contains(materialHolder.as(Material.class));
     }
 

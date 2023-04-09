@@ -28,7 +28,7 @@ import org.screamingsandals.lib.player.Player
 import org.screamingsandals.lib.spectator.Component
 import org.screamingsandals.lib.utils.ComparableWrapper
 import org.screamingsandals.lib.api.Wrapper
-import org.screamingsandals.lib.item.ItemTypeHolder
+import org.screamingsandals.lib.item.ItemType
 import org.screamingsandals.lib.item.builder.ItemStackFactory
 import org.screamingsandals.lib.spectator.ComponentLike
 import org.screamingsandals.lib.utils.math.Vector2D
@@ -152,7 +152,7 @@ inline operator fun Container.minusAssign(items: Collection<ItemStack>) {
 inline operator fun Container.get(slot: Int): ItemStack? = this.getItem(slot)
 inline operator fun Container.set(slot: Int, item: ItemStack?) = this.setItem(slot, item)
 inline operator fun Container.set(slot: Int, type: String?) = this.setItem(slot, ItemStackFactory.build(type))
-inline operator fun Container.contains(type: String) = this.contains(ItemTypeHolder.of(type))
+inline operator fun Container.contains(type: String) = this.contains(ItemType.of(type))
 
 // visual +=|-= viewer|viewers; viewer in visual
 
@@ -199,7 +199,7 @@ inline infix fun BasicEntity.tp(loc: Location): CompletableFuture<Boolean> = thi
 inline infix fun BasicEntity.tp(entity: BasicEntity): CompletableFuture<Boolean> = this.teleport(entity.location)
 
 // newItem = itemType * 5; newItem = newItem * 6; newItem++; newItem--
-inline operator fun ItemTypeHolder.times(amount: Int): ItemStack = ItemStackFactory.builder().type(this).amount(amount).build()!!
+inline operator fun ItemType.times(amount: Int): ItemStack = ItemStackFactory.builder().type(this).amount(amount).build()!!
 inline operator fun ItemStack.times(amount: Int): ItemStack = this.withAmount(amount)
 inline operator fun ItemStack.inc(): ItemStack = this.withAmount(amount + 1)
 inline operator fun ItemStack.dec(): ItemStack = this.withAmount(amount - 1)

@@ -26,9 +26,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> implements AttributeHolder {
+public class BukkitAttribute extends BasicWrapper<AttributeInstance> implements Attribute {
 
-    protected BukkitAttributeHolder(@NotNull AttributeInstance wrappedObject) {
+    protected BukkitAttribute(@NotNull AttributeInstance wrappedObject) {
         super(wrappedObject);
     }
 

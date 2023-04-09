@@ -25,5 +25,5 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.CLASS)
 @Documented
 public @interface LimitedVersionSupport {
-    @NotNull String value() default "";
+    @NotNull String value();
 }

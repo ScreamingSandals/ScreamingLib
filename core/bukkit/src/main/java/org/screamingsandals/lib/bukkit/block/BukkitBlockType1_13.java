@@ -26,7 +26,7 @@ import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class BukkitBlockType1_13 extends BasicWrapper<BlockData> implements BlockTypeHolder {
+public class BukkitBlockType1_13 extends BasicWrapper<BlockData> implements BlockType {
 
     public static boolean NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED;
     private static final @NotNull String NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED_MESSAGE = "Nag author/s of this plugin about usage of BlockTypeHolder#legacyData() or #withLegacyData() in non-legacy environment!";
@@ -79,7 +79,7 @@ public class BukkitBlockType1_13 extends BasicWrapper<BlockData> implements Bloc
     }
 
     @Override
-    public @NotNull BlockTypeHolder withLegacyData(byte legacyData) {
+    public @NotNull BlockType withLegacyData(byte legacyData) {
         if (!NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED) {
             BukkitCore.getPlugin().getLogger().warning(NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED_MESSAGE);
             NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED = true;
@@ -111,7 +111,7 @@ public class BukkitBlockType1_13 extends BasicWrapper<BlockData> implements Bloc
     }
 
     @Override
-    public @NotNull BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, String> data) {
+    public @NotNull BlockType withFlatteningData(@NotNull Map<@NotNull String, String> data) {
         final var builder = new StringBuilder();
         if (!data.isEmpty()) {
             builder.append('[');
@@ -126,7 +126,7 @@ public class BukkitBlockType1_13 extends BasicWrapper<BlockData> implements Bloc
     }
 
     @Override
-    public @NotNull BlockTypeHolder with(@NotNull String attribute, @NotNull String value) {
+    public @NotNull BlockType with(@NotNull String attribute, @NotNull String value) {
         return withFlatteningData(new HashMap<>(flatteningData()) {
             {
                 put(attribute, value);
@@ -135,7 +135,7 @@ public class BukkitBlockType1_13 extends BasicWrapper<BlockData> implements Bloc
     }
 
     @Override
-    public @NotNull BlockTypeHolder with(@NotNull String attribute, int value) {
+    public @NotNull BlockType with(@NotNull String attribute, int value) {
         return withFlatteningData(new HashMap<>(flatteningData()) {
             {
                 put(attribute, String.valueOf(value));
@@ -144,7 +144,7 @@ public class BukkitBlockType1_13 extends BasicWrapper<BlockData> implements Bloc
     }
 
     @Override
-    public @NotNull BlockTypeHolder with(@NotNull String attribute, boolean value) {
+    public @NotNull BlockType with(@NotNull String attribute, boolean value) {
         return withFlatteningData(new HashMap<>(flatteningData()) {
             {
                 put(attribute, String.valueOf(value));
@@ -235,7 +235,7 @@ public class BukkitBlockType1_13 extends BasicWrapper<BlockData> implements Bloc
         if (object instanceof BlockData) {
             return wrappedObject.getMaterial() == ((BlockData) object).getMaterial();
         }
-        var blockType = BlockTypeHolder.ofNullable(object);
+        var blockType = BlockType.ofNullable(object);
         if (blockType == null) {
             return false;
         }
@@ -261,7 +261,7 @@ public class BukkitBlockType1_13 extends BasicWrapper<BlockData> implements Bloc
                 return isSameType(str.substring(0, str.length() - 3));
             }
         }
-        return equals(BlockTypeHolder.ofNullable(object));
+        return equals(BlockType.ofNullable(object));
     }
 
     @Override

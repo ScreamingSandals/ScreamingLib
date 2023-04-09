@@ -22,17 +22,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.TaggableHolder;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.util.List;
 
 @Accessors(fluent = true)
-public interface ItemTypeHolder extends ComparableWrapper, ParticleData, TaggableHolder {
+public interface ItemType extends ComparableWrapper, ParticleData, TaggableHolder {
     @NotNull String platformName();
 
     @Deprecated
@@ -48,47 +48,42 @@ public interface ItemTypeHolder extends ComparableWrapper, ParticleData, Taggabl
     @Deprecated
     @LimitedVersionSupport("<= 1.12.2")
     @Contract(value = "_ -> new", pure = true)
-    @NotNull ItemTypeHolder withForcedDurability(short durability);
+    @NotNull ItemType withForcedDurability(short durability);
 
-    default @NotNull ItemTypeHolder colorize(@NotNull String color) {
+    default @NotNull ItemType colorize(@NotNull String color) {
         return ItemTypeMapper.colorize(this, color);
     }
 
-    @Nullable BlockTypeHolder block();
+    @Nullable BlockType block();
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ITEM_TYPE_TAG)
     @Override
-    boolean hasTag(@NotNull Object tag);
+    boolean hasTag(@MinecraftType(MinecraftType.Type.ITEM_TYPE_TAG) @NotNull Object tag);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.ITEM_TYPE_OR_TAG) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.ITEM_TYPE_OR_TAG) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    static @NotNull ItemTypeHolder of(@NotNull Object type) {
+    static @NotNull ItemType of(@MinecraftType(MinecraftType.Type.ITEM_TYPE) @NotNull Object type) {
         var result = ofNullable(type);
         Preconditions.checkNotNullIllegal(result, "Could not find item type: " + type);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Contract("null -> null")
-    static @Nullable ItemTypeHolder ofNullable(@Nullable Object type) {
-        if (type instanceof ItemTypeHolder) {
-            return (ItemTypeHolder) type;
+    static @Nullable ItemType ofNullable(@MinecraftType(MinecraftType.Type.ITEM_TYPE) @Nullable Object type) {
+        if (type instanceof ItemType) {
+            return (ItemType) type;
         }
         return ItemTypeMapper.resolve(type);
     }
 
-    static @NotNull ItemTypeHolder air() {
+    static @NotNull ItemType air() {
         return ItemTypeMapper.getCachedAir();
     }
 
-    static @Unmodifiable @NotNull List<@NotNull ItemTypeHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull ItemType> all() {
         return ItemTypeMapper.getValues();
     }
 }

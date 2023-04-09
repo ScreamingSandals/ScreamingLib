@@ -19,7 +19,7 @@ package org.screamingsandals.lib.attribute;
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -28,16 +28,14 @@ public interface AttributeType extends RegistryItem, RawValueHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
-    static @NotNull AttributeType of(@NotNull Object attributeType) {
+    static @NotNull AttributeType of(@MinecraftType(MinecraftType.Type.ATTRIBUTE_TYPE) @NotNull Object attributeType) {
         var result = ofNullable(attributeType);
         Preconditions.checkNotNullIllegal(result, "Could not find attribute type: " + attributeType);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
     @Contract("null -> null")
-    static @Nullable AttributeType ofNullable(@Nullable Object attributeType) {
+    static @Nullable AttributeType ofNullable(@MinecraftType(MinecraftType.Type.ATTRIBUTE_TYPE) @Nullable Object attributeType) {
         if (attributeType instanceof AttributeType) {
             return (AttributeType) attributeType;
         }
@@ -48,11 +46,9 @@ public interface AttributeType extends RegistryItem, RawValueHolder {
         return AttributeTypeRegistry.getInstance().getRegistryItemStream();
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
     @Override
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.ATTRIBUTE_TYPE) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
     @Override
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.ATTRIBUTE_TYPE) @Nullable Object @NotNull... objects);
 }

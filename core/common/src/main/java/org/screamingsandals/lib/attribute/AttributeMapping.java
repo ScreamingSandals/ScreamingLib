@@ -64,7 +64,7 @@ public abstract class AttributeMapping {
 
         return null;
     };
-    private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable ItemAttributeHolder> CONFIGURATE_LOAD_ITEM = node -> {
+    private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable ItemAttribute> CONFIGURATE_LOAD_ITEM = node -> {
         var type = node.node("type");
         var uuid = node.node("uuid");
         var name = node.node("name");
@@ -79,7 +79,7 @@ public abstract class AttributeMapping {
         }
 
         try {
-            return new ItemAttributeHolder(
+            return new ItemAttribute(
                     typeOpt,
                     uuid.get(UUID.class, (Supplier<UUID>) UUID::randomUUID),
                     name.getString(""),
@@ -105,7 +105,7 @@ public abstract class AttributeMapping {
             })
             .registerP2W(AttributeModifierHolder.class, e -> e);
 
-    protected final @NotNull BidirectionalConverter<ItemAttributeHolder> itemAttributeConverter = BidirectionalConverter.<ItemAttributeHolder>build()
+    protected final @NotNull BidirectionalConverter<ItemAttribute> itemAttributeConverter = BidirectionalConverter.<ItemAttribute>build()
             .registerP2W(ConfigurationNode.class, CONFIGURATE_LOAD_ITEM)
             .registerP2W(Map.class, map -> {
                 try {
@@ -114,7 +114,7 @@ public abstract class AttributeMapping {
                     return null;
                 }
             })
-            .registerP2W(ItemAttributeHolder.class, e -> e);
+            .registerP2W(ItemAttribute.class, e -> e);
 
     @ApiStatus.Internal
     public AttributeMapping() {
@@ -126,14 +126,14 @@ public abstract class AttributeMapping {
     }
 
     @Contract("null -> null")
-    public static @Nullable AttributeHolder wrapAttribute(@Nullable Object attribute) {
+    public static @Nullable Attribute wrapAttribute(@Nullable Object attribute) {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
         return attributeMapping.wrapAttribute0(attribute);
     }
 
-    protected abstract @Nullable AttributeHolder wrapAttribute0(@Nullable Object attribute);
+    protected abstract @Nullable Attribute wrapAttribute0(@Nullable Object attribute);
 
     @Contract("null -> null")
     public static @Nullable AttributeModifierHolder wrapAttributeModifier(@Nullable Object attributeModifier) {
@@ -144,14 +144,14 @@ public abstract class AttributeMapping {
     }
 
     @Contract("null -> null")
-    public static @Nullable ItemAttributeHolder wrapItemAttribute(@Nullable Object attribute) {
+    public static @Nullable ItemAttribute wrapItemAttribute(@Nullable Object attribute) {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
         return attributeMapping.itemAttributeConverter.convertNullable(attribute);
     }
 
-    public static <T> T convertItemAttributeHolder(@NotNull ItemAttributeHolder holder, @NotNull Class<T> newType) {
+    public static <T> T convertItemAttributeHolder(@NotNull ItemAttribute holder, @NotNull Class<T> newType) {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }

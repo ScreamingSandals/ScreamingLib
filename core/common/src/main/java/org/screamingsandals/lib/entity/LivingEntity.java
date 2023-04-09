@@ -18,8 +18,8 @@ package org.screamingsandals.lib.entity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.attribute.AttributeHolder;
+import org.screamingsandals.lib.block.BlockType;
+import org.screamingsandals.lib.attribute.Attribute;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.meta.PotionEffect;
@@ -31,7 +31,7 @@ import java.util.List;
 
 public interface LivingEntity extends BasicEntity, ProjectileShooter {
 
-    @Nullable AttributeHolder getAttribute(@NotNull AttributeType attributeType);
+    @Nullable Attribute getAttribute(@NotNull AttributeType attributeType);
 
     double getEyeHeight();
 
@@ -39,7 +39,7 @@ public interface LivingEntity extends BasicEntity, ProjectileShooter {
 
     @NotNull Location getEyeLocation();
 
-    @NotNull Block getTargetBlock(@Nullable Collection<@NotNull BlockTypeHolder> transparent, int maxDistance);
+    @NotNull Block getTargetBlock(@Nullable Collection<@NotNull BlockType> transparent, int maxDistance);
 
     @Nullable Block getTargetBlock(int maxDistance);
 

@@ -25,7 +25,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -53,8 +53,7 @@ public interface InventoryType extends RegistryItem, RawValueHolder {
      * @return true if specified inventory type is the same as this
      */
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.INVENTORY_TYPE) @Nullable Object object);
 
     /**
      * Compares the inventory type and the objects
@@ -63,19 +62,16 @@ public interface InventoryType extends RegistryItem, RawValueHolder {
      * @return true if at least one of the inventory type objects is same as this
      */
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.INVENTORY_TYPE) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    static @NotNull InventoryType of(@NotNull Object inventoryType) {
+    static @NotNull InventoryType of(@MinecraftType(MinecraftType.Type.INVENTORY_TYPE) @NotNull Object inventoryType) {
         var result = ofNullable(inventoryType);
         Preconditions.checkNotNullIllegal(result, "Could not find inventory type: " + inventoryType);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
     @Contract("null -> null")
-    static @Nullable InventoryType ofNullable(@Nullable Object inventoryType) {
+    static @Nullable InventoryType ofNullable( @MinecraftType(MinecraftType.Type.INVENTORY_TYPE) @Nullable Object inventoryType) {
         if (inventoryType instanceof InventoryType) {
             return (InventoryType) inventoryType;
         }

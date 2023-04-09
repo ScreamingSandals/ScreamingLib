@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
 
@@ -100,7 +100,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
      * @param materialHolder the item type
      * @return is the supplied item type present in this inventory?
      */
-    boolean contains(@NotNull ItemTypeHolder materialHolder);
+    boolean contains(@NotNull ItemType materialHolder);
 
     /**
      * Checks if the supplied item is present in this inventory.

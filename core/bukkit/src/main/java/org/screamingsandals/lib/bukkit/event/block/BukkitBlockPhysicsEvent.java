@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.BlockPhysicsEvent;
@@ -39,7 +39,7 @@ public class BukkitBlockPhysicsEvent implements BlockPhysicsEvent, BukkitCancell
 
     // Internal cache
     private @Nullable Block block;
-    private @Nullable BlockTypeHolder material;
+    private @Nullable BlockType material;
     private @Nullable Block causingBlock;
 
     @Override
@@ -51,9 +51,9 @@ public class BukkitBlockPhysicsEvent implements BlockPhysicsEvent, BukkitCancell
     }
 
     @Override
-    public @NotNull BlockTypeHolder material() {
+    public @NotNull BlockType material() {
         if (material == null) {
-            material = BlockTypeHolder.of(event.getChangedType());
+            material = BlockType.of(event.getChangedType());
         }
         return material;
     }

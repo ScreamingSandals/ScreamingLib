@@ -19,7 +19,7 @@ package org.screamingsandals.lib.world.gamerule;
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -28,23 +28,19 @@ public interface GameRuleType extends RegistryItem, RawValueHolder {
     @NotNull String platformName();
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.GAME_RULE_TYPE) @Nullable Object object);
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.GAME_RULE_TYPE) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
-    static @NotNull GameRuleType of(@NotNull Object gameRule) {
+    static @NotNull GameRuleType of(@MinecraftType(MinecraftType.Type.GAME_RULE_TYPE) @NotNull Object gameRule) {
         var result = ofNullable(gameRule);
         Preconditions.checkNotNullIllegal(result, "Could not find game rule: " + gameRule);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
     @Contract("null -> null")
-    static @Nullable GameRuleType ofNullable(@Nullable Object gameRule) {
+    static @Nullable GameRuleType ofNullable(@MinecraftType(MinecraftType.Type.GAME_RULE_TYPE) @Nullable Object gameRule) {
         if (gameRule instanceof GameRuleType) {
             return (GameRuleType) gameRule;
         }

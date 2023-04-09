@@ -20,9 +20,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.block.BlockTypeMapper;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
@@ -64,8 +64,8 @@ public abstract class ItemBlockIdsRemapper {
             "RED",
             "BLACK"
     );
-    public static final @NotNull Map<@NotNull Predicate<BlockTypeHolder>, Function<String, Optional<BlockTypeHolder>>> colorableBlocks = new HashMap<>();
-    public static final @NotNull Map<@NotNull Predicate<ItemTypeHolder>, Function<String, Optional<ItemTypeHolder>>> colorableItems = new HashMap<>();
+    public static final @NotNull Map<@NotNull Predicate<BlockType>, Function<String, Optional<BlockType>>> colorableBlocks = new HashMap<>();
+    public static final @NotNull Map<@NotNull Predicate<ItemType>, Function<String, Optional<ItemType>>> colorableItems = new HashMap<>();
 
 
     /**
@@ -113,14 +113,14 @@ public abstract class ItemBlockIdsRemapper {
     }
 
     private void makeColorableBlock(String baseName, String notColoredName) {
-        var list = new ArrayList<BlockTypeHolder>();
-        COLORS.forEach(s -> BlockTypeHolder.ofNullable(s + "_" + baseName).ifNotNull(materialHolder -> {
+        var list = new ArrayList<BlockType>();
+        COLORS.forEach(s -> BlockType.ofNullable(s + "_" + baseName).ifNotNull(materialHolder -> {
             if (!list.contains(materialHolder)) {
                 list.add(materialHolder);
             }
         }));
 
-        BlockTypeHolder.ofNullable(notColoredName).ifNotNull(materialHolder -> {
+        BlockType.ofNullable(notColoredName).ifNotNull(materialHolder -> {
             if (!list.contains(materialHolder)) {
                 list.add(materialHolder);
             }
@@ -129,7 +129,7 @@ public abstract class ItemBlockIdsRemapper {
         if (!list.isEmpty()) { // if list is empty, we don't have this material
             colorableBlocks.put(list::contains, s -> {
                 if (COLORS.contains(s.toUpperCase(Locale.ROOT))) {
-                    return Optional.ofNullable(BlockTypeHolder.ofNullable(s.toUpperCase(Locale.ROOT) + "_" + baseName));
+                    return Optional.ofNullable(BlockType.ofNullable(s.toUpperCase(Locale.ROOT) + "_" + baseName));
                 }
                 return Optional.empty();
             });
@@ -137,14 +137,14 @@ public abstract class ItemBlockIdsRemapper {
     }
 
     private void makeColorableItem(String baseName, String notColoredName) {
-        List<ItemTypeHolder> list = new ArrayList<>();
-        COLORS.forEach(s -> ItemTypeHolder.ofNullable(s + "_" + baseName).ifNotNull(materialHolder -> {
+        List<ItemType> list = new ArrayList<>();
+        COLORS.forEach(s -> ItemType.ofNullable(s + "_" + baseName).ifNotNull(materialHolder -> {
             if (!list.contains(materialHolder)) {
                 list.add(materialHolder);
             }
         }));
 
-        ItemTypeHolder.ofNullable(notColoredName).ifNotNull(materialHolder -> {
+        ItemType.ofNullable(notColoredName).ifNotNull(materialHolder -> {
             if (!list.contains(materialHolder)) {
                 list.add(materialHolder);
             }
@@ -153,7 +153,7 @@ public abstract class ItemBlockIdsRemapper {
         if (!list.isEmpty()) { // if list is empty, we don't have this material
             colorableItems.put(list::contains, s -> {
                 if (COLORS.contains(s.toUpperCase(Locale.ROOT))) {
-                    return ItemTypeHolder.ofNullable(s.toUpperCase(Locale.ROOT) + "_" + baseName).toOptional();
+                    return ItemType.ofNullable(s.toUpperCase(Locale.ROOT) + "_" + baseName).toOptional();
                 }
                 return Optional.empty();
             });
@@ -390,7 +390,7 @@ public abstract class ItemBlockIdsRemapper {
                 alternativeLegacyName != null && !alternativeLegacyName.equalsIgnoreCase(legacyMaterial) ? ResourceLocation.of(alternativeLegacyName) : null;
 
         var mapping = itemTypeMapper.getUNSAFE_mapping();
-        ItemTypeHolder holder = null;
+        ItemType holder = null;
         if (platform.isUsingLegacyNames() && (mapping.containsKey(legacyMaterialNamespaced) || (alternativeLegacyNamespaced != null && mapping.containsKey(alternativeLegacyNamespaced)))) {
             if (mapping.containsKey(legacyMaterialNamespaced)) {
                 holder = mapping.get(legacyMaterialNamespaced).withForcedDurability((short) data);
@@ -454,7 +454,7 @@ public abstract class ItemBlockIdsRemapper {
                 alternativeLegacyName != null && !alternativeLegacyName.equalsIgnoreCase(legacyMaterial) ? ResourceLocation.of(alternativeLegacyName) : null;
 
         var mapping = blockTypeMapper.getUNSAFE_mapping();
-        BlockTypeHolder holder = null;
+        BlockType holder = null;
         if (platform.isUsingLegacyNames() && (mapping.containsKey(legacyMaterialNamespaced) || (alternativeLegacyNamespaced != null && mapping.containsKey(alternativeLegacyNamespaced)))) {
             if (mapping.containsKey(legacyMaterialNamespaced)) {
                 holder = mapping.get(legacyMaterialNamespaced).withLegacyData((byte) data);
@@ -539,7 +539,7 @@ public abstract class ItemBlockIdsRemapper {
         var completeFlatteningMaterialNamespaced = ComplexMappingKey.of(flatteningMaterialNamespaced, stateNamespaced);
 
         var mapping = blockTypeMapper.getUNSAFE_mapping();
-        BlockTypeHolder holder = null;
+        BlockType holder = null;
         if (platform.isUsingLegacyNames() && (mapping.containsKey(legacyMaterialNamespaced) || (alternativeLegacyNamespaced != null && mapping.containsKey(alternativeLegacyNamespaced)))) {
             if (mapping.containsKey(legacyMaterialNamespaced)) {
                 holder = mapping.get(legacyMaterialNamespaced).withLegacyData((byte) data);

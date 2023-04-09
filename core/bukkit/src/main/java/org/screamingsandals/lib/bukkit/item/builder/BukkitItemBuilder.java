@@ -27,7 +27,7 @@ import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
-import org.screamingsandals.lib.attribute.ItemAttributeHolder;
+import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.BukkitItemBlockIdsRemapper;
 import org.screamingsandals.lib.bukkit.attribute.BukkitItemAttribute;
@@ -40,7 +40,7 @@ import org.screamingsandals.lib.bukkit.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.Enchantment;
@@ -61,7 +61,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     private org.bukkit.inventory.ItemStack item;
 
     @Override
-    public @NotNull ItemStackBuilder type(@NotNull ItemTypeHolder type) {
+    public @NotNull ItemStackBuilder type(@NotNull ItemType type) {
         if (item == null) {
             item = new org.bukkit.inventory.ItemStack(Material.AIR);
         }
@@ -147,7 +147,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     @Override
-    public @NotNull ItemStackBuilder attributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers) {
+    public @NotNull ItemStackBuilder attributeModifiers(@Nullable List<@NotNull ItemAttribute> modifiers) {
         if (item == null) {
             return this;
         }
@@ -168,7 +168,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     @Override
-    public @NotNull ItemStackBuilder attributeModifier(@NotNull ItemAttributeHolder modifier) {
+    public @NotNull ItemStackBuilder attributeModifier(@NotNull ItemAttribute modifier) {
         if (item == null) {
             return this;
         }

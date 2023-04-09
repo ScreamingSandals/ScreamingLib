@@ -24,8 +24,13 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
+import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter1_8;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
+import org.screamingsandals.lib.nms.accessors.ClientboundLevelParticlesPacketAccessor;
+import org.screamingsandals.lib.nms.accessors.EnumParticleAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerLevelAccessor;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -143,6 +148,10 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
 
     @Override
     public void sendParticle(@NotNull ParticleHolder particle, @NotNull Location location) {
+        if (!this.equals(location.getWorld())) {
+            throw new IllegalArgumentException("The location of the sent particle is not in the correct world!");
+        }
+
         try {
             // 1.13.1 +
             wrappedObject.spawnParticle(
@@ -168,10 +177,26 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
                         particle.offset().getZ(),
                         particle.particleData(),
                         particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null
+                        // the official implementation set longDistance always to true for some reason in pre-flattening versions
                 );
             } catch (Throwable ignored2) {
                 // 1.8.8
-                // TODO: implement for 1.8.8
+                var enumParticle = particle.particleType().as(EnumParticleAccessor.getType());
+                Reflect.fastInvoke(
+                        ClassStorage.getHandle(wrappedObject),
+                        ServerLevelAccessor.getMethodA1(),
+                        enumParticle,
+                        particle.longDistance(),
+                        (float) location.getX(),
+                        (float) location.getY(),
+                        (float) location.getZ(),
+                        particle.count(),
+                        (float) particle.offset().getX(),
+                        (float) particle.offset().getY(),
+                        (float) particle.offset().getZ(),
+                        (float) particle.particleData(),
+                        particle.specialData() != null ? BukkitParticleConverter1_8.convertParticleData(particle.specialData()) : new int[0]
+                );
             }
         }
     }

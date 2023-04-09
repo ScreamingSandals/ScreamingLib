@@ -26,7 +26,7 @@ import org.screamingsandals.lib.item.*;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -53,7 +53,7 @@ public abstract class ItemStackFactory {
 
     protected final @NotNull BidirectionalConverter<ItemStack> itemConverter = BidirectionalConverter.<ItemStack>build()
             .registerW2P(String.class, item -> item.getMaterial().platformName())
-            .registerW2P(ItemTypeHolder.class, ItemStack::getMaterial)
+            .registerW2P(ItemType.class, ItemStack::getMaterial)
             .registerP2W(ConfigurationNode.class, CONFIGURATE_RESOLVER)
             .registerP2W(Map.class, map -> {
                 try {
@@ -90,9 +90,8 @@ public abstract class ItemStackFactory {
         return factory.asView0(item);
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Contract("null -> null")
-    public static @Nullable ItemStack build(@Nullable Object stack) {
+    public static @Nullable ItemStack build(@MinecraftType(MinecraftType.Type.ITEM_TYPE) @Nullable Object stack) {
         return readStack(stack);
     }
 
@@ -102,9 +101,8 @@ public abstract class ItemStackFactory {
         return builder.build();
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Contract("null,_ -> null")
-    public static @Nullable ItemStack build(@Nullable Object stack, @Nullable ReceiverConsumer<@NotNull ItemStackBuilder> builderConsumer) {
+    public static @Nullable ItemStack build(@MinecraftType(MinecraftType.Type.ITEM_TYPE) @Nullable Object stack, @Nullable ReceiverConsumer<@NotNull ItemStackBuilder> builderConsumer) {
         var item = readStack(stack);
         if (item == null) {
             return null;
@@ -118,8 +116,7 @@ public abstract class ItemStackFactory {
         return item;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    public static @Nullable ItemStack readStack(@Nullable Object stackObject) {
+    public static @Nullable ItemStack readStack(@MinecraftType(MinecraftType.Type.ITEM_TYPE) @Nullable Object stackObject) {
         return factory.itemConverter.convertOptional(stackObject).orElseGet(() -> readShortStack(builder(), stackObject));
     }
 

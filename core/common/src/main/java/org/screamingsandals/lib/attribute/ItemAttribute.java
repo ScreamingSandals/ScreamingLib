@@ -16,26 +16,28 @@
 
 package org.screamingsandals.lib.attribute;
 
+import lombok.Data;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.utils.RawValueHolder;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.api.Wrapper;
 
-import java.util.List;
+import java.util.UUID;
 
-public interface AttributeHolder extends Wrapper, RawValueHolder {
-    @NotNull AttributeType getAttributeType();
+@Data
+public class ItemAttribute implements Wrapper {
+    private final @NotNull AttributeType type;
+    private final @NotNull UUID uuid;
+    private final @NotNull String name;
+    private final double amount;
+    private final AttributeModifierHolder.@NotNull Operation operation;
+    private final @Nullable EquipmentSlot slot;
 
-    double getBaseValue();
-
-    void setBaseValue(double baseValue);
-
-    double getDefaultValue();
-
-    double getValue();
-
-    @NotNull List<@NotNull AttributeModifierHolder> getModifiers();
-
-    void addModifier(@NotNull AttributeModifierHolder modifier);
-
-    void removeModifier(@NotNull AttributeModifierHolder modifier);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> @NotNull T as(@NotNull Class<T> type) {
+        return AttributeMapping.convertItemAttributeHolder(this, type);
+    }
 }

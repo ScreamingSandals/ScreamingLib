@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.event.SEvent;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.ItemStackView;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.utils.BlockFace;
@@ -89,10 +89,10 @@ public interface PlayerInteractEvent extends SCancellableEvent, PlayerEvent, Pla
      *
      * @return Material the material of the item used
      */
-    default @NotNull ItemTypeHolder material() {
+    default @NotNull ItemType material() {
         var item = item();
         if (item == null) {
-            return ItemTypeHolder.air();
+            return ItemType.air();
         }
 
         return item.getType();

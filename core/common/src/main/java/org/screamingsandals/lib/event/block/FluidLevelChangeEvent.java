@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
@@ -28,5 +28,5 @@ public interface FluidLevelChangeEvent extends SCancellableEvent, PlatformEvent 
 
     @NotNull Block block();
 
-    @NotNull BlockTypeHolder newBlockData();
+    @NotNull BlockType newBlockData();
 }

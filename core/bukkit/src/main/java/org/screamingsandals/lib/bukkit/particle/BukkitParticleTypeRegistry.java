@@ -24,9 +24,11 @@ import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 
 @Service
 public abstract class BukkitParticleTypeRegistry extends ParticleTypeRegistry {
+    public static final boolean HAS_PARTICLES_API = Version.isVersion(1, 9);
+
     @ServiceInitializer
     public static @NotNull BukkitParticleTypeRegistry init() {
-        if (Version.isVersion(1, 9)) {
+        if (HAS_PARTICLES_API) {
             return new BukkitParticleTypeRegistry1_9();
         } else {
             return new BukkitParticleTypeRegistry1_8();

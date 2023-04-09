@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 public interface SoundStop extends Wrapper, RawValueHolder {
@@ -37,8 +37,7 @@ public interface SoundStop extends Wrapper, RawValueHolder {
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @CustomAutocompletion(CustomAutocompletion.Type.SOUND)
-    static @NotNull SoundStop minecraftNamed(@Nullable String soundKey) {
+    static @NotNull SoundStop minecraftNamed(@MinecraftType(MinecraftType.Type.SOUND) @Nullable String soundKey) {
         return builder().soundKey(soundKey).build();
     }
 
@@ -53,8 +52,7 @@ public interface SoundStop extends Wrapper, RawValueHolder {
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    @CustomAutocompletion(CustomAutocompletion.Type.SOUND)
-    static @NotNull SoundStop minecraftNamedSourced(@Nullable String soundKey, @Nullable SoundSource source) {
+    static @NotNull SoundStop minecraftNamedSourced(@MinecraftType(MinecraftType.Type.SOUND) @Nullable String soundKey, @Nullable SoundSource source) {
         return builder().soundKey(soundKey).source(source).build();
     }
 
@@ -81,8 +79,7 @@ public interface SoundStop extends Wrapper, RawValueHolder {
         @NotNull Builder soundKey(@Nullable ResourceLocation key);
 
         @Contract("_ -> this")
-        @CustomAutocompletion(CustomAutocompletion.Type.SOUND)
-        default @NotNull Builder soundKey(@Nullable String key) {
+        default @NotNull Builder soundKey(@MinecraftType(MinecraftType.Type.SOUND) @Nullable String key) {
             return soundKey(key != null ? ResourceLocation.of(key) : null);
         }
 

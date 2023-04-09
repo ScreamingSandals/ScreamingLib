@@ -19,8 +19,7 @@ package org.screamingsandals.lib.bukkit.particle;
 import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.bukkit.utils.Version;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.particle.*;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -46,7 +45,7 @@ public class BukkitParticleType1_9 extends BasicWrapper<Particle> implements Par
             switch (dataType.getSimpleName()) {
                 case "MaterialData":
                 case "BlockData":
-                    return BlockTypeHolder.class;
+                    return BlockType.class;
                 case "ItemStack":
                     return ItemStack.class;
                 case "DustOptions":
@@ -54,6 +53,7 @@ public class BukkitParticleType1_9 extends BasicWrapper<Particle> implements Par
                 case "DustTransition":
                     return DustTransition.class;
             }
+            // TODO: Integer, Float, Vibration
         }
         return null;
     }

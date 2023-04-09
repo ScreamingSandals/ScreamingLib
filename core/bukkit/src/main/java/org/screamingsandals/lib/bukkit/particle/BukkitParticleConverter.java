@@ -21,24 +21,25 @@ import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.particle.DustOptions;
 import org.screamingsandals.lib.particle.DustTransition;
 import org.screamingsandals.lib.particle.ParticleData;
 
 @UtilityClass
 public class BukkitParticleConverter {
-    public Object convertParticleData(ParticleData data) {
-        if (data instanceof BlockTypeHolder) {
+    public Object convertParticleData(@NotNull ParticleData data) {
+        if (data instanceof BlockType) {
             if (Version.isVersion(1, 13)) {
                 return data.as(BlockData.class);
             } else {
                 return data.as(MaterialData.class);
             }
-        } else if (data instanceof ItemTypeHolder) {
+        } else if (data instanceof ItemType) {
             return data.as(org.bukkit.inventory.ItemStack.class);
         } else if (data instanceof ItemStack) {
             return data.as(org.bukkit.inventory.ItemStack.class);

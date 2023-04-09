@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -29,5 +29,5 @@ public interface EntityChangeBlockEvent extends SCancellableEvent, PlatformEvent
 
     @NotNull Block block();
 
-    @NotNull BlockTypeHolder to();
+    @NotNull BlockType to();
 }

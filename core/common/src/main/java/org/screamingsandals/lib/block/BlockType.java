@@ -16,25 +16,24 @@
 
 package org.screamingsandals.lib.block;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.TaggableHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 
 import java.util.*;
 
 /**
  * Class representing a <strong>block</strong> material.
- *
- * Use {@link org.screamingsandals.lib.item.ItemTypeHolder} for item materials.
+ * <p>
+ * Use {@link ItemType} for item materials.
  */
-public interface BlockTypeHolder extends ComparableWrapper, ParticleData, TaggableHolder {
+public interface BlockType extends ComparableWrapper, ParticleData, TaggableHolder {
 
+    @ApiStatus.Experimental
     @NotNull String platformName();
 
     @Deprecated
@@ -42,24 +41,24 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
 
     @Deprecated
     @Contract(value = "_ -> new", pure = true)
-    @NotNull BlockTypeHolder withLegacyData(byte legacyData);
+    @NotNull BlockType withLegacyData(byte legacyData);
 
     @Unmodifiable @NotNull Map<@NotNull String, String> flatteningData();
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, String> flatteningData);
+    @NotNull BlockType withFlatteningData(@NotNull Map<@NotNull String, String> flatteningData);
 
     @Contract(value = "_, _ -> new", pure = true)
-    @NotNull BlockTypeHolder with(@NotNull String attribute, @NotNull String value);
+    @NotNull BlockType with(@NotNull String attribute, @NotNull String value);
 
     @Contract(value = "_, _ -> new", pure = true)
-    @NotNull BlockTypeHolder with(@NotNull String attribute, int value);
+    @NotNull BlockType with(@NotNull String attribute, int value);
 
     @Contract(value = "_, _ -> new", pure = true)
-    @NotNull BlockTypeHolder with(@NotNull String attribute, boolean value);
+    @NotNull BlockType with(@NotNull String attribute, boolean value);
 
     @Contract(value = "_ -> new", pure = true)
-    default @NotNull BlockTypeHolder colorize(@NotNull String color) {
+    default @NotNull BlockType colorize(@NotNull String color) {
         return BlockTypeMapper.colorize(this, color);
     }
 
@@ -86,14 +85,11 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
     boolean hasGravity();
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK_TYPE_TAG)
-    boolean hasTag(@NotNull Object tag);
+    boolean hasTag(@MinecraftType(MinecraftType.Type.BLOCK_TYPE_TAG) @NotNull Object tag);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    boolean isSameType(@Nullable Object object);
+    boolean isSameType(@MinecraftType(MinecraftType.Type.BLOCK_TYPE_ONLY) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    boolean isSameType(@Nullable Object @NotNull... objects);
+    boolean isSameType(@MinecraftType(MinecraftType.Type.BLOCK_TYPE_ONLY) @Nullable Object @NotNull... objects);
 
     /**
      * This method accept any object that represents block type, or:
@@ -105,35 +101,31 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
      * @param object object that represents block type
      * @return true if this block is the same as the object
      */
-    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Override
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.BLOCK_TYPE_OR_TAG) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Override
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.BLOCK_TYPE_OR_TAG) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    static @NotNull BlockTypeHolder of(@NotNull Object type) {
+    static @NotNull BlockType of(@MinecraftType(MinecraftType.Type.BLOCK_TYPE) @NotNull Object type) {
         var result = ofNullable(type);
         Preconditions.checkNotNullIllegal(result, "Could not find block type: " + type);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Contract("null -> null")
-    static @Nullable BlockTypeHolder ofNullable(@Nullable Object type) {
-        if (type instanceof BlockTypeHolder) {
-            return (BlockTypeHolder) type;
+    static @Nullable BlockType ofNullable(@MinecraftType(MinecraftType.Type.BLOCK_TYPE) @Nullable Object type) {
+        if (type instanceof BlockType) {
+            return (BlockType) type;
         }
         return BlockTypeMapper.resolve(type);
     }
 
-    static @NotNull BlockTypeHolder air() {
+    static @NotNull BlockType air() {
         return BlockTypeMapper.getCachedAir();
     }
 
-    static @Unmodifiable @NotNull List<@NotNull BlockTypeHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull BlockType> all() {
         return BlockTypeMapper.getValues();
     }
 }

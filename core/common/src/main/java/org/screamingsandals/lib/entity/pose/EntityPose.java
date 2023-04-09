@@ -19,7 +19,7 @@ package org.screamingsandals.lib.entity.pose;
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
@@ -33,23 +33,19 @@ public interface EntityPose extends RegistryItem, RawValueHolder {
      * {@inheritDoc}
      */
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.ENTITY_POSE) @Nullable Object object);
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.ENTITY_POSE) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
-    static @NotNull EntityPose of(@NotNull Object entityPose) {
+    static @NotNull EntityPose of(@MinecraftType(MinecraftType.Type.ENTITY_POSE) @NotNull Object entityPose) {
         var result = ofNullable(entityPose);
         Preconditions.checkNotNullIllegal(result, "Could not find entity pose: " + entityPose);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
     @Contract("null -> null")
-    static @Nullable EntityPose ofNullable(@Nullable Object entityPose) {
+    static @Nullable EntityPose ofNullable(@MinecraftType(MinecraftType.Type.ENTITY_POSE) @Nullable Object entityPose) {
         if (entityPose instanceof EntityPose) {
             return (EntityPose) entityPose;
         }

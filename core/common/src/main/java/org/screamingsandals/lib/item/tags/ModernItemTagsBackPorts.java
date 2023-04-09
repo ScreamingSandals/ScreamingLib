@@ -21,7 +21,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.tags.TagPortHelper;
 
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 @ApiStatus.Internal
 @UtilityClass
 public class ModernItemTagsBackPorts {
-    public static @Nullable List<@NotNull String> getPortedTags(@NotNull ItemTypeHolder itemType, @NotNull Predicate<@NotNull String> nativeTagChecker) {
+    public static @Nullable List<@NotNull String> getPortedTags(@NotNull ItemType itemType, @NotNull Predicate<@NotNull String> nativeTagChecker) {
         if (!Server.isVersion(1, 13)) {
             /* This file doesn't support legacy version backports (these are supported by Bukkit-specific implementation, because Bukkit is the only legacy platform) */
             return List.of();

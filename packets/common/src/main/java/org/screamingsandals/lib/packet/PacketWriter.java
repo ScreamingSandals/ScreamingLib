@@ -22,9 +22,9 @@ import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -516,7 +516,7 @@ public abstract class PacketWriter extends OutputStream {
         }
     }
 
-    public void writeBlockData(@NotNull BlockTypeHolder blockDataHolder) {
+    public void writeBlockData(@NotNull BlockType blockDataHolder) {
         writeVarInt(getBlockStateId(blockDataHolder));
     }
 
@@ -550,9 +550,9 @@ public abstract class PacketWriter extends OutputStream {
         return Server.getProtocolVersion();
     }
 
-    protected abstract int getItemId(@NotNull ItemTypeHolder material);
+    protected abstract int getItemId(@NotNull ItemType material);
 
-    protected abstract int getBlockStateId(@NotNull BlockTypeHolder blockDataHolder);
+    protected abstract int getBlockStateId(@NotNull BlockType blockDataHolder);
 
     public abstract int getEquipmentSlotId(@NotNull EquipmentSlot equipmentSlotHolder);
 }

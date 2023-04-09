@@ -25,15 +25,15 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockType1_13;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitItemType1_13 extends BasicWrapper<Material> implements ItemTypeHolder {
+public class BukkitItemType1_13 extends BasicWrapper<Material> implements ItemType {
 
     // Because people can be stupid + it's also used in our current code for deserializing items ;)
     private short forcedDurability;
@@ -61,14 +61,14 @@ public class BukkitItemType1_13 extends BasicWrapper<Material> implements ItemTy
     }
 
     @Override
-    public @NotNull ItemTypeHolder withForcedDurability(short durability) {
+    public @NotNull ItemType withForcedDurability(short durability) {
         var holder = new BukkitItemType1_13(wrappedObject);
         holder.forcedDurability = durability;
         return holder;
     }
 
     @Override
-    public @Nullable BlockTypeHolder block() {
+    public @Nullable BlockType block() {
         if (!wrappedObject.isBlock()) {
             return null;
         }
@@ -98,7 +98,7 @@ public class BukkitItemType1_13 extends BasicWrapper<Material> implements ItemTy
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof Material || object instanceof ItemTypeHolder) {
+        if (object instanceof Material || object instanceof ItemType) {
             return equals(object);
         }
         if (object instanceof String) {
@@ -108,7 +108,7 @@ public class BukkitItemType1_13 extends BasicWrapper<Material> implements ItemTy
                 return hasTag(str.substring(1));
             }
         }
-        return equals(ItemTypeHolder.ofNullable(object));
+        return equals(ItemType.ofNullable(object));
     }
 
     @Override

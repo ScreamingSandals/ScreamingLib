@@ -21,7 +21,7 @@ import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.world.Location;
@@ -33,8 +33,7 @@ public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder
     boolean isAlive();
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE_TAG)
-    boolean hasTag(@NotNull Object tag);
+    boolean hasTag(@MinecraftType(MinecraftType.Type.ENTITY_TYPE_TAG) @NotNull Object tag);
 
     /**
      * Compares the entity type and the object
@@ -43,8 +42,7 @@ public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder
      * @return true if specified entity type is the same as this
      */
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
-    boolean is(@Nullable Object entityType);
+    boolean is(@MinecraftType(MinecraftType.Type.ENTITY_TYPE_OR_TAG) @Nullable Object entityType);
 
     /**
      * Compares the entity type and the objects
@@ -53,21 +51,18 @@ public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder
      * @return true if at least one of the entity type objects is same as this
      */
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
-    boolean is(@Nullable Object @NotNull... entityTypes);
+    boolean is(@MinecraftType(MinecraftType.Type.ENTITY_TYPE_OR_TAG) @Nullable Object @NotNull... entityTypes);
 
     @Nullable BasicEntity spawn(@NotNull Location location);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
-    static @NotNull EntityType of(@NotNull Object entityType) {
+    static @NotNull EntityType of(@MinecraftType(MinecraftType.Type.ENTITY_TYPE) @NotNull Object entityType) {
         var result = ofNullable(entityType);
         Preconditions.checkNotNullIllegal(result, "Could not find entity type: " + entityType);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     @Contract("null -> null")
-    static @Nullable EntityType ofNullable(@Nullable Object entityType) {
+    static @Nullable EntityType ofNullable(@MinecraftType(MinecraftType.Type.ENTITY_TYPE) @Nullable Object entityType) {
         if (entityType instanceof EntityType) {
             return (EntityType) entityType;
         }

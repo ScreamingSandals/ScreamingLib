@@ -18,7 +18,7 @@ package org.screamingsandals.lib.item.meta;
 
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -26,24 +26,20 @@ public interface Potion extends RegistryItem {
     @ApiStatus.Experimental
     @NotNull String platformName();
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Override
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.POTION) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Override
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.POTION) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
-    static @NotNull Potion of(@NotNull Object potion) {
+    static @NotNull Potion of(@MinecraftType(MinecraftType.Type.POTION) @NotNull Object potion) {
         var result = ofNullable(potion);
         Preconditions.checkNotNullIllegal(result, "Could not find potion: " + potion);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Contract("null -> null")
-    static @Nullable Potion ofNullable(@Nullable Object potion) {
+    static @Nullable Potion ofNullable(@MinecraftType(MinecraftType.Type.POTION) @Nullable Object potion) {
         if (potion instanceof Potion) {
             return (Potion) potion;
         }

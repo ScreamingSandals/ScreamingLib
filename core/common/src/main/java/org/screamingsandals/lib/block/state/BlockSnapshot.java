@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.block.state;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.container.ContainerHolder;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.block.Block;
@@ -27,9 +27,9 @@ import org.screamingsandals.lib.world.Location;
 // TODO: Metadata
 public interface BlockSnapshot extends Wrapper, ContainerHolder {
 
-    @NotNull BlockTypeHolder getType();
+    @NotNull BlockType getType();
 
-    void setType(@NotNull BlockTypeHolder type);
+    void setType(@NotNull BlockType type);
 
     @NotNull Location getLocation();
 

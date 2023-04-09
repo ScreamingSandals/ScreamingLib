@@ -16,12 +16,15 @@
 
 package org.screamingsandals.lib.bukkit.container;
 
+import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.container.PlayerContainer;
+import org.screamingsandals.lib.item.builder.ItemStackFactory;
 
 import java.util.Arrays;
 
@@ -118,32 +121,62 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
 
     @Override
     public @NotNull ItemStack getItemInMainHand() {
-        return new BukkitItem(((PlayerInventory) wrappedObject).getItemInMainHand());
+        if (Version.isVersion(1, 9)) {
+            return new BukkitItem(((PlayerInventory) wrappedObject).getItemInMainHand());
+        } else {
+            return new BukkitItem(((PlayerInventory) wrappedObject).getItemInHand());
+        }
     }
 
     @Override
     public void setItemInMainHand(@Nullable ItemStack item) {
         var inventory = (PlayerInventory) wrappedObject;
-        if (item == null) {
-            inventory.setItemInMainHand(null);
-            return;
+        if (Version.isVersion(1, 9)) {
+            if (item == null) {
+                inventory.setItemInMainHand(null);
+                return;
+            }
+            inventory.setItemInMainHand(item.as(org.bukkit.inventory.ItemStack.class));
+        } else {
+            if (item == null) {
+                inventory.setItemInHand(null);
+                return;
+            }
+            inventory.setItemInHand(item.as(org.bukkit.inventory.ItemStack.class));
         }
-        inventory.setItemInMainHand(item.as(org.bukkit.inventory.ItemStack.class));
     }
 
     @Override
     public @NotNull ItemStack getItemInOffHand() {
-        return new BukkitItem(((PlayerInventory) wrappedObject).getItemInOffHand());
+        if (Version.isVersion(1, 9)) {
+            return new BukkitItem(((PlayerInventory) wrappedObject).getItemInOffHand());
+        } else {
+            return ItemStackFactory.getAir();
+        }
     }
 
     @Override
     public void setItemInOffHand(@Nullable ItemStack item) {
         var inventory = (PlayerInventory) wrappedObject;
-        if (item == null) {
-            inventory.setItemInOffHand(null);
-            return;
+        if (Version.isVersion(1, 9)) {
+            if (item == null) {
+                inventory.setItemInOffHand(null);
+                return;
+            }
+            inventory.setItemInOffHand(item.as(org.bukkit.inventory.ItemStack.class));
+        } else {
+            if (item != null && !item.isAir()) {
+                // I have no idea where we should put the item, so I just pass it to the addItem method and drop it in case of failure.
+                var failure = inventory.addItem(item.as(org.bukkit.inventory.ItemStack.class));
+                if (!failure.isEmpty()) {
+                    var holder = inventory.getHolder();
+                    if (holder != null) {
+                        var loc = holder.getLocation();
+                        failure.forEach((integer, itemStack) -> loc.getWorld().dropItem(loc, itemStack));
+                    }
+                }
+            }
         }
-        inventory.setItemInOffHand(item.as(org.bukkit.inventory.ItemStack.class));
     }
 
     @Override

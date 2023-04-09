@@ -66,7 +66,11 @@ public class BukkitPlayerInteractEntityEvent implements PlayerInteractEntityEven
     @Override
     public @NotNull EquipmentSlot hand() {
         if (hand == null) {
-            hand = EquipmentSlot.of(event.getHand());
+            try {
+                hand = EquipmentSlot.of(event.getHand());
+            } catch (Throwable ignored) {
+                hand = EquipmentSlot.of("main_hand"); // 1.8.8
+            }
         }
         return hand;
     }

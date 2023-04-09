@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.player;
 
-import io.netty.channel.Channel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
@@ -31,7 +30,6 @@ import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
-import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.weather.WeatherType;
@@ -401,22 +399,5 @@ public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudien
     @Override
     default @NotNull Type getType() {
         return Type.PLAYER;
-    }
-
-    /**
-     * Wrapper for hands.
-     */
-    // TODO: holder?
-    enum Hand implements Wrapper {
-        MAIN,
-        OFF;
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public <T> @NotNull T as(@NotNull Class<T> type) {
-            return Players.convertHand(this, type);
-        }
     }
 }

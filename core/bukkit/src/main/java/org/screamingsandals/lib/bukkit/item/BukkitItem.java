@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.attribute.ItemAttributeHolder;
+import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.bukkit.item.builder.BukkitItemBuilder;
@@ -35,7 +35,7 @@ import org.screamingsandals.lib.bukkit.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.ItemStackView;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
@@ -63,8 +63,8 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
     }
 
     @Override
-    public @NotNull ItemTypeHolder getType() {
-        return ItemTypeHolder.of(wrappedObject.getType());
+    public @NotNull ItemType getType() {
+        return ItemType.of(wrappedObject.getType());
     }
 
     @Override
@@ -105,14 +105,14 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
     }
 
     @Override
-    public @NotNull List<@NotNull ItemAttributeHolder> getAttributeModifiers() {
+    public @NotNull List<@NotNull ItemAttribute> getAttributeModifiers() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
             // TODO: find solution: missing Bukkit API for older versions
             if (Reflect.hasMethod(meta, "hasAttributeModifiers")) { // 1.13.1
                 if (meta.hasAttributeModifiers()) {
                     var bukkitModifiers = meta.getAttributeModifiers();
-                    var list = new ArrayList<ItemAttributeHolder>(bukkitModifiers.size());
+                    var list = new ArrayList<ItemAttribute>(bukkitModifiers.size());
                     bukkitModifiers
                             .forEach((attribute, attributeModifier) ->
                                     AttributeMapping.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))

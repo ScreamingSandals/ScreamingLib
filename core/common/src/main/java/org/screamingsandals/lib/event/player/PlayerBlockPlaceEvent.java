@@ -21,9 +21,9 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.block.state.BlockSnapshot;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 
 import java.util.Collection;
 
@@ -36,7 +36,7 @@ public interface PlayerBlockPlaceEvent extends SCancellableEvent, PlayerEvent, P
     /**
      * Hand used to place this block
      */
-    Player.@NotNull Hand playerHand();
+    @NotNull EquipmentSlot playerHand();
 
     /**
      * Placed block

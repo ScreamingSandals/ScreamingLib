@@ -19,7 +19,7 @@ package org.screamingsandals.lib.configurate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -27,20 +27,20 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 import java.util.stream.Collectors;
 
-public class BlockTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<BlockTypeHolder> {
+public class BlockTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<BlockType> {
     public static final @NotNull BlockTypeHolderSerializer INSTANCE = new BlockTypeHolderSerializer();
 
     @Override
-    public @NotNull BlockTypeHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull BlockType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return BlockTypeHolder.of(type);
+            return BlockType.of(type);
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable BlockTypeHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable BlockType obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

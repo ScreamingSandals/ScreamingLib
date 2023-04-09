@@ -19,7 +19,7 @@ package org.screamingsandals.lib.item.builder;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.spectator.Component;
 import org.spongepowered.configurate.ConfigurationNode;
 
@@ -38,7 +38,7 @@ public class ShortStackDeserializer {
             shortStackObject = ((ConfigurationNode) shortStackObject).getString();
         }
         if (!(shortStackObject instanceof String)) {
-            var opt = ItemTypeHolder.ofNullable(shortStackObject);
+            var opt = ItemType.ofNullable(shortStackObject);
             if (opt != null) {
                 builder.type(opt);
                 return;
@@ -74,7 +74,7 @@ public class ShortStackDeserializer {
             }
         }
 
-        var materialHolder = ItemTypeHolder.ofNullable(material);
+        var materialHolder = ItemType.ofNullable(material);
         if (materialHolder == null) {
             return;
         }

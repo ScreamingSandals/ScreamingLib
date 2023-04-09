@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -52,30 +52,24 @@ public interface PotionEffect extends RegistryItem {
     @Contract(value = "_ -> new", pure = true)
     @NotNull PotionEffect withIcon(boolean icon);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     @Override
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.POTION_EFFECT) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     @Override
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.POTION_EFFECT) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
-    boolean isSameType(@Nullable Object object);
+    boolean isSameType(@MinecraftType(MinecraftType.Type.POTION_EFFECT_TYPE) @Nullable Object object);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
-    boolean isSameType(@Nullable Object @NotNull... objects);
+    boolean isSameType(@MinecraftType(MinecraftType.Type.POTION_EFFECT_TYPE) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
-    static @NotNull PotionEffect of(@NotNull Object effect) {
+    static @NotNull PotionEffect of(@MinecraftType(MinecraftType.Type.POTION_EFFECT) @NotNull Object effect) {
         var result = ofNullable(effect);
         Preconditions.checkNotNullIllegal(result, "Could not find potion effect: " + effect);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     @Contract("null -> null")
-    static @Nullable PotionEffect ofNullable(@Nullable Object effect) {
+    static @Nullable PotionEffect ofNullable(@MinecraftType(MinecraftType.Type.POTION_EFFECT) @Nullable Object effect) {
         if (effect instanceof PotionEffect) {
             return (PotionEffect) effect;
         }

@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -39,23 +39,19 @@ public interface DamageType extends RegistryItem, RawValueHolder, TaggableHolder
      * @return true if this damage type is equivalent to the object
      */
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.DAMAGE_TYPE) @Nullable Object object);
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.DAMAGE_TYPE) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    static @NotNull DamageType of(@NotNull Object damageType) {
+    static @NotNull DamageType of(@MinecraftType(MinecraftType.Type.DAMAGE_TYPE) @NotNull Object damageType) {
         var result = ofNullable(damageType);
         Preconditions.checkNotNullIllegal(result, "Could not find damage type: " + damageType);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
     @Contract("null -> null")
-    static @Nullable DamageType ofNullable(@Nullable Object damageType) {
+    static @Nullable DamageType ofNullable(@MinecraftType(MinecraftType.Type.DAMAGE_TYPE) @Nullable Object damageType) {
         if (damageType instanceof DamageType) {
             return (DamageType) damageType;
         }

@@ -21,7 +21,7 @@ import org.bukkit.block.data.BlockData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.block.state.BlockSnapshot;
 import org.screamingsandals.lib.block.state.BlockSnapshots;
 import org.screamingsandals.lib.bukkit.utils.Version;
@@ -37,16 +37,16 @@ public final class BukkitBlock extends BasicWrapper<org.bukkit.block.Block> impl
     }
 
     @Override
-    public void type(@NotNull BlockTypeHolder type) {
+    public void type(@NotNull BlockType type) {
         setType(type, false);
     }
 
     @Override
-    public void alterTypeWithoutPhysics(@NotNull BlockTypeHolder type) {
+    public void alterTypeWithoutPhysics(@NotNull BlockType type) {
         setType(type, true);
     }
 
-    private void setType(@NotNull BlockTypeHolder type, boolean ignorePhysics) {
+    private void setType(@NotNull BlockType type, boolean ignorePhysics) {
         final var bukkitLocation = wrappedObject.getLocation();
         PaperLib.getChunkAtAsync(bukkitLocation)
                 .thenAccept(result -> {
@@ -60,11 +60,11 @@ public final class BukkitBlock extends BasicWrapper<org.bukkit.block.Block> impl
     }
 
     @Override
-    public @NotNull BlockTypeHolder type() {
+    public @NotNull BlockType type() {
         if (!Version.isVersion(1,13)) {
-            return BlockTypeHolder.of(wrappedObject.getState().getData());
+            return BlockType.of(wrappedObject.getState().getData());
         } else {
-            return BlockTypeHolder.of(wrappedObject.getBlockData());
+            return BlockType.of(wrappedObject.getBlockData());
         }
     }
 

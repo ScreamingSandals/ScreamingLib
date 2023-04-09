@@ -25,8 +25,6 @@ import org.screamingsandals.lib.configurate.ItemTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.ComplexMappingKey;
 import org.screamingsandals.lib.utils.key.MappingKey;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
@@ -42,14 +40,14 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 @ProvidedService
-public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> {
+public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemType> {
 
     private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
-    protected final @NotNull BidirectionalConverter<ItemTypeHolder> itemTypeConverter = BidirectionalConverter.<ItemTypeHolder>build()
-            .registerP2W(ItemTypeHolder.class, i -> i)
+    protected final @NotNull BidirectionalConverter<ItemType> itemTypeConverter = BidirectionalConverter.<ItemType>build()
+            .registerP2W(ItemType.class, i -> i)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {
-                    return ItemTypeHolderSerializer.INSTANCE.deserialize(ItemTypeHolder.class, node);
+                    return ItemTypeHolderSerializer.INSTANCE.deserialize(ItemType.class, node);
                 } catch (SerializationException ex) {
                     ex.printStackTrace();
                     return null;
@@ -57,7 +55,7 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
             });
 
     private static @Nullable ItemTypeMapper itemTypeMapper;
-    private static @Nullable ItemTypeHolder cachedAir;
+    private static @Nullable ItemType cachedAir;
 
     @ApiStatus.Internal
     public ItemTypeMapper() {
@@ -68,10 +66,8 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
         itemTypeMapper = this;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "ofNullable")
     @Contract("null -> null")
-    public static @Nullable ItemTypeHolder resolve(@Nullable Object materialObject) {
+    public static @Nullable ItemType resolve(@Nullable Object materialObject) {
         if (itemTypeMapper == null) {
             throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
         }
@@ -133,15 +129,14 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
         }).orElse(null);
     }
 
-    @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "all")
-    public static @NotNull List<@NotNull ItemTypeHolder> getValues() {
+    public static @NotNull List<@NotNull ItemType> getValues() {
         if (itemTypeMapper == null) {
             throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
         }
         return Collections.unmodifiableList(itemTypeMapper.values);
     }
 
-    public static @NotNull ItemTypeHolder colorize(@NotNull ItemTypeHolder holder, @NotNull String color) {
+    public static @NotNull ItemType colorize(@NotNull ItemType holder, @NotNull String color) {
         if (itemTypeMapper == null) {
             throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
         }
@@ -153,7 +148,7 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
                 .orElse(holder);
     }
 
-    public @NotNull Map<@NotNull MappingKey, ItemTypeHolder> getUNSAFE_mapping() {
+    public @NotNull Map<@NotNull MappingKey, ItemType> getUNSAFE_mapping() {
         return mapping;
     }
 
@@ -162,8 +157,7 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
         super.mapAlias(mappingKey, alias);
     }
 
-    @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "air")
-    public static @NotNull ItemTypeHolder getCachedAir() {
+    public static @NotNull ItemType getCachedAir() {
         if (cachedAir == null) {
             cachedAir = resolve("minecraft:air");
             Preconditions.checkNotNullIllegal(cachedAir, "Could not find item type: minecraft:air");

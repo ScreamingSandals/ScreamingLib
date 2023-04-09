@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 
@@ -38,8 +38,7 @@ public interface SoundStart extends Wrapper, RawValueHolder {
     }
 
     @Contract(value = "_, _, _, _ -> new", pure = true)
-    @CustomAutocompletion(CustomAutocompletion.Type.SOUND)
-    static @NotNull SoundStart minecraftSound(@NotNull String soundKey, @NotNull SoundSource soundSource, float volume, float pitch) {
+    static @NotNull SoundStart minecraftSound(@MinecraftType(MinecraftType.Type.SOUND) @NotNull String soundKey, @NotNull SoundSource soundSource, float volume, float pitch) {
         return builder()
                 .soundKey(soundKey)
                 .source(soundSource)
@@ -88,8 +87,7 @@ public interface SoundStart extends Wrapper, RawValueHolder {
         @NotNull Builder soundKey(@NotNull ResourceLocation key);
 
         @Contract("_ -> this")
-        @CustomAutocompletion(CustomAutocompletion.Type.SOUND)
-        default @NotNull Builder soundKey(@NotNull String key) {
+        default @NotNull Builder soundKey(@MinecraftType(MinecraftType.Type.SOUND) @NotNull String key) {
             return soundKey(ResourceLocation.of(key));
         }
 

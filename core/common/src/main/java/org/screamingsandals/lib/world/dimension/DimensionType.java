@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
@@ -31,23 +31,19 @@ public interface DimensionType extends RegistryItem, RawValueHolder {
     @NotNull String platformName();
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.DIMENSION)
-    boolean is(@Nullable Object object);
+    boolean is(@MinecraftType(MinecraftType.Type.DIMENSION_TYPE) @Nullable Object object);
 
     @Override
-    @CustomAutocompletion(CustomAutocompletion.Type.DIMENSION)
-    boolean is(@Nullable Object @NotNull... objects);
+    boolean is(@MinecraftType(MinecraftType.Type.DIMENSION_TYPE) @Nullable Object @NotNull... objects);
 
-    @CustomAutocompletion(CustomAutocompletion.Type.DIMENSION)
-    static @NotNull DimensionType of(@NotNull Object dimension) {
+    static @NotNull DimensionType of(@MinecraftType(MinecraftType.Type.DIMENSION_TYPE) @NotNull Object dimension) {
         var result = ofNullable(dimension);
         Preconditions.checkNotNullIllegal(result, "Could not find dimension: " + dimension);
         return result;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.DIMENSION)
     @Contract("null -> null")
-    static @Nullable DimensionType ofNullable(@Nullable Object dimension) {
+    static @Nullable DimensionType ofNullable(@MinecraftType(MinecraftType.Type.DIMENSION_TYPE) @Nullable Object dimension) {
         if (dimension instanceof DimensionType) {
             return (DimensionType) dimension;
         }
