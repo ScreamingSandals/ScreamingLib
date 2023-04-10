@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.particle.ParticleType;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.utils.registry.SimpleRegistryItemStream;
 

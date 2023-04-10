@@ -28,7 +28,7 @@ import org.screamingsandals.lib.bukkit.BukkitServer;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 @Data
 @Accessors(fluent = true)

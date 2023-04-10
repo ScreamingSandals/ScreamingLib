@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.backports.StorageNBTPortedComponent;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.StorageNBTComponent;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 public class PortedBungeeStorageNBTComponent extends PortedBungeeNBTComponent implements StorageNBTComponent {
     protected PortedBungeeStorageNBTComponent(@NotNull StorageNBTPortedComponent wrappedObject) {

@@ -22,7 +22,7 @@ import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.List;
 

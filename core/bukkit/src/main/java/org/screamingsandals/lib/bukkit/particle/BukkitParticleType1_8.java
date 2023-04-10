@@ -24,7 +24,7 @@ import org.screamingsandals.lib.nms.accessors.EnumParticleAccessor;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.particle.ParticleType;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Arrays;

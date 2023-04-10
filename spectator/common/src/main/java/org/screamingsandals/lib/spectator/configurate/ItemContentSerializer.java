@@ -23,7 +23,7 @@ import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.nbt.Tag;
 import org.screamingsandals.lib.nbt.configurate.TagSerializer;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;

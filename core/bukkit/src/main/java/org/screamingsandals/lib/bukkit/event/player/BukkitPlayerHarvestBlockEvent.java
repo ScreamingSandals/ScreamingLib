@@ -29,7 +29,7 @@ import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.PlayerHarvestBlockEvent;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.collections.CollectionLinkedToCollection;
 
 import java.util.Collection;
 

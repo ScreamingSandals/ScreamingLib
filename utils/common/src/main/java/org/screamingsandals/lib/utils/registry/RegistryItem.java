@@ -18,7 +18,7 @@ package org.screamingsandals.lib.utils.registry;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.ComparableWrapper;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 public interface RegistryItem extends ComparableWrapper {
     @NotNull ResourceLocation location();

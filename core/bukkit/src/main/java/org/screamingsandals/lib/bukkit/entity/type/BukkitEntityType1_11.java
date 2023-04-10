@@ -26,7 +26,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 

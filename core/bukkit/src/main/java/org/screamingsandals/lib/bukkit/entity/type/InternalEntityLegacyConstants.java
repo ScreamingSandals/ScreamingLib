@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.entity.type;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 @UtilityClass
 public class InternalEntityLegacyConstants {

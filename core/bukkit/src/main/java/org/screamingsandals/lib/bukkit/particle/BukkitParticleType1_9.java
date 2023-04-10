@@ -23,7 +23,7 @@ import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.particle.*;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.Locale;

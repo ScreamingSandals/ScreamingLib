@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.utils.key;
+package org.screamingsandals.lib.utils;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.utils.ComparableWrapper;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -30,7 +29,7 @@ import java.util.Objects;
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class ResourceLocation implements MappingKey, ComparableWrapper {
+public class ResourceLocation implements CharSequence, ComparableWrapper {
     private final @NotNull String namespace;
     private final @NotNull String path;
 
@@ -166,5 +165,17 @@ public class ResourceLocation implements MappingKey, ComparableWrapper {
     @Override
     public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
+    }
+
+    public int length() {
+        return asString().length();
+    }
+
+    public char charAt(int index) {
+        return asString().charAt(index);
+    }
+
+    public @NotNull CharSequence subSequence(int start, int end) {
+        return asString().subSequence(start, end);
     }
 }

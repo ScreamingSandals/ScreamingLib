@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.bukkit.attribute.BukkitAttributeMapping;
 import org.screamingsandals.lib.bukkit.attribute.BukkitAttributeTypeRegistry;
-import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeMapper;
+import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeRegistry;
 import org.screamingsandals.lib.bukkit.block.BukkitBlocks;
 import org.screamingsandals.lib.bukkit.block.state.BukkitBlockSnapshots;
 import org.screamingsandals.lib.bukkit.container.BukkitContainerFactory;
@@ -184,7 +184,7 @@ import org.screamingsandals.lib.bukkit.event.world.BukkitWorldLoadEvent;
 import org.screamingsandals.lib.bukkit.event.world.BukkitWorldSaveEvent;
 import org.screamingsandals.lib.bukkit.event.world.BukkitWorldUnloadEvent;
 import org.screamingsandals.lib.bukkit.firework.BukkitFireworkEffectRegistry;
-import org.screamingsandals.lib.bukkit.item.BukkitItemTypeMapper;
+import org.screamingsandals.lib.bukkit.item.BukkitItemTypeRegistry;
 import org.screamingsandals.lib.bukkit.item.builder.BukkitItemStackFactory;
 import org.screamingsandals.lib.bukkit.item.meta.BukkitEnchantmentRegistry;
 import org.screamingsandals.lib.bukkit.item.meta.BukkitPotionEffectRegistry;
@@ -354,8 +354,8 @@ import java.util.function.Function;
             BukkitPotionEffectRegistry.class,
             BukkitPotionRegistry.class,
             BukkitEquipmentSlotRegistry.class,
-            BukkitItemTypeMapper.class,
-            BukkitBlockTypeMapper.class,
+            BukkitItemTypeRegistry.class,
+            BukkitBlockTypeRegistry.class,
             BukkitItemBlockIdsRemapper.class,
             BukkitItemStackFactory.class,
             BukkitPlayers.class,

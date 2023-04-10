@@ -43,10 +43,6 @@ public class ItemTypeHolderSerializer extends AbstractScreamingSerializer implem
             node.set(null);
             return;
         }
-        if (obj.forcedDurability() == 0) {
-            node.set(obj.platformName());
-        } else {
-            node.set(obj.platformName() + ":" + obj.forcedDurability());
-        }
+        node.set(obj.location().asString());
     }
 }

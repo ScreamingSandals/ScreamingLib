@@ -144,19 +144,6 @@ public abstract class Server {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConsoleSender0();
     }
 
-    /**
-     * <pre>
-     *  O   This is Paul.
-     * /|\  He checks the server version to decide
-     *  |   when to use legacy method or flattening method.
-     * / \  Be like Paul. Ignore this method.
-     * </pre>
-     */
-    @ApiStatus.Experimental
-    public static void UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage() {
-        Preconditions.checkNotNull(server, "Server has not yet been initialized!").UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage0();
-    }
-
     // abstract methods for implementations
 
     public abstract @NotNull String getVersion0();
@@ -190,8 +177,4 @@ public abstract class Server {
     public abstract @NotNull ProxyType getProxyType0();
 
     public abstract @NotNull Integer getProtocolVersion0();
-
-    @ApiStatus.OverrideOnly
-    public void UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage0() {
-    }
 }

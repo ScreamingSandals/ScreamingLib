@@ -30,7 +30,7 @@ import org.screamingsandals.lib.world.Locations;
 @ProvidedService
 @ServiceDependencies(dependsOn = {
         Locations.class,
-        BlockTypeMapper.class
+        BlockTypeRegistry.class
 })
 public abstract class Blocks {
     protected final @NotNull BidirectionalConverter<Block> converter = BidirectionalConverter.<Block>build()

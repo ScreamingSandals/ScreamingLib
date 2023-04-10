@@ -16,22 +16,21 @@
 
 package org.screamingsandals.lib.bukkit.block;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.block.BlockType;
+import org.screamingsandals.lib.block.BlockTypeRegistry;
 import org.screamingsandals.lib.bukkit.block.converter.LegacyMaterialDataToFlatteningConverter;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements BlockType {
 
     public BukkitBlockType1_8(@NotNull Material material) {
@@ -54,12 +53,10 @@ public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements Bl
         return wrappedObject.getItemType().name();
     }
 
-    @Override
     public byte legacyData() {
         return wrappedObject.getData();
     }
 
-    @Override
     public @NotNull BlockType withLegacyData(byte legacyData) {
         var clone = wrappedObject.clone();
         clone.setData(legacyData);
@@ -67,12 +64,12 @@ public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements Bl
     }
 
     @Override
-    public @Unmodifiable @NotNull Map<@NotNull String, String> flatteningData() {
+    public @Unmodifiable @NotNull Map<@NotNull String, String> stateData() {
         return LegacyMaterialDataToFlatteningConverter.get(wrappedObject);
     }
 
     @Override
-    public @NotNull BlockType withFlatteningData(@NotNull Map<@NotNull String, String> flatteningData) {
+    public @NotNull BukkitBlockType1_8 withStateData(@NotNull Map<@NotNull String, String> stateData) {
         var materialName = wrappedObject.getItemType().name();
         byte baseData = 0;
 
@@ -116,6 +113,10 @@ public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements Bl
         switch (materialName) {
             case "LOG":
             case "LOG_2":
+                if ((wrappedObject.getData() & 0xC) == 0xC) {
+                    baseData = wrappedObject.getData(); // this is not a log but rather a wood, the whole data is a type
+                    break;
+                }
             case "LEAVES":
             case "LEAVES_2": // wood type
                 baseData = (byte) (wrappedObject.getData() & 0x3); // 0x2 and 0x1 bits (together 0x3) are used for wood type
@@ -165,8 +166,10 @@ public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements Bl
         }
 
         var materialData = Material.valueOf(materialName).getNewData(baseData);
-        for (var e : flatteningData.entrySet()) {
-            materialData = LegacyMaterialDataToFlatteningConverter.set(materialData, e.getKey(), e.getValue());
+        if (!stateData.isEmpty()) {
+            for (var e : stateData.entrySet()) {
+                materialData = LegacyMaterialDataToFlatteningConverter.set(materialData, e.getKey(), e.getValue());
+            }
         }
         return new BukkitBlockType1_8(materialData);
     }
@@ -193,18 +196,23 @@ public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements Bl
 
     @Override
     public @Nullable Integer getInt(@NotNull String attribute) {
-        return LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute).mapOrNull(s -> {
+        var value = LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute);
+        if (value != null) {
             try {
-                return Integer.valueOf(s);
+                return Integer.valueOf(value);
             } catch (Throwable ignored) {
             }
-            return null;
-        });
+        }
+        return null;
     }
 
     @Override
     public @Nullable Boolean getBoolean(@NotNull String attribute) {
-        return LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute).mapOrNull(Boolean::parseBoolean);
+        var value = LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute);
+        if (value != null) {
+            return Boolean.parseBoolean(value);
+        }
+        return null;
     }
 
     @Override
@@ -249,7 +257,7 @@ public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements Bl
             return false;
         }
         var value = key.path();
-        return BukkitBlockTypeMapper.hasTagInBackPorts(wrappedObject.getItemType(), value);
+        return BukkitBlockTypeRegistry1_8.hasTagInBackPorts(wrappedObject.getItemType(), value);
     }
 
     @Override
@@ -348,6 +356,9 @@ public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements Bl
         switch (materialName) {
             case "LOG":
             case "LOG_2":
+                if ((material.getData() & 0xC) == 0xC) {
+                    return material.getData() == wrappedObject.getData(); // this is not a log but rather a wood, the whole data is a type 
+                }
             case "LEAVES":
             case "LEAVES_2": // wood type
                 return (material.getData() & 0x3) == (wrappedObject.getData() & 0x3); // 0x8 and 0x4 bits are used for additional state data and not variant
@@ -424,6 +435,16 @@ public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements Bl
         return Arrays.stream(objects).anyMatch(this::is);
     }
 
+    @Override
+    public @NotNull String completeState() {
+        var data = stateData();
+        if (!data.isEmpty()) {
+            return location().asString() + '[' + data.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.joining(",")) + ']';
+        } else {
+            return location().asString();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
@@ -431,5 +452,18 @@ public class BukkitBlockType1_8 extends BasicWrapper<MaterialData> implements Bl
             return (T) wrappedObject.getItemType();
         }
         return super.as(type);
+    }
+
+    @Override
+    public @NotNull ResourceLocation location() {
+        var registry = BlockTypeRegistry.getInstance();
+        if (registry instanceof BukkitBlockTypeRegistry1_8) {
+            var newType = this.withStateData(Map.of()); // remove data values and keep only variants
+            var location = ((BukkitBlockTypeRegistry1_8) registry).getResourceLocations().get(newType);
+            if (location != null) {
+                return location;
+            }
+        }
+        return ResourceLocation.of("minecraft:legacy/" + platformName() + "/" + wrappedObject.getData());
     }
 }

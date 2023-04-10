@@ -24,7 +24,7 @@ import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.TriState;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.ConfigurationOptions;
 import org.spongepowered.configurate.serialize.SerializationException;

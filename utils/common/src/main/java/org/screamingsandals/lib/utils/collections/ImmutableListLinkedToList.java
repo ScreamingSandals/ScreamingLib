@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.utils;
+package org.screamingsandals.lib.utils.collections;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,20 +22,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
-public class ListLinkedToList<L, O> extends CollectionLinkedToCollection<L, O> implements List<L> {
-    public ListLinkedToList(List<O> original, Function<L, O> linkToOriginal, Function<O, L> originalToLink) {
+public class ImmutableListLinkedToList<L, O> extends ImmutableCollectionLinkedToCollection<L, O> implements List<L> {
+    public ImmutableListLinkedToList(@NotNull List<O> original, @NotNull Function<L, O> linkToOriginal, @NotNull Function<O, L> originalToLink) {
         super(original, linkToOriginal, originalToLink);
     }
 
-    private List<O> original() {
+    private @NotNull List<O> original() {
         return (List<O>) original;
     }
 
     @Override
     public boolean addAll(int index, @NotNull Collection<? extends L> c) {
-        return original().addAll(index, c.stream().map(linkToOriginal).collect(Collectors.toList()));
+       throw new UnsupportedOperationException();
     }
 
     @Override
@@ -45,17 +44,17 @@ public class ListLinkedToList<L, O> extends CollectionLinkedToCollection<L, O> i
 
     @Override
     public L set(int index, L element) {
-        return originalToLink.apply(original().set(index, linkToOriginal.apply(element)));
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void add(int index, L element) {
-        original().add(index, linkToOriginal.apply(element));
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public L remove(int index) {
-        return originalToLink.apply(original().remove(index));
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -105,17 +104,17 @@ public class ListLinkedToList<L, O> extends CollectionLinkedToCollection<L, O> i
 
             @Override
             public void remove() {
-                realIterator.remove();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public void set(L l) {
-                realIterator.set(linkToOriginal.apply(l));
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public void add(L l) {
-                realIterator.add(linkToOriginal.apply(l));
+                throw new UnsupportedOperationException();
             }
         };
     }
@@ -123,6 +122,7 @@ public class ListLinkedToList<L, O> extends CollectionLinkedToCollection<L, O> i
     @Override
     public @NotNull ListIterator<L> listIterator(int index) {
         var realIterator = original().listIterator(index);
+
 
         return new ListIterator<>() {
             @Override
@@ -157,17 +157,17 @@ public class ListLinkedToList<L, O> extends CollectionLinkedToCollection<L, O> i
 
             @Override
             public void remove() {
-                realIterator.remove();
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public void set(L l) {
-                realIterator.set(linkToOriginal.apply(l));
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public void add(L l) {
-                realIterator.add(linkToOriginal.apply(l));
+                throw new UnsupportedOperationException();
             }
         };
     }

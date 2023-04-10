@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 @LimitedVersionSupport(">= 1.15")
 public interface StorageNBTComponent extends NBTComponent {

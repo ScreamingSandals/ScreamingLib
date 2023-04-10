@@ -52,7 +52,7 @@ public final class BukkitBlock extends BasicWrapper<org.bukkit.block.Block> impl
                 .thenAccept(result -> {
                     if (!Version.isVersion(1,13)) {
                         bukkitLocation.getBlock().setType(type.as(Material.class), !ignorePhysics);
-                        Reflect.getMethod(bukkitLocation.getBlock(), "setData", byte.class, boolean.class).invoke(type.legacyData(), !ignorePhysics);
+                        Reflect.getMethod(bukkitLocation.getBlock(), "setData", byte.class, boolean.class).invoke(type instanceof BukkitBlockType1_8 ? ((BukkitBlockType1_8) type).legacyData() : 0, !ignorePhysics);
                     } else {
                         bukkitLocation.getBlock().setBlockData(type.as(BlockData.class), !ignorePhysics);
                     }

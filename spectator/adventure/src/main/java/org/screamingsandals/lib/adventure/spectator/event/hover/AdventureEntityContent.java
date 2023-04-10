@@ -29,7 +29,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.UUID;
 

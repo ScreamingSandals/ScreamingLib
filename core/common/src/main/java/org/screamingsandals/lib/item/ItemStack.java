@@ -32,7 +32,7 @@ import org.screamingsandals.lib.spectator.event.hover.ItemContentLike;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.List;
 import java.util.stream.Collectors;

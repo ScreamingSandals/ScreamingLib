@@ -18,14 +18,12 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
-import java.util.stream.Collectors;
 
 public class BlockTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<BlockType> {
     public static final @NotNull BlockTypeHolderSerializer INSTANCE = new BlockTypeHolderSerializer();
@@ -46,21 +44,6 @@ public class BlockTypeHolderSerializer extends AbstractScreamingSerializer imple
             return;
         }
 
-        if (Server.isVersion(1, 13)) {
-            var builder = new StringBuilder(obj.platformName());
-            var data = obj.flatteningData();
-            if (!data.isEmpty()) {
-                builder.append('[');
-                builder.append(data
-                        .entrySet()
-                        .stream()
-                        .map(entry -> entry.getKey() + "=" + entry.getValue())
-                        .collect(Collectors.joining(",")));
-                builder.append(']');
-            }
-            node.set(builder.toString());
-        } else {
-            node.set(obj.platformName() + ":" + obj.legacyData());
-        }
+        node.set(obj.completeState());
     }
 }

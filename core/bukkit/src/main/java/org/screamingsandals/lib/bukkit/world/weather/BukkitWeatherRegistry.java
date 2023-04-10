@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.world.weather;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.utils.registry.SimpleRegistryItemStream;
 import org.screamingsandals.lib.world.weather.WeatherRegistry;

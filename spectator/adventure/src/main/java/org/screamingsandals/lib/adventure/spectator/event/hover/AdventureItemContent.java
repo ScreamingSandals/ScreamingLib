@@ -29,7 +29,7 @@ import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> implements ItemContent {
     public AdventureItemContent(HoverEvent.@NotNull ShowItem wrappedObject) {

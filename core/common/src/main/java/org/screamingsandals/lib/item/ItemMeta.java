@@ -23,7 +23,7 @@ import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.spectator.Color;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 @UtilityClass
 @Deprecated

@@ -30,7 +30,7 @@ import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.world.PlantGrowEvent;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.collections.CollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.Locations;

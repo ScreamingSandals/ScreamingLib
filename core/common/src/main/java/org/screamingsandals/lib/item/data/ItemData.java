@@ -18,7 +18,7 @@ package org.screamingsandals.lib.item.data;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Set;
 import java.util.function.Supplier;

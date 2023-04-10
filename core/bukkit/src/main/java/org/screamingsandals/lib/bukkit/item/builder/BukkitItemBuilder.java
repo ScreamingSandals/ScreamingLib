@@ -32,11 +32,13 @@ import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.BukkitItemBlockIdsRemapper;
 import org.screamingsandals.lib.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
+import org.screamingsandals.lib.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.bukkit.item.ItemMetaHelper;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.bukkit.item.data.CraftBukkitItemData;
 import org.screamingsandals.lib.bukkit.nbt.NBTVanillaSerializer;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
@@ -50,7 +52,6 @@ import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
 import org.screamingsandals.lib.nms.accessors.ItemStackAccessor;
 import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.*;
@@ -67,8 +68,11 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         }
 
         this.item.setType(type.as(Material.class));
-        if (type.forcedDurability() != 0) {
-            durability(type.forcedDurability());
+        if (type instanceof BukkitItemType1_8) {
+            var durability = ((BukkitItemType1_8) type).forcedDurability();
+            if (durability != 0) {
+                durability(durability);
+            }
         }
         return this;
     }
@@ -79,7 +83,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     public ItemStackBuilder durability(short durability) {
-        if (BukkitItemBlockIdsRemapper.getBPlatform() == Platform.JAVA_LEGACY) {
+        if (!Version.isVersion(1, 13)) {
             this.item.setDurability(durability);
         } else {
             var meta = item.getItemMeta();

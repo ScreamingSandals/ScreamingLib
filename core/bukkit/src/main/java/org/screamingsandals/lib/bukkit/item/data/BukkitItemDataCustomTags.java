@@ -28,7 +28,7 @@ import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.utils.GsonUtils;
 import org.screamingsandals.lib.utils.Primitives;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.List;
 import java.util.Locale;

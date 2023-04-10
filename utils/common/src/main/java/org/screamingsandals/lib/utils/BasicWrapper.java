@@ -16,13 +16,9 @@
 
 package org.screamingsandals.lib.utils;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.api.Wrapper;
-
-import java.util.Objects;
 
 /**
  * Basic Wrapper is class used for directly wrapping objects without using Mapping classes and Bidirectional Converters.
@@ -30,9 +26,16 @@ import java.util.Objects;
  * @see BasicWrapper#wrap(Object)
  * @param <O> type of wrapped object
  */
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class BasicWrapper<O> implements Wrapper, RawValueHolder {
     protected final transient @NotNull O wrappedObject;
+
+    protected BasicWrapper(@NotNull O wrappedObject) {
+        //noinspection ConstantValue
+        if (wrappedObject == null) {
+            throw new IllegalArgumentException("BasicWrapper does not accept null as a value!");
+        }
+        this.wrappedObject = wrappedObject;
+    }
 
     public static <O> @NotNull BasicWrapper<O> wrap(@NotNull O wrappedObject) {
         return new BasicWrapper<>(wrappedObject);
@@ -67,7 +70,7 @@ public class BasicWrapper<O> implements Wrapper, RawValueHolder {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(wrappedObject);
+        return wrappedObject.hashCode();
     }
 
     @Override

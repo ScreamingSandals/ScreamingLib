@@ -20,9 +20,10 @@ import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.particle.ParticleData;
-import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 import java.util.*;
 
@@ -31,22 +32,15 @@ import java.util.*;
  * <p>
  * Use {@link ItemType} for item materials.
  */
-public interface BlockType extends ComparableWrapper, ParticleData, TaggableHolder {
+public interface BlockType extends RegistryItem, ParticleData, TaggableHolder {
 
     @ApiStatus.Experimental
     @NotNull String platformName();
 
-    @Deprecated
-    byte legacyData();
-
-    @Deprecated
-    @Contract(value = "_ -> new", pure = true)
-    @NotNull BlockType withLegacyData(byte legacyData);
-
-    @Unmodifiable @NotNull Map<@NotNull String, String> flatteningData();
+    @Unmodifiable @NotNull Map<@NotNull String, String> stateData();
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull BlockType withFlatteningData(@NotNull Map<@NotNull String, String> flatteningData);
+    @NotNull BlockType withStateData(@NotNull Map<@NotNull String, String> stateData);
 
     @Contract(value = "_, _ -> new", pure = true)
     @NotNull BlockType with(@NotNull String attribute, @NotNull String value);
@@ -59,7 +53,7 @@ public interface BlockType extends ComparableWrapper, ParticleData, TaggableHold
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull BlockType colorize(@NotNull String color) {
-        return BlockTypeMapper.colorize(this, color);
+        return BlockTypeRegistry.colorize(this, color);
     }
 
     @Nullable String get(@NotNull String attribute);
@@ -107,6 +101,13 @@ public interface BlockType extends ComparableWrapper, ParticleData, TaggableHold
     @Override
     boolean is(@MinecraftType(MinecraftType.Type.BLOCK_TYPE_OR_TAG) @Nullable Object @NotNull... objects);
 
+    /**
+     * Returns location followed by this specific block state
+     *
+     * @return location followed by this specific block state
+     */
+    @NotNull String completeState();
+
     static @NotNull BlockType of(@MinecraftType(MinecraftType.Type.BLOCK_TYPE) @NotNull Object type) {
         var result = ofNullable(type);
         Preconditions.checkNotNullIllegal(result, "Could not find block type: " + type);
@@ -118,14 +119,14 @@ public interface BlockType extends ComparableWrapper, ParticleData, TaggableHold
         if (type instanceof BlockType) {
             return (BlockType) type;
         }
-        return BlockTypeMapper.resolve(type);
+        return BlockTypeRegistry.getInstance().resolveMapping(type);
     }
 
     static @NotNull BlockType air() {
-        return BlockTypeMapper.getCachedAir();
+        return BlockTypeRegistry.getCachedAir();
     }
 
-    static @Unmodifiable @NotNull List<@NotNull BlockType> all() {
-        return BlockTypeMapper.getValues();
+    static @NotNull RegistryItemStream<@NotNull BlockType> all() {
+        return BlockTypeRegistry.getInstance().getRegistryItemStream();
     }
 }

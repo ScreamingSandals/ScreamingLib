@@ -29,7 +29,7 @@ import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.PlayerChatEvent;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.collections.CollectionLinkedToCollection;
 
 import java.util.Collection;
 

@@ -22,7 +22,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.Locale;

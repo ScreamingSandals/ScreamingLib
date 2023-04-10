@@ -37,10 +37,9 @@ import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.PlayerBlockPlaceEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.player.Players;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.slot.EquipmentSlot;
-import org.screamingsandals.lib.utils.ImmutableCollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.collections.ImmutableCollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;

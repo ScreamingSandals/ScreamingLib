@@ -23,9 +23,10 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockType1_8;
 import org.screamingsandals.lib.item.ItemType;
+import org.screamingsandals.lib.item.ItemTypeRegistry;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 
@@ -48,7 +49,6 @@ public class BukkitItemType1_8 extends BasicWrapper<Pair<Material, Short>> imple
         return wrappedObject.first().name();
     }
 
-    @Override
     public short forcedDurability() {
         return wrappedObject.second();
     }
@@ -59,16 +59,84 @@ public class BukkitItemType1_8 extends BasicWrapper<Pair<Material, Short>> imple
     }
 
     @Override
-    public @NotNull ItemType withForcedDurability(short durability) {
-        return new BukkitItemType1_8(Pair.of(wrappedObject.first(), durability));
-    }
-
-    @Override
     public @Nullable BlockType block() {
         if (!wrappedObject.first().isBlock()) {
+            String name = null;
+            switch (wrappedObject.first().name()) {
+                // these are basically items directly representing blocks
+                case "BREWING_STAND_ITEM":
+                    name = "BREWING_STAND";
+                    break;
+                case "CAULDRON_ITEM":
+                    name = "CAULDRON";
+                    break;
+                case "FLOWER_POT_ITEM":
+                    name = "FLOWER_POT";
+                    break;
+                case "SKULL_ITEM":
+                    name = "SKULL"; // TODO: Tile entity and specific type representation
+                    break;
+                case "WOOD_DOOR":
+                    name = "WOODEN_DOOR";
+                    break;
+                case "IRON_DOOR":
+                    name = "IRON_DOOR_BLOCK";
+                    break;
+                case "SPRUCE_DOOR_ITEM":
+                    name = "SPRUCE_DOOR";
+                    break;
+                case "BIRCH_DOOR_ITEM":
+                    name = "BIRCH_DOOR";
+                    break;
+                case "JUNGLE_DOOR_ITEM":
+                    name = "JUNGLE_DOOR";
+                    break;
+                case "ACACIA_DOOR_ITEM":
+                    name = "ACACIA_DOOR";
+                    break;
+                case "DARK_OAK_DOOR_ITEM":
+                    name = "DARK_OAK_DOOR";
+                    break;
+                case "BED":
+                    name = "BED_BLOCK"; // TODO: Tile entity and bed color representation
+                    break;
+                case "SUGAR_CANE":
+                    name = "SUGAR_CANE_BLOCK";
+                    break;
+                case "CAKE":
+                    name = "CAKE_BLOCK";
+                    break;
+                case "DIODE":
+                    name = "DIODE_BLOCK_OFF";
+                    break;
+                case "REDSTONE_COMPARATOR":
+                    name = "REDSTONE_COMPARATOR_OFF";
+                    break;
+            }
+            try {
+                return new BukkitBlockType1_8(Material.valueOf(name));
+            } catch (IllegalArgumentException ignored) {
+            }
             return null;
         }
-        return new BukkitBlockType1_8(wrappedObject.first(), wrappedObject.second().byteValue());
+        var data = wrappedObject.second().byteValue();
+        switch (wrappedObject.first().name()) { // item -> block data value conversion
+            case "ANVIL":
+                data = (byte) ((data & 0x3) << 2); // properly convert anvil
+                break;
+            case "TORCH":
+            case "REDSTONE_TORCH_ON":
+                data = 5; // default value for standing torch
+                break;
+            case "CHEST":
+            case "FURNACE":
+            case "LADDER":
+            case "ENDER_CHEST":
+            case "TRAPPED_CHEST":
+                data = 2; // default value for containers
+                break;
+        }
+        return new BukkitBlockType1_8(wrappedObject.first(), data);
     }
 
     @Override
@@ -82,8 +150,7 @@ public class BukkitItemType1_8 extends BasicWrapper<Pair<Material, Short>> imple
         if (!"minecraft".equals(key.namespace())) {
             return false;
         }
-        var value = key.path();
-        return BukkitItemTypeMapper.hasTagInBackPorts(wrappedObject.first(), value);
+        return BukkitItemTypeRegistry1_8.hasTagInBackPorts(wrappedObject.first(), key.path());
     }
 
     @Override
@@ -118,5 +185,17 @@ public class BukkitItemType1_8 extends BasicWrapper<Pair<Material, Short>> imple
             return (T) new ItemStack(wrappedObject.first(), 1, wrappedObject.second());
         }
         return super.as(type);
+    }
+
+    @Override
+    public @NotNull ResourceLocation location() {
+        var registry = ItemTypeRegistry.getInstance();
+        if (registry instanceof BukkitItemTypeRegistry1_8) {
+            var location = ((BukkitItemTypeRegistry1_8) registry).getResourceLocations().get(this);
+            if (location != null) {
+                return location;
+            }
+        }
+        return ResourceLocation.of("minecraft:legacy/" + wrappedObject.first().name() + "/" + wrappedObject.second());
     }
 }

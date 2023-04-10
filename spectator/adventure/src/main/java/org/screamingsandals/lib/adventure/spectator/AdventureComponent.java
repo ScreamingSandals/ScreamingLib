@@ -37,7 +37,7 @@ import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.TriState;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Arrays;

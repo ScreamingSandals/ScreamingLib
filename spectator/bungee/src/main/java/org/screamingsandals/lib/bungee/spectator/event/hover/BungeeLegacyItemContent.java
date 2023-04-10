@@ -28,7 +28,7 @@ import org.screamingsandals.lib.nbt.NumericTag;
 import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 public class BungeeLegacyItemContent extends BasicWrapper<CompoundTag> implements ItemContent {
 

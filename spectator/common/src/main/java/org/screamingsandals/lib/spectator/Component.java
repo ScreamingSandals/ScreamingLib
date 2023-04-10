@@ -32,7 +32,7 @@ import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.TriState;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;

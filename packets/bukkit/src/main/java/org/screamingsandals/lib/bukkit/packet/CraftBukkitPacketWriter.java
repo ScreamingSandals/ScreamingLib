@@ -22,6 +22,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockType;
+import org.screamingsandals.lib.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.slot.EquipmentSlot;
@@ -68,5 +69,13 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
 
         final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.getMethodGetTag1());
         Reflect.fastInvoke(friendlyByteBuf, FriendlyByteBufAccessor.getMethodWriteNbt1(), nbtTag);
+    }
+
+    @Override
+    protected short getForcedDurability(@NotNull ItemType material) {
+        if (material instanceof BukkitItemType1_8) {
+            return ((BukkitItemType1_8) material).forcedDurability();
+        }
+        return 0;
     }
 }

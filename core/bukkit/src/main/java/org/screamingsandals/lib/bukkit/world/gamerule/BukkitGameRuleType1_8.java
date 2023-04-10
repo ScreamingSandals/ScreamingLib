@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.world.gamerule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.world.gamerule.GameRuleType;
 
 import java.util.Arrays;

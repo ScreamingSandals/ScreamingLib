@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @ProvidedService
-@ServiceDependencies(dependsOn = ItemTypeMapper.class)
+@ServiceDependencies(dependsOn = ItemTypeRegistry.class)
 public abstract class ItemStackFactory {
 
     private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable ItemStack> CONFIGURATE_RESOLVER = node -> {

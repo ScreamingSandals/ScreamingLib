@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.screamingsandals.lib.spectator.sound.SoundStop {
     public AdventureSoundStop(@NotNull SoundStop wrappedObject) {

@@ -23,7 +23,7 @@ import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 public interface SoundStop extends Wrapper, RawValueHolder {
     @Contract(value = "-> new", pure = true)

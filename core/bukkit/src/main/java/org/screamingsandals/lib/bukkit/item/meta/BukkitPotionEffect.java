@@ -24,7 +24,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.Locale;

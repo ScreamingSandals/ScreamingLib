@@ -29,7 +29,7 @@ import org.screamingsandals.lib.block.state.BlockSnapshots;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.world.SpongeAbsorbEvent;
-import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.collections.CollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;

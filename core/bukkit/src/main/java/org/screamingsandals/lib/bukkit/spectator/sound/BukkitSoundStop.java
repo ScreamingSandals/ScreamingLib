@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.BukkitServer;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 @Data
 @Accessors(fluent = true)

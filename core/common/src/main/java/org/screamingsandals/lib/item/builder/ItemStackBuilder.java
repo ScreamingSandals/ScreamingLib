@@ -39,7 +39,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Collection;
 import java.util.List;

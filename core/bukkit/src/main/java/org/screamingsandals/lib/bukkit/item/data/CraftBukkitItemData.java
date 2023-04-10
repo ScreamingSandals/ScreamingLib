@@ -25,7 +25,7 @@ import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.utils.GsonUtils;
 import org.screamingsandals.lib.utils.Primitives;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Locale;

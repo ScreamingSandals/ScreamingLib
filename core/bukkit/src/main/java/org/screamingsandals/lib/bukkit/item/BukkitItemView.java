@@ -19,10 +19,9 @@ package org.screamingsandals.lib.bukkit.item;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.bukkit.BukkitItemBlockIdsRemapper;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemStackView;
-import org.screamingsandals.lib.utils.Platform;
 
 public class BukkitItemView extends BukkitItem implements ItemStackView {
     public BukkitItemView(@NotNull org.bukkit.inventory.ItemStack stack) {
@@ -38,7 +37,7 @@ public class BukkitItemView extends BukkitItem implements ItemStackView {
         var stack = replaceable.as(org.bukkit.inventory.ItemStack.class);
         wrappedObject.setType(stack.getType());
         wrappedObject.setAmount(stack.getAmount());
-        if (BukkitItemBlockIdsRemapper.getBPlatform() == Platform.JAVA_LEGACY) {
+        if (!Version.isVersion(1, 13)) {
             wrappedObject.setDurability(stack.getDurability());
         }
         if (stack.hasItemMeta()) {

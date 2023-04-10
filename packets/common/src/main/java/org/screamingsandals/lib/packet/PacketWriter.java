@@ -489,7 +489,7 @@ public abstract class PacketWriter extends OutputStream {
 
             write(item.getAmount());
             if (protocol() < 351) {
-                writeShort(item.getMaterial().forcedDurability());
+                writeShort(getForcedDurability(item.getMaterial())); // TODO: I think this should be durability in general and not just data value
             }
             writeNBTFromItem(item);
         }
@@ -551,6 +551,10 @@ public abstract class PacketWriter extends OutputStream {
     }
 
     protected abstract int getItemId(@NotNull ItemType material);
+
+    protected short getForcedDurability(@NotNull ItemType material) {
+        return 0;
+    }
 
     protected abstract int getBlockStateId(@NotNull BlockType blockDataHolder);
 

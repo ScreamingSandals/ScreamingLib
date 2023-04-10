@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.utils;
+package org.screamingsandals.lib.utils.collections;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;

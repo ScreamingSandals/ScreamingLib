@@ -49,15 +49,6 @@ public class ClassStorage {
 		public static final Class<?> CraftPersistentDataTypeRegistry = safeGetClass("{obc}.persistence.CraftPersistentDataTypeRegistry");
 		public static final Class<?> CraftCustomTagTypeRegistry = safeGetClass("{obc}.inventory.CraftCustomTagTypeRegistry");
 		public static final Class<?> CraftSound = safeGetClass("{obc}.CraftSound");
-
-		private static Class<?> CraftLegacy;
-
-		public static Class<?> UNSAFE_EVIL_GET_OUT_getCraftLegacy() {
-			if (CraftLegacy == null) {
-				CraftLegacy = safeGetClass("{obc}.legacy.CraftLegacy");
-			}
-			return CraftLegacy;
-		}
 	}
 	
 	private static @NotNull String checkNMSVersion() {

@@ -21,23 +21,17 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockType1_13;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 
 public class BukkitItemType1_13 extends BasicWrapper<Material> implements ItemType {
-
-    // Because people can be stupid + it's also used in our current code for deserializing items ;)
-    private short forcedDurability;
-
     public BukkitItemType1_13(@NotNull Material wrappedObject) {
         super(wrappedObject);
         if (!wrappedObject.isItem()) {
@@ -51,20 +45,8 @@ public class BukkitItemType1_13 extends BasicWrapper<Material> implements ItemTy
     }
 
     @Override
-    public short forcedDurability() {
-        return forcedDurability;
-    }
-
-    @Override
     public int maxStackSize() {
         return wrappedObject.getMaxStackSize();
-    }
-
-    @Override
-    public @NotNull ItemType withForcedDurability(short durability) {
-        var holder = new BukkitItemType1_13(wrappedObject);
-        holder.forcedDurability = durability;
-        return holder;
     }
 
     @Override
@@ -93,7 +75,7 @@ public class BukkitItemType1_13 extends BasicWrapper<Material> implements ItemTy
             return false;
         }
         var value = key.path();
-        return BukkitItemTypeMapper.hasTagInBackPorts(wrappedObject, value);
+        return BukkitItemTypeRegistry1_13.hasTagInBackPorts(wrappedObject, value);
     }
 
     @Override
@@ -120,17 +102,14 @@ public class BukkitItemType1_13 extends BasicWrapper<Material> implements ItemTy
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == ItemStack.class) {
-            ItemStack stack = new ItemStack(wrappedObject);
-            if (forcedDurability != 0) {
-                // it's somehow still supported because people can be stupid sometimes
-                ItemMeta meta = stack.getItemMeta();
-                if (meta instanceof Damageable) {
-                    ((Damageable) meta).setDamage(forcedDurability);
-                    stack.setItemMeta(meta);
-                }
-            }
-            return (T) stack;
+            return (T) new ItemStack(wrappedObject);
         }
         return super.as(type);
+    }
+
+    @Override
+    public @NotNull ResourceLocation location() {
+        var key = wrappedObject.getKey();
+        return ResourceLocation.of(key.getNamespace(), key.getKey());
     }
 }

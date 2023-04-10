@@ -23,7 +23,7 @@ import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.item.meta.Potion;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.List;

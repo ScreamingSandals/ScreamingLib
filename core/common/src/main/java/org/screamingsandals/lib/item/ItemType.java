@@ -17,27 +17,22 @@
 package org.screamingsandals.lib.item;
 
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.particle.ParticleData;
-import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-
-import java.util.List;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 @Accessors(fluent = true)
-public interface ItemType extends ComparableWrapper, ParticleData, TaggableHolder {
+public interface ItemType extends RegistryItem, ParticleData, TaggableHolder {
+    @ApiStatus.Experimental
     @NotNull String platformName();
-
-    @Deprecated
-    @LimitedVersionSupport("<= 1.12.2")
-    short forcedDurability();
 
     default boolean isAir() {
         return equals(air());
@@ -45,13 +40,8 @@ public interface ItemType extends ComparableWrapper, ParticleData, TaggableHolde
 
     int maxStackSize();
 
-    @Deprecated
-    @LimitedVersionSupport("<= 1.12.2")
-    @Contract(value = "_ -> new", pure = true)
-    @NotNull ItemType withForcedDurability(short durability);
-
     default @NotNull ItemType colorize(@NotNull String color) {
-        return ItemTypeMapper.colorize(this, color);
+        return ItemTypeRegistry.colorize(this, color);
     }
 
     @Nullable BlockType block();
@@ -76,14 +66,14 @@ public interface ItemType extends ComparableWrapper, ParticleData, TaggableHolde
         if (type instanceof ItemType) {
             return (ItemType) type;
         }
-        return ItemTypeMapper.resolve(type);
+        return ItemTypeRegistry.getInstance().resolveMapping(type);
     }
 
     static @NotNull ItemType air() {
-        return ItemTypeMapper.getCachedAir();
+        return ItemTypeRegistry.getCachedAir();
     }
 
-    static @Unmodifiable @NotNull List<@NotNull ItemType> all() {
-        return ItemTypeMapper.getValues();
+    static @NotNull RegistryItemStream<@NotNull ItemType> all() {
+        return ItemTypeRegistry.getInstance().getRegistryItemStream();
     }
 }

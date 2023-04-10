@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.StorageNBTComponent;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 public class AdventureStorageNBTComponent extends AdventureNBTComponent<net.kyori.adventure.text.StorageNBTComponent> implements StorageNBTComponent {
     public AdventureStorageNBTComponent(net.kyori.adventure.text.@NotNull StorageNBTComponent wrappedObject) {

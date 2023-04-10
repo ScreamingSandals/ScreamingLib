@@ -22,7 +22,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.entity.type.EntityTypeTagBackPorts;
 import org.screamingsandals.lib.utils.Pair;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.utils.registry.SimpleRegistryItemStream;
 

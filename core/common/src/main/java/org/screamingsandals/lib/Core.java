@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib;
 
-import org.screamingsandals.lib.block.BlockTypeMapper;
+import org.screamingsandals.lib.block.BlockTypeRegistry;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.container.type.InventoryTypeRegistry;
 import org.screamingsandals.lib.entity.Entities;
@@ -24,7 +24,7 @@ import org.screamingsandals.lib.entity.damage.DamageTypeRegistry;
 import org.screamingsandals.lib.entity.pose.EntityPoseRegistry;
 import org.screamingsandals.lib.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.item.ItemTypeMapper;
+import org.screamingsandals.lib.item.ItemTypeRegistry;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeRegistry;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
@@ -71,8 +71,8 @@ import org.screamingsandals.lib.world.weather.WeatherRegistry;
         PotionEffectRegistry.class,
         PotionRegistry.class,
         EquipmentSlotRegistry.class,
-        ItemTypeMapper.class,
-        BlockTypeMapper.class,
+        ItemTypeRegistry.class,
+        BlockTypeRegistry.class,
         ItemBlockIdsRemapper.class,
         ItemStackFactory.class,
         Players.class,

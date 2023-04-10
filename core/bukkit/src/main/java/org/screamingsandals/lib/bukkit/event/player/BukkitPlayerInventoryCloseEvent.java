@@ -29,7 +29,7 @@ import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.event.player.PlayerInventoryCloseEvent;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor

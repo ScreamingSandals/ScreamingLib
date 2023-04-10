@@ -32,7 +32,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityDeathEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.collections.CollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;

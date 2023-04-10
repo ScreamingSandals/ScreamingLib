@@ -30,7 +30,7 @@ import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.AreaEffectCloudApplyEvent;
-import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.collections.CollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;

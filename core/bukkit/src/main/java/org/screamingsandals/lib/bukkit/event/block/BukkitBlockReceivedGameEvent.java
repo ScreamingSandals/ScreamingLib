@@ -30,7 +30,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.block.BlockReceivedGameEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor

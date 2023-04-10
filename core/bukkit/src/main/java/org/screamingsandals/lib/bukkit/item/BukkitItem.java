@@ -32,6 +32,7 @@ import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.bukkit.item.data.CraftBukkitItemData;
 import org.screamingsandals.lib.bukkit.nbt.NBTVanillaSerializer;
+import org.screamingsandals.lib.bukkit.utils.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
@@ -64,7 +65,11 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
 
     @Override
     public @NotNull ItemType getType() {
-        return ItemType.of(wrappedObject.getType());
+        if (Version.isVersion(1, 13)) {
+            return ItemType.of(wrappedObject.getType());
+        } else {
+            return new BukkitItemType1_8(wrappedObject.getType(), wrappedObject.getType().getMaxDurability() >= 0 ? 0 : wrappedObject.getDurability()); // distinguish between durability and data value
+        }
     }
 
     @Override

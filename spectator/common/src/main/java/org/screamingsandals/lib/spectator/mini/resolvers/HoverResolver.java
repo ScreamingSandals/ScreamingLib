@@ -26,7 +26,7 @@ import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;

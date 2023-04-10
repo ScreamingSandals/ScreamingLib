@@ -33,7 +33,7 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 @UtilityClass
 public class LegacyMaterialDataToFlatteningConverter {
-    // TODO: consider not using o.b.m and remove all duplicates (but is it worth? no one will touch this code in the future)
+    // TODO: remove usage of o.b.m as it is not reliable
     public static @NotNull MaterialData set(@NotNull MaterialData materialData, @NotNull String key, @NotNull String value) {
         materialData = materialData.clone();
         var materialName = materialData.getItemType().name();
@@ -108,7 +108,9 @@ public class LegacyMaterialDataToFlatteningConverter {
                         break;
                     //case "occupied": break; - Does not exist in legacy
                 }
-            } else if (materialData instanceof Crops) {
+            } else if (materialData instanceof Crops
+                    || "CARROT".equals(materialName)
+                    || "POTATO".equals(materialName)) {
                 if ("age".equalsIgnoreCase(key)) {
                     var age = Byte.parseByte(value);
                     if ("BEETROOT_BLOCK".equals(materialName) || "NETHER_WARTS".equals(materialName)) {
@@ -1564,6 +1566,8 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialData instanceof Crops
                     || materialData instanceof NetherWarts
+                    || "CARROT".equals(materialName) // 1.8.8-1.9
+                    || "POTATO".equals(materialName) // 1.8.8-1.9
                     || "CACTUS".equals(materialName)
                     || "SUGAR_CANE_BLOCK".equals(materialName)
                     || "CHORUS_FLOWER".equalsIgnoreCase(materialName)
@@ -1880,6 +1884,8 @@ public class LegacyMaterialDataToFlatteningConverter {
                             case NORTH:
                                 return "z";
                         }
+                    } else {
+                        return "y";
                     }
                 }
             } else if (materialData instanceof Skull) {

@@ -28,7 +28,7 @@ import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.ResourceLocation;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 public class BungeeItemContent extends BasicWrapper<Item> implements ItemContent {
     public BungeeItemContent(@NotNull Item wrappedObject) {
