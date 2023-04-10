@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.configurate;
+package org.screamingsandals.lib.bukkit.attribute;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.spectator.Color;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
+import org.screamingsandals.lib.attribute.Attributes;
+import org.screamingsandals.lib.bukkit.utils.Version;
+import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 
-public abstract class AbstractScreamingSerializer {
-
-    protected @Nullable Color deserializeColor(@NotNull ConfigurationNode colorNode) {
-        try {
-            return colorNode.get(Color.class);
-        } catch (SerializationException ex) {
-            return Color.WHITE;
+@Service
+public abstract class BukkitAttributes extends Attributes {
+    @ServiceInitializer
+    public static @NotNull BukkitAttributes init() {
+        if (Version.isVersion(1, 9)) {
+            return new BukkitAttributes1_9();
+        } else {
+            return new BukkitAttributes1_8();
         }
     }
 }

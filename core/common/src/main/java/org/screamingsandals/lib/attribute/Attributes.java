@@ -21,7 +21,8 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.slot.EquipmentSlot;
+import org.screamingsandals.lib.configurate.AttributeModifierSerializer;
+import org.screamingsandals.lib.configurate.ItemAttributeSerializer;
 import org.screamingsandals.lib.slot.EquipmentSlotRegistry;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
@@ -33,9 +34,7 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @ProvidedService
@@ -43,21 +42,11 @@ import java.util.function.Supplier;
         AttributeTypeRegistry.class,
         EquipmentSlotRegistry.class
 })
-public abstract class AttributeMapping {
-    private static @Nullable AttributeMapping attributeMapping;
-    private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable AttributeModifierHolder> CONFIGURATE_LOAD_MODIFIER = node -> {
-        var uuid = node.node("uuid");
-        var name = node.node("name");
-        var amount = node.node("amount");
-        var operation = node.node("operation");
-
+public abstract class Attributes {
+    private static @Nullable Attributes attributeMapping;
+    private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable AttributeModifier> CONFIGURATE_LOAD_MODIFIER = node -> {
         try {
-            return new AttributeModifierHolder(
-                    uuid.get(UUID.class, (Supplier<UUID>) UUID::randomUUID),
-                    name.getString(""),
-                    amount.getDouble(),
-                    operation.get(AttributeModifierHolder.Operation.class)
-            );
+            return AttributeModifierSerializer.INSTANCE.deserialize(AttributeModifier.class, node);
         } catch (SerializationException e) {
             e.printStackTrace();
         }
@@ -65,28 +54,8 @@ public abstract class AttributeMapping {
         return null;
     };
     private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable ItemAttribute> CONFIGURATE_LOAD_ITEM = node -> {
-        var type = node.node("type");
-        var uuid = node.node("uuid");
-        var name = node.node("name");
-        var amount = node.node("amount");
-        var operation = node.node("operation");
-        var slot = node.node("slot");
-
-        var typeOpt = AttributeType.ofNullable(type.raw());
-
-        if (typeOpt == null) {
-            return null;
-        }
-
         try {
-            return new ItemAttribute(
-                    typeOpt,
-                    uuid.get(UUID.class, (Supplier<UUID>) UUID::randomUUID),
-                    name.getString(""),
-                    amount.getDouble(),
-                    operation.get(AttributeModifierHolder.Operation.class),
-                    EquipmentSlot.ofNullable(slot.raw())
-            );
+            return ItemAttributeSerializer.INSTANCE.deserialize(ItemAttribute.class, node);
         } catch (SerializationException e) {
             e.printStackTrace();
         }
@@ -94,7 +63,7 @@ public abstract class AttributeMapping {
         return null;
     };
 
-    protected final @NotNull BidirectionalConverter<AttributeModifierHolder> attributeModifierConverter = BidirectionalConverter.<AttributeModifierHolder>build()
+    protected final @NotNull BidirectionalConverter<AttributeModifier> attributeModifierConverter = BidirectionalConverter.<AttributeModifier>build()
             .registerP2W(ConfigurationNode.class, CONFIGURATE_LOAD_MODIFIER)
             .registerP2W(Map.class, map -> {
                 try {
@@ -103,7 +72,7 @@ public abstract class AttributeMapping {
                     return null;
                 }
             })
-            .registerP2W(AttributeModifierHolder.class, e -> e);
+            .registerP2W(AttributeModifier.class, e -> e);
 
     protected final @NotNull BidirectionalConverter<ItemAttribute> itemAttributeConverter = BidirectionalConverter.<ItemAttribute>build()
             .registerP2W(ConfigurationNode.class, CONFIGURATE_LOAD_ITEM)
@@ -117,7 +86,7 @@ public abstract class AttributeMapping {
             .registerP2W(ItemAttribute.class, e -> e);
 
     @ApiStatus.Internal
-    public AttributeMapping() {
+    public Attributes() {
         if (attributeMapping != null) {
             throw new UnsupportedOperationException("AttributeMapping is already initialized.");
         }
@@ -136,7 +105,7 @@ public abstract class AttributeMapping {
     protected abstract @Nullable Attribute wrapAttribute0(@Nullable Object attribute);
 
     @Contract("null -> null")
-    public static @Nullable AttributeModifierHolder wrapAttributeModifier(@Nullable Object attributeModifier) {
+    public static @Nullable AttributeModifier wrapAttributeModifier(@Nullable Object attributeModifier) {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
@@ -158,7 +127,7 @@ public abstract class AttributeMapping {
         return attributeMapping.itemAttributeConverter.convert(holder, newType);
     }
 
-    public static <T> T convertAttributeModifierHolder(@NotNull AttributeModifierHolder holder, @NotNull Class<T> newType) {
+    public static <T> T convertAttributeModifierHolder(@NotNull AttributeModifier holder, @NotNull Class<T> newType) {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }

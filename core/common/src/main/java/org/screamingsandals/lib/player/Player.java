@@ -25,7 +25,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.HumanEntity;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.entity.EntityDamageEvent;
-import org.screamingsandals.lib.particle.ParticleHolder;
+import org.screamingsandals.lib.particle.Particle;
 import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -268,7 +268,7 @@ public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudien
      * @param particle the particle
      * @param location the location of the particle
      */
-    void sendParticle(@NotNull ParticleHolder particle, @NotNull Location location);
+    void sendParticle(@NotNull Particle particle, @NotNull Location location);
 
     /**
      * Gets the compass target location for this player.

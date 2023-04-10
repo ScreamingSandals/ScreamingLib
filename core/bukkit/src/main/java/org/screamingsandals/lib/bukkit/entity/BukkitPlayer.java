@@ -38,7 +38,7 @@ import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.nms.accessors.ClientboundLevelParticlesPacketAccessor;
 import org.screamingsandals.lib.nms.accessors.EnumParticleAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
-import org.screamingsandals.lib.particle.ParticleHolder;
+import org.screamingsandals.lib.particle.Particle;
 import org.screamingsandals.lib.player.Players;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.player.gamemode.GameMode;
@@ -299,7 +299,7 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     }
 
     @Override
-    public void sendParticle(@NotNull ParticleHolder particle, @NotNull Location location) {
+    public void sendParticle(@NotNull Particle particle, @NotNull Location location) {
         if (!this.getLocation().getWorld().equals(location.getWorld())) {
             throw new IllegalArgumentException("The location of the sent particle is not in the correct world!");
         }
@@ -307,7 +307,7 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
         if (BukkitParticleTypeRegistry.HAS_PARTICLES_API) {
             // 1.9.+
             ((org.bukkit.entity.Player) wrappedObject).spawnParticle(
-                    particle.particleType().as(Particle.class),
+                    particle.particleType().as(org.bukkit.Particle.class),
                     location.as(org.bukkit.Location.class),
                     particle.count(),
                     particle.offset().getX(),

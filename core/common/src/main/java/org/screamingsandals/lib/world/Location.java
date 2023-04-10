@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.entity.BasicEntity;
-import org.screamingsandals.lib.particle.ParticleHolder;
+import org.screamingsandals.lib.particle.Particle;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -344,7 +344,7 @@ public class Location implements Wrapper {
      *
      * @param particle the particle
      */
-    public void sendParticle(@NotNull ParticleHolder particle) {
+    public void sendParticle(@NotNull Particle particle) {
         getWorld().sendParticle(particle, this);
     }
 

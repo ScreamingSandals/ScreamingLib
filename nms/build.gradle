@@ -397,6 +397,7 @@ nmsGen {
     reqClass('net.minecraft.world.entity.monster.Zombie') {
         reqMethod('spigot:setVillagerType', '@EnumZombieType')
         reqMethod('spigot:getVillagerType')
+        reqField('obfuscated:a:1.8.8') // Attributes 1.8.8 support
     }
 
     /* 1.8.8 compat start */
@@ -411,6 +412,46 @@ nmsGen {
 
     reqClass('net.minecraft.server.level.ServerLevel') {
         reqMethod('obfuscated:a:1.8.8', '@EnumParticle', boolean, double, double, double, int, double, double, double, double, int[])
+    }
+
+    // Attributes
+    reqClass('net.minecraft.world.entity.monster.SharedMonsterAttributes') {
+        reqField('spigot:maxHealth:1.8.8')
+        reqField('spigot:FOLLOW_RANGE:1.8.8')
+        reqField('obfuscated:c:1.8.8')
+        reqField('spigot:MOVEMENT_SPEED:1.8.8')
+        reqField('spigot:ATTACK_DAMAGE:1.8.8')
+    }
+
+    reqClass('net.minecraft.world.entity.animal.horse.Horse') {
+        reqField('spigot:attributeJumpStrength:1.8.8')
+    }
+
+    reqClass('spigot:IAttribute:1.8.8') {
+        reqMethod('obfuscated:b:1.8.8')
+    }
+
+    reqClass('net.minecraft.world.entity.ai.attributes.AttributeModifier') {
+        reqMethod('obfuscated:a:1.8.8') // amount
+        reqMethod('obfuscated:b:1.8.8') // operation (ordered: 0,1,2)
+        reqMethod('obfuscated:c:1.8.8') // name
+        reqMethod('obfuscated:d:1.8.8') // unique id
+
+        reqConstructor(UUID, String, double, int)
+    }
+
+    reqClass('net.minecraft.world.entity.ai.attributes.AttributeInstance') {
+        reqMethod('spigot:getAttribute:1.8.8') // attribute type
+        reqMethod('obfuscated:b:1.8.8') // get base value
+        reqMethod('spigot:setValue:1.8.8', double) // set base value
+        reqMethod('obfuscated:c:1.8.8') // get modifiers
+        reqMethod('obfuscated:b:1.8.8', '@AttributeModifier') // add modifier
+        reqMethod('obfuscated:c:1.8.8', '@AttributeModifier') // remove modifier
+        reqMethod('spigot:getValue:1.8.8') // get value
+    }
+
+    reqClass('net.minecraft.world.entity.LivingEntity') {
+        reqMethod('spigot:getAttributeInstance:1.8.8', '@IAttribute')
     }
     /* 1.8.8 compat end */
 }

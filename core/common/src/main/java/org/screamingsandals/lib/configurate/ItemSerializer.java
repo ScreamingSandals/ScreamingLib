@@ -19,7 +19,7 @@ package org.screamingsandals.lib.configurate;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.attribute.AttributeMapping;
+import org.screamingsandals.lib.attribute.Attributes;
 import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
@@ -45,7 +45,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class ItemSerializer extends AbstractScreamingSerializer implements TypeSerializer<ItemStack> {
+public class ItemSerializer implements TypeSerializer<ItemStack> {
     public static final @NotNull ItemSerializer INSTANCE = new ItemSerializer();
 
     private static final @NotNull SNBTSerializer internalSNBTSerializer = SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build();
@@ -232,11 +232,11 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
             if (!attributes.empty()) {
                 if (attributes.isList()) {
                     attributes.childrenList().stream()
-                            .map(AttributeMapping::wrapItemAttribute)
+                            .map(Attributes::wrapItemAttribute)
                             .filter(Objects::nonNull)
                             .forEach(builder::attributeModifier);
                 } else {
-                    AttributeMapping.wrapItemAttribute(attributes).ifNotNull(builder::attributeModifier);
+                    Attributes.wrapItemAttribute(attributes).ifNotNull(builder::attributeModifier);
                 }
             }
 
@@ -293,7 +293,7 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
         node.set(null);
 
         if (obj != null) {
-            ItemTypeHolderSerializer.INSTANCE.serialize(ItemType.class, obj.getType(), node.node(TYPE_KEY));
+            ItemTypeSerializer.INSTANCE.serialize(ItemType.class, obj.getType(), node.node(TYPE_KEY));
             node.node(AMOUNT_KEY).set(obj.getAmount());
             var tag = obj.getTag();
             if (!tag.isEmpty()) {

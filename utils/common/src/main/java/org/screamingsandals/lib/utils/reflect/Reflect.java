@@ -18,6 +18,9 @@ package org.screamingsandals.lib.utils.reflect;
 
 import lombok.experimental.UtilityClass;
 import org.intellij.lang.annotations.Language;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import sun.misc.Unsafe;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -458,6 +461,21 @@ public class Reflect {
             return new Constructor(type.getConstructor(arguments));
         } catch (Exception ignored) { }
         return new Constructor(null);
+    }
+
+    public static <T extends Enum<T>> @Nullable T newEnumValue(@NotNull Class<T> type, @NotNull String name, int ordinal) {
+        try {
+            var constructor = Unsafe.class.getDeclaredConstructors()[0];
+            constructor.setAccessible(true);
+            var unsafe = (Unsafe) constructor.newInstance();
+            var newValue = unsafe.allocateInstance(type);
+            var ordinalField = Enum.class.getDeclaredField("ordinal");
+            unsafe.putInt(newValue, unsafe.objectFieldOffset(ordinalField), ordinal);
+            var nameField = Enum.class.getDeclaredField("name");
+            unsafe.putObject(newValue, unsafe.objectFieldOffset(nameField), name);
+            return (T) newValue;
+        } catch (Exception ignored) { }
+        return null;
     }
 
     public static Constructor constructor(java.lang.reflect.Constructor<?> constructor) {

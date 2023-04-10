@@ -25,20 +25,24 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.block.BlockType;
+import org.screamingsandals.lib.bukkit.attribute.BukkitAttribute1_8;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.bukkit.utils.Version;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.attribute.Attribute;
-import org.screamingsandals.lib.attribute.AttributeMapping;
+import org.screamingsandals.lib.attribute.Attributes;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.meta.PotionEffect;
+import org.screamingsandals.lib.nms.accessors.LivingEntityAccessor;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.Locations;
 
@@ -55,9 +59,11 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
     @Override
     public @Nullable Attribute getAttribute(@NotNull AttributeType attributeType) {
         try {
-            return AttributeMapping.wrapAttribute(((org.bukkit.entity.LivingEntity) wrappedObject).getAttribute(attributeType.as(org.bukkit.attribute.Attribute.class)));
+            return Attributes.wrapAttribute(((org.bukkit.entity.LivingEntity) wrappedObject).getAttribute(attributeType.as(org.bukkit.attribute.Attribute.class)));
         } catch (Throwable ignored) {
-            // TODO: 1.8.8
+            if (attributeType instanceof BukkitAttribute1_8) {
+                return Attributes.wrapAttribute(Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getMethodGetAttributeInstance1(), attributeType.raw()));
+            }
             return null;
         }
     }

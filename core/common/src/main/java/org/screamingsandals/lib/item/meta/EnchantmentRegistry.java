@@ -19,7 +19,7 @@ package org.screamingsandals.lib.item.meta;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.configurate.EnchantmentHolderSerializer;
+import org.screamingsandals.lib.configurate.EnchantmentSerializer;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
@@ -52,7 +52,7 @@ public abstract class EnchantmentRegistry extends Registry<Enchantment> {
     protected final @Nullable Enchantment resolveMapping0(@NotNull Object object) {
         if (object instanceof ConfigurationNode) {
             try {
-                return EnchantmentHolderSerializer.INSTANCE.deserialize(Enchantment.class, (ConfigurationNode) object);
+                return EnchantmentSerializer.INSTANCE.deserialize(Enchantment.class, (ConfigurationNode) object);
             } catch (SerializationException e) {
                 e.printStackTrace();
                 return null;

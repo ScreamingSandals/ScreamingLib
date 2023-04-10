@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.entity.BasicEntity;
-import org.screamingsandals.lib.particle.ParticleHolder;
+import org.screamingsandals.lib.particle.Particle;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
@@ -155,7 +155,7 @@ public interface World extends Wrapper, RawValueHolder, PlayerAudience.Forwardin
      * @param particle the particle
      * @param location the location
      */
-    void sendParticle(@NotNull ParticleHolder particle, @NotNull Location location);
+    void sendParticle(@NotNull Particle particle, @NotNull Location location);
 
     /**
      * Determines if the spawn point of this world is loaded and being held in memory.

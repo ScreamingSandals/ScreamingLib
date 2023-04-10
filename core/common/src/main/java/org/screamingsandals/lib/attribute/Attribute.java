@@ -33,9 +33,9 @@ public interface Attribute extends Wrapper, RawValueHolder {
 
     double getValue();
 
-    @NotNull List<@NotNull AttributeModifierHolder> getModifiers();
+    @NotNull List<@NotNull AttributeModifier> getModifiers();
 
-    void addModifier(@NotNull AttributeModifierHolder modifier);
+    void addModifier(@NotNull AttributeModifier modifier);
 
-    void removeModifier(@NotNull AttributeModifierHolder modifier);
+    void removeModifier(@NotNull AttributeModifier modifier);
 }

@@ -30,7 +30,7 @@ public class ItemAttribute implements Wrapper {
     private final @NotNull UUID uuid;
     private final @NotNull String name;
     private final double amount;
-    private final AttributeModifierHolder.@NotNull Operation operation;
+    private final AttributeModifier.@NotNull Operation operation;
     private final @Nullable EquipmentSlot slot;
 
     /**
@@ -38,6 +38,6 @@ public class ItemAttribute implements Wrapper {
      */
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
-        return AttributeMapping.convertItemAttributeHolder(this, type);
+        return Attributes.convertItemAttributeHolder(this, type);
     }
 }

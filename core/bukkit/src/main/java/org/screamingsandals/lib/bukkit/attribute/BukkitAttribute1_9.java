@@ -17,24 +17,27 @@
 package org.screamingsandals.lib.bukkit.attribute;
 
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.attribute.*;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.nms.accessors.AttributeInstanceAccessor;
+import org.screamingsandals.lib.nms.accessors.IAttributeAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class BukkitAttribute extends BasicWrapper<AttributeInstance> implements Attribute {
+public class BukkitAttribute1_9 extends BasicWrapper<AttributeInstance> implements Attribute {
 
-    protected BukkitAttribute(@NotNull AttributeInstance wrappedObject) {
+    protected BukkitAttribute1_9(@NotNull AttributeInstance wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public @NotNull AttributeType getAttributeType() {
-        return new BukkitAttributeType(wrappedObject.getAttribute());
+        return AttributeType.of(wrappedObject.getAttribute());
     }
 
     @Override
@@ -49,7 +52,12 @@ public class BukkitAttribute extends BasicWrapper<AttributeInstance> implements 
 
     @Override
     public double getDefaultValue() {
-        return wrappedObject.getDefaultValue();
+        try {
+            return wrappedObject.getDefaultValue(); // TODO: fix this since it was added in 1.11
+        } catch (Throwable ignored) {
+            // 1.9-1.11
+            return (double) Reflect.fastInvokeResulted(ClassStorage.getHandleOfItemStack(wrappedObject), AttributeInstanceAccessor.getMethodGetAttribute1()).fastInvoke(IAttributeAccessor.getMethodB1());
+        }
     }
 
     @Override
@@ -58,20 +66,20 @@ public class BukkitAttribute extends BasicWrapper<AttributeInstance> implements 
     }
 
     @Override
-    public @NotNull List<@NotNull AttributeModifierHolder> getModifiers() {
+    public @NotNull List<@NotNull AttributeModifier> getModifiers() {
         return wrappedObject.getModifiers().stream()
-                .map(AttributeMapping::wrapAttributeModifier)
+                .map(Attributes::wrapAttributeModifier)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void addModifier(@NotNull AttributeModifierHolder modifier) {
-        wrappedObject.addModifier(modifier.as(AttributeModifier.class));
+    public void addModifier(@NotNull AttributeModifier modifier) {
+        wrappedObject.addModifier(modifier.as(org.bukkit.attribute.AttributeModifier.class));
     }
 
     @Override
-    public void removeModifier(@NotNull AttributeModifierHolder modifier) {
-        wrappedObject.removeModifier(modifier.as(AttributeModifier.class));
+    public void removeModifier(@NotNull AttributeModifier modifier) {
+        wrappedObject.removeModifier(modifier.as(org.bukkit.attribute.AttributeModifier.class));
     }
 }

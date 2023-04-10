@@ -18,27 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.damage.DamageType;
+import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class DamageCauseHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<DamageType> {
-    public static final @NotNull DamageCauseHolderSerializer INSTANCE = new DamageCauseHolderSerializer();
+public class EntityPoseSerializer implements TypeSerializer<EntityPose> {
+    public static final @NotNull EntityPoseSerializer INSTANCE = new EntityPoseSerializer();
 
     @Override
-    public @NotNull DamageType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull EntityPose deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return DamageType.of(node.getString());
+            return EntityPose.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable DamageType obj, @NotNull ConfigurationNode node) throws SerializationException {
-        node.set(obj == null ? null : obj.platformName());
+    public void serialize(@NotNull Type type, @Nullable EntityPose obj, @NotNull ConfigurationNode node) throws SerializationException {
+        node.set(obj == null ? null : obj.location().asString());
     }
 }

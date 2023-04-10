@@ -18,28 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.world.weather.WeatherType;
+import org.screamingsandals.lib.world.dimension.DimensionType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class WeatherHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<WeatherType> {
-
-    public static final @NotNull WeatherHolderSerializer INSTANCE = new WeatherHolderSerializer();
+public class DimensionTypeSerializer implements TypeSerializer<DimensionType> {
+    public static final @NotNull DimensionTypeSerializer INSTANCE = new DimensionTypeSerializer();
 
     @Override
-    public @NotNull WeatherType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull DimensionType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return WeatherType.of(node.getString());
+            return DimensionType.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable WeatherType obj, @NotNull ConfigurationNode node) throws SerializationException {
-        node.set(obj == null ? null : obj.platformName());
+    public void serialize(@NotNull Type type, @Nullable DimensionType obj, @NotNull ConfigurationNode node) throws SerializationException {
+        node.set(obj == null ? null : obj.location().asString());
     }
 }

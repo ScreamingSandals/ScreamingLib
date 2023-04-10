@@ -18,7 +18,9 @@ package org.screamingsandals.lib.configurate;
 
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.attribute.AttributeModifier;
 import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.entity.damage.DamageType;
@@ -48,26 +50,28 @@ public class SLibSerializers {
     public TypeSerializerCollection.@NotNull Builder appendSerializers(TypeSerializerCollection.@NotNull Builder builder) {
         return SpectatorSerializers.appendSerializers(builder)
                 .register(Tag.class, TagSerializer.INSTANCE)
-                .register(AttributeType.class, AttributeTypeHolderSerializer.INSTANCE)
-                .register(DamageType.class, DamageCauseHolderSerializer.INSTANCE)
-                .register(DifficultyType.class, DifficultyHolderSerializer.INSTANCE)
-                .register(DimensionType.class, DimensionHolderSerializer.INSTANCE)
-                .register(Enchantment.class, EnchantmentHolderSerializer.INSTANCE)
-                .register(EntityPose.class, EntityPoseHolderSerializer.INSTANCE)
-                .register(EntityType.class, EntityTypeHolderSerializer.INSTANCE)
-                .register(GameMode.class, GameModeHolderSerializer.INSTANCE)
-                .register(GameRuleType.class, GameRuleHolderSerializer.INSTANCE)
-                .register(InventoryType.class, InventoryTypeHolderSerializer.INSTANCE)
-                .register(ParticleType.class, ParticleTypeHolderSerializer.INSTANCE)
-                .register(PotionEffect.class, PotionEffectHolderSerializer.INSTANCE)
-                .register(Potion.class, PotionHolderSerializer.INSTANCE)
-                .register(WeatherType.class, WeatherHolderSerializer.INSTANCE)
-                .register(FireworkEffect.class, FireworkEffectHolderSerializer.INSTANCE)
-                .register(ItemType.class, ItemTypeHolderSerializer.INSTANCE)
-                .register(BlockType.class, BlockTypeHolderSerializer.INSTANCE)
-                .register(EquipmentSlot.class, EquipmentSlotHolderSerializer.INSTANCE)
+                .register(AttributeModifier.class, AttributeModifierSerializer.INSTANCE)
+                .register(AttributeType.class, AttributeTypeSerializer.INSTANCE)
+                .register(DamageType.class, DamageTypeSerializer.INSTANCE)
+                .register(DifficultyType.class, DifficultyTypeSerializer.INSTANCE)
+                .register(DimensionType.class, DimensionTypeSerializer.INSTANCE)
+                .register(Enchantment.class, EnchantmentSerializer.INSTANCE)
+                .register(EntityPose.class, EntityPoseSerializer.INSTANCE)
+                .register(EntityType.class, EntityTypeSerializer.INSTANCE)
+                .register(GameMode.class, GameModeSerializer.INSTANCE)
+                .register(GameRuleType.class, GameRuleTypeSerializer.INSTANCE)
+                .register(InventoryType.class, InventoryTypeSerializer.INSTANCE)
+                .register(ParticleType.class, ParticleTypeSerializer.INSTANCE)
+                .register(PotionEffect.class, PotionEffectSerializer.INSTANCE)
+                .register(Potion.class, PotionSerializer.INSTANCE)
+                .register(WeatherType.class, WeatherTypeSerializer.INSTANCE)
+                .register(FireworkEffect.class, FireworkEffectSerializer.INSTANCE)
+                .register(ItemType.class, ItemTypeSerializer.INSTANCE)
+                .register(BlockType.class, BlockTypeSerializer.INSTANCE)
+                .register(EquipmentSlot.class, EquipmentSlotSerializer.INSTANCE)
                 .register(ItemStack.class, ItemSerializer.INSTANCE)
-                .register(Location.class, LocationHolderSerializer.INSTANCE);
+                .register(Location.class, LocationSerializer.INSTANCE)
+                .register(ItemAttribute.class, ItemAttributeSerializer.INSTANCE);
     }
     public @NotNull TypeSerializerCollection makeSerializers(TypeSerializerCollection.@NotNull Builder builder) {
         return appendSerializers(builder).build();

@@ -19,7 +19,7 @@ package org.screamingsandals.lib.firework;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.configurate.FireworkEffectHolderSerializer;
+import org.screamingsandals.lib.configurate.FireworkEffectSerializer;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.registry.SimpleRegistry;
@@ -41,7 +41,7 @@ public abstract class FireworkEffectRegistry extends SimpleRegistry<FireworkEffe
 
         specialType(ConfigurationNode.class, node -> {
             try {
-                return FireworkEffectHolderSerializer.INSTANCE.deserialize(FireworkEffect.class, node);
+                return FireworkEffectSerializer.INSTANCE.deserialize(FireworkEffect.class, node);
             } catch (SerializationException e) {
                 e.printStackTrace();
             }
@@ -50,7 +50,7 @@ public abstract class FireworkEffectRegistry extends SimpleRegistry<FireworkEffe
 
         specialType(Map.class, map  -> {
             try {
-                FireworkEffectHolderSerializer.INSTANCE.deserialize(FireworkEffect.class, BasicConfigurationNode.root().set(map));
+                FireworkEffectSerializer.INSTANCE.deserialize(FireworkEffect.class, BasicConfigurationNode.root().set(map));
             } catch (SerializationException e) {
                 e.printStackTrace();
             }

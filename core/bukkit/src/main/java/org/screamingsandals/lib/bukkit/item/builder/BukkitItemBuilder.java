@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.bukkit.BukkitCore;
-import org.screamingsandals.lib.bukkit.BukkitItemBlockIdsRemapper;
 import org.screamingsandals.lib.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.bukkit.item.BukkitItemType1_8;

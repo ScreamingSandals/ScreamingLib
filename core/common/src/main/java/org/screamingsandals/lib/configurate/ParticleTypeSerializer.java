@@ -18,38 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.meta.Enchantment;
+import org.screamingsandals.lib.particle.ParticleType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class EnchantmentHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<Enchantment> {
-    public static final @NotNull EnchantmentHolderSerializer INSTANCE = new EnchantmentHolderSerializer();
+public class ParticleTypeSerializer implements TypeSerializer<ParticleType> {
+    public static final @NotNull ParticleTypeSerializer INSTANCE = new ParticleTypeSerializer();
 
     @Override
-    public @NotNull Enchantment deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull ParticleType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            if (node.isMap()) {
-                var typeNode = node.node("type").getString();
-                var levelNode = node.node("level").getInt(1);
-
-                if (typeNode != null && !typeNode.isEmpty()) {
-                    return Enchantment.of(typeNode).withLevel(levelNode);
-                }
-            }
-
-            // TODO: read Map.Entry? Is it possible?
-
-            return Enchantment.of(node.getString());
+            return ParticleType.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable Enchantment obj, @NotNull ConfigurationNode node) throws SerializationException {
-        node.set(obj == null ? null : (obj.platformName() + " " + obj.level()));
+    public void serialize(@NotNull Type type, @Nullable ParticleType obj, @NotNull ConfigurationNode node) throws SerializationException {
+        node.set(obj == null ? null : obj.location().asString());
     }
 }

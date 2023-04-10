@@ -18,32 +18,28 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.BlockType;
+import org.screamingsandals.lib.item.meta.Potion;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class BlockTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<BlockType> {
-    public static final @NotNull BlockTypeHolderSerializer INSTANCE = new BlockTypeHolderSerializer();
+public class PotionSerializer implements TypeSerializer<Potion> {
+
+    public static final @NotNull PotionSerializer INSTANCE = new PotionSerializer();
 
     @Override
-    public @NotNull BlockType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull Potion deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return BlockType.of(type);
+            return Potion.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable BlockType obj, @NotNull ConfigurationNode node) throws SerializationException {
-        if (obj == null) {
-            node.set(null);
-            return;
-        }
-
-        node.set(obj.completeState());
+    public void serialize(@NotNull Type type, @Nullable Potion obj, @NotNull ConfigurationNode node) throws SerializationException {
+        node.set(obj == null ? null : obj.location().asString());
     }
 }

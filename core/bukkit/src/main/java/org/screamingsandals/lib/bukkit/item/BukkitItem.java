@@ -23,7 +23,7 @@ import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
-import org.screamingsandals.lib.attribute.AttributeMapping;
+import org.screamingsandals.lib.attribute.Attributes;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.attribute.BukkitItemAttribute;
@@ -120,7 +120,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
                     var list = new ArrayList<ItemAttribute>(bukkitModifiers.size());
                     bukkitModifiers
                             .forEach((attribute, attributeModifier) ->
-                                    AttributeMapping.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
+                                    Attributes.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
                                             .ifNotNull(list::add)
                             );
                     return list;

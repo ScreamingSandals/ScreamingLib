@@ -18,28 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.meta.Potion;
+import org.screamingsandals.lib.container.type.InventoryType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class PotionHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<Potion> {
-
-    public static final @NotNull PotionHolderSerializer INSTANCE = new PotionHolderSerializer();
+public class InventoryTypeSerializer implements TypeSerializer<InventoryType> {
+    public static final @NotNull InventoryTypeSerializer INSTANCE = new InventoryTypeSerializer();
 
     @Override
-    public @NotNull Potion deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull InventoryType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return Potion.of(node.getString());
+            return InventoryType.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable Potion obj, @NotNull ConfigurationNode node) throws SerializationException {
-        node.set(obj == null ? null : obj.platformName());
+    public void serialize(@NotNull Type type, @Nullable InventoryType obj, @NotNull ConfigurationNode node) throws SerializationException {
+        node.set(obj == null ? null : obj.location().asString());
     }
 }

@@ -18,27 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.world.difficulty.DifficultyType;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class DifficultyHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<DifficultyType> {
-    public static final @NotNull DifficultyHolderSerializer INSTANCE = new DifficultyHolderSerializer();
+public class EquipmentSlotSerializer implements TypeSerializer<EquipmentSlot> {
+    public static final @NotNull EquipmentSlotSerializer INSTANCE = new EquipmentSlotSerializer();
 
     @Override
-    public @NotNull DifficultyType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull EquipmentSlot deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return DifficultyType.of(node.getString());
+            return EquipmentSlot.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable DifficultyType obj, @NotNull ConfigurationNode node) throws SerializationException {
-        node.set(obj == null ? null : obj.platformName());
+    public void serialize(@NotNull Type type, @Nullable EquipmentSlot obj, @NotNull ConfigurationNode node) throws SerializationException {
+        node.set(obj == null ? null : obj.location().asString());
     }
 }

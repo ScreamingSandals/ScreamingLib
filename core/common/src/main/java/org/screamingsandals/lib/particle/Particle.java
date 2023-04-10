@@ -28,7 +28,7 @@ import org.screamingsandals.lib.utils.math.Vector3D;
 @Accessors(fluent = true, chain = true)
 @With
 @RequiredArgsConstructor
-public class ParticleHolder {
+public class Particle {
     private final @NotNull ParticleType particleType;
     private final int count;
     private final @NotNull Vector3D offset;
@@ -36,23 +36,23 @@ public class ParticleHolder {
     private final boolean longDistance;
     private final @Nullable ParticleData specialData;
 
-    public ParticleHolder(@NotNull ParticleType particleType) {
+    public Particle(@NotNull ParticleType particleType) {
         this(particleType, 1, Vector3D.ZERO, 1, false, null);
     }
 
-    public ParticleHolder(@NotNull ParticleType particleType, int count) {
+    public Particle(@NotNull ParticleType particleType, int count) {
         this(particleType, count, Vector3D.ZERO, 1, false, null);
     }
 
-    public ParticleHolder(@NotNull ParticleType particleType, int count, @NotNull Vector3D offset) {
+    public Particle(@NotNull ParticleType particleType, int count, @NotNull Vector3D offset) {
         this(particleType, count, offset, 1, false, null);
     }
 
-    public ParticleHolder(@NotNull ParticleType particleType, int count, @NotNull Vector3D offset, double particleData) {
+    public Particle(@NotNull ParticleType particleType, int count, @NotNull Vector3D offset, double particleData) {
         this(particleType, count, offset, particleData, false, null);
     }
 
-    public ParticleHolder(@NotNull ParticleType particleType, int count, @NotNull Vector3D offset, double particleData, boolean longDistance) {
+    public Particle(@NotNull ParticleType particleType, int count, @NotNull Vector3D offset, double particleData, boolean longDistance) {
         this(particleType, count, offset, particleData, longDistance, null);
     }
 }

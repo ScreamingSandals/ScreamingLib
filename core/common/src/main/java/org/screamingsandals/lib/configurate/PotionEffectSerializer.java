@@ -25,7 +25,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class PotionEffectHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<PotionEffect> {
+public class PotionEffectSerializer implements TypeSerializer<PotionEffect> {
     private static final @NotNull String EFFECT_KEY = "effect";
     private static final @NotNull String DURATION_KEY = "duration";
     private static final @NotNull String AMPLIFIER_KEY = "amplifier";
@@ -33,7 +33,7 @@ public class PotionEffectHolderSerializer extends AbstractScreamingSerializer im
     private static final @NotNull String PARTICLES_KEY = "particles";
     private static final @NotNull String ICON_KEY = "icon";
 
-    public static final @NotNull PotionEffectHolderSerializer INSTANCE = new PotionEffectHolderSerializer();
+    public static final @NotNull PotionEffectSerializer INSTANCE = new PotionEffectSerializer();
 
     @Override
     public @NotNull PotionEffect deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
@@ -68,7 +68,7 @@ public class PotionEffectHolderSerializer extends AbstractScreamingSerializer im
             return;
         }
 
-        node.node(EFFECT_KEY).set(obj.platformName());
+        node.node(EFFECT_KEY).set(obj.location().asString());
         node.node(DURATION_KEY).set(obj.duration());
         node.node(AMPLIFIER_KEY).set(obj.amplifier());
         node.node(AMBIENT_KEY).set(obj.ambient());

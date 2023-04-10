@@ -16,30 +16,33 @@
 
 package org.screamingsandals.lib.bukkit.attribute;
 
-import org.bukkit.attribute.Attribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.attribute.AttributeTypeRegistry;
+import org.screamingsandals.lib.nms.accessors.IAttributeAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitAttributeType extends BasicWrapper<Attribute> implements AttributeType {
+public class BukkitAttributeType1_8 extends BasicWrapper<Object> implements AttributeType {
 
-    public BukkitAttributeType(@NotNull Attribute wrappedObject) {
+    public BukkitAttributeType1_8(@NotNull Object wrappedObject) {
         super(wrappedObject);
+        if (IAttributeAccessor.getType() == null || !IAttributeAccessor.getType().isInstance(wrappedObject)) {
+            throw new IllegalArgumentException("Object must be an instance of IAttribute!");
+        }
     }
 
     @Override
     public @NotNull String platformName() {
-        return wrappedObject.name();
+        return wrappedObject.toString();
     }
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof Attribute || object instanceof AttributeType) {
+        if (IAttributeAccessor.getType().isInstance(object) || object instanceof AttributeType) {
             return equals(object);
         }
         return equals(AttributeType.ofNullable(object));
@@ -52,22 +55,13 @@ public class BukkitAttributeType extends BasicWrapper<Attribute> implements Attr
 
     @Override
     public @NotNull ResourceLocation location() {
-        return getLocation(wrappedObject);
-    }
-
-    public static @NotNull ResourceLocation getLocation(@NotNull Attribute attribute) {
-        if (Server.isVersion(1, 16)) {
-            return ResourceLocation.of(attribute.getKey().getNamespace(), attribute.getKey().getKey());
-        } else {
-            var name = attribute.name();
-            if (name.startsWith("GENERIC_")) {
-                return ResourceLocation.of("generic." + name.substring(8));
-            } else if (name.startsWith("HORSE_")) {
-                return ResourceLocation.of("horse." + name.substring(6));
-            } else if (name.startsWith("ZOMBIE_")) {
-                return ResourceLocation.of("zombie." + name.substring(7));
+        var registry = AttributeTypeRegistry.getInstance();
+        if (registry instanceof BukkitAttributeTypeRegistry1_8) {
+            var loc = ((BukkitAttributeTypeRegistry1_8) registry).attributesToLocation.get(wrappedObject);
+            if (loc != null) {
+                return loc;
             }
-            return ResourceLocation.of(name);
         }
+        return ResourceLocation.of(wrappedObject.toString());
     }
 }

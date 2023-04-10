@@ -27,8 +27,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-public class LocationHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<Location> {
-    public static final @NotNull LocationHolderSerializer INSTANCE = new LocationHolderSerializer();
+public class LocationSerializer implements TypeSerializer<Location> {
+    public static final @NotNull LocationSerializer INSTANCE = new LocationSerializer();
 
     private static final @NotNull String X_KEY = "x";
     private static final @NotNull String Y_KEY = "y";

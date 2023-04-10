@@ -18,27 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.player.gamemode.GameMode;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class GameModeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<GameMode> {
-    public static final @NotNull GameModeHolderSerializer INSTANCE = new GameModeHolderSerializer();
+public class EntityTypeSerializer implements TypeSerializer<EntityType> {
+    public static final @NotNull EntityTypeSerializer INSTANCE = new EntityTypeSerializer();
 
     @Override
-    public @NotNull GameMode deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull EntityType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return GameMode.of(node.getString());
+            return EntityType.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable GameMode obj, @NotNull ConfigurationNode node) throws SerializationException {
-        node.set(obj == null ? null : obj.platformName());
+    public void serialize(@NotNull Type type, @Nullable EntityType obj, @NotNull ConfigurationNode node) throws SerializationException {
+        node.set(obj == null ? null : obj.location().asString());
     }
 }

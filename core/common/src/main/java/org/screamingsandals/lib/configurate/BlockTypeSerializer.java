@@ -18,31 +18,32 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.ItemType;
+import org.screamingsandals.lib.block.BlockType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class ItemTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<ItemType> {
-    public static final @NotNull ItemTypeHolderSerializer INSTANCE = new ItemTypeHolderSerializer();
+public class BlockTypeSerializer implements TypeSerializer<BlockType> {
+    public static final @NotNull BlockTypeSerializer INSTANCE = new BlockTypeSerializer();
 
     @Override
-    public @NotNull ItemType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull BlockType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return ItemType.of(node.getString());
+            return BlockType.of(type);
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable ItemType obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable BlockType obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;
         }
-        node.set(obj.location().asString());
+
+        node.set(obj.completeState());
     }
 }

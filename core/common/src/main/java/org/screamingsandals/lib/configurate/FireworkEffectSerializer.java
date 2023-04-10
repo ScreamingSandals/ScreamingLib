@@ -29,14 +29,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<FireworkEffect> {
+public class FireworkEffectSerializer implements TypeSerializer<FireworkEffect> {
     private static final @NotNull String TYPE_KEY = "type";
     private static final @NotNull String FLICKER_KEY = "flicker";
     private static final @NotNull String TRAIL_KEY = "trail";
     private static final @NotNull String COLORS_KEY = "colors";
     private static final @NotNull String FADE_COLORS_KEY = "fade-colors";
 
-    public static final @NotNull FireworkEffectHolderSerializer INSTANCE = new FireworkEffectHolderSerializer();
+    public static final @NotNull FireworkEffectSerializer INSTANCE = new FireworkEffectSerializer();
 
     @Override
     public @NotNull FireworkEffect deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
@@ -98,7 +98,7 @@ public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer 
             return;
         }
 
-        node.node(TYPE_KEY).set(obj.platformName());
+        node.node(TYPE_KEY).set(obj.location().asString());
         node.node(FLICKER_KEY).set(obj.flicker());
         node.node(TRAIL_KEY).set(obj.trail());
         for (var color : obj.colors()) {
@@ -106,6 +106,14 @@ public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer 
         }
         for (var color : obj.fadeColors()) {
             node.node(FADE_COLORS_KEY).appendListNode().set(Color.class, color);
+        }
+    }
+
+    protected @Nullable Color deserializeColor(@NotNull ConfigurationNode colorNode) {
+        try {
+            return colorNode.get(Color.class);
+        } catch (SerializationException ex) {
+            return Color.WHITE;
         }
     }
 }

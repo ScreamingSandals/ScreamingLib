@@ -23,7 +23,7 @@ import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Core;
-import org.screamingsandals.lib.bukkit.attribute.BukkitAttributeMapping;
+import org.screamingsandals.lib.bukkit.attribute.BukkitAttributes;
 import org.screamingsandals.lib.bukkit.attribute.BukkitAttributeTypeRegistry;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeRegistry;
 import org.screamingsandals.lib.bukkit.block.BukkitBlocks;
@@ -348,7 +348,7 @@ import java.util.function.Function;
             BukkitEntityTypeRegistry.class,
             BukkitEntities.class,
             BukkitAttributeTypeRegistry.class,
-            BukkitAttributeMapping.class,
+            BukkitAttributes.class,
             BukkitFireworkEffectRegistry.class,
             BukkitEnchantmentRegistry.class,
             BukkitPotionEffectRegistry.class,

@@ -19,7 +19,7 @@ package org.screamingsandals.lib.item.meta;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.configurate.PotionEffectHolderSerializer;
+import org.screamingsandals.lib.configurate.PotionEffectSerializer;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
@@ -53,14 +53,14 @@ public abstract class PotionEffectRegistry extends Registry<PotionEffect> {
     protected final @Nullable PotionEffect resolveMapping0(@NotNull Object object) {
         if (object instanceof ConfigurationNode) {
             try {
-                return PotionEffectHolderSerializer.INSTANCE.deserialize(Enchantment.class, (ConfigurationNode) object);
+                return PotionEffectSerializer.INSTANCE.deserialize(Enchantment.class, (ConfigurationNode) object);
             } catch (SerializationException e) {
                 e.printStackTrace();
                 return null;
             }
         } else if (object instanceof Map) {
             try {
-                return PotionEffectHolderSerializer.INSTANCE.deserialize(PotionEffect.class, BasicConfigurationNode.root().set(object));
+                return PotionEffectSerializer.INSTANCE.deserialize(PotionEffect.class, BasicConfigurationNode.root().set(object));
             } catch (SerializationException e) {
                 e.printStackTrace();
                 return null;

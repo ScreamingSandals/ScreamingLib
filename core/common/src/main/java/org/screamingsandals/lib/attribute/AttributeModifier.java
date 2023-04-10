@@ -23,7 +23,7 @@ import org.screamingsandals.lib.api.Wrapper;
 import java.util.UUID;
 
 @Data
-public class AttributeModifierHolder implements Wrapper {
+public class AttributeModifier implements Wrapper {
     private final @NotNull UUID uuid;
     private final @NotNull String name;
     private final double amount;
@@ -34,7 +34,7 @@ public class AttributeModifierHolder implements Wrapper {
      */
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
-        return AttributeMapping.convertAttributeModifierHolder(this, type);
+        return Attributes.convertAttributeModifierHolder(this, type);
     }
 
     public enum Operation {

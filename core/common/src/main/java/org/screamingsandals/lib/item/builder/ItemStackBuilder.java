@@ -19,7 +19,7 @@ package org.screamingsandals.lib.item.builder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.attribute.AttributeMapping;
+import org.screamingsandals.lib.attribute.Attributes;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.item.HideFlags;
@@ -222,7 +222,7 @@ public interface ItemStackBuilder extends MetadataConsumer {
 
     @Contract("_ -> this")
     default @NotNull ItemStackBuilder attribute(@NotNull Object itemAttribute) {
-        var attribute = AttributeMapping.wrapItemAttribute(itemAttribute);
+        var attribute = Attributes.wrapItemAttribute(itemAttribute);
         if (attribute != null) {
             this.attributeModifier(attribute);
         }

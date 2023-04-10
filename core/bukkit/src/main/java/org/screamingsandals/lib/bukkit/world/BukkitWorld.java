@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.bukkit.world;
 
 import org.bukkit.GameRule;
-import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
@@ -28,10 +27,9 @@ import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter1_8;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.nms.accessors.ClientboundLevelParticlesPacketAccessor;
 import org.screamingsandals.lib.nms.accessors.EnumParticleAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerLevelAccessor;
-import org.screamingsandals.lib.particle.ParticleHolder;
+import org.screamingsandals.lib.particle.Particle;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -147,7 +145,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
     }
 
     @Override
-    public void sendParticle(@NotNull ParticleHolder particle, @NotNull Location location) {
+    public void sendParticle(@NotNull Particle particle, @NotNull Location location) {
         if (!this.equals(location.getWorld())) {
             throw new IllegalArgumentException("The location of the sent particle is not in the correct world!");
         }
@@ -155,7 +153,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
         try {
             // 1.13.1 +
             wrappedObject.spawnParticle(
-                    particle.particleType().as(Particle.class),
+                    particle.particleType().as(org.bukkit.Particle.class),
                     location.as(org.bukkit.Location.class),
                     particle.count(),
                     particle.offset().getX(),
@@ -169,7 +167,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
             try {
                 // 1.9.+
                 wrappedObject.spawnParticle(
-                        particle.particleType().as(Particle.class),
+                        particle.particleType().as(org.bukkit.Particle.class),
                         location.as(org.bukkit.Location.class),
                         particle.count(),
                         particle.offset().getX(),

@@ -18,27 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.world.gamerule.GameRuleType;
+import org.screamingsandals.lib.entity.damage.DamageType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class GameRuleHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<GameRuleType> {
-    public static final @NotNull GameRuleHolderSerializer INSTANCE = new GameRuleHolderSerializer();
+public class DamageTypeSerializer implements TypeSerializer<DamageType> {
+    public static final @NotNull DamageTypeSerializer INSTANCE = new DamageTypeSerializer();
 
     @Override
-    public @NotNull GameRuleType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull DamageType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return GameRuleType.of(node.getString());
+            return DamageType.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable GameRuleType obj, @NotNull ConfigurationNode node) throws SerializationException {
-        node.set(obj == null ? null : obj.platformName());
+    public void serialize(@NotNull Type type, @Nullable DamageType obj, @NotNull ConfigurationNode node) throws SerializationException {
+        node.set(obj == null ? null : obj.location().asString());
     }
 }
