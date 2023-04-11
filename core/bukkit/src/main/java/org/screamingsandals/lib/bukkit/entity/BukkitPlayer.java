@@ -19,7 +19,6 @@ package org.screamingsandals.lib.bukkit.entity;
 import com.viaversion.viaversion.api.Via;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
@@ -33,7 +32,7 @@ import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.nms.accessors.ClientboundLevelParticlesPacketAccessor;
 import org.screamingsandals.lib.nms.accessors.EnumParticleAccessor;
@@ -349,7 +348,7 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     }
 
     @Override
-    public @Nullable BasicEntity getSpectatorTarget() {
+    public @Nullable Entity getSpectatorTarget() {
         var target = ((org.bukkit.entity.Player) wrappedObject).getSpectatorTarget();
         if (target == null) {
             return null;
@@ -358,8 +357,8 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     }
 
     @Override
-    public void setSpectatorTarget(@Nullable BasicEntity entity) {
-        ((org.bukkit.entity.Player) wrappedObject).setSpectatorTarget(entity == null ? null : entity.as(Entity.class));
+    public void setSpectatorTarget(@Nullable Entity entity) {
+        ((org.bukkit.entity.Player) wrappedObject).setSpectatorTarget(entity == null ? null : entity.as(org.bukkit.entity.Entity.class));
     }
 
     @Override

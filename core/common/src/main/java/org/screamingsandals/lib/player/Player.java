@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.HumanEntity;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.entity.EntityDamageEvent;
@@ -294,14 +294,14 @@ public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudien
      *
      * @return the spectator target, empty if there is no target
      */
-    @Nullable BasicEntity getSpectatorTarget();
+    @Nullable Entity getSpectatorTarget();
 
     /**
      * Sets the spectator target for this player.
      *
      * @param entity the spectator target, null to clear the target
      */
-    void setSpectatorTarget(@Nullable BasicEntity entity);
+    void setSpectatorTarget(@Nullable Entity entity);
 
     /**
      * Gets the players total experience points.

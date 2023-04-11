@@ -27,7 +27,7 @@ import org.bukkit.entity.EnderDragon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EnderDragonChangePhaseEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -44,12 +44,12 @@ public class BukkitEnderDragonChangePhaseEvent implements EnderDragonChangePhase
     private final @NotNull org.bukkit.event.entity.EnderDragonChangePhaseEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private @Nullable Phase currentPhase;
     private boolean currentPhaseCached;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }

@@ -35,10 +35,11 @@ import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.tasker.DefaultThreads;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.task.TaskState;
-import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.tasker.task.Task;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.UpdateStrategy;
@@ -69,7 +70,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     private volatile boolean lookAtPlayer;
     private final @NotNull List<@NotNull MetadataItem> metadata;
     private ClientboundSetPlayerTeamPacket.@NotNull CollisionRule collisionRule;
-    private final @NotNull Map<@NotNull UUID, TaskerTask> hiderTask;
+    private final @NotNull Map<@NotNull UUID, Task> hiderTask;
     private double hologramElevation;
 
     public NPCImpl(@NotNull UUID uuid, @NotNull Location location, boolean touchable) {
@@ -259,7 +260,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     private void scheduleTabHide(@NotNull Player viewer) {
         cancelTabHide(viewer);
-        Tasker.build(() -> {
+        Tasker.runDelayed(DefaultThreads.GLOBAL_THREAD, () -> { // TODO: does this have to run on main thread?
             if (!viewer.isOnline()) {
                 return;
             }
@@ -269,7 +270,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                     .data(getNPCInfoData())
                     .build()
                     .sendPacket(viewer);
-        }).delay(6L, TaskerTime.SECONDS).start();
+        }, 6L, TaskerTime.SECONDS);
     }
 
     private @NotNull List<@NotNull AbstractPacket> createSpawnPackets() {

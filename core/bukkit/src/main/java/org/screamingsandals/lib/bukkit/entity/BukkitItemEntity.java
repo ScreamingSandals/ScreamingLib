@@ -23,7 +23,7 @@ import org.screamingsandals.lib.item.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 
-public class BukkitItemEntity extends BukkitBasicEntity implements ItemEntity {
+public class BukkitItemEntity extends BukkitEntity implements ItemEntity {
 
     public BukkitItemEntity(org.bukkit.entity.@NotNull Item wrappedObject) {
         super(wrappedObject);

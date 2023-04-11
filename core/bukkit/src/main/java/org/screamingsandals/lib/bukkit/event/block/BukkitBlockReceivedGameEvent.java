@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.block.BlockReceivedGameEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -45,7 +45,7 @@ public class BukkitBlockReceivedGameEvent implements BlockReceivedGameEvent, Buk
 
     // Internal cache
     private @Nullable Block block;
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private boolean entityConverted;
     private @Nullable ResourceLocation underlyingEvent;
 
@@ -58,7 +58,7 @@ public class BukkitBlockReceivedGameEvent implements BlockReceivedGameEvent, Buk
     }
 
     @Override
-    public @Nullable BasicEntity entity() {
+    public @Nullable Entity entity() {
         if (!entityConverted) {
             if (event.getEntity() != null) {
                 entity = Entities.wrapEntity(event.getEntity()).orElseThrow();

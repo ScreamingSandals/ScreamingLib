@@ -35,7 +35,6 @@ import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.spectator.title.Title;
-import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 
 import java.time.temporal.TemporalAccessor;
@@ -1744,50 +1743,6 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
         return this;
     }
 
-    public <W extends CommandSender> Tasker.@NotNull TaskBuilder titleTask(@NotNull W sender) {
-        return Tasker
-                .build(() -> {
-                    if (sender instanceof PlayerAudience) {
-                        ((PlayerAudience) sender).showTitle(asTitle(sender));
-                    }
-                });
-    }
-
-    public <W extends CommandSender> Tasker.@NotNull TaskBuilder titleTask(@NotNull W @NotNull... senders) {
-        return Tasker
-                .build(() -> {
-                    for (var sender : senders) {
-                        title(sender);
-                    }
-                });
-    }
-
-    public <W extends CommandSender> Tasker.@NotNull TaskBuilder titleTask(@NotNull Collection<@NotNull W> senders) {
-        return Tasker
-                .build(() -> senders.forEach(this::title));
-    }
-
-    public <W extends CommandSender> @NotNull Message titleAsync(@NotNull W sender) {
-        titleTask(sender)
-                .async()
-                .start();
-        return this;
-    }
-
-    public <W extends CommandSender> @NotNull Message titleAsync(@NotNull W @NotNull... senders) {
-        titleTask(senders)
-                .async()
-                .start();
-        return this;
-    }
-
-    public <W extends CommandSender> @NotNull Message titleAsync(@NotNull Collection<@NotNull W> receivers) {
-        titleTask(receivers)
-                .async()
-                .start();
-        return this;
-    }
-
     /**
      * Sends this {@link Message} to defined receiver.
      *
@@ -1823,88 +1778,6 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      */
     public <W extends CommandSender> @NotNull Message send(@NotNull Collection<@NotNull W> receivers) {
         receivers.forEach(this::send);
-        return this;
-    }
-
-    /**
-     * Prepares a {@link Tasker.TaskBuilder} that will send this message.
-     *
-     * @param receiver receiver that will get the message
-     * @param <W>      type for {@link CommandSender}.
-     * @return prepared task for the sending.
-     */
-    public <W extends CommandSender> Tasker.@NotNull TaskBuilder sendTask(@NotNull W receiver) {
-        return Tasker
-                .build(() -> getFor(receiver).forEach(receiver::sendMessage));
-    }
-
-    /**
-     * Prepares a {@link Tasker.TaskBuilder} that will send this message.
-     *
-     * @param receivers array of receivers
-     * @param <W>       type for {@link CommandSender}.
-     * @return prepared task for the sending.
-     */
-    public <W extends CommandSender> Tasker.@NotNull TaskBuilder sendTask(@NotNull W @NotNull... receivers) {
-        return Tasker
-                .build(() -> {
-                    for (var sender : receivers) {
-                        send(sender);
-                    }
-                });
-    }
-
-    /**
-     * Prepares a {@link Tasker.TaskBuilder} that will send this message.
-     *
-     * @param receivers collection of receivers
-     * @param <W>       type for {@link CommandSender}.
-     * @return prepared task for the sending.
-     */
-    public <W extends CommandSender> Tasker.@NotNull TaskBuilder sendTask(@NotNull Collection<@NotNull W> receivers) {
-        return Tasker
-                .build(() -> receivers.forEach(this::send));
-    }
-
-    /**
-     * Sends this message asynchronously via {@link Tasker}.
-     *
-     * @param receiver receiver
-     * @param <W>      type for {@link CommandSender}.
-     * @return this message
-     */
-    public <W extends CommandSender> @NotNull Message sendAsync(@NotNull W receiver) {
-        sendTask(receiver)
-                .async()
-                .start();
-        return this;
-    }
-
-    /**
-     * Sends this message asynchronously via {@link Tasker}.
-     *
-     * @param receivers array of receivers
-     * @param <W>       type for {@link CommandSender}.
-     * @return this message
-     */
-    public <W extends CommandSender> @NotNull Message sendAsync(@NotNull W @NotNull... receivers) {
-        sendTask(receivers)
-                .async()
-                .start();
-        return this;
-    }
-
-    /**
-     * Sends this message asynchronously via {@link Tasker}.
-     *
-     * @param receivers collection of receivers
-     * @param <W>       type for {@link CommandSender}.
-     * @return this message
-     */
-    public <W extends CommandSender> @NotNull Message sendAsync(@NotNull Collection<@NotNull W> receivers) {
-        sendTask(receivers)
-                .async()
-                .start();
         return this;
     }
 

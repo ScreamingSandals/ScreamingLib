@@ -25,7 +25,7 @@ import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter1_8;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.nms.accessors.EnumParticleAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerLevelAccessor;
@@ -95,7 +95,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
     }
 
     @Override
-    public @NotNull List<@NotNull BasicEntity> getEntities() {
+    public @NotNull List<@NotNull Entity> getEntities() {
         return wrappedObject.getEntities().stream()
                 .map(Entities::wrapEntity)
                 .filter(Objects::nonNull)

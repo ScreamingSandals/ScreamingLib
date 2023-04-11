@@ -22,8 +22,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.particle.Particle;
+import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @With
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class Location implements Wrapper {
+public class Location implements Wrapper, ThreadProperty {
     /**
      * The X coordinate of this location.
      */
@@ -390,7 +391,7 @@ public class Location implements Wrapper {
      * @param radius the radius
      * @return the entities
      */
-    public @NotNull List<@NotNull BasicEntity> getNearbyEntities(int radius) {
+    public @NotNull List<@NotNull Entity> getNearbyEntities(int radius) {
         return world.getEntities().stream()
                 .filter(e -> isInRange(e.getLocation(), radius))
                 .collect(Collectors.toList());
@@ -404,7 +405,7 @@ public class Location implements Wrapper {
      * @param <T>    the entity type
      * @return the entities
      */
-    public <T extends BasicEntity> @NotNull List<@NotNull T> getNearbyEntitiesByClass(@NotNull Class<T> clazz, int radius) {
+    public <T extends Entity> @NotNull List<@NotNull T> getNearbyEntitiesByClass(@NotNull Class<T> clazz, int radius) {
         return world.getEntitiesByClass(clazz).stream()
                 .filter(e -> isInRange(e.getLocation(), radius))
                 .collect(Collectors.toList());

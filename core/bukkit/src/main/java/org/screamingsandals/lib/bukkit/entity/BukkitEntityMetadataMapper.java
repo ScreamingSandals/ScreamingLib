@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockType;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.bukkit.utils.Version;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
@@ -54,7 +54,7 @@ import java.util.function.*;
 @UtilityClass
 public class BukkitEntityMetadataMapper {
 
-    private static final @NotNull Map<@NotNull Class<? extends Entity>, Map<@NotNull String, BukkitMetadata<?, ?>>> METADATA = new HashMap<>();
+    private static final @NotNull Map<@NotNull Class<? extends org.bukkit.entity.Entity>, Map<@NotNull String, BukkitMetadata<?, ?>>> METADATA = new HashMap<>();
 
     // TODO: it would be better to generate this static initializer or maybe find a better way then manually doing this shit (because of fucking modded servers)
     // sometimes compiler optimizations cause this too not work on some versions, so that's why you may sometimes find reflection where it does not make any sense :)
@@ -423,7 +423,7 @@ public class BukkitEntityMetadataMapper {
         // TODO: Shulker
 
         Builder.begin(ShulkerBullet.class)
-                .map("target", Entity.class, ShulkerBullet::getTarget, ShulkerBullet::setTarget);
+                .map("target", org.bukkit.entity.Entity.class, ShulkerBullet::getTarget, ShulkerBullet::setTarget);
 
         // TODO: Sittable (why it doesn't extend Entity?)
 
@@ -488,10 +488,10 @@ public class BukkitEntityMetadataMapper {
         Builder.begin(TNTPrimed.class)
                 .map("fuse_ticks", "data_fuse_id", Integer.class, TNTPrimed::getFuseTicks, TNTPrimed::setFuseTicks)
                 .whenNot(ss, b -> b
-                        .map("source", Entity.class, TNTPrimed::getSource, null)
+                        .map("source", org.bukkit.entity.Entity.class, TNTPrimed::getSource, null)
                 )
                 .when(ss, b -> b
-                        .map("source", Entity.class, TNTPrimed::getSource, TNTPrimed::setSource)
+                        .map("source", org.bukkit.entity.Entity.class, TNTPrimed::getSource, TNTPrimed::setSource)
                 );
 
         if (Reflect.has("org.bukkit.entity.TropicalFish")) {
@@ -563,14 +563,14 @@ public class BukkitEntityMetadataMapper {
         }
     }
 
-    public static boolean has(Entity entity, String metadata) {
+    public static boolean has(org.bukkit.entity.Entity entity, String metadata) {
         final var finalMetadata = metadata.toLowerCase(Locale.ROOT);
         return METADATA.entrySet().stream()
                 .anyMatch(classMapEntry -> classMapEntry.getKey().isInstance(entity) && classMapEntry.getValue().containsKey(finalMetadata));
     }
 
     @SuppressWarnings("unchecked")
-    public static void set(Entity entity, String metadata, Object value) {
+    public static void set(org.bukkit.entity.Entity entity, String metadata, Object value) {
         final var finalMetadata = metadata.toLowerCase(Locale.ROOT);
         var bukkitMetadata = METADATA.entrySet().stream()
                 .filter(classMapEntry -> classMapEntry.getKey().isInstance(entity) && classMapEntry.getValue().containsKey(finalMetadata))
@@ -678,7 +678,7 @@ public class BukkitEntityMetadataMapper {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T get(Entity entity, String metadata, Class<T> valueClass) {
+    public static <T> T get(org.bukkit.entity.Entity entity, String metadata, Class<T> valueClass) {
         final var finalMetadata = metadata.toLowerCase(Locale.ROOT);
         var bukkitMetadata = METADATA.entrySet().stream()
                 .filter(classMapEntry -> classMapEntry.getKey().isInstance(entity) && classMapEntry.getValue().containsKey(finalMetadata))
@@ -697,7 +697,7 @@ public class BukkitEntityMetadataMapper {
             return (T) BlockType.of(value);
         } else if (valueClass == ItemType.class) {
             return (T) ItemType.of(value);
-        } else if (BasicEntity.class.isAssignableFrom(valueClass) && value instanceof Entity) {
+        } else if (Entity.class.isAssignableFrom(valueClass) && value instanceof org.bukkit.entity.Entity) {
             return (T) Entities.wrapEntity(value).orElseThrow();
         } else if (value instanceof org.bukkit.inventory.ItemStack && valueClass == ItemStack.class) {
             return (T) new BukkitItem((org.bukkit.inventory.ItemStack) value);
@@ -790,7 +790,7 @@ public class BukkitEntityMetadataMapper {
     }
 
     @Data
-    public static class BukkitMetadata<E extends Entity, V> {
+    public static class BukkitMetadata<E extends org.bukkit.entity.Entity, V> {
         private final Class<V> valueClass;
         private final @NotNull Function<E, V> getter;
         private final @Nullable BiConsumer<E, V> setter;
@@ -798,12 +798,12 @@ public class BukkitEntityMetadataMapper {
     }
 
     @RequiredArgsConstructor
-    public static class Builder<E extends Entity> {
+    public static class Builder<E extends org.bukkit.entity.Entity> {
         private final Class<E> clazz;
         private boolean registered;
         private final Map<String, BukkitMetadata<E, ?>> metadataMap = new HashMap<>();
 
-        public static <E extends Entity> Builder<E> begin(Class<E> entityClass) {
+        public static <E extends org.bukkit.entity.Entity> Builder<E> begin(Class<E> entityClass) {
             return new Builder<>(entityClass);
         }
 

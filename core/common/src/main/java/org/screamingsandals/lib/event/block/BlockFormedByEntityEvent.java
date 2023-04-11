@@ -17,9 +17,9 @@
 package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 
 public interface BlockFormedByEntityEvent extends BlockFormEvent {
 
-    @NotNull BasicEntity producer();
+    @NotNull Entity producer();
 }

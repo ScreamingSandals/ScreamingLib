@@ -17,17 +17,24 @@
 package org.screamingsandals.lib.bungee.tasker;
 
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.bungee.tasker.task.BungeeTaskerTask;
-import org.screamingsandals.lib.tasker.TaskBuilderImpl;
+import org.screamingsandals.lib.bungee.tasker.task.BungeeTask;
 import org.screamingsandals.lib.tasker.Tasker;
-import org.screamingsandals.lib.tasker.task.TaskerTask;
-import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.tasker.TaskerTime;
+import org.screamingsandals.lib.tasker.ThreadProperty;
+import org.screamingsandals.lib.tasker.task.TaskBase;
+import org.screamingsandals.lib.tasker.task.Task;
 import org.screamingsandals.lib.utils.annotations.Service;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 @Service
 public class BungeeTasker extends Tasker {
+    // only async scheduler is present in Bungee, every ThreadProperty is ignored (only global_thread and async_thread properties should be present anyways)
     private final @NotNull Plugin plugin;
     private final @NotNull TaskScheduler scheduler;
 
@@ -37,44 +44,46 @@ public class BungeeTasker extends Tasker {
     }
 
     @Override
-    public @NotNull TaskerTask start0(@NotNull TaskBuilderImpl builder) {
-        final var runnable = builder.getRunnable();
-        if (builder.isAfterOneTick()) {
-            return new BungeeTaskerTask(builder.getTaskId(), scheduler.runAsync(plugin, runnable));
-        }
+    protected @NotNull Task run0(@NotNull ThreadProperty property, @NotNull Runnable runnable) {
+        return new BungeeTask(scheduler.runAsync(plugin, runnable));
+    }
 
-        if (builder.isAsync()
-                && builder.getRepeat() == 0
-                && builder.getDelay() == 0) {
-            return new BungeeTaskerTask(builder.getTaskId(), scheduler.runAsync(plugin, runnable));
-        }
+    @Override
+    protected @NotNull Task runDelayed0(@NotNull ThreadProperty property, @NotNull Runnable runnable, long delay, @NotNull TaskerTime delayUnit) {
+        return new BungeeTask(scheduler.schedule(plugin, runnable, delayUnit.getTime(delay), delayUnit.getTimeUnit()));
+    }
 
-        final var timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");
-        if (builder.getDelay() > 0 && builder.getRepeat() <= 0) {
-            return new BungeeTaskerTask(
-                    builder.getTaskId(),
-                    scheduler.schedule(
-                            plugin,
-                            runnable,
-                            timeUnit.getTime((int) builder.getDelay()),
-                            timeUnit.getTimeUnit()
-                    )
-            );
-        }
+    @Override
+    protected @NotNull Task runRepeatedly0(@NotNull ThreadProperty property, @NotNull Runnable runnable, long period, @NotNull TaskerTime periodUnit) {
+        return new BungeeTask(scheduler.schedule(plugin, runnable, 0L, periodUnit.getTime(period), periodUnit.getTimeUnit()));
+    }
 
-        if (builder.getRepeat() > 0) {
-            return new BungeeTaskerTask(
-                    builder.getTaskId(),
-                    scheduler.schedule(
-                            plugin,
-                            runnable,
-                            timeUnit.getTime((int) builder.getDelay()),
-                            timeUnit.getTime((int) builder.getRepeat()),
-                            timeUnit.getTimeUnit()
-                    )
-            );
-        }
+    @Override
+    protected @NotNull Task runRepeatedly0(@NotNull ThreadProperty property, @NotNull Consumer<@NotNull TaskBase> selfCancellable, long period, @NotNull TaskerTime periodUnit) {
+        var atomic = new AtomicReference<ScheduledTask>(null);
+        atomic.set(scheduler.schedule(plugin, () -> {
+            while (atomic.get() == null); // hell nah, what should we do?? :cry:
+            selfCancellable.accept(atomic.get()::cancel);
+        }, 0L, periodUnit.getTime(period), periodUnit.getTimeUnit()));
+        return new BungeeTask(atomic.get());
+    }
 
-        throw new UnsupportedOperationException("Unsupported Tasker state!");
+    @Override
+    protected @NotNull Task runDelayedAndRepeatedly0(@NotNull ThreadProperty property, @NotNull Runnable runnable, long delay, @NotNull TaskerTime delayUnit, long period, @NotNull TaskerTime periodUnit) {
+        var millisDelay = delayUnit.getTimeUnit().toMillis(delayUnit.getTime(delay));
+        var millisPeriod = periodUnit.getTimeUnit().toMillis(periodUnit.getTime(period));
+        return new BungeeTask(scheduler.schedule(plugin, runnable, millisDelay, millisPeriod, TimeUnit.MILLISECONDS));
+    }
+
+    @Override
+    protected @NotNull Task runDelayedAndRepeatedly0(@NotNull ThreadProperty property, @NotNull Consumer<@NotNull TaskBase> selfCancellable, long delay, @NotNull TaskerTime delayUnit, long period, @NotNull TaskerTime periodUnit) {
+        var millisDelay = delayUnit.getTimeUnit().toMillis(delayUnit.getTime(delay));
+        var millisPeriod = periodUnit.getTimeUnit().toMillis(periodUnit.getTime(period));
+        var atomic = new AtomicReference<ScheduledTask>(null);
+        atomic.set(scheduler.schedule(plugin, () -> {
+            while (atomic.get() == null); // hell nah, what should we do?? :cry:
+            selfCancellable.accept(atomic.get()::cancel);
+        },  millisDelay, millisPeriod, TimeUnit.MILLISECONDS));
+        return new BungeeTask(atomic.get());
     }
 }

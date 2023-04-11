@@ -27,7 +27,7 @@ import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.AreaEffectCloudApplyEvent;
 import org.screamingsandals.lib.utils.collections.CollectionLinkedToCollection;
@@ -47,11 +47,11 @@ public class BukkitAreaEffectCloudApplyEvent implements AreaEffectCloudApplyEven
     private final @NotNull org.bukkit.event.entity.AreaEffectCloudApplyEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
-    private @Nullable Collection<@NotNull BasicEntity> affectedEntities;
+    private @Nullable Entity entity;
+    private @Nullable Collection<@NotNull Entity> affectedEntities;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -59,7 +59,7 @@ public class BukkitAreaEffectCloudApplyEvent implements AreaEffectCloudApplyEven
     }
 
     @Override
-    public @NotNull Collection<@NotNull BasicEntity> affectedEntities() {
+    public @NotNull Collection<@NotNull Entity> affectedEntities() {
         if (affectedEntities == null) {
             affectedEntities = new CollectionLinkedToCollection<>(
                     event.getAffectedEntities(),

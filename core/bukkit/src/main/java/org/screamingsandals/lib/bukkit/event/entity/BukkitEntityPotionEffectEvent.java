@@ -26,7 +26,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityPotionEffectEvent;
 import org.screamingsandals.lib.item.meta.PotionEffect;
@@ -44,7 +44,7 @@ public class BukkitEntityPotionEffectEvent implements EntityPotionEffectEvent, B
     private final @NotNull org.bukkit.event.entity.EntityPotionEffectEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private @Nullable PotionEffect oldEffect;
     private boolean oldEffectCached;
     private @Nullable PotionEffect newEffect;
@@ -53,7 +53,7 @@ public class BukkitEntityPotionEffectEvent implements EntityPotionEffectEvent, B
     private @Nullable Action action;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }

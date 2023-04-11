@@ -23,7 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityTameEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -40,11 +40,11 @@ public class BukkitEntityTameEvent implements EntityTameEvent, BukkitCancellable
     private final @NotNull org.bukkit.event.entity.EntityTameEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
-    private @Nullable BasicEntity owner;
+    private @Nullable Entity entity;
+    private @Nullable Entity owner;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -52,7 +52,7 @@ public class BukkitEntityTameEvent implements EntityTameEvent, BukkitCancellable
     }
 
     @Override
-    public @NotNull BasicEntity owner() {
+    public @NotNull Entity owner() {
         if (owner == null) {
             owner = Entities.wrapEntity(event.getOwner()).orElseThrow();
         }

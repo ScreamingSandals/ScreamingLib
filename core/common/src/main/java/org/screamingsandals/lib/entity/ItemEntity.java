@@ -23,7 +23,7 @@ import org.screamingsandals.lib.world.Location;
 
 import java.util.concurrent.TimeUnit;
 
-public interface ItemEntity extends BasicEntity {
+public interface ItemEntity extends Entity {
 
     @NotNull ItemStack getItem();
 

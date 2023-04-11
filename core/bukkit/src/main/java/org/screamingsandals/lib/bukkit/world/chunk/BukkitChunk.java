@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.world.World;
@@ -56,11 +56,11 @@ public class BukkitChunk extends BasicWrapper<org.bukkit.Chunk> implements Chunk
     }
 
     @Override
-    public @NotNull BasicEntity @NotNull [] getEntities() {
+    public @NotNull Entity @NotNull [] getEntities() {
         return Arrays.stream(wrappedObject.getEntities())
                 .map(Entities::wrapEntity)
                 .filter(Objects::nonNull)
-                .toArray(BasicEntity[]::new);
+                .toArray(Entity[]::new);
     }
 
     @Override

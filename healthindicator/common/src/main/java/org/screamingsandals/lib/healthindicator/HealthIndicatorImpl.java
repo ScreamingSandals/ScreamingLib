@@ -32,7 +32,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
-import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.tasker.task.Task;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractVisual;
@@ -52,7 +52,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     protected volatile boolean ready;
     protected volatile boolean healthInTabList;
     protected volatile @NotNull Component symbol = Component.empty();
-    protected @Nullable TaskerTask task;
+    protected @Nullable Task task;
 
     public HealthIndicatorImpl(@NotNull UUID uuid) {
         super(uuid);
@@ -190,11 +190,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
             task.cancel();
         }
 
-        task = Tasker.build(() -> update())
-                .async()
-                .repeat(time, unit)
-                .start();
-
+        task = Tasker.runAsyncRepeatedly(() -> update(), time, unit);
         return this;
     }
 

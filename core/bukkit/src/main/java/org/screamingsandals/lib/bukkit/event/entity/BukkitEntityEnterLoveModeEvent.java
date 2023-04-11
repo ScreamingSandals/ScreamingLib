@@ -26,7 +26,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityEnterLoveModeEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -43,13 +43,13 @@ public class BukkitEntityEnterLoveModeEvent implements EntityEnterLoveModeEvent,
     private final @NotNull org.bukkit.event.entity.EntityEnterLoveModeEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
-    private @Nullable BasicEntity humanEntity;
+    private @Nullable Entity entity;
+    private @Nullable Entity humanEntity;
     private boolean humanEntityCached;
 
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -57,7 +57,7 @@ public class BukkitEntityEnterLoveModeEvent implements EntityEnterLoveModeEvent,
     }
 
     @Override
-    public @Nullable BasicEntity humanEntity() {
+    public @Nullable Entity humanEntity() {
         if (!humanEntityCached) {
             if (event.getHumanEntity() != null) {
                 humanEntity = Entities.wrapEntity(event.getHumanEntity()).orElseThrow();

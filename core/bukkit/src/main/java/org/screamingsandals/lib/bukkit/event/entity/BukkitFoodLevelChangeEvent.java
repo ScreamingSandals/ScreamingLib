@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.FoodLevelChangeEvent;
 import org.screamingsandals.lib.item.ItemStack;
@@ -42,12 +42,12 @@ public class BukkitFoodLevelChangeEvent implements FoodLevelChangeEvent, BukkitC
     private final @NotNull org.bukkit.event.entity.FoodLevelChangeEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private @Nullable ItemStack item;
     private boolean itemCached;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }

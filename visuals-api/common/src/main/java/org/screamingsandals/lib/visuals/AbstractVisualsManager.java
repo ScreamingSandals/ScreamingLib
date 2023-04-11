@@ -241,21 +241,21 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     private void softAddViewer(@NotNull T visual, @NotNull Player player, long tickedDelay) {
-        Tasker.build(() -> {
+        Tasker.runAsyncDelayed(() -> {
             if (!player.isOnline()) {
                 return;
             }
             visual.onViewerAdded(player, false);
-        }).delay(tickedDelay, TaskerTime.TICKS).async().start();
+        }, tickedDelay, TaskerTime.TICKS);
     }
 
     private void softRemoveViewer(@NotNull T visual, @NotNull Player player, long tickedDelay) {
-        Tasker.build(() -> {
+        Tasker.runAsyncDelayed(() -> {
             if (!player.isOnline()) {
                 return;
             }
             visual.onViewerRemoved(player, false);
-        }).delay(tickedDelay, TaskerTime.TICKS).async().start();
+        }, tickedDelay, TaskerTime.TICKS);
     }
 
     public abstract void fireVisualTouchEvent(@NotNull Player sender, @NotNull T visual, @NotNull InteractType interactType);

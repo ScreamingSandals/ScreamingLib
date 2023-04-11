@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.tasker;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,9 +32,9 @@ public enum TaskerTime {
     @Getter
     private final int timeUnitValue;
     @Getter
-    private final TimeUnit timeUnit;
+    private final @NotNull TimeUnit timeUnit;
 
-    TaskerTime(long bukkitValue, int timeUnitValue, TimeUnit timeUnit) {
+    TaskerTime(long bukkitValue, int timeUnitValue, @NotNull TimeUnit timeUnit) {
         this.bukkitValue = bukkitValue;
         this.timeUnitValue = timeUnitValue;
         this.timeUnit = timeUnit;
@@ -43,7 +44,7 @@ public enum TaskerTime {
         return bukkitValue * multiplier;
     }
 
-    public int getTime(int multiplier) {
+    public long getTime(long multiplier) {
         return timeUnitValue * multiplier;
     }
 }

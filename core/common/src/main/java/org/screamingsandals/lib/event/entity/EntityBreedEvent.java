@@ -18,20 +18,20 @@ package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
 
 public interface EntityBreedEvent extends SCancellableEvent, PlatformEvent {
 
-    @NotNull BasicEntity entity();
+    @NotNull Entity entity();
 
-    @NotNull BasicEntity mother();
+    @NotNull Entity mother();
 
-    @NotNull BasicEntity father();
+    @NotNull Entity father();
 
-    @Nullable BasicEntity breeder();
+    @Nullable Entity breeder();
 
     @Nullable ItemStack bredWith();
 

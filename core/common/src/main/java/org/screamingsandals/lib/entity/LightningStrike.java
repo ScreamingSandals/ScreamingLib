@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.world.Location;
 
-public interface LightningStrike extends BasicEntity {
+public interface LightningStrike extends Entity {
     boolean isEffect();
 
     static @Nullable LightningStrike strike(@NotNull Location locationHolder) {

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.event.player.BukkitPlayerCraftItemEvent;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.VillagerReplenishTradeEvent;
 import org.screamingsandals.lib.event.player.PlayerCraftItemEvent;
@@ -43,10 +43,10 @@ public class BukkitVillagerReplenishTradeEvent implements VillagerReplenishTrade
     private final @NotNull org.bukkit.event.entity.VillagerReplenishTradeEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }

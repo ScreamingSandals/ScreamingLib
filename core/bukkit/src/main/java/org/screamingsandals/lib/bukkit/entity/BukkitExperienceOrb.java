@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.entity;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.ExperienceOrb;
 
-public class BukkitExperienceOrb extends BukkitBasicEntity implements ExperienceOrb {
+public class BukkitExperienceOrb extends BukkitEntity implements ExperienceOrb {
     public BukkitExperienceOrb(@NotNull org.bukkit.entity.ExperienceOrb wrappedObject) {
         super(wrappedObject);
     }

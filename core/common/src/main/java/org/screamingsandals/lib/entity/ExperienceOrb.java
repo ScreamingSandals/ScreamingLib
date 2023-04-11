@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.world.Location;
 
-public interface ExperienceOrb extends BasicEntity {
+public interface ExperienceOrb extends Entity {
     int getExperience();
 
     void setExperience(int experience);

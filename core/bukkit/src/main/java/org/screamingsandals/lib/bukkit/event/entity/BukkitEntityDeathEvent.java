@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityDeathEvent;
 import org.screamingsandals.lib.item.ItemStack;
@@ -49,7 +49,7 @@ public class BukkitEntityDeathEvent implements EntityDeathEvent, NoAutoCancellab
     private final @NotNull org.bukkit.event.entity.EntityDeathEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private @Nullable Collection<@NotNull ItemStack> drops;
 
     @Override
@@ -65,7 +65,7 @@ public class BukkitEntityDeathEvent implements EntityDeathEvent, NoAutoCancellab
     }
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }

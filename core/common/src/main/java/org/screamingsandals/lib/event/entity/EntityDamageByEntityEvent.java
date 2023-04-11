@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 public interface EntityDamageByEntityEvent extends EntityDamageEvent {
-    @NotNull BasicEntity damager();
+    @NotNull Entity damager();
 }

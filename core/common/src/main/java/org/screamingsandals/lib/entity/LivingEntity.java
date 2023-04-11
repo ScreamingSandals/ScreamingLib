@@ -29,7 +29,7 @@ import org.screamingsandals.lib.world.Location;
 import java.util.Collection;
 import java.util.List;
 
-public interface LivingEntity extends BasicEntity, ProjectileShooter {
+public interface LivingEntity extends Entity, ProjectileShooter {
 
     @Nullable Attribute getAttribute(@NotNull AttributeType attributeType);
 
@@ -94,9 +94,9 @@ public interface LivingEntity extends BasicEntity, ProjectileShooter {
 
     boolean isLeashed();
 
-    @Nullable BasicEntity getLeashHolder();
+    @Nullable Entity getLeashHolder();
 
-    boolean setLeashHolder(@Nullable BasicEntity holder);
+    boolean setLeashHolder(@Nullable Entity holder);
 
     boolean removeLeashHolder();
 
@@ -116,7 +116,7 @@ public interface LivingEntity extends BasicEntity, ProjectileShooter {
 
     boolean hasAI();
 
-    void attack(@NotNull BasicEntity target);
+    void attack(@NotNull Entity target);
 
     void swingMainHand();
 
@@ -132,7 +132,7 @@ public interface LivingEntity extends BasicEntity, ProjectileShooter {
 
     void damage(double amount);
 
-    void damage(double amount, @Nullable BasicEntity damageSource);
+    void damage(double amount, @Nullable Entity damageSource);
 
     double getAbsorptionAmount();
 

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.ProjectileHitEvent;
 import org.screamingsandals.lib.utils.BlockFace;
@@ -43,8 +43,8 @@ public class BukkitProjectileHitEvent implements ProjectileHitEvent, BukkitCance
     private final @NotNull org.bukkit.event.entity.ProjectileHitEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
-    private @Nullable BasicEntity hitEntity;
+    private @Nullable Entity entity;
+    private @Nullable Entity hitEntity;
     private boolean hitEntityCached;
     private @Nullable Block hitBlock;
     private boolean hitBlockCached;
@@ -52,7 +52,7 @@ public class BukkitProjectileHitEvent implements ProjectileHitEvent, BukkitCance
     private boolean hitFaceCached;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -60,7 +60,7 @@ public class BukkitProjectileHitEvent implements ProjectileHitEvent, BukkitCance
     }
 
     @Override
-    public @Nullable BasicEntity hitEntity() {
+    public @Nullable Entity hitEntity() {
         if (!hitEntityCached) {
             if (event.getHitEntity() != null) {
                 hitEntity = Entities.wrapEntity(event.getHitEntity()).orElseThrow();

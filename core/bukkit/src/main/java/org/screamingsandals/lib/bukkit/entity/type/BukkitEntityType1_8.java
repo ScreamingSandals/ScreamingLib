@@ -20,7 +20,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -91,7 +91,7 @@ public class BukkitEntityType1_8 extends BasicWrapper<org.bukkit.entity.EntityTy
     }
 
     @Override
-    public @Nullable BasicEntity spawn(@NotNull Location location) {
+    public @Nullable Entity spawn(@NotNull Location location) {
         return Entities.spawn(this, location);
     }
 

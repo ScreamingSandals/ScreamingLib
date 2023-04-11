@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.player.PlayerFishEvent;
 import org.screamingsandals.lib.player.Player;
@@ -43,10 +43,10 @@ public class BukkitPlayerFishEvent implements PlayerFishEvent, BukkitCancellable
 
     // Internal cache
     private @Nullable Player player;
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private boolean entityCached;
     private @Nullable State state;
-    private @Nullable BasicEntity hookEntity;
+    private @Nullable Entity hookEntity;
 
     @Override
     public @NotNull Player player() {
@@ -57,7 +57,7 @@ public class BukkitPlayerFishEvent implements PlayerFishEvent, BukkitCancellable
     }
 
     @Override
-    public @Nullable BasicEntity caughtEntity() {
+    public @Nullable Entity caughtEntity() {
         if (!entityCached) {
             if (event.getCaught() != null) {
                 entity = Entities.wrapEntity(event.getCaught()).orElseThrow();
@@ -86,7 +86,7 @@ public class BukkitPlayerFishEvent implements PlayerFishEvent, BukkitCancellable
     }
 
     @Override
-    public @NotNull BasicEntity hookEntity() {
+    public @NotNull Entity hookEntity() {
         if (hookEntity == null) {
             hookEntity = Entities.wrapEntity(event.getHook()).orElseThrow();
         }

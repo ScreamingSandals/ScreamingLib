@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.event.entity;
+package org.screamingsandals.lib.tasker.task;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.Entity;
-import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
-import org.screamingsandals.lib.event.player.PlayerCraftItemEvent;
+import org.screamingsandals.lib.utils.RawValueHolder;
 
-public interface VillagerAcquireTradeEvent extends SCancellableEvent, PlatformEvent {
-
-    @NotNull Entity entity();
-
-    PlayerCraftItemEvent.@NotNull Recipe recipe();
-
-    @Deprecated // because there's no proper Recipe API yet
-    void recipe(PlayerCraftItemEvent.@NotNull Recipe recipe);
+public interface Task extends TaskBase, RawValueHolder {
+    /**
+     * Returns the current state of this task.
+     *
+     * @return the current state of this task
+     */
+    @NotNull TaskState getState();
 }

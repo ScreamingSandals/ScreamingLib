@@ -18,7 +18,7 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
@@ -26,7 +26,7 @@ import java.util.Locale;
 
 public interface PlayerFishEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
 
-    @Nullable BasicEntity caughtEntity();
+    @Nullable Entity caughtEntity();
 
     int exp();
 
@@ -34,7 +34,7 @@ public interface PlayerFishEvent extends SCancellableEvent, PlayerEvent, Platfor
 
     @NotNull State state();
 
-    @NotNull BasicEntity hookEntity();
+    @NotNull Entity hookEntity();
 
     /**
      * An enum to specify the state of the fishing

@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.event.entity;
+package org.screamingsandals.lib.tasker;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.Entity;
-import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
-import org.screamingsandals.lib.event.player.PlayerCraftItemEvent;
 
-public interface VillagerAcquireTradeEvent extends SCancellableEvent, PlatformEvent {
-
-    @NotNull Entity entity();
-
-    PlayerCraftItemEvent.@NotNull Recipe recipe();
-
-    @Deprecated // because there's no proper Recipe API yet
-    void recipe(PlayerCraftItemEvent.@NotNull Recipe recipe);
+/**
+ * Describes an object which can be owned by a specific thread in some platforms.
+ * These objects should be accessed/modified only in the appropriate thread (entities, chunks, blocks)
+ * or can be used to determine the thread, but can be safely accessed (locations).
+ */
+public interface ThreadProperty {
+    default @NotNull ThreadTasker tasker() {
+        return new ThreadTasker(this);
+    }
 }

@@ -26,7 +26,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.damage.DamageType;
 import org.screamingsandals.lib.event.entity.EntityDamageEvent;
@@ -44,11 +44,11 @@ public class BukkitEntityDamageEvent implements EntityDamageEvent, BukkitCancell
     private final @NotNull org.bukkit.event.entity.EntityDamageEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private @Nullable DamageType damageCause;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }

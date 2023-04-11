@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.player.PlayerShearEntityEvent;
 import org.screamingsandals.lib.item.ItemStack;
@@ -46,7 +46,7 @@ public class BukkitPlayerShearEntityEvent implements PlayerShearEntityEvent, Buk
 
     // Internal cache
     private @Nullable Player player;
-    private @Nullable BasicEntity what;
+    private @Nullable Entity what;
     private @Nullable ItemStack item;
     private @Nullable EquipmentSlot hand;
 
@@ -59,7 +59,7 @@ public class BukkitPlayerShearEntityEvent implements PlayerShearEntityEvent, Buk
     }
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (what == null) {
             what = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }

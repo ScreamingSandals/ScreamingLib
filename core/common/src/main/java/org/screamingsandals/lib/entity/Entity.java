@@ -23,6 +23,7 @@ import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public interface BasicEntity extends Wrapper, RawValueHolder, ContainerHolder {
+public interface Entity extends Wrapper, RawValueHolder, ContainerHolder, ThreadProperty {
     @NotNull EntityType getEntityType();
 
     @NotNull Location getLocation();
@@ -108,11 +109,11 @@ public interface BasicEntity extends Wrapper, RawValueHolder, ContainerHolder {
 
     void setPersistent(boolean persistent);
 
-    @NotNull List<@NotNull BasicEntity> getPassengers();
+    @NotNull List<@NotNull Entity> getPassengers();
 
-    boolean addPassenger(@NotNull BasicEntity passenger);
+    boolean addPassenger(@NotNull Entity passenger);
 
-    boolean removePassenger(@NotNull BasicEntity passenger);
+    boolean removePassenger(@NotNull Entity passenger);
 
     boolean hasPassengers();
 
@@ -132,7 +133,7 @@ public interface BasicEntity extends Wrapper, RawValueHolder, ContainerHolder {
 
     boolean leaveVehicle();
 
-    @Nullable BasicEntity getVehicle();
+    @Nullable Entity getVehicle();
 
     void setCustomName(@Nullable String name);
 

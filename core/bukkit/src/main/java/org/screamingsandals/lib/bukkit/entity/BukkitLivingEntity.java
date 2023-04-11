@@ -21,7 +21,6 @@ import org.bukkit.entity.ArmorStand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.block.BlockType;
@@ -51,7 +50,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntity {
+public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
     public BukkitLivingEntity(@NotNull org.bukkit.entity.LivingEntity wrappedObject) {
         super(wrappedObject);
     }
@@ -248,7 +247,7 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
     }
 
     @Override
-    public @Nullable BasicEntity getLeashHolder() {
+    public @Nullable Entity getLeashHolder() {
         if (isLeashed()) {
             return Entities.wrapEntity(((org.bukkit.entity.LivingEntity) wrappedObject).getLeashHolder());
         }
@@ -256,8 +255,8 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
     }
 
     @Override
-    public boolean setLeashHolder(@Nullable BasicEntity holder) {
-        return ((org.bukkit.entity.LivingEntity) wrappedObject).setLeashHolder(holder != null ? holder.as(Entity.class) : null);
+    public boolean setLeashHolder(@Nullable Entity holder) {
+        return ((org.bukkit.entity.LivingEntity) wrappedObject).setLeashHolder(holder != null ? holder.as(org.bukkit.entity.Entity.class) : null);
     }
 
     @Override
@@ -343,9 +342,9 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
     }
 
     @Override
-    public void attack(@NotNull BasicEntity target) {
+    public void attack(@NotNull Entity target) {
         try {
-            ((org.bukkit.entity.LivingEntity) wrappedObject).attack(target.as(Entity.class));
+            ((org.bukkit.entity.LivingEntity) wrappedObject).attack(target.as(org.bukkit.entity.Entity.class));
         } catch (Throwable ignored) {
             // TODO: <= 1.15.2
         }
@@ -418,8 +417,8 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
     }
 
     @Override
-    public void damage(double amount, @Nullable BasicEntity damageSource) {
-        ((org.bukkit.entity.LivingEntity) wrappedObject).damage(amount, damageSource != null ? damageSource.as(Entity.class) : null);
+    public void damage(double amount, @Nullable Entity damageSource) {
+        ((org.bukkit.entity.LivingEntity) wrappedObject).damage(amount, damageSource != null ? damageSource.as(org.bukkit.entity.Entity.class) : null);
     }
 
     @Override

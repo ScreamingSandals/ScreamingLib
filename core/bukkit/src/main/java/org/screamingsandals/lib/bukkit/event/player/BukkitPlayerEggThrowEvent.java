@@ -23,7 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.event.player.PlayerEggThrowEvent;
@@ -43,7 +43,7 @@ public class BukkitPlayerEggThrowEvent implements PlayerEggThrowEvent {
 
     // Internal cache
     private @Nullable Player player;
-    private @Nullable BasicEntity egg;
+    private @Nullable Entity egg;
 
     @Override
     public @NotNull Player player() {
@@ -54,7 +54,7 @@ public class BukkitPlayerEggThrowEvent implements PlayerEggThrowEvent {
     }
 
     @Override
-    public @NotNull BasicEntity eggEntity() {
+    public @NotNull Entity eggEntity() {
         if (egg == null) {
             egg = Entities.wrapEntity(event.getEgg()).orElseThrow();
         }

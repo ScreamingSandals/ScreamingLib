@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityCombustByEntityEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -31,10 +31,10 @@ public class BukkitEntityCombustByEntityEvent extends BukkitEntityCombustEvent i
     }
 
     // Internal cache
-    private @Nullable BasicEntity combuster;
+    private @Nullable Entity combuster;
 
     @Override
-    public @NotNull BasicEntity combuster() {
+    public @NotNull Entity combuster() {
         if (combuster == null) {
             combuster = Entities.wrapEntity(((org.bukkit.event.entity.EntityCombustByEntityEvent) event()).getCombuster()).orElseThrow();
         }

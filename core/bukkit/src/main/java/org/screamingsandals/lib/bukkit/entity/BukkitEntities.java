@@ -24,6 +24,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityType1_8;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.*;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.ExperienceOrb;
 import org.screamingsandals.lib.entity.LightningStrike;
 import org.screamingsandals.lib.entity.type.EntityType;
@@ -44,12 +45,12 @@ public class BukkitEntities extends Entities {
     public static final boolean HAS_MOB_INTERFACE = Reflect.has("org.bukkit.entity.Mob");
 
     @Override
-    protected @Nullable BasicEntity wrapEntity0(@NotNull Object entity) {
-        if (entity instanceof BasicEntity) {
-            return (BasicEntity) entity;
+    protected @Nullable Entity wrapEntity0(@NotNull Object entity) {
+        if (entity instanceof Entity) {
+            return (Entity) entity;
         }
 
-        if (!(entity instanceof Entity)) {
+        if (!(entity instanceof org.bukkit.entity.Entity)) {
             return null;
         }
 
@@ -94,11 +95,11 @@ public class BukkitEntities extends Entities {
             return new BukkitExperienceOrb((org.bukkit.entity.ExperienceOrb) entity);
         }
 
-        return new BukkitBasicEntity((Entity) entity);
+        return new BukkitEntity((org.bukkit.entity.Entity) entity);
     }
 
     @Override
-    public @Nullable BasicEntity spawn0(@NotNull EntityType entityType, @NotNull Location locationHolder) {
+    public @Nullable Entity spawn0(@NotNull EntityType entityType, @NotNull Location locationHolder) {
         return entityType.asNullable(org.bukkit.entity.EntityType.class).mapOrNull(entityType1 -> {
             var bukkitLoc = locationHolder.as(org.bukkit.Location.class);
             var world = bukkitLoc.getWorld();

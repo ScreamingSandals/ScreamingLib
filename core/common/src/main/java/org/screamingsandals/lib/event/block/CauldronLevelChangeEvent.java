@@ -18,7 +18,7 @@ package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -29,7 +29,7 @@ public interface CauldronLevelChangeEvent extends SCancellableEvent, PlatformEve
 
     @NotNull Block block();
 
-    @Nullable BasicEntity entity();
+    @Nullable Entity entity();
 
     int oldLevel();
 

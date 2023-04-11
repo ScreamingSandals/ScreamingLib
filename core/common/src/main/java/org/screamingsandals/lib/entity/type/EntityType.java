@@ -18,7 +18,7 @@ package org.screamingsandals.lib.entity.type;
 
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.TaggableHolder;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
@@ -53,7 +53,7 @@ public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder
     @Override
     boolean is(@MinecraftType(MinecraftType.Type.ENTITY_TYPE_OR_TAG) @Nullable Object @NotNull... entityTypes);
 
-    @Nullable BasicEntity spawn(@NotNull Location location);
+    @Nullable Entity spawn(@NotNull Location location);
 
     static @NotNull EntityType of(@MinecraftType(MinecraftType.Type.ENTITY_TYPE) @NotNull Object entityType) {
         var result = ofNullable(entityType);

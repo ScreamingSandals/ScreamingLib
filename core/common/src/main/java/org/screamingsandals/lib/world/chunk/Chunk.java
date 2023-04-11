@@ -18,7 +18,8 @@ package org.screamingsandals.lib.world.chunk;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
+import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.block.Block;
@@ -27,7 +28,7 @@ import org.screamingsandals.lib.world.World;
 /**
  * An interface representing a chunk.
  */
-public interface Chunk extends Wrapper, RawValueHolder {
+public interface Chunk extends Wrapper, RawValueHolder, ThreadProperty {
     /**
      * Gets the X coordinate of this chunk.
      *
@@ -65,7 +66,7 @@ public interface Chunk extends Wrapper, RawValueHolder {
      *
      * @return the entities
      */
-    @NotNull BasicEntity @NotNull [] getEntities();
+    @NotNull Entity @NotNull [] getEntities();
 
     /**
      * Determines if this chunk is loaded.

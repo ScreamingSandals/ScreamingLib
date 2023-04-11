@@ -34,7 +34,7 @@ import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.task.TaskState;
-import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.tasker.task.Task;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.utils.math.Vector3Df;
@@ -42,6 +42,7 @@ import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
 import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
 import org.screamingsandals.lib.world.Location;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -56,7 +57,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     private final @NotNull Map<@NotNull Integer, HologramPiece> entitiesOnLines;
     @Getter(AccessLevel.NONE)
     private volatile @Nullable HologramPiece itemEntity;
-    private volatile @Nullable TaskerTask rotationTask;
+    private volatile @Nullable Task rotationTask;
     private @NotNull Location cachedLocation;
     private @NotNull Location location;
     private int viewDistance;
@@ -415,21 +416,18 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
     private void startRotationTask() {
         if (rotationMode != RotationMode.NONE && rotationTask == null) {
-            rotationTask = Tasker.build(() -> {
-                        if (itemEntity == null || !visible) {
-                            return;
-                        }
+            rotationTask = Tasker.runAsyncRepeatedly(() -> {
+                if (itemEntity == null || !visible) {
+                    return;
+                }
 
-                        itemEntity.setHeadRotation(checkAndAdd(itemEntity.getHeadRotation()));
-                        final var metadataPacket = ClientboundSetEntityDataPacket.builder()
-                                .entityId(itemEntity.getId())
-                                .metadata(itemEntity.getMetadataItems())
-                                .build();
-                        viewers.forEach(player -> update(player, List.of(metadataPacket), false));
-                    })
-                    .repeat(rotationTime.getFirst(), rotationTime.getSecond())
-                    .async()
-                    .start();
+                itemEntity.setHeadRotation(checkAndAdd(itemEntity.getHeadRotation()));
+                final var metadataPacket = ClientboundSetEntityDataPacket.builder()
+                        .entityId(itemEntity.getId())
+                        .metadata(itemEntity.getMetadataItems())
+                        .build();
+                viewers.forEach(player -> update(player, List.of(metadataPacket), false));
+            }, rotationTime.getFirst(), rotationTime.getSecond());
         }
     }
 

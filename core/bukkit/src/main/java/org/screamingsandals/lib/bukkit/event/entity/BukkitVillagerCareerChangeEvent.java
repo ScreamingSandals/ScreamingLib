@@ -24,7 +24,7 @@ import org.bukkit.entity.Villager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.VillagerCareerChangeEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -41,11 +41,11 @@ public class BukkitVillagerCareerChangeEvent implements VillagerCareerChangeEven
     private final @NotNull org.bukkit.event.entity.VillagerCareerChangeEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private @Nullable ChangeReason reason;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }

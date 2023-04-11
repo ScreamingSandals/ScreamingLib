@@ -16,32 +16,28 @@
 
 package org.screamingsandals.lib.bukkit.tasker.task;
 
-import lombok.Data;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.task.TaskState;
-import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.tasker.task.Task;
+import org.screamingsandals.lib.utils.BasicWrapper;
 
-@Data
-public class BukkitTaskerTask implements TaskerTask {
-    private final @NotNull Integer id;
-    private final @NotNull BukkitTask taskObject;
+public class BukkitTask extends BasicWrapper<org.bukkit.scheduler.BukkitTask> implements Task {
+    public BukkitTask(org.bukkit.scheduler.@NotNull BukkitTask wrappedObject) {
+        super(wrappedObject);
+    }
 
     @Override
     public void cancel() {
         try {
-            taskObject.cancel();
+            wrappedObject.cancel();
         } catch (Exception e) {
-            throw new UnsupportedOperationException("Exception while cancelling task " + id + "!", e);
+            throw new UnsupportedOperationException("Exception while cancelling task " + wrappedObject.getTaskId() + "!", e);
         }
-
-        Tasker.unregister(this);
     }
 
     @Override
     public @NotNull TaskState getState() {
-        if (taskObject.isCancelled()) {
+        if (wrappedObject.isCancelled()) {
             return TaskState.FINISHED;
         }
 

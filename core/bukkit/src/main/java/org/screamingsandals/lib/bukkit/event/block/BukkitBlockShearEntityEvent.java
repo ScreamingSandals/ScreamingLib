@@ -26,7 +26,7 @@ import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.block.BlockShearEntityEvent;
 import org.screamingsandals.lib.item.ItemStack;
@@ -45,7 +45,7 @@ public class BukkitBlockShearEntityEvent implements BlockShearEntityEvent, Bukki
 
     // Internal cache
     private @Nullable Block block;
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private @Nullable ItemStack tool;
 
     @Override
@@ -57,7 +57,7 @@ public class BukkitBlockShearEntityEvent implements BlockShearEntityEvent, Bukki
     }
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }

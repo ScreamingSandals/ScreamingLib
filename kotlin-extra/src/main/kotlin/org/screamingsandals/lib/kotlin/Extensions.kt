@@ -19,7 +19,7 @@
 package org.screamingsandals.lib.kotlin
 
 import org.screamingsandals.lib.container.Container
-import org.screamingsandals.lib.entity.BasicEntity
+import org.screamingsandals.lib.entity.Entity
 import org.screamingsandals.lib.event.Cancellable
 import org.screamingsandals.lib.event.EventManager
 import org.screamingsandals.lib.event.SEvent
@@ -88,7 +88,7 @@ inline operator fun Vector3Di.plus(vec: Vector3Di): Vector3Di = this.clone().add
 inline operator fun Vector3Di.minus(vec: Vector3Di): Vector3Di = this.clone().subtract(vec)
 inline operator fun Vector3Di.times(multiplier: Int): Vector3Di = this.clone().multiply(multiplier)
 
-inline operator fun World.contains(entity: BasicEntity): Boolean = this == entity.location.world
+inline operator fun World.contains(entity: Entity): Boolean = this == entity.location.world
 
 // distance = location1 - location2
 
@@ -185,18 +185,18 @@ inline operator fun LinedVisual<*>.set(line: Int, text: Component) {
 
 // entity +=|-= passenger; passenger in entity
 
-inline operator fun BasicEntity.plusAssign(entity: BasicEntity) {
+inline operator fun Entity.plusAssign(entity: Entity) {
     this.addPassenger(entity)
 }
-inline operator fun BasicEntity.minusAssign(entity: BasicEntity) {
+inline operator fun Entity.minusAssign(entity: Entity) {
     this.removePassenger(entity)
 }
-inline operator fun BasicEntity.contains(entity: BasicEntity) = this.passengers.contains(entity)
+inline operator fun Entity.contains(entity: Entity) = this.passengers.contains(entity)
 
 // entity tp location|anotherEntity
 
-inline infix fun BasicEntity.tp(loc: Location): CompletableFuture<Boolean> = this.teleport(loc)
-inline infix fun BasicEntity.tp(entity: BasicEntity): CompletableFuture<Boolean> = this.teleport(entity.location)
+inline infix fun Entity.tp(loc: Location): CompletableFuture<Boolean> = this.teleport(loc)
+inline infix fun Entity.tp(entity: Entity): CompletableFuture<Boolean> = this.teleport(entity.location)
 
 // newItem = itemType * 5; newItem = newItem * 6; newItem++; newItem--
 inline operator fun ItemType.times(amount: Int): ItemStack = ItemStackFactory.builder().type(this).amount(amount).build()!!

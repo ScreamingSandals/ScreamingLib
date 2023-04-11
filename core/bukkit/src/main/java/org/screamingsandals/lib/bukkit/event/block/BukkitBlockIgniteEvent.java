@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.block.BlockIgniteEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -46,7 +46,7 @@ public class BukkitBlockIgniteEvent implements BlockIgniteEvent, BukkitCancellab
     private @Nullable IgniteCause igniteCause;
     private @Nullable Block ignitingBlock;
     private boolean ignitingBlockConverted;
-    private @Nullable BasicEntity ignitingEntity;
+    private @Nullable Entity ignitingEntity;
     private boolean ignitingEntityConverted;
 
     @Override
@@ -77,7 +77,7 @@ public class BukkitBlockIgniteEvent implements BlockIgniteEvent, BukkitCancellab
     }
 
     @Override
-    public @Nullable BasicEntity ignitingEntity() {
+    public @Nullable Entity ignitingEntity() {
         if (!ignitingEntityConverted) {
             if (event.getIgnitingEntity() != null) {
                 ignitingEntity = Entities.wrapEntity(event.getIgnitingEntity()).orElseThrow();

@@ -18,17 +18,20 @@ package org.screamingsandals.lib.velocity.tasker;
 
 import com.velocitypowered.api.scheduler.Scheduler;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.tasker.TaskBuilderImpl;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
-import org.screamingsandals.lib.tasker.task.TaskerTask;
-import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.tasker.ThreadProperty;
+import org.screamingsandals.lib.tasker.task.TaskBase;
+import org.screamingsandals.lib.tasker.task.Task;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.internal.PlatformPluginObject;
-import org.screamingsandals.lib.velocity.tasker.task.VelocityTaskerTask;
+import org.screamingsandals.lib.velocity.tasker.task.VelocityTask;
+
+import java.util.function.Consumer;
 
 @Service
 public class VelocityTasker extends Tasker {
+    // only async scheduler is present in Velocity, every ThreadProperty is ignored (only global_thread and async_thread properties should be present anyways)
     private final @NotNull Object owner;
     private final @NotNull Scheduler scheduler;
 
@@ -38,35 +41,59 @@ public class VelocityTasker extends Tasker {
     }
 
     @Override
-    public @NotNull TaskerTask start0(@NotNull TaskBuilderImpl builder) {
-        final var runnable = builder.getRunnable();
+    protected @NotNull Task run0(@NotNull ThreadProperty property, @NotNull Runnable runnable) {
+        return new VelocityTask(scheduler.buildTask(owner, runnable).schedule());
+    }
 
-        if (builder.isAfterOneTick()) {
-            final var taskBuilder = scheduler.buildTask(owner, runnable);
-            taskBuilder.delay(TaskerTime.TICKS.getTime(1), TaskerTime.TICKS.getTimeUnit());
-            return new VelocityTaskerTask(builder.getTaskId(), taskBuilder.schedule());
-        }
+    @Override
+    protected @NotNull Task runDelayed0(@NotNull ThreadProperty property, @NotNull Runnable runnable, long delay, @NotNull TaskerTime delayUnit) {
+        return new VelocityTask(
+                scheduler
+                        .buildTask(owner, runnable)
+                        .delay(delayUnit.getTime((int) delay), delayUnit.getTimeUnit())
+                        .schedule()
+        );
+    }
 
-        if (builder.isAsync()
-                && builder.getRepeat() == 0
-                && builder.getDelay() == 0) {
-            return new VelocityTaskerTask(builder.getTaskId(), scheduler.buildTask(owner, runnable).schedule());
-        }
+    @Override
+    protected @NotNull Task runRepeatedly0(@NotNull ThreadProperty property, @NotNull Runnable runnable, long period, @NotNull TaskerTime periodUnit) {
+        return new VelocityTask(
+                scheduler
+                        .buildTask(owner, runnable)
+                        .repeat(periodUnit.getTime((int) period), periodUnit.getTimeUnit())
+                        .schedule()
+        );
+    }
 
-        final var timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");
-        if (builder.getDelay() > 0 && builder.getRepeat() <= 0) {
-            return new VelocityTaskerTask(builder.getTaskId(), scheduler.buildTask(owner, runnable)
-                    .delay(timeUnit.getTime((int) builder.getRepeat()), timeUnit.getTimeUnit())
-                    .schedule());
-        }
+    @Override
+    protected @NotNull Task runRepeatedly0(@NotNull ThreadProperty property, @NotNull Consumer<@NotNull TaskBase> selfCancellable, long period, @NotNull TaskerTime periodUnit) {
+        return new VelocityTask(
+                scheduler
+                        .buildTask(owner, (selfTask) -> selfCancellable.accept(selfTask::cancel))
+                        .repeat(periodUnit.getTime((int) period), periodUnit.getTimeUnit())
+                        .schedule()
+        );
+    }
 
-        if (builder.getRepeat() > 0) {
-            return new VelocityTaskerTask(builder.getTaskId(), scheduler.buildTask(owner, runnable)
-                    .delay(timeUnit.getTime((int) builder.getDelay()), timeUnit.getTimeUnit())
-                    .repeat(timeUnit.getTime((int) builder.getRepeat()), timeUnit.getTimeUnit())
-                    .schedule());
-        }
+    @Override
+    protected @NotNull Task runDelayedAndRepeatedly0(@NotNull ThreadProperty property, @NotNull Runnable runnable, long delay, @NotNull TaskerTime delayUnit, long period, @NotNull TaskerTime periodUnit) {
+        return new VelocityTask(
+                scheduler
+                        .buildTask(owner, runnable)
+                        .delay(delayUnit.getTime((int) delay), delayUnit.getTimeUnit())
+                        .repeat(periodUnit.getTime((int) period), periodUnit.getTimeUnit())
+                        .schedule()
+        );
+    }
 
-        throw new UnsupportedOperationException("Unsupported Tasker state!");
+    @Override
+    protected @NotNull Task runDelayedAndRepeatedly0(@NotNull ThreadProperty property, @NotNull Consumer<@NotNull TaskBase> selfCancellable, long delay, @NotNull TaskerTime delayUnit, long period, @NotNull TaskerTime periodUnit) {
+        return new VelocityTask(
+                scheduler
+                        .buildTask(owner, (selfTask) -> selfCancellable.accept(selfTask::cancel))
+                        .delay(delayUnit.getTime((int) delay), delayUnit.getTimeUnit())
+                        .repeat(periodUnit.getTime((int) period), periodUnit.getTimeUnit())
+                        .schedule()
+        );
     }
 }

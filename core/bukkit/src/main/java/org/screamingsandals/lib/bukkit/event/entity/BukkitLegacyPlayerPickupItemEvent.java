@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitItemEntity;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.ItemEntity;
 import org.screamingsandals.lib.event.player.PlayerPickupItemEvent;
 import org.screamingsandals.lib.player.Player;
@@ -47,7 +47,7 @@ public class BukkitLegacyPlayerPickupItemEvent implements PlayerPickupItemEvent,
     private @Nullable ItemEntity item;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         return player();
     }
 

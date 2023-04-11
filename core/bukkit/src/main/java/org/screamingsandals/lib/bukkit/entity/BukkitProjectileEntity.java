@@ -26,7 +26,7 @@ import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.ProjectileEntity;
 import org.screamingsandals.lib.entity.ProjectileShooter;
 
-public class BukkitProjectileEntity extends BukkitBasicEntity implements ProjectileEntity {
+public class BukkitProjectileEntity extends BukkitEntity implements ProjectileEntity {
     public BukkitProjectileEntity(@NotNull Projectile wrappedObject) {
         super(wrappedObject);
     }

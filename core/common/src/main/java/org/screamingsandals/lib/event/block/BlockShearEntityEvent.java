@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
@@ -27,7 +27,7 @@ public interface BlockShearEntityEvent extends SCancellableEvent, PlatformEvent 
 
     @NotNull Block block();
 
-    @NotNull BasicEntity entity();
+    @NotNull Entity entity();
 
     @NotNull ItemStack tool();
 }

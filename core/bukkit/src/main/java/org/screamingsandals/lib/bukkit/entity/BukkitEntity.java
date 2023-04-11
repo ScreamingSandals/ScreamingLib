@@ -31,7 +31,7 @@ import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.nms.accessors.EnumZombieTypeAccessor;
@@ -51,8 +51,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class BukkitBasicEntity extends BasicWrapper<Entity> implements BasicEntity {
-    public BukkitBasicEntity(@NotNull Entity wrappedObject) {
+public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> implements Entity {
+    public BukkitEntity(@NotNull org.bukkit.entity.Entity wrappedObject) {
         super(wrappedObject);
     }
 
@@ -199,7 +199,7 @@ public class BukkitBasicEntity extends BasicWrapper<Entity> implements BasicEnti
     }
 
     @Override
-    public @NotNull List<@NotNull BasicEntity> getPassengers() {
+    public @NotNull List<@NotNull Entity> getPassengers() {
         return wrappedObject.getPassengers()
                 .stream()
                 .map(Entities::wrapEntity)
@@ -208,8 +208,8 @@ public class BukkitBasicEntity extends BasicWrapper<Entity> implements BasicEnti
     }
 
     @Override
-    public boolean addPassenger(@NotNull BasicEntity passenger) {
-        var bukkitPassenger = passenger.as(Entity.class);
+    public boolean addPassenger(@NotNull Entity passenger) {
+        var bukkitPassenger = passenger.as(org.bukkit.entity.Entity.class);
         try {
             return wrappedObject.addPassenger(bukkitPassenger);
         } catch (Throwable ignored) { // probably old version
@@ -218,9 +218,9 @@ public class BukkitBasicEntity extends BasicWrapper<Entity> implements BasicEnti
     }
 
     @Override
-    public boolean removePassenger(@NotNull BasicEntity passenger) {
+    public boolean removePassenger(@NotNull Entity passenger) {
         try {
-            return wrappedObject.removePassenger(passenger.as(Entity.class));
+            return wrappedObject.removePassenger(passenger.as(org.bukkit.entity.Entity.class));
         } catch (Throwable ignored) { // probably old version
             return wrappedObject.eject();
         }
@@ -272,7 +272,7 @@ public class BukkitBasicEntity extends BasicWrapper<Entity> implements BasicEnti
     }
 
     @Override
-    public @Nullable BasicEntity getVehicle() {
+    public @Nullable Entity getVehicle() {
         return Entities.wrapEntity(wrappedObject.getVehicle());
     }
 

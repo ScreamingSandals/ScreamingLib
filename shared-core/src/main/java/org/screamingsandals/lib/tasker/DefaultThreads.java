@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.tasker.task;
+package org.screamingsandals.lib.tasker;
 
-import org.jetbrains.annotations.NotNull;
-
-public interface TaskerTask extends TaskBase {
-
-    @NotNull Integer getId();
-
-    /**
-     * Returns the current state of this task.
-     *
-     * @return the current state of this task
-     */
-    @NotNull TaskState getState();
-
-    @NotNull Object getTaskObject();
+public enum DefaultThreads implements ThreadProperty {
+    GLOBAL_THREAD,
+    ASYNC_THREAD;
 }

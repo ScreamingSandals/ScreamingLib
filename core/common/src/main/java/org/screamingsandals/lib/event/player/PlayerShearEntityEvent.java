@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
@@ -25,7 +25,7 @@ import org.screamingsandals.lib.slot.EquipmentSlot;
 
 public interface PlayerShearEntityEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
 
-    @NotNull BasicEntity entity();
+    @NotNull Entity entity();
 
     @NotNull ItemStack item();
 

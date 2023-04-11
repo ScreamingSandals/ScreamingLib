@@ -20,13 +20,14 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.block.state.BlockSnapshot;
 
 /**
  * A class representing a block at a specific location.
  */
-public interface Block extends Wrapper {
+public interface Block extends Wrapper, ThreadProperty {
     /**
      * Sets this block to a new material.
      *

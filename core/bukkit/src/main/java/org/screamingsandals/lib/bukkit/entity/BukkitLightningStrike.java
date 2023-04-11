@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.entity;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.LightningStrike;
 
-public class BukkitLightningStrike extends BukkitBasicEntity implements LightningStrike {
+public class BukkitLightningStrike extends BukkitEntity implements LightningStrike {
     public BukkitLightningStrike(@NotNull org.bukkit.entity.LightningStrike wrappedObject) {
         super(wrappedObject);
     }

@@ -29,7 +29,7 @@ import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityPlaceEvent;
 import org.screamingsandals.lib.player.Player;
@@ -48,14 +48,14 @@ public class BukkitEntityPlaceEvent implements EntityPlaceEvent, BukkitCancellab
     private final @NotNull org.bukkit.event.entity.EntityPlaceEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private @Nullable Player player;
     private boolean playerCached;
     private @Nullable Block block;
     private @Nullable BlockFace blockFace;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }

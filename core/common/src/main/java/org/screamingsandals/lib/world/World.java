@@ -19,7 +19,7 @@ package org.screamingsandals.lib.world;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.particle.Particle;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -101,7 +101,7 @@ public interface World extends Wrapper, RawValueHolder, PlayerAudience.Forwardin
      *
      * @return the list of the entities in this world
      */
-    @NotNull List<@NotNull BasicEntity> getEntities();
+    @NotNull List<@NotNull Entity> getEntities();
 
     /**
      * Gets the list of entities extending the supplied class in this world.
@@ -110,7 +110,7 @@ public interface World extends Wrapper, RawValueHolder, PlayerAudience.Forwardin
      * @param <T> the entity type
      * @return the list of entities
      */
-    default <T extends BasicEntity> @NotNull List<@NotNull T> getEntitiesByClass(Class<T> clazz) {
+    default <T extends Entity> @NotNull List<@NotNull T> getEntitiesByClass(Class<T> clazz) {
         return getEntities().stream()
                 .filter(clazz::isInstance)
                 .map(clazz::cast)

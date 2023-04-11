@@ -17,9 +17,9 @@
 package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 
 public interface EntityCombustByEntityEvent extends EntityCombustEvent {
 
-    @NotNull BasicEntity combuster();
+    @NotNull Entity combuster();
 }

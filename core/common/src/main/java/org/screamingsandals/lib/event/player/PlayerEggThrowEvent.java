@@ -17,13 +17,13 @@
 package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.event.PlatformEvent;
 
 public interface PlayerEggThrowEvent extends PlayerEvent, PlatformEvent {
 
-    @NotNull BasicEntity eggEntity();
+    @NotNull Entity eggEntity();
 
     boolean hatching();
 

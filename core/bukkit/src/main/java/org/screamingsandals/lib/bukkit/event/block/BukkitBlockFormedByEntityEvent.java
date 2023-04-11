@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.event.block;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.block.BlockFormedByEntityEvent;
 
@@ -30,14 +30,14 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitBlockFormedByEntityEvent extends BukkitBlockFormEvent implements BlockFormedByEntityEvent {
     // Internal cache
-    private BasicEntity producer;
+    private Entity producer;
 
     public BukkitBlockFormedByEntityEvent(EntityBlockFormEvent event) {
         super(event);
     }
 
     @Override
-    public @NotNull BasicEntity producer() {
+    public @NotNull Entity producer() {
         if (producer == null) {
             producer = Entities.wrapEntity(((EntityBlockFormEvent) event()).getEntity()).orElseThrow();
         }

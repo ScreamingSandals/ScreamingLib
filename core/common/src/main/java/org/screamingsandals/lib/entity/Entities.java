@@ -51,15 +51,15 @@ public abstract class Entities {
     }
 
     @Contract("null -> null")
-    public static @Nullable BasicEntity wrapEntity(@Nullable Object entity) {
+    public static @Nullable Entity wrapEntity(@Nullable Object entity) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
         if (entity == null) {
             return null;
         }
-        if (entity instanceof BasicEntity) {
-            return (BasicEntity) entity;
+        if (entity instanceof Entity) {
+            return (Entity) entity;
         }
         return mapper.wrapEntity0(entity);
     }
@@ -137,7 +137,7 @@ public abstract class Entities {
     }
 
     @Contract("null,_ -> null")
-    public static @Nullable BasicEntity spawn(@Nullable Object entityType, @NotNull Location locationHolder) {
+    public static @Nullable Entity spawn(@Nullable Object entityType, @NotNull Location locationHolder) {
         if (entityType == null) {
             return null;
         }
@@ -152,7 +152,7 @@ public abstract class Entities {
         }
     }
 
-    public static @Nullable BasicEntity spawn(@NotNull EntityType entityType, @NotNull Location locationHolder) {
+    public static @Nullable Entity spawn(@NotNull EntityType entityType, @NotNull Location locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
@@ -197,9 +197,9 @@ public abstract class Entities {
         return mapper.getNewEntityIdSynchronously0();
     }
 
-    protected abstract @Nullable BasicEntity wrapEntity0(@NotNull Object entity);
+    protected abstract @Nullable Entity wrapEntity0(@NotNull Object entity);
 
-    public abstract @Nullable BasicEntity spawn0(@NotNull EntityType entityType, @NotNull Location locationHolder);
+    public abstract @Nullable Entity spawn0(@NotNull EntityType entityType, @NotNull Location locationHolder);
 
     public abstract @Nullable ItemEntity dropItem0(@NotNull ItemStack item, @NotNull Location locationHolder);
 

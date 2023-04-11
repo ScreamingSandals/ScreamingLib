@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityDamageByEntityEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -31,10 +31,10 @@ public class BukkitEntityDamageByEntityEvent extends BukkitEntityDamageEvent imp
     }
 
     // Internal cache
-    private @Nullable BasicEntity damager;
+    private @Nullable Entity damager;
 
     @Override
-    public @NotNull BasicEntity damager() {
+    public @NotNull Entity damager() {
         if (damager == null) {
             damager = Entities.wrapEntity(((org.bukkit.event.entity.EntityDamageByEntityEvent) event()).getDamager()).orElseThrow();
         }

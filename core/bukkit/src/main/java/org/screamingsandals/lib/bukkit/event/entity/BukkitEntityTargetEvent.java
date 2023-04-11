@@ -20,11 +20,10 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import lombok.experimental.ExtensionMethod;
-import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityTargetEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -41,11 +40,11 @@ public class BukkitEntityTargetEvent implements EntityTargetEvent, BukkitCancell
     private final @NotNull org.bukkit.event.entity.EntityTargetEvent event;
 
     // Internal cache
-    private @Nullable BasicEntity entity;
+    private @Nullable Entity entity;
     private @Nullable TargetReason targetReason;
 
     @Override
-    public @NotNull BasicEntity entity() {
+    public @NotNull Entity entity() {
         if (entity == null) {
             entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -53,7 +52,7 @@ public class BukkitEntityTargetEvent implements EntityTargetEvent, BukkitCancell
     }
 
     @Override
-    public @Nullable BasicEntity target() {
+    public @Nullable Entity target() {
         if (event.getTarget() == null) {
             return null;
         }
@@ -62,8 +61,8 @@ public class BukkitEntityTargetEvent implements EntityTargetEvent, BukkitCancell
     }
 
     @Override
-    public void target(@Nullable BasicEntity target) {
-        event.setTarget(target == null ? null : target.as(Entity.class));
+    public void target(@Nullable Entity target) {
+        event.setTarget(target == null ? null : target.as(org.bukkit.entity.Entity.class));
     }
 
     @Override
