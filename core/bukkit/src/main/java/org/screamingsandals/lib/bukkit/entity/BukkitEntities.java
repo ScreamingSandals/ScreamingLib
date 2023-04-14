@@ -30,6 +30,8 @@ import org.screamingsandals.lib.entity.LightningStrike;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.tasker.DefaultThreads;
+import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -207,11 +209,12 @@ public class BukkitEntities extends Entities {
 
     @Override
     public @NotNull CompletableFuture<@NotNull Integer> getNewEntityIdSynchronously0() {
+        // TODO: check how this is supposed to work on Folia
         CompletableFuture<Integer> future = new CompletableFuture<>();
         if (Server.isServerThread()) {
             future.complete(getNewEntityId());
         } else {
-            Server.runSynchronously(() -> future.complete(getNewEntityId()));
+            Tasker.run(DefaultThreads.GLOBAL_THREAD, () -> future.complete(getNewEntityId()));
         }
         future.exceptionally(ex -> {
             ex.printStackTrace();

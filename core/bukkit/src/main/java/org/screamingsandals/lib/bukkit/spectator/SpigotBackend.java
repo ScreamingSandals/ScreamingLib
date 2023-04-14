@@ -24,7 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.spectator.audience.adapter.BukkitAdapter;
 import org.screamingsandals.lib.bukkit.spectator.audience.adapter.BukkitConsoleAdapter;
 import org.screamingsandals.lib.bukkit.spectator.audience.adapter.BukkitPlayerAdapter;
-import org.screamingsandals.lib.bukkit.spectator.bossbar.BukkitBossBar;
+import org.screamingsandals.lib.bukkit.spectator.bossbar.BukkitBossBar1_8;
+import org.screamingsandals.lib.bukkit.spectator.bossbar.BukkitBossBar1_9;
 import org.screamingsandals.lib.bukkit.spectator.sound.BukkitDummySoundSource;
 import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundSource;
 import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundStart;
@@ -52,7 +53,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.Locale;
 
 
-// I don't think we have to implement backend for raw CraftBukkit without md_5's retarded library, who uses raw CraftBukkit in 2022 anyways
+// I don't think we have to implement backend for raw CraftBukkit without md_5's retarded library, who uses raw CraftBukkit in 2023 anyways
 public class SpigotBackend extends AbstractBungeeBackend {
     private SpectatorBackend adventureBackend;
 
@@ -77,7 +78,11 @@ public class SpigotBackend extends AbstractBungeeBackend {
             return adventureBackend.bossBar();
         }
 
-        return new BukkitBossBar.BukkitBossBarBuilder();
+        if (Version.isVersion(1, 9)) {
+            return new BukkitBossBar1_9.BukkitBossBarBuilder();
+        } else {
+            return new BukkitBossBar1_8.BukkitBossBarBuilder();
+        }
     }
 
     @Override

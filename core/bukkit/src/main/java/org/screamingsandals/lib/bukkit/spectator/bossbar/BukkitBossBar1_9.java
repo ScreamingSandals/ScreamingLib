@@ -36,10 +36,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BukkitBossBar extends BasicWrapper<BossBar> implements org.screamingsandals.lib.spectator.bossbar.BossBar {
+public class BukkitBossBar1_9 extends BasicWrapper<BossBar> implements org.screamingsandals.lib.spectator.bossbar.BossBar {
     private final @NotNull List<@NotNull RegisteredListener> internalListeners = new ArrayList<>();
 
-    public BukkitBossBar(@NotNull BossBar wrappedObject) {
+    public BukkitBossBar1_9(@NotNull BossBar wrappedObject) {
         super(wrappedObject);
     }
 
@@ -197,7 +197,7 @@ public class BukkitBossBar extends BasicWrapper<BossBar> implements org.screamin
 
         @Override
         public org.screamingsandals.lib.spectator.bossbar.@NotNull BossBar build() {
-            var boss = new BukkitBossBar(Bukkit.createBossBar(
+            var boss = new BukkitBossBar1_9(Bukkit.createBossBar(
                     title.toLegacy(),
                     BarColor.PURPLE,
                     BarStyle.SOLID

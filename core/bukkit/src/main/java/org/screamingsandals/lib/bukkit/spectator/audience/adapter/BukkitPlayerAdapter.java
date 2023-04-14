@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.bukkit.spectator.bossbar.BukkitBossBar1_8;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.ItemTagKeys;
 import org.screamingsandals.lib.item.ItemType;
@@ -143,7 +144,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
             var s = ClassStorage.asMinecraftComponent(title.subtitle());
             if (ClientboundSetTitlesAnimationPacketAccessor.getType() != null) {
                 // 1.17+
-                var times = Reflect.construct(ClientboundSetTitlesAnimationPacketAccessor.getConstructor0(), title.fadeIn(), title.stay(), title.fadeOut());
+                var times = Reflect.construct(ClientboundSetTitlesAnimationPacketAccessor.getConstructor0(), (int) title.fadeIn().toMillis() / 50, (int) title.stay().toMillis() / 50, (int) title.fadeOut().toMillis() / 50);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), times);
 
                 var titleP = Reflect.construct(ClientboundSetTitleTextPacketAccessor.getConstructor0(), t);
@@ -154,7 +155,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
                 return;
             } else if (ClientboundSetTitlesPacketAccessor.getType() != null) {
                 // 1.8.8 - 1.16.5
-                var times = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor0(), title.fadeIn(), title.stay(), title.fadeOut());
+                var times = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor0(), (int) title.fadeIn().toMillis() / 50, (int) title.stay().toMillis() / 50, (int) title.fadeOut().toMillis() / 50);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), times);
 
                 var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor1(), ClientboundSetTitlesPacket_i_TypeAccessor.getFieldTITLE(), t);
@@ -187,16 +188,24 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
 
     @Override
     public void showBossBar(@NotNull BossBar bossBar) {
-        var bukkitBoss = bossBar.as(org.bukkit.boss.BossBar.class);
-        bukkitBoss.addPlayer(commandSender());
-        if (!bukkitBoss.isVisible()) {
-            bukkitBoss.setVisible(true);
+        if (bossBar instanceof BukkitBossBar1_8) {
+            ((BukkitBossBar1_8) bossBar).addViewer(commandSender());
+        } else {
+            var bukkitBoss = bossBar.as(org.bukkit.boss.BossBar.class);
+            bukkitBoss.addPlayer(commandSender());
+            if (!bukkitBoss.isVisible()) {
+                bukkitBoss.setVisible(true);
+            }
         }
     }
 
     @Override
     public void hideBossBar(@NotNull BossBar bossBar) {
-        bossBar.as(org.bukkit.boss.BossBar.class).removePlayer(commandSender());
+        if (bossBar instanceof BukkitBossBar1_8) {
+            ((BukkitBossBar1_8) bossBar).removeViewer(commandSender());
+        } else {
+            bossBar.as(org.bukkit.boss.BossBar.class).removePlayer(commandSender());
+        }
     }
 
     @Override

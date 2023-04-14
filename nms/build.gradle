@@ -75,6 +75,16 @@ nmsGen {
         reqField('searge:field_70170_p') // world
     }
 
+    // 1.8.8 compat - Attributes (LivingEntity requires to be defined earlier)
+    reqClass('spigot:IAttribute:1.8.8') {
+        reqMethod('obfuscated:b:1.8.8')
+    }
+
+    reqClass('net.minecraft.world.entity.LivingEntity') { // 1.8.8 compat - BossBar
+        reqMethod('spigot:getAttributeInstance:1.8.8', '@IAttribute') // 1.8.8 compat - Attributes
+    }
+    // end 1.8.8 compat
+
     reqClass('net.minecraft.network.chat.Component$Serializer') {
         reqMethod('searge:func_150699_a', String) // up to 1.15.2
         reqMethod('searge:m_130701_', String) // 1.16.1+
@@ -131,6 +141,10 @@ nmsGen {
         reqConstructor('io.netty.buffer.ByteBuf')
     }
 
+    reqClass('net.minecraft.network.syncher.SynchedEntityData') {
+        reqMethod('spigot:watch', int, Object) // 1.8.8 compat - bossbar - 1.8.8 ONLY method
+    }
+
     reqClass('net.minecraft.network.protocol.Packet')
 
     reqClass('net.minecraft.network.protocol.game.ClientboundAnimatePacket')
@@ -143,7 +157,9 @@ nmsGen {
     }
     reqClass('net.minecraft.network.protocol.game.ClientboundContainerClosePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket')
-    reqClass('net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket') {
+        reqConstructor(int[]) // 1.8.8 compat - bossbar
+    }
     reqClass('net.minecraft.network.protocol.game.ClientboundSetCameraPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket')
@@ -158,9 +174,13 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$Rot')
     reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$Pos')
     reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$PosRot')
-    reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket') {
+        reqConstructor(int, '@SynchedEntityData', boolean) // 1.8.8 compat - bossbar
+    }
     reqClass('net.minecraft.network.protocol.game.ClientboundEntityEventPacket')
-    reqClass('net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket') {
+        reqConstructor('@Entity') // 1.8.8 compat - bossbar
+    }
     reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetExperiencePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundExplodePacket')
@@ -184,7 +204,9 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetObjectivePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetScorePacket')
-    reqClass('net.minecraft.network.protocol.game.ClientboundAddMobPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundAddMobPacket') {
+        reqConstructor('@LivingEntity') // 1.8.8 compat - bossbar
+    }
     reqClass('net.minecraft.network.protocol.game.ClientboundAddEntityPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket')
@@ -427,10 +449,6 @@ nmsGen {
         reqField('spigot:attributeJumpStrength:1.8.8')
     }
 
-    reqClass('spigot:IAttribute:1.8.8') {
-        reqMethod('obfuscated:b:1.8.8')
-    }
-
     reqClass('net.minecraft.world.entity.ai.attributes.AttributeModifier') {
         reqMethod('obfuscated:a:1.8.8') // amount
         reqMethod('obfuscated:b:1.8.8') // operation (ordered: 0,1,2)
@@ -450,8 +468,15 @@ nmsGen {
         reqMethod('spigot:getValue:1.8.8') // get value
     }
 
-    reqClass('net.minecraft.world.entity.LivingEntity') {
-        reqMethod('spigot:getAttributeInstance:1.8.8', '@IAttribute')
+    // BossBars
+
+    reqClass('net.minecraft.world.entity.boss.wither.WitherBoss') {
+        reqConstructor('@Level')
+    }
+
+    reqClass('net.minecraft.world.entity.boss.enderdragon.EnderDragon') {
+        reqConstructor('@Level')
+        reqField('subEntities')
     }
     /* 1.8.8 compat end */
 }

@@ -31,7 +31,9 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.UUID;
 
 public class EntityNMS {
-	protected final Object handler;
+	protected Object handler;
+
+	protected EntityNMS() {}
 
 	public EntityNMS(Object handler) {
 		this.handler = handler;

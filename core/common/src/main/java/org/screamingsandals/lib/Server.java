@@ -24,7 +24,6 @@ import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.player.Sender;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.ProxyType;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.world.World;
 
@@ -114,17 +113,6 @@ public abstract class Server {
         return server.getConnectedPlayersFromWorld0(world);
     }
 
-    /**
-     * Runs a {@link Runnable} synchronously (on the main server thread).
-     *
-     * @param task the runnable
-     */
-    public static void runSynchronously(@NotNull Runnable task) {
-        Preconditions.checkNotNull(server, "Server has not yet been initialized!");
-        Preconditions.checkNotNull(task, "Invalid task provided!");
-        server.runSynchronously0(task);
-    }
-
     public static void shutdown() {
         Preconditions.checkNotNull(server, "Server has not yet been initialized!").shutdown0();
     }
@@ -165,8 +153,6 @@ public abstract class Server {
     public abstract @NotNull List<@NotNull Player> getConnectedPlayersFromWorld0(@NotNull World world);
 
     public abstract @NotNull List<@NotNull World> getWorlds0();
-
-    public abstract void runSynchronously0(@NotNull Runnable task);
 
     public abstract List<@NotNull ChannelFuture> getConnections0();
 

@@ -22,6 +22,7 @@ import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.packet.event.SPlayerServerboundInteractEvent;
 import org.screamingsandals.lib.player.Player;
+import org.screamingsandals.lib.tasker.DefaultThreads;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.InteractType;
@@ -234,7 +235,8 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
                     }
                     coolDownMap.put(player.getUuid(), System.currentTimeMillis());
                 }
-                Server.runSynchronously(() -> fireVisualTouchEvent(player, visual, event.getInteractType()));
+                // TODO: is this synchronization really needed?
+                Tasker.run(DefaultThreads.GLOBAL_THREAD, () -> fireVisualTouchEvent(player, visual, event.getInteractType()));
                 break;
             }
         }

@@ -17,10 +17,8 @@
 package org.screamingsandals.lib.bukkit;
 
 import io.netty.channel.ChannelFuture;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
@@ -42,11 +40,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
 public class BukkitServer extends Server {
-    private final @NotNull Plugin plugin;
-
     private static final @NotNull Map<@NotNull String, String> UNSAFE_SOUND_CACHE = new HashMap<>();
 
     {
@@ -118,11 +113,6 @@ public class BukkitServer extends Server {
         return Bukkit.getWorlds().stream()
                 .map(Worlds::wrapWorld)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void runSynchronously0(@NotNull Runnable task) {
-        Bukkit.getServer().getScheduler().runTask(plugin, task);
     }
 
     @SuppressWarnings("unchecked")
