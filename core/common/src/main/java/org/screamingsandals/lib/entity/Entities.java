@@ -22,13 +22,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.type.EntityType;
-import org.screamingsandals.lib.entity.type.EntityTypeRegistry;
+import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.meta.PotionEffectRegistry;
+import org.screamingsandals.lib.impl.item.meta.PotionEffectRegistry;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.Location;
-import org.screamingsandals.lib.world.Locations;
+import org.screamingsandals.lib.impl.world.Locations;
 
 import java.util.concurrent.CompletableFuture;
 

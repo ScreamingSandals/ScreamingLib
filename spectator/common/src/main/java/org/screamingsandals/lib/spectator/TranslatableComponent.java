@@ -18,6 +18,9 @@ package org.screamingsandals.lib.spectator;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.spectator.Spectator;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +44,13 @@ public interface TranslatableComponent extends Component {
     @Contract(pure = true)
     @NotNull TranslatableComponent withArgs(@NotNull Collection<Component> components);
 
+    @LimitedVersionSupport(">= 1.19.4")
+    @Nullable String fallback();
+
+    @LimitedVersionSupport(">= 1.19.4")
+    @Contract(pure = true)
+    @NotNull TranslatableComponent withFallback(@Nullable String fallback);
+
     @Contract(value = "-> new", pure = true)
     TranslatableComponent.@NotNull Builder toBuilder();
 
@@ -53,5 +63,9 @@ public interface TranslatableComponent extends Component {
 
         @Contract("_ -> this")
         @NotNull Builder args(@NotNull Collection<Component> components);
+
+        @LimitedVersionSupport(">= 1.19.4")
+        @Contract("_ -> this")
+        @NotNull Builder fallback(@Nullable String fallback);
     }
 }

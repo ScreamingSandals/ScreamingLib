@@ -17,10 +17,10 @@
 package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.player.Player;
 
-public interface PlayerEvent extends SEvent {
+public interface PlayerEvent extends Event {
 
     /**
      * Gets the player associated with this event.

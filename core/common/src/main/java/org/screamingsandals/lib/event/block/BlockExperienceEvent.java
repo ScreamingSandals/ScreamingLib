@@ -18,12 +18,12 @@ package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SEvent;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.event.Event;
+import org.screamingsandals.lib.block.BlockPlacement;
 
-public interface BlockExperienceEvent extends SEvent, PlatformEvent {
+public interface BlockExperienceEvent extends Event, PlatformEvent {
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
     int experience();
 

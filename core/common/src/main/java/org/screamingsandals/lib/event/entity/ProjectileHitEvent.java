@@ -20,17 +20,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.utils.BlockFace;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
-public interface ProjectileHitEvent extends SCancellableEvent, PlatformEvent {
+public interface ProjectileHitEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Entity entity();
 
     @Nullable Entity hitEntity();
 
-    @Nullable Block hitBlock();
+    @Nullable BlockPlacement hitBlock();
 
     @Nullable BlockFace hitFace();
 }

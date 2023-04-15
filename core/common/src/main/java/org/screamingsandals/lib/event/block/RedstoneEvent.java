@@ -18,13 +18,13 @@ package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.Event;
 
-public interface RedstoneEvent extends SEvent, PlatformEvent {
+public interface RedstoneEvent extends Event, PlatformEvent {
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
     @Range(from = 0, to = 15)
     int oldCurrent();

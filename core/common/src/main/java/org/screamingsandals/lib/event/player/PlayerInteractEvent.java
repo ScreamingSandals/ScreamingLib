@@ -19,23 +19,23 @@ package org.screamingsandals.lib.event.player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
+import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.ItemStackView;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.utils.BlockFace;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
 import java.util.List;
 
-public interface PlayerInteractEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerInteractEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     @Nullable ItemStackView item();
 
     @NotNull Action action();
 
-    @Nullable Block clickedBlock();
+    @Nullable BlockPlacement clickedBlock();
 
     @NotNull BlockFace blockFace();
 
@@ -61,8 +61,8 @@ public interface PlayerInteractEvent extends SCancellableEvent, PlayerEvent, Pla
      */
     @Override
     default void cancelled(boolean cancel) {
-        useClickedBlock(cancel ? SEvent.Result.DENY : useClickedBlock() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : useClickedBlock());
-        useItemInHand(cancel ? SEvent.Result.DENY : useItemInHand() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : useItemInHand());
+        useClickedBlock(cancel ? Event.Result.DENY : useClickedBlock() == Event.Result.DENY ? Event.Result.DEFAULT : useClickedBlock());
+        useItemInHand(cancel ? Event.Result.DENY : useItemInHand() == Event.Result.DENY ? Event.Result.DEFAULT : useItemInHand());
     }
 
     /**

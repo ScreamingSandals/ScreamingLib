@@ -20,11 +20,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.Location;
 
-public interface EntityPortalExitEvent extends SEvent, PlatformEvent {
+public interface EntityPortalExitEvent extends Event, PlatformEvent {
 
     @NotNull Entity entity();
 

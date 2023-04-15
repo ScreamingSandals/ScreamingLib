@@ -18,13 +18,13 @@ package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
-public interface BlockCookEvent extends SCancellableEvent, PlatformEvent {
+public interface BlockCookEvent extends CancellableEvent, PlatformEvent {
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
     @NotNull ItemStack source();
 

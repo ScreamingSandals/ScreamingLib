@@ -17,11 +17,11 @@
 package org.screamingsandals.lib.proxy.event;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.SCancellableAsyncEvent;
+import org.screamingsandals.lib.event.CancellableAsyncEvent;
 import org.screamingsandals.lib.proxy.PendingConnection;
 import org.screamingsandals.lib.spectator.Component;
 
-public interface SPlayerLoginEvent extends SCancellableAsyncEvent {
+public interface SPlayerLoginEvent extends CancellableAsyncEvent {
     @NotNull PendingConnection getPlayer();
 
     @NotNull Component getCancelMessage();

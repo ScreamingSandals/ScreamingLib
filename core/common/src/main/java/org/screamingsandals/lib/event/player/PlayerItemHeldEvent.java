@@ -17,9 +17,9 @@
 package org.screamingsandals.lib.event.player;
 
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 
-public interface PlayerItemHeldEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerItemHeldEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     /**
      * Gets the previous held slot index

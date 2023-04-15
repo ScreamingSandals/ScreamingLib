@@ -16,26 +16,20 @@
 
 package org.screamingsandals.lib.world;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Class responsible for converting platform worlds to wrappers.
  */
 @ProvidedService
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public abstract class Worlds {
-    protected final @NotNull BidirectionalConverter<World> converter = BidirectionalConverter.<World>build()
-            .registerP2W(World.class, e -> e);
-
     private static @Nullable Worlds worlds;
 
     /**
@@ -48,49 +42,6 @@ public abstract class Worlds {
         }
         worlds = this;
     }
-
-    /**
-     * Resolves the supplied platform world to its {@link World} wrapper, can be empty.
-     *
-     * @param obj the platform world
-     * @return the world wrapper
-     */
-    @Contract("null -> null")
-    public static @Nullable World resolve(@Nullable Object obj) {
-        if (worlds == null) {
-            throw new UnsupportedOperationException("Worlds is not initialized yet.");
-        }
-        return worlds.converter.convertNullable(obj);
-    }
-
-    /**
-     * Maps the supplied platform world to its {@link World} wrapper.
-     *
-     * @param input the platform world
-     * @param <T> the platform world type
-     * @return the world wrapper
-     * @throws java.util.NoSuchElementException when the world could not be mapped
-     */
-    public static <T> @NotNull World wrapWorld(@NotNull T input) {
-        return resolve(input).orElseThrow();
-    }
-
-    /**
-     * Converts the world holder to a new type (like a platform world type).
-     *
-     * @param holder the world holder to convert
-     * @param newType the new type class
-     * @param <T> the new type
-     * @return the world holder converted to the supplied type
-     * @throws UnsupportedOperationException when the wrapper could not be converted to its new type
-     */
-    public static <T> T convert(@NotNull World holder, @NotNull Class<T> newType) {
-        if (worlds == null) {
-            throw new UnsupportedOperationException("Worlds is not initialized yet.");
-        }
-        return worlds.converter.convert(holder, newType);
-    }
-
 
     /**
      * Gets the world holder by a supplied {@link UUID}.
@@ -126,9 +77,23 @@ public abstract class Worlds {
         return worlds.getWorld0(name);
     }
 
+    /**
+     * Gets the list of worlds that are currently loaded pn the server.
+     *
+     * @return list of worlds currently loaded on the server
+     */
+    public static @NotNull List<@NotNull World> getWorlds() {
+        if (worlds == null) {
+            throw new UnsupportedOperationException("Worlds is not initialized yet.");
+        }
+        return worlds.getWorlds0();
+    }
+
     // abstract methods for implementations
 
     protected abstract @Nullable World getWorld0(@NotNull UUID uuid);
 
     protected abstract @Nullable World getWorld0(@NotNull String name);
+
+    protected abstract @NotNull List<@NotNull World> getWorlds0();
 }

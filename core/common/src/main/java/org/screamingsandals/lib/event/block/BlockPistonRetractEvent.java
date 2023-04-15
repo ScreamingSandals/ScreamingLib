@@ -17,11 +17,11 @@
 package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
 import java.util.Collection;
 
 public interface BlockPistonRetractEvent extends BlockPistonEvent {
 
-    @NotNull Collection<@NotNull Block> pushedBlocks();
+    @NotNull Collection<@NotNull BlockPlacement> pushedBlocks();
 }

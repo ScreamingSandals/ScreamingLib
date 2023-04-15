@@ -19,12 +19,12 @@ package org.screamingsandals.lib.event.player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.utils.*;
 
-public interface PlayerInventoryClickEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerInventoryClickEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     @Nullable ItemStack cursorItem();
 

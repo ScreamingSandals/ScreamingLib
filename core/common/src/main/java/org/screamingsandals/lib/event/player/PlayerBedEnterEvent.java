@@ -18,14 +18,14 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.event.CancellableEvent;
+import org.screamingsandals.lib.block.BlockPlacement;
 
 import java.util.Locale;
 
-public interface PlayerBedEnterEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerBedEnterEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
-    @NotNull Block bed();
+    @NotNull BlockPlacement bed();
 
     @NotNull BedEnterResult bedEnterResult();
 

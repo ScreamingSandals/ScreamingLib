@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.ItemEntity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 
-public interface EntityDropItemEvent extends SCancellableEvent, PlatformEvent {
+public interface EntityDropItemEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Entity entity();
 

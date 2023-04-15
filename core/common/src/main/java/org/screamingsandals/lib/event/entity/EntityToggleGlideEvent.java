@@ -19,8 +19,8 @@ package org.screamingsandals.lib.event.entity;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
-public interface EntityToggleGlideEvent extends SCancellableEvent, PlatformEvent {
+import org.screamingsandals.lib.event.CancellableEvent;
+public interface EntityToggleGlideEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Entity entity();
 

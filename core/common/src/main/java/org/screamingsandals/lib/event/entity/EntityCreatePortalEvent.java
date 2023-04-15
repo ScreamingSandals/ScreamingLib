@@ -19,13 +19,13 @@ package org.screamingsandals.lib.event.entity;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.utils.PortalType;
-import org.screamingsandals.lib.block.state.BlockSnapshot;
+import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 
 import java.util.Collection;
 
-public interface EntityCreatePortalEvent extends SCancellableEvent, PlatformEvent {
+public interface EntityCreatePortalEvent extends CancellableEvent, PlatformEvent {
     @NotNull Entity entity();
 
     @NotNull Collection<@NotNull BlockSnapshot> blocks();

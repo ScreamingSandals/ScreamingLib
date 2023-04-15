@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.Event;
 
-public interface EntityPoseChangeEvent extends SEvent, PlatformEvent {
+public interface EntityPoseChangeEvent extends Event, PlatformEvent {
     @NotNull Entity entity();
 
     @NotNull EntityPose pose();

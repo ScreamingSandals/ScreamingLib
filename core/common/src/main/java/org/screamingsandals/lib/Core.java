@@ -16,47 +16,45 @@
 
 package org.screamingsandals.lib;
 
-import org.screamingsandals.lib.block.BlockTypeRegistry;
+import org.screamingsandals.lib.impl.block.BlockRegistry;
 import org.screamingsandals.lib.container.ContainerFactory;
-import org.screamingsandals.lib.container.type.InventoryTypeRegistry;
+import org.screamingsandals.lib.impl.container.type.InventoryTypeRegistry;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.entity.damage.DamageTypeRegistry;
-import org.screamingsandals.lib.entity.pose.EntityPoseRegistry;
-import org.screamingsandals.lib.entity.type.EntityTypeRegistry;
+import org.screamingsandals.lib.impl.entity.damage.DamageTypeRegistry;
+import org.screamingsandals.lib.impl.entity.pose.EntityPoseRegistry;
+import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.item.ItemTypeRegistry;
-import org.screamingsandals.lib.attribute.Attributes;
-import org.screamingsandals.lib.attribute.AttributeTypeRegistry;
+import org.screamingsandals.lib.impl.ItemBlockIdsRemapper;
+import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
+import org.screamingsandals.lib.impl.attribute.Attributes;
+import org.screamingsandals.lib.impl.attribute.AttributeTypeRegistry;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
-import org.screamingsandals.lib.firework.FireworkEffectRegistry;
-import org.screamingsandals.lib.item.meta.EnchantmentRegistry;
-import org.screamingsandals.lib.item.meta.PotionEffectRegistry;
-import org.screamingsandals.lib.item.meta.PotionRegistry;
-import org.screamingsandals.lib.particle.ParticleTypeRegistry;
-import org.screamingsandals.lib.slot.EquipmentSlotRegistry;
+import org.screamingsandals.lib.impl.firework.FireworkEffectRegistry;
+import org.screamingsandals.lib.impl.item.meta.EnchantmentRegistry;
+import org.screamingsandals.lib.impl.item.meta.PotionEffectRegistry;
+import org.screamingsandals.lib.impl.item.meta.PotionRegistry;
+import org.screamingsandals.lib.impl.particle.ParticleTypeRegistry;
+import org.screamingsandals.lib.impl.slot.EquipmentSlotRegistry;
 import org.screamingsandals.lib.player.Players;
-import org.screamingsandals.lib.player.gamemode.GameModeRegistry;
+import org.screamingsandals.lib.impl.player.gamemode.GameModeRegistry;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
-import org.screamingsandals.lib.block.Blocks;
-import org.screamingsandals.lib.world.Locations;
+import org.screamingsandals.lib.block.BlockPlacements;
+import org.screamingsandals.lib.impl.world.Locations;
 import org.screamingsandals.lib.world.Worlds;
-import org.screamingsandals.lib.world.chunk.Chunks;
-import org.screamingsandals.lib.world.difficulty.DifficultyRegistry;
-import org.screamingsandals.lib.world.dimension.DimensionRegistry;
-import org.screamingsandals.lib.block.state.BlockSnapshots;
-import org.screamingsandals.lib.world.gamerule.GameRuleRegistry;
-import org.screamingsandals.lib.world.weather.WeatherRegistry;
+import org.screamingsandals.lib.impl.world.chunk.Chunks;
+import org.screamingsandals.lib.impl.world.difficulty.DifficultyRegistry;
+import org.screamingsandals.lib.impl.world.dimension.DimensionRegistry;
+import org.screamingsandals.lib.impl.block.snapshot.BlockSnapshots;
+import org.screamingsandals.lib.impl.world.gamerule.GameRuleRegistry;
+import org.screamingsandals.lib.impl.world.weather.WeatherRegistry;
 
 /**
  * Main entry point of the core module.
  */
-@AbstractService(
-        pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
-        replaceRule = "{basePackage}.{platform}.{Platform}{className}"
-)
+@AbstractService("org.screamingsandals.lib.impl.{platform}.{Platform}Core")
 @ServiceDependencies(dependsOn = {
         Server.class,
         CustomPayload.class,
@@ -72,12 +70,12 @@ import org.screamingsandals.lib.world.weather.WeatherRegistry;
         PotionRegistry.class,
         EquipmentSlotRegistry.class,
         ItemTypeRegistry.class,
-        BlockTypeRegistry.class,
+        BlockRegistry.class,
         ItemBlockIdsRemapper.class,
         ItemStackFactory.class,
         Players.class,
         Locations.class,
-        Blocks.class,
+        BlockPlacements.class,
         BlockSnapshots.class,
         DamageTypeRegistry.class,
         GameModeRegistry.class,

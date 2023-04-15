@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.attribute.AttributeModifier;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.attribute.ItemAttribute;
-import org.screamingsandals.lib.block.BlockType;
+import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.entity.damage.DamageType;
 import org.screamingsandals.lib.entity.pose.EntityPose;
@@ -67,7 +67,7 @@ public class SLibSerializers {
                 .register(WeatherType.class, WeatherTypeSerializer.INSTANCE)
                 .register(FireworkEffect.class, FireworkEffectSerializer.INSTANCE)
                 .register(ItemType.class, ItemTypeSerializer.INSTANCE)
-                .register(BlockType.class, BlockTypeSerializer.INSTANCE)
+                .register(Block.class, BlockTypeSerializer.INSTANCE)
                 .register(EquipmentSlot.class, EquipmentSlotSerializer.INSTANCE)
                 .register(ItemStack.class, ItemSerializer.INSTANCE)
                 .register(Location.class, LocationSerializer.INSTANCE)

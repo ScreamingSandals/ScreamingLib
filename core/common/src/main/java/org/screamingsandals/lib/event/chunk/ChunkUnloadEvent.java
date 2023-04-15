@@ -18,13 +18,13 @@ package org.screamingsandals.lib.event.chunk;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.world.chunk.Chunk;
 
 /**
  * NOTE: This event is cancellable only on old minecraft versions
  */
-public interface ChunkUnloadEvent extends SCancellableEvent, PlatformEvent {
+public interface ChunkUnloadEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Chunk chunk();
 

@@ -19,11 +19,11 @@ package org.screamingsandals.lib.event.entity;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 
 import java.util.Collection;
 
-public interface AreaEffectCloudApplyEvent extends SCancellableEvent, PlatformEvent {
+public interface AreaEffectCloudApplyEvent extends CancellableEvent, PlatformEvent {
     @NotNull Entity entity();
 
     @NotNull Collection<@NotNull Entity> affectedEntities();

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.attribute;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.api.Wrapper;
 

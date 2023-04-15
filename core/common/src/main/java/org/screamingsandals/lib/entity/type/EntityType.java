@@ -19,11 +19,12 @@ package org.screamingsandals.lib.entity.type;
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.entity.Entity;
+import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.registry.RegistryItem;
-import org.screamingsandals.lib.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItem;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.world.Location;
 
 public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder {

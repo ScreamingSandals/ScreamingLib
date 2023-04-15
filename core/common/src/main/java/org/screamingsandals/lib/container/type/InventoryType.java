@@ -21,13 +21,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
+import org.screamingsandals.lib.impl.container.type.InventoryTypeRegistry;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.registry.RegistryItem;
-import org.screamingsandals.lib.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItem;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
 
 public interface InventoryType extends RegistryItem, RawValueHolder {
     @NotNull String platformName();

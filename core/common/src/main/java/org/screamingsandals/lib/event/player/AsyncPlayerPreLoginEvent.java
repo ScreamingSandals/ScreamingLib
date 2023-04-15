@@ -18,14 +18,14 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SAsyncEvent;
+import org.screamingsandals.lib.event.AsyncEvent;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 
 import java.net.InetAddress;
 import java.util.UUID;
 
-public interface AsyncPlayerPreLoginEvent extends SAsyncEvent, PlatformEvent {
+public interface AsyncPlayerPreLoginEvent extends AsyncEvent, PlatformEvent {
 
     /**
      * Gets the UUID

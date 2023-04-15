@@ -7,5 +7,5 @@ dependencies {
 }
 
 shadowJar {
-    relocate 'io.papermc.lib', 'org.screamingsandals.lib.ext.paperlib'
+    relocate 'io.papermc.lib', 'org.screamingsandals.lib.impl.ext.paperlib'
 }

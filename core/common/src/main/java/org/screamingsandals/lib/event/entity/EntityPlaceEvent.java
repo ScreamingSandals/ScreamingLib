@@ -20,17 +20,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.BlockFace;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
-public interface EntityPlaceEvent extends SCancellableEvent, PlatformEvent {
+public interface EntityPlaceEvent extends CancellableEvent, PlatformEvent {
     @NotNull Entity entity();
 
     @Nullable Player player();
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
     @NotNull BlockFace blockFace();
 }

@@ -18,10 +18,10 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.world.Location;
 
-public interface PlayerMoveEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerMoveEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     @NotNull Location currentLocation();
 

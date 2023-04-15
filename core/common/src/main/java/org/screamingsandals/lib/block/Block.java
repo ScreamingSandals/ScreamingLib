@@ -16,63 +16,118 @@
 
 package org.screamingsandals.lib.block;
 
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.api.Wrapper;
-import org.screamingsandals.lib.tasker.ThreadProperty;
-import org.screamingsandals.lib.world.Location;
-import org.screamingsandals.lib.block.state.BlockSnapshot;
+import org.jetbrains.annotations.*;
+import org.screamingsandals.lib.TaggableHolder;
+import org.screamingsandals.lib.impl.block.BlockRegistry;
+import org.screamingsandals.lib.item.ItemType;
+import org.screamingsandals.lib.particle.ParticleData;
+import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItem;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
+
+import java.util.*;
 
 /**
- * A class representing a block at a specific location.
+ * Class representing a <strong>block</strong> material.
+ * <p>
+ * Use {@link ItemType} for item materials.
  */
-public interface Block extends Wrapper, ThreadProperty {
-    /**
-     * Sets this block to a new material.
-     *
-     * @param type new material
-     */
-    void type(@NotNull BlockType type);
+public interface Block extends RegistryItem, ParticleData, TaggableHolder {
 
-    /**
-     * Sets this block to a new material without applying physics.
-     *
-     * @param type new material
-     */
     @ApiStatus.Experimental
-    void alterTypeWithoutPhysics(@NotNull BlockType type);
+    @NotNull String platformName();
+
+    @Unmodifiable @NotNull Map<@NotNull String, String> stateData();
+
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull Block withStateData(@NotNull Map<@NotNull String, String> stateData);
+
+    @Contract(value = "_, _ -> new", pure = true)
+    @NotNull Block with(@NotNull String attribute, @NotNull String value);
+
+    @Contract(value = "_, _ -> new", pure = true)
+    @NotNull Block with(@NotNull String attribute, int value);
+
+    @Contract(value = "_, _ -> new", pure = true)
+    @NotNull Block with(@NotNull String attribute, boolean value);
+
+    @Contract(value = "_ -> new", pure = true)
+    default @NotNull Block colorize(@NotNull String color) {
+        return BlockRegistry.colorize(this, color);
+    }
+
+    @Nullable String get(@NotNull String attribute);
+
+    @Nullable Integer getInt(@NotNull String attribute);
+
+    @Nullable Boolean getBoolean(@NotNull String attribute);
+
+    default boolean isAir() {
+        return isSameType(air(), "minecraft:cave_air", "minecraft:void_air");
+    }
+
+    boolean isSolid();
+
+    boolean isTransparent();
+
+    boolean isFlammable();
+
+    boolean isBurnable();
+
+    boolean isOccluding();
+
+    boolean hasGravity();
+
+    @Override
+    boolean hasTag(@MinecraftType(MinecraftType.Type.BLOCK_TYPE_TAG) @NotNull Object tag);
+
+    boolean isSameType(@MinecraftType(MinecraftType.Type.BLOCK_TYPE) @Nullable Object object);
+
+    boolean isSameType(@MinecraftType(MinecraftType.Type.BLOCK_TYPE) @Nullable Object @NotNull... objects);
 
     /**
-     * Gets the current material at the location of this block.
+     * This method accept any object that represents block type, or:
+     * <br>
+     * tags if prefixed with #
+     * <br>
+     * the type without the exact state if suffixed by [*] (alternative to {@link #isSameType(Object)}
      *
-     * @return current material
+     * @param object object that represents block type
+     * @return true if this block is the same as the object
      */
-    @NotNull BlockType type();
+    @Override
+    boolean is(@MinecraftType(MinecraftType.Type.BLOCK_OR_TAG) @Nullable Object object);
+
+    @Override
+    boolean is(@MinecraftType(MinecraftType.Type.BLOCK_OR_TAG) @Nullable Object @NotNull... objects);
 
     /**
-     * Gets the {@link BlockSnapshot} of this block.
+     * Returns location followed by this specific block state
      *
-     * @return the block snapshot, empty if there is none
+     * @return location followed by this specific block state
      */
-    @Nullable BlockSnapshot blockSnapshot();
+    @NotNull String completeState();
 
-    /**
-     * Breaks this block naturally.
-     */
-    void breakNaturally();
+    static @NotNull Block of(@MinecraftType(MinecraftType.Type.BLOCK) @NotNull Object type) {
+        var result = ofNullable(type);
+        Preconditions.checkNotNullIllegal(result, "Could not find block type: " + type);
+        return result;
+    }
 
-    /**
-     * Location of this block.
-     *
-     * @return the block location
-     */
-    @NotNull Location location();
+    @Contract("null -> null")
+    static @Nullable Block ofNullable(@MinecraftType(MinecraftType.Type.BLOCK) @Nullable Object type) {
+        if (type instanceof Block) {
+            return (Block) type;
+        }
+        return BlockRegistry.getInstance().resolveMapping(type);
+    }
 
-    /**
-     * Determines if this block is empty (is of the minecraft:air material or its derivatives).
-     *
-     * @return is this block empty?
-     */
-    boolean isEmpty();
+    static @NotNull Block air() {
+        return BlockRegistry.getCachedAir();
+    }
+
+    static @NotNull RegistryItemStream<@NotNull Block> all() {
+        return BlockRegistry.getInstance().getRegistryItemStream();
+    }
 }

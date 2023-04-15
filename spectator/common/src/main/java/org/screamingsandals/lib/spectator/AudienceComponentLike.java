@@ -19,6 +19,7 @@ package org.screamingsandals.lib.spectator;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.spectator.StaticAudienceComponentLike;
 import org.screamingsandals.lib.spectator.audience.Audience;
 
 import java.util.List;

@@ -38,7 +38,6 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -173,31 +172,9 @@ public class MiscUtils {
             throw new UnsupportedOperationException("Type " + typeElement.getQualifiedName() + " doesn't have @AbstractService annotation");
         }
 
-        var pattern = Pattern.compile(mappingAnnotation.pattern());
-        var matcher = pattern.matcher(typeElement.getQualifiedName().toString());
-
-        if (!matcher.matches()) {
-            throw new UnsupportedOperationException("Pattern in @AbstractService annotation of " + typeElement.getQualifiedName() + " is invalid");
-        }
-
-        var sb = new StringBuilder();
-        var pattern2 = Pattern.compile("(\\{[^}]+})");
-        var matcher2 = pattern2.matcher(mappingAnnotation.replaceRule());
-
-        while (matcher2.find()) {
-            var g = matcher2.group(1);
-            try {
-                var repString = matcher.group(g.substring(1, g.length() - 1));
-                if (repString != null) {
-                    matcher2.appendReplacement(sb, repString);
-                }
-            } catch (IllegalArgumentException ignored) { }
-        }
-        matcher2.appendTail(sb);
-
         var map = new HashMap<PlatformType, ServiceContainer>();
 
-        final var rule = sb.toString();
+        final var rule = mappingAnnotation.value();
 
         platformTypes.forEach(platformType -> {
             var resolvedClassName = rule

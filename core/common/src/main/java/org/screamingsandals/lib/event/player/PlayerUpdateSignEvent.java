@@ -19,14 +19,14 @@ package org.screamingsandals.lib.event.player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.event.CancellableEvent;
+import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 
-public interface PlayerUpdateSignEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerUpdateSignEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
     @NotNull Component @NotNull [] lines();
 

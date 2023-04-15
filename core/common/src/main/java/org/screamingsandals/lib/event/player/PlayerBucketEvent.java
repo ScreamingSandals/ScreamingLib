@@ -19,17 +19,17 @@ package org.screamingsandals.lib.event.player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.utils.BlockFace;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
-public interface PlayerBucketEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerBucketEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
-    @NotNull Block blockClicked();
+    @NotNull BlockPlacement blockClicked();
 
     @NotNull BlockFace blockFace();
 

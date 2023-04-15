@@ -24,7 +24,7 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.List;
 
-@AbstractService
+@AbstractService("org.screamingsandals.lib.impl.{platform}.plugin.{Platform}Plugins")
 public abstract class Plugins {
     private static @Nullable Plugins pluginManager;
 

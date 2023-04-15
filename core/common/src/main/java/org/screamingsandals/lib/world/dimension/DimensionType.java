@@ -20,11 +20,12 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.world.dimension.DimensionRegistry;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.registry.RegistryItem;
-import org.screamingsandals.lib.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItem;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
 
 public interface DimensionType extends RegistryItem, RawValueHolder {
     @ApiStatus.Experimental

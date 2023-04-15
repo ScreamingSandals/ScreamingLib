@@ -18,16 +18,16 @@ package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.event.CancellableEvent;
+import org.screamingsandals.lib.block.BlockPlacement;
 
 import java.util.Collection;
 
-public interface BlockExplodeEvent extends SCancellableEvent, PlatformEvent {
+public interface BlockExplodeEvent extends CancellableEvent, PlatformEvent {
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
-    @NotNull Collection<@NotNull Block> destroyedBlocks();
+    @NotNull Collection<@NotNull BlockPlacement> destroyedBlocks();
 
     float yield();
 

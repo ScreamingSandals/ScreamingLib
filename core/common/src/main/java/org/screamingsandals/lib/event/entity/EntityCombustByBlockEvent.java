@@ -17,9 +17,9 @@
 package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
 public interface EntityCombustByBlockEvent extends EntityCombustEvent {
 
-    @Nullable Block combuster();
+    @Nullable BlockPlacement combuster();
 }

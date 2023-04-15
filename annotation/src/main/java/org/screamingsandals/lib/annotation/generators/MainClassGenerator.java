@@ -21,14 +21,13 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.Triple;
+import org.screamingsandals.lib.impl.utils.Triple;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.QualifiedNameable;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;

@@ -18,10 +18,10 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
 
-public interface PlayerItemConsumeEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerItemConsumeEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     @Nullable ItemStack item();
 

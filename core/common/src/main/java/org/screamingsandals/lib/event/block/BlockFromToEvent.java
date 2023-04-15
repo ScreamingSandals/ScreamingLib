@@ -18,15 +18,15 @@ package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.utils.BlockFace;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
-public interface BlockFromToEvent extends SCancellableEvent, PlatformEvent {
+public interface BlockFromToEvent extends CancellableEvent, PlatformEvent {
 
-    @NotNull Block sourceBlock();
+    @NotNull BlockPlacement sourceBlock();
 
-    @NotNull Block facedBlock();
+    @NotNull BlockPlacement facedBlock();
 
     @NotNull BlockFace face();
 }

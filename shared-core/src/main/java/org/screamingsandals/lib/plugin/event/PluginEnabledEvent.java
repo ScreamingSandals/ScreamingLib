@@ -17,12 +17,12 @@
 package org.screamingsandals.lib.plugin.event;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.plugin.Plugin;
 
 /**
  * NOTE: Only Platforms that support plugin enabling and disabling of plugins have this event.
  */
-public interface PluginEnabledEvent extends SEvent {
+public interface PluginEnabledEvent extends Event {
     @NotNull Plugin plugin();
 }

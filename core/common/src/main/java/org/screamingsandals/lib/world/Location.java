@@ -21,11 +21,12 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.api.Wrapper;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.entity.Entity;
+import org.screamingsandals.lib.impl.world.Locations;
 import org.screamingsandals.lib.particle.Particle;
 import org.screamingsandals.lib.tasker.ThreadProperty;
-import org.screamingsandals.lib.utils.*;
+import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
@@ -255,9 +256,11 @@ public class Location implements Wrapper, ThreadProperty {
      * @return the squared distance
      */
     public double getDistanceSquared(@NotNull Location holder) {
-        return MathUtils.square(getX() - holder.getX()) +
-                MathUtils.square(getY() - holder.getY()) +
-                MathUtils.square(getZ() - holder.getZ());
+        double dx = getX() - holder.getX();
+        double dy = getY() - holder.getY();
+        double dz = getZ() - holder.getZ();
+
+        return dx * dx + dy * dy + dz * dz;
     }
 
     /**
@@ -327,8 +330,8 @@ public class Location implements Wrapper, ThreadProperty {
      *
      * @return the block
      */
-    public @NotNull Block getBlock() {
-        return as(Block.class);
+    public @NotNull BlockPlacement getBlock() {
+        return as(BlockPlacement.class);
     }
 
     /**
@@ -354,7 +357,7 @@ public class Location implements Wrapper, ThreadProperty {
      *
      * @return the highest non-empty block
      */
-    public @NotNull Block getHighestBlock() {
+    public @NotNull BlockPlacement getHighestBlock() {
         return getWorld().getHighestBlockAt(getBlockX(), getBlockZ());
     }
 

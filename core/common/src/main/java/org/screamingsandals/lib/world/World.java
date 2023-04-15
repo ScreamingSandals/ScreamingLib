@@ -18,7 +18,7 @@ package org.screamingsandals.lib.world;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.particle.Particle;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
@@ -185,7 +185,7 @@ public interface World extends Wrapper, RawValueHolder, PlayerAudience.Forwardin
      * @param z the z coordinate
      * @return the highest non-empty block
      */
-    @NotNull Block getHighestBlockAt(int x, int z);
+    @NotNull BlockPlacement getHighestBlockAt(int x, int z);
 
     /**
      * Gets the highest non-empty Y coordinate at the given X and Z coordinates.

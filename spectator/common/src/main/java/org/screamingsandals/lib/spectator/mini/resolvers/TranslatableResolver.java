@@ -58,12 +58,15 @@ public class TranslatableResolver implements SingleTagResolver {
     @Override
     public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         if (component instanceof TranslatableComponent) {
-            var args = new ArrayList<String>();
-            args.add(((TranslatableComponent) component).translate());
-            for (var arg : ((TranslatableComponent) component).args()) {
-                args.add(parser.serialize(arg));
+            var fallback = ((TranslatableComponent) component).fallback();
+            if (fallback == null) {
+                var args = new ArrayList<String>();
+                args.add(((TranslatableComponent) component).translate());
+                for (var arg : ((TranslatableComponent) component).args()) {
+                    args.add(parser.serialize(arg));
+                }
+                return new TagNode(tagName, args);
             }
-            return new TagNode(tagName, args);
         }
         return null;
     }

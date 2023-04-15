@@ -19,10 +19,10 @@ package org.screamingsandals.lib.event.player;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 
-public interface PlayerInteractEntityEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerInteractEntityEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     @NotNull Entity clickedEntity();
 

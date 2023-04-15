@@ -49,6 +49,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
 
     // Translate
     private static final @NotNull String TRANSLATE_KEY = "translate";
+    private static final @NotNull String FALLBACK_KEY = "fallback";
     private static final @NotNull String WITH_KEY = "with";
 
     // Score
@@ -123,7 +124,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
             if (node.hasChild(TEXT_KEY)) {
                 builder = Component.text().content(node.node(TEXT_KEY).getString());
             } else if (node.hasChild(TRANSLATE_KEY)) {
-                builder = Component.translatable().translate(node.node(TRANSLATE_KEY).getString());
+                builder = Component.translatable().translate(node.node(TRANSLATE_KEY).getString()).fallback(node.node(FALLBACK_KEY).getString());
 
                 if (node.hasChild(WITH_KEY)) {
                     var withNode = node.node(WITH_KEY);
@@ -250,6 +251,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
             node.node(TEXT_KEY).set(((TextComponent) obj).content());
         } else if (obj instanceof TranslatableComponent) {
             node.node(TRANSLATE_KEY).set(((TranslatableComponent) obj).translate());
+            node.node(FALLBACK_KEY).set(((TranslatableComponent) obj).fallback());
             var args = ((TranslatableComponent) obj).args();
             if (!args.isEmpty()) {
                 var withNode = node.node(WITH_KEY);

@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.utils.annotations;
 
+import org.screamingsandals.lib.impl.utils.ControllableImpl;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,7 +36,7 @@ import java.lang.annotation.Target;
  *  <li>a <strong>org.screamingsandals.lib.plugin.Plugin</strong> of your plugin, which is a class describing the plugin</li>
  *  <li>the platform class of your plugin - not recommended, unless this is platform specific service</li>
  *  <li>
- *      a {@link org.screamingsandals.lib.utils.Controllable} or {@link org.screamingsandals.lib.utils.ControllableImpl},
+ *      a {@link org.screamingsandals.lib.utils.Controllable} or {@link ControllableImpl},
  *      yet we highly discourage from using controllables in favor of annotations from {@link org.screamingsandals.lib.utils.annotations}
  *  </li>
  *  <li>an another service defined in {@link ServiceDependencies#dependsOn()} or {@link ServiceDependencies#dependsOnConditioned()}</li>

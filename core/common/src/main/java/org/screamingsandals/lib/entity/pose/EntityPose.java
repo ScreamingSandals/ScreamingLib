@@ -17,12 +17,13 @@
 package org.screamingsandals.lib.entity.pose;
 
 import org.jetbrains.annotations.*;
+import org.screamingsandals.lib.impl.entity.pose.EntityPoseRegistry;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.utils.registry.RegistryItem;
-import org.screamingsandals.lib.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItem;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
 
 @LimitedVersionSupport("Bukkit >= 1.17")
 public interface EntityPose extends RegistryItem, RawValueHolder {

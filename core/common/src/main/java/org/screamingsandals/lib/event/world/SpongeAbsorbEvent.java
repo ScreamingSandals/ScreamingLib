@@ -18,17 +18,17 @@ package org.screamingsandals.lib.event.world;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.state.BlockSnapshot;
+import org.screamingsandals.lib.block.BlockPlacement;
+import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 
 import java.util.Collection;
 
 @LimitedVersionSupport("Bukkit >= 1.13")
-public interface SpongeAbsorbEvent extends SCancellableEvent, PlatformEvent {
+public interface SpongeAbsorbEvent extends CancellableEvent, PlatformEvent {
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
     @NotNull Collection<@NotNull BlockSnapshot> waterBlocks();
 }

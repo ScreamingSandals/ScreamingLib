@@ -20,10 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
 
-public interface FoodLevelChangeEvent extends SCancellableEvent, PlatformEvent {
+public interface FoodLevelChangeEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Entity entity();
 

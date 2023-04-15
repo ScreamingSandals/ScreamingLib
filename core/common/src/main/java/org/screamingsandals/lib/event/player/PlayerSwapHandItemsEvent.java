@@ -18,12 +18,12 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 @LimitedVersionSupport(">= 1.9")
-public interface PlayerSwapHandItemsEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerSwapHandItemsEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     @Nullable ItemStack mainHandItem();
 

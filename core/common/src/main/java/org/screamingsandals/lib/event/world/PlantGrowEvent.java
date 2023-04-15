@@ -19,14 +19,14 @@ package org.screamingsandals.lib.event.world;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.world.Location;
-import org.screamingsandals.lib.block.state.BlockSnapshot;
+import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 
 import java.util.Collection;
 
-public interface PlantGrowEvent extends SCancellableEvent, PlatformEvent {
+public interface PlantGrowEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Collection<@NotNull BlockSnapshot> blockStates();
 

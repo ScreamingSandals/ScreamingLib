@@ -19,15 +19,15 @@ package org.screamingsandals.lib.event.player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.state.BlockSnapshot;
+import org.screamingsandals.lib.block.BlockPlacement;
+import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 
 import java.util.Collection;
 
-public interface PlayerBlockPlaceEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerBlockPlaceEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
     /**
      * Other blocks that were also placed by the placement of block. They may have material type of AIR. This list also includes the main block
      */
@@ -41,7 +41,7 @@ public interface PlayerBlockPlaceEvent extends SCancellableEvent, PlayerEvent, P
     /**
      * Placed block
      */
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
     /**
      * Replaced block state

@@ -19,19 +19,19 @@ package org.screamingsandals.lib.event.entity;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.event.CancellableEvent;
+import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.world.Location;
 
 import java.util.Collection;
 
-public interface EntityExplodeEvent extends SCancellableEvent, PlatformEvent {
+public interface EntityExplodeEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Entity entity();
 
     @NotNull Location location();
 
-    @NotNull Collection<@NotNull Block> blocks();
+    @NotNull Collection<@NotNull BlockPlacement> blocks();
 
     float yield();
 

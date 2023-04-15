@@ -18,12 +18,12 @@ package org.screamingsandals.lib.entity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.BlockType;
+import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.attribute.Attribute;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.meta.PotionEffect;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.world.Location;
 
 import java.util.Collection;
@@ -39,9 +39,9 @@ public interface LivingEntity extends Entity, ProjectileShooter {
 
     @NotNull Location getEyeLocation();
 
-    @NotNull Block getTargetBlock(@Nullable Collection<@NotNull BlockType> transparent, int maxDistance);
+    @NotNull BlockPlacement getTargetBlock(@Nullable Collection<@NotNull Block> transparent, int maxDistance);
 
-    @Nullable Block getTargetBlock(int maxDistance);
+    @Nullable BlockPlacement getTargetBlock(int maxDistance);
 
     int getRemainingAir();
 

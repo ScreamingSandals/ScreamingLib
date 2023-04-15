@@ -22,7 +22,7 @@ import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.world.World;
 
 /**
@@ -58,7 +58,7 @@ public interface Chunk extends Wrapper, RawValueHolder, ThreadProperty {
      * @param z the block Z coordinate inside this chunk (0 to 15)
      * @return the block
      */
-    @NotNull Block getBlock(@Range(from = 0, to = 15) int x, int y, @Range(from = 0, to = 15) int z);
+    @NotNull BlockPlacement getBlock(@Range(from = 0, to = 15) int x, int y, @Range(from = 0, to = 15) int z);
 
     /**
      * Gets all entities inhabiting this chunk.

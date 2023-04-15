@@ -18,12 +18,12 @@ package org.screamingsandals.lib.event.world;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.world.World;
 
 @LimitedVersionSupport("Bukkit >= 1.15.1")
-public interface TimeSkipEvent extends SCancellableEvent, PlatformEvent {
+public interface TimeSkipEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull World world();
 

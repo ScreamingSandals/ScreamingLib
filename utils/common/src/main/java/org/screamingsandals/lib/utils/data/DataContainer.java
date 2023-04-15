@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.utils.data;
 
+import org.screamingsandals.lib.impl.utils.data.SimpleDataContainer;
+
 import java.util.Map;
 import java.util.Optional;
 

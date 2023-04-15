@@ -19,15 +19,15 @@ package org.screamingsandals.lib.event.block;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.ItemEntity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.block.state.BlockSnapshot;
+import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 
 import java.util.Collection;
 
 @LimitedVersionSupport("Bukkit >= 1.13.2")
-public interface BlockDropItemEvent extends SCancellableEvent, PlatformEvent {
+public interface BlockDropItemEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Player player();
 

@@ -461,6 +461,7 @@ public final class MiniMessageParser {
         public @NotNull Builder defaultComponentTags() {
             registerComponentTag("selector", new SelectorResolver(), "sel");
             registerComponentTag("lang", new TranslatableResolver(), "tr", "translate");
+            registerComponentTag("lang_or", new TranslatableFallbackResolver(), "tr_or", "translate_or");
             registerComponentTag("nbt", new NbtResolver(), "data");
             registerComponentTag("key", new KeybindResolver());
             registerComponentTag("score", new ScoreResolver());

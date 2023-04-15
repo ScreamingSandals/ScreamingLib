@@ -17,10 +17,10 @@
 package org.screamingsandals.lib.proxy.event;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 
-public interface SPlayerChatEvent extends SCancellableEvent {
+public interface SPlayerChatEvent extends CancellableEvent {
     @NotNull ProxiedPlayerWrapper getPlayer();
 
     boolean isCommand();

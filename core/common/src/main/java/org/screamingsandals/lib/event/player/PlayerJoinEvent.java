@@ -18,11 +18,11 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 
-public interface PlayerJoinEvent extends SEvent, PlayerEvent, PlatformEvent {
+public interface PlayerJoinEvent extends Event, PlayerEvent, PlatformEvent {
 
     @Nullable Component joinMessage();
 

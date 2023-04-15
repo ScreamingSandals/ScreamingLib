@@ -17,13 +17,13 @@
 package org.screamingsandals.lib.proxy.event;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 
 import java.util.Arrays;
 import java.util.List;
 
-public interface SPlayerLeaveEvent extends SEvent {
+public interface SPlayerLeaveEvent extends Event {
     @NotNull LoginStatus getStatus();
 
     @NotNull ProxiedPlayerWrapper getPlayer();

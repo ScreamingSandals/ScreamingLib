@@ -18,6 +18,7 @@ package org.screamingsandals.lib.spectator;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.spectator.Spectator;
 
 public interface TextComponent extends Component {
     @Contract(value = "-> new", pure = true)

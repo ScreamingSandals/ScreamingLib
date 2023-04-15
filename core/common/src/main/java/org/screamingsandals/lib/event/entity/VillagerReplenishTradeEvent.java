@@ -20,10 +20,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.event.player.PlayerCraftItemEvent;
 
-public interface VillagerReplenishTradeEvent extends SCancellableEvent, PlatformEvent {
+public interface VillagerReplenishTradeEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Entity entity();
 

@@ -17,9 +17,9 @@
 package org.screamingsandals.lib.event.player;
 
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 
-public interface PlayerToggleFlightEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerToggleFlightEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     boolean flying();
 }

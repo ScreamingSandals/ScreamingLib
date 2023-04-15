@@ -22,12 +22,13 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.TaggableHolder;
-import org.screamingsandals.lib.block.BlockType;
+import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.registry.RegistryItem;
-import org.screamingsandals.lib.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItem;
+import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
 
 @Accessors(fluent = true)
 public interface ItemType extends RegistryItem, ParticleData, TaggableHolder {
@@ -44,7 +45,7 @@ public interface ItemType extends RegistryItem, ParticleData, TaggableHolder {
         return ItemTypeRegistry.colorize(this, color);
     }
 
-    @Nullable BlockType block();
+    @Nullable Block block();
 
     @Override
     boolean hasTag(@MinecraftType(MinecraftType.Type.ITEM_TYPE_TAG) @NotNull Object tag);

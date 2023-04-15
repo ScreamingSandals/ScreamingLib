@@ -20,11 +20,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 
 import java.util.Locale;
 
-public interface PlayerFishEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerFishEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     @Nullable Entity caughtEntity();
 

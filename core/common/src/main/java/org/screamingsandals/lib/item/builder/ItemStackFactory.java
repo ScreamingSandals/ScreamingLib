@@ -22,6 +22,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.ItemSerializer;
+import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
+import org.screamingsandals.lib.impl.item.builder.ShortStackDeserializer;
 import org.screamingsandals.lib.item.*;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;

@@ -19,8 +19,8 @@ package org.screamingsandals.lib.event.entity;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 
-public interface VehicleCreateEvent extends SCancellableEvent, PlatformEvent {
+public interface VehicleCreateEvent extends CancellableEvent, PlatformEvent {
     @NotNull Entity entity();
 }

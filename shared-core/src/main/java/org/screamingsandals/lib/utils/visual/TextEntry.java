@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.utils.visual;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.utils.visual.SimpleCLTextEntry;
+import org.screamingsandals.lib.impl.utils.visual.SimpleTextEntry;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 

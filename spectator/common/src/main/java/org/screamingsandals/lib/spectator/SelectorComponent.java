@@ -19,6 +19,7 @@ package org.screamingsandals.lib.spectator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.spectator.Spectator;
 
 public interface SelectorComponent extends SeparableComponent {
     @Contract(value = "-> new", pure = true)

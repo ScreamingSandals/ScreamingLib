@@ -19,10 +19,10 @@ package org.screamingsandals.lib.event.entity;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.world.Location;
 
-public interface EntityPortalEnterEvent extends SEvent, PlatformEvent {
+public interface EntityPortalEnterEvent extends Event, PlatformEvent {
 
     @NotNull Entity entity();
 

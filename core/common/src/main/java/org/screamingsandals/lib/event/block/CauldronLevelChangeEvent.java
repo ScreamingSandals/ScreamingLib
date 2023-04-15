@@ -19,15 +19,15 @@ package org.screamingsandals.lib.event.block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 
 import java.util.Locale;
 
-public interface CauldronLevelChangeEvent extends SCancellableEvent, PlatformEvent {
+public interface CauldronLevelChangeEvent extends CancellableEvent, PlatformEvent {
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
     @Nullable Entity entity();
 

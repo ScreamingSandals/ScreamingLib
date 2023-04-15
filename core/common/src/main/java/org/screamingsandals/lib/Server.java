@@ -26,6 +26,7 @@ import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.world.World;
+import org.screamingsandals.lib.world.Worlds;
 
 import java.util.List;
 
@@ -97,10 +98,6 @@ public abstract class Server {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConnectedPlayers0();
     }
 
-    public static @NotNull List<@NotNull World> getWorlds() {
-        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getWorlds0();
-    }
-
     /**
      * Gets a list of players that are currently in the supplied world.
      *
@@ -151,8 +148,6 @@ public abstract class Server {
     public abstract @NotNull List<@NotNull Player> getConnectedPlayers0();
 
     public abstract @NotNull List<@NotNull Player> getConnectedPlayersFromWorld0(@NotNull World world);
-
-    public abstract @NotNull List<@NotNull World> getWorlds0();
 
     public abstract List<@NotNull ChannelFuture> getConnections0();
 

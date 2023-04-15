@@ -18,10 +18,10 @@ package org.screamingsandals.lib.event.chunk;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.world.chunk.Chunk;
 
-public interface ChunkPopulateEvent extends SEvent, PlatformEvent {
+public interface ChunkPopulateEvent extends Event, PlatformEvent {
 
     @NotNull Chunk chunk();
 }

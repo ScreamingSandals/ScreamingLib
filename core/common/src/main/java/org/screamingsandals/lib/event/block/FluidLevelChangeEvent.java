@@ -17,16 +17,16 @@
 package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockType;
-import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
-import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.event.PlatformEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
+import org.screamingsandals.lib.block.BlockPlacement;
 
 @LimitedVersionSupport(">= 1.13.2")
-public interface FluidLevelChangeEvent extends SCancellableEvent, PlatformEvent {
+public interface FluidLevelChangeEvent extends CancellableEvent, PlatformEvent {
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
-    @NotNull BlockType newBlockData();
+    @NotNull Block newBlockData();
 }

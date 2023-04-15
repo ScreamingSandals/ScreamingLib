@@ -18,16 +18,16 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
-public interface PlayerBlockDamageEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerBlockDamageEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     /**
      * Damaged Block
      */
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
     /**
      * Item which has been used to damage this block

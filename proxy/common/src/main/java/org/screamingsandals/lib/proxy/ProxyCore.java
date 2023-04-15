@@ -22,7 +22,7 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
-@AbstractService
+@AbstractService("org.screamingsandals.lib.impl.{platform}.proxy.{Platform}ProxyCore")
 @ServiceDependencies(dependsOn = {
         EventManager.class,
         Tasker.class,

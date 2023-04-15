@@ -27,24 +27,24 @@ public class Classes {
         public static final @NotNull ClassName PLUGINS_SERVICE = ClassName.get("org.screamingsandals.lib.plugin", "Plugins");
         public static final @NotNull ClassName PLUGIN = ClassName.get("org.screamingsandals.lib.plugin", "Plugin");
         public static final @NotNull ClassName CONTROLLABLE = ClassName.get("org.screamingsandals.lib.utils", "Controllable");
-        public static final @NotNull ClassName CONTROLLABLE_IMPL = ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl");
+        public static final @NotNull ClassName CONTROLLABLE_IMPL = ClassName.get("org.screamingsandals.lib.impl.utils", "ControllableImpl");
         public static final @NotNull ClassName CORE = ClassName.get("org.screamingsandals.lib", "Core");
         public static final @NotNull ClassName PROXY_CORE = ClassName.get("org.screamingsandals.lib.proxy", "ProxyCore");
         public static final @NotNull ClassName LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.utils.logger", "LoggerWrapper");
-        public static final @NotNull ClassName JUL_LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.utils.logger", "JULLoggerWrapper");
-        public static final @NotNull ClassName SLF4J_LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.utils.logger", "Slf4jLoggerWrapper");
-        public static final @NotNull ClassName DUAL_LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.utils.logger", "DualLoggerWrapper");
+        public static final @NotNull ClassName JUL_LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.impl.utils.logger", "JULLoggerWrapper");
+        public static final @NotNull ClassName SLF4J_LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.impl.utils.logger", "Slf4jLoggerWrapper");
+        public static final @NotNull ClassName DUAL_LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.impl.utils.logger", "DualLoggerWrapper");
         public static final @NotNull ClassName REFLECT = ClassName.get("org.screamingsandals.lib.utils.reflect", "Reflect");
         public static final @NotNull ClassName SERIALIZERS = ClassName.get("org.screamingsandals.lib.configurate", "SLibSerializers");
         public static final @NotNull ClassName SPECTATOR_SERIALIZERS = ClassName.get("org.screamingsandals.lib.spectator.configurate", "SpectatorSerializers");
         public static final @NotNull ClassName EVENT_MANAGER = ClassName.get("org.screamingsandals.lib.event", "EventManager");
         public static final @NotNull ClassName EVENT_HANDLER = ClassName.get("org.screamingsandals.lib.event", "EventHandler");
         public static final @NotNull ClassName EVENT_PRIORITY = ClassName.get("org.screamingsandals.lib.event", "EventPriority");
-        public static final @NotNull ClassName EVENT = ClassName.get("org.screamingsandals.lib.event", "SEvent");
+        public static final @NotNull ClassName EVENT = ClassName.get("org.screamingsandals.lib.event", "Event");
         public static final @NotNull ClassName SERVICE_MANAGER = ClassName.get("org.screamingsandals.lib.plugin", "ServiceManager");
-        public static final @NotNull ClassName BUKKIT_PLUGIN = ClassName.get("org.screamingsandals.lib.bukkit.plugin", "BukkitPlugin");
-        public static final @NotNull ClassName BUNGEE_PLUGIN = ClassName.get("org.screamingsandals.lib.bungee.plugin", "BungeePlugin");
-        public static final @NotNull ClassName VELOCITY_PLUGIN = ClassName.get("org.screamingsandals.lib.velocity.plugin", "VelocityPlugin");
+        public static final @NotNull ClassName BUKKIT_PLUGIN = ClassName.get("org.screamingsandals.lib.impl.bukkit.plugin", "BukkitPlugin");
+        public static final @NotNull ClassName BUNGEE_PLUGIN = ClassName.get("org.screamingsandals.lib.impl.bungee.plugin", "BungeePlugin");
+        public static final @NotNull ClassName VELOCITY_PLUGIN = ClassName.get("org.screamingsandals.lib.impl.velocity.plugin", "VelocityPlugin");
     }
 
     @UtilityClass

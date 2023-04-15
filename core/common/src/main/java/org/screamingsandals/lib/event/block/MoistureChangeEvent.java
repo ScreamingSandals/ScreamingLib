@@ -17,14 +17,14 @@
 package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.state.BlockSnapshot;
+import org.screamingsandals.lib.block.BlockPlacement;
+import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 
-public interface MoistureChangeEvent extends SCancellableEvent, PlatformEvent {
+public interface MoistureChangeEvent extends CancellableEvent, PlatformEvent {
 
-    @NotNull Block block();
+    @NotNull BlockPlacement block();
 
     @NotNull BlockSnapshot newBlockState();
 }

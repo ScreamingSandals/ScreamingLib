@@ -17,8 +17,8 @@
 package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
 public interface EntityDamageByBlockEvent extends EntityDamageEvent {
-    @Nullable Block damager();
+    @Nullable BlockPlacement damager();
 }

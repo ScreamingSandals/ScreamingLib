@@ -18,10 +18,10 @@ package org.screamingsandals.lib.event.world;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.world.World;
 
-public interface WorldInitEvent extends SEvent, PlatformEvent {
+public interface WorldInitEvent extends Event, PlatformEvent {
 
     @NotNull World world();
 }

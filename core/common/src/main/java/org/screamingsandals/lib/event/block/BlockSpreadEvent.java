@@ -17,9 +17,9 @@
 package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.block.BlockPlacement;
 
 public interface BlockSpreadEvent extends BlockFormEvent {
 
-    @NotNull Block source();
+    @NotNull BlockPlacement source();
 }

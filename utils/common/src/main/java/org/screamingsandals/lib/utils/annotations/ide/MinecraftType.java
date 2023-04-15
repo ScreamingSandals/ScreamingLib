@@ -32,9 +32,9 @@ public @interface MinecraftType {
 
     enum Type {
         ATTRIBUTE_TYPE,
+        BLOCK,
         BLOCK_TYPE,
-        BLOCK_TYPE_ONLY,
-        BLOCK_TYPE_OR_TAG,
+        BLOCK_OR_TAG,
         BLOCK_TYPE_TAG,
         DAMAGE_TYPE,
         DIFFICULTY_TYPE,

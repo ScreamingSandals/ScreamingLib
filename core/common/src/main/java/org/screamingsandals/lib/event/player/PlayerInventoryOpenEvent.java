@@ -19,9 +19,9 @@ package org.screamingsandals.lib.event.player;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 
-public interface PlayerInventoryOpenEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
+public interface PlayerInventoryOpenEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
 
     @NotNull Container topInventory();
 
