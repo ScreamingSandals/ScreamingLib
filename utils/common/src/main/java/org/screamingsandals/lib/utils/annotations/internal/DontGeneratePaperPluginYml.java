@@ -23,8 +23,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+// useless now, will be used after ExperimentalGeneratePaperPluginYml is removed, and paper-plugin.yml is enabled by default
 @ApiStatus.Internal
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.TYPE)
-public @interface InternalCoreService {
+@Target({ElementType.TYPE, ElementType.PACKAGE})
+public @interface DontGeneratePaperPluginYml {
 }

@@ -17,14 +17,28 @@
 package org.screamingsandals.lib.utils.annotations.internal;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
+/**
+ * Inform annotation processor that this service or class associated with this service can access classes of another plugin/s.
+ * Some platforms may require these plugins to be added between soft dependencies. Only optional dependencies can be specified,
+ * the library should not force the plugin to have any dependencies.
+ */
 @ApiStatus.Internal
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-public @interface InternalCoreService {
+@Repeatable(AccessPluginClasses.List.class)
+public @interface AccessPluginClasses {
+    /**
+     * @return soft dependencies
+     */
+    @NotNull String @NotNull [] value();
+
+    @Retention(RetentionPolicy.CLASS)
+    @Target(ElementType.TYPE)
+    @interface List {
+        @NotNull AccessPluginClasses @NotNull [] value();
+    }
 }

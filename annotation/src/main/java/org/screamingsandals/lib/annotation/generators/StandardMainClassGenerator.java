@@ -18,6 +18,7 @@ package org.screamingsandals.lib.annotation.generators;
 
 import com.squareup.javapoet.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.annotation.constants.Classes;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.PlatformType;
@@ -28,10 +29,14 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import java.util.List;
+import java.util.Set;
 
 public abstract class StandardMainClassGenerator extends MainClassGenerator {
+    protected @Nullable Set<@NotNull String> implicitSoftDependencies;
+
     protected void fillInOnLoadMethod(@NotNull QualifiedNameable pluginContainer, @NotNull List<@NotNull ServiceContainer> autoInit, @NotNull ProcessingEnvironment processingEnvironment, @NotNull String mainClassName, MethodSpec.@NotNull Builder builder) {
         var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, getPlatform());
+        this.implicitSoftDependencies = sortedPair.third();
 
         var onLoadCodeBlock = CodeBlock.builder()
                 .addStatement("this.$N = new $T()", "pluginControllable", Classes.SLib.CONTROLLABLE_IMPL);

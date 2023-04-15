@@ -33,11 +33,13 @@ import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.utils.annotations.internal.AccessPluginClasses;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
 @Service
 @ServiceDependencies(dependsOn = ServerboundInteractPacketListener.class)
 @RequiredArgsConstructor
+@AccessPluginClasses({"ViaVersion", "ProtocolSupport"})
 public class BukkitPacketMapper extends PacketMapper {
 
     @Override

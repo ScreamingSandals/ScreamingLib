@@ -22,8 +22,10 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Types;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class ServiceContainer {
@@ -33,6 +35,7 @@ public class ServiceContainer {
     private final @NotNull List<@NotNull TypeElement> dependencies = new LinkedList<>();
     private final @NotNull List<@NotNull TypeElement> loadAfter = new LinkedList<>();
     private final @NotNull List<@NotNull TypeElement> init = new LinkedList<>();
+    private final @NotNull Set<@NotNull String> accessedPlugins = new HashSet<>();
     private final boolean earlyInitialization;
     private final boolean staticOnly;
     private final boolean coreService;

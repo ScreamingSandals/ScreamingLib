@@ -24,6 +24,8 @@ import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.Plugin;
 import org.screamingsandals.lib.utils.annotations.PluginDependencies;
+import org.screamingsandals.lib.utils.annotations.ExperimentalGeneratePaperPluginYml;
+import org.screamingsandals.lib.utils.annotations.internal.DontGeneratePaperPluginYml;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -62,54 +64,165 @@ public class BukkitMainClassGenerator extends StandardMainClassGenerator {
                 .build()
                 .writeTo(processingEnvironment.getFiler());
 
-        var loader = YamlConfigurationLoader.builder()
-                .path(Path.of(processingEnvironment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "plugin.yml").toUri()))
-                .build();
-
         var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
 
-        var node = loader.createNode();
-        node.node("main").set(newClassPackage + "." + newClassName);
-        node.node("name").set(pluginAnnotation.id());
-        node.node("version").set(pluginAnnotation.version());
-        node.node("api-version").set("1.13");
-        node.node("load").set(pluginAnnotation.loadTime().name());
-        if (!pluginAnnotation.name().isBlank()) {
-            node.node("prefix").set(pluginAnnotation.name());
-        }
-        if (!pluginAnnotation.description().isBlank()) {
-            node.node("description").set(pluginAnnotation.description());
-        }
-        if (pluginAnnotation.authors().length > 0) {
-            node.node("authors").set(Arrays.asList(pluginAnnotation.authors()));
-        }
+        {
+            var loader = YamlConfigurationLoader.builder()
+                    .path(Path.of(processingEnvironment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "plugin.yml").toUri()))
+                    .build();
 
-        var depend = new ArrayList<String>();
-        var softdepend = new ArrayList<String>();
-        var loadbefore = new ArrayList<String>();
-
-        Arrays.stream(pluginContainer.getAnnotationsByType(PluginDependencies.class)).forEach(pluginDependencies -> {
-            if (pluginDependencies.platform() == PlatformType.BUKKIT) {
-                depend.addAll(Arrays.asList(pluginDependencies.dependencies()));
-                softdepend.addAll(Arrays.asList(pluginDependencies.softDependencies()));
-                loadbefore.addAll(Arrays.asList(pluginDependencies.loadBefore()));
+            var node = loader.createNode();
+            node.node("main").set(newClassPackage + "." + newClassName);
+            node.node("name").set(pluginAnnotation.id());
+            node.node("version").set(pluginAnnotation.version());
+            node.node("api-version").set("1.13");
+            node.node("load").set(pluginAnnotation.loadTime().name());
+            if (!pluginAnnotation.name().isBlank()) {
+                node.node("prefix").set(pluginAnnotation.name());
             }
-        });
+            if (!pluginAnnotation.description().isBlank()) {
+                node.node("description").set(pluginAnnotation.description());
+            }
+            if (pluginAnnotation.authors().length > 0) {
+                node.node("authors").set(Arrays.asList(pluginAnnotation.authors()));
+            }
 
-        if (!depend.isEmpty()) {
-            node.node("depend").set(depend.stream().distinct().collect(Collectors.toList()));
+            var depend = new ArrayList<String>();
+            var softdepend = new ArrayList<String>();
+            var loadbefore = new ArrayList<String>();
+
+            Arrays.stream(pluginContainer.getAnnotationsByType(PluginDependencies.class)).forEach(pluginDependencies -> {
+                if (pluginDependencies.platform() == PlatformType.BUKKIT) {
+                    depend.addAll(Arrays.asList(pluginDependencies.dependencies()));
+                    softdepend.addAll(Arrays.asList(pluginDependencies.softDependencies()));
+                    loadbefore.addAll(Arrays.asList(pluginDependencies.loadBefore()));
+                }
+            });
+
+            if (!depend.isEmpty()) {
+                node.node("depend").set(depend.stream().distinct().collect(Collectors.toList()));
+            }
+
+            if (!softdepend.isEmpty()) {
+                node.node("softdepend").set(softdepend.stream().distinct().collect(Collectors.toList()));
+            }
+
+            if (!loadbefore.isEmpty()) {
+                node.node("loadbefore").set(loadbefore.stream().distinct().collect(Collectors.toList()));
+            }
+
+            loader.save(node);
         }
 
-        if (!softdepend.isEmpty()) {
-            node.node("softdepend").set(softdepend.stream().distinct().collect(Collectors.toList()));
+        paperPluginYml:
+        if (pluginContainer.getAnnotation(DontGeneratePaperPluginYml.class) == null) {
+
+            if (pluginContainer.getAnnotation(ExperimentalGeneratePaperPluginYml.class) == null) { // TODO: remove this when Paper plugins are stable enough
+                break paperPluginYml;
+            }
+
+            var loader = YamlConfigurationLoader.builder()
+                    .path(Path.of(processingEnvironment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "paper-plugin.yml").toUri()))
+                    .build();
+
+            var node = loader.createNode();
+            node.node("main").set(newClassPackage + "." + newClassName);
+            node.node("name").set(pluginAnnotation.id());
+            node.node("version").set(pluginAnnotation.version());
+            node.node("api-version").set("1.19");
+            node.node("load").set(pluginAnnotation.loadTime().name());
+            if (!pluginAnnotation.name().isBlank()) {
+                node.node("prefix").set(pluginAnnotation.name());
+            }
+            if (!pluginAnnotation.description().isBlank()) {
+                node.node("description").set(pluginAnnotation.description());
+            }
+            if (pluginAnnotation.authors().length > 0) {
+                node.node("authors").set(Arrays.asList(pluginAnnotation.authors()));
+            }
+
+            var depend = new ArrayList<String>();
+            var softdepend = new ArrayList<String>();
+            var loadbefore = new ArrayList<String>();
+
+            Arrays.stream(pluginContainer.getAnnotationsByType(PluginDependencies.class)).forEach(pluginDependencies -> {
+                if (pluginDependencies.platform() == PlatformType.BUKKIT) {
+                    depend.addAll(Arrays.asList(pluginDependencies.dependencies()));
+                    softdepend.addAll(Arrays.asList(pluginDependencies.softDependencies()));
+                    loadbefore.addAll(Arrays.asList(pluginDependencies.loadBefore()));
+                }
+            });
+
+            var usedDependencies = new ArrayList<String>();
+            var usedLoads = new ArrayList<String>();
+
+            var dependencies = node.node("dependencies");
+            var loadBefore = node.node("load-before");
+            var loadAfter = node.node("load-after");
+
+            if (!depend.isEmpty()) {
+                for (var dependency : depend) {
+                    if (!usedDependencies.contains(dependency)) {
+                        usedDependencies.add(dependency);
+                        var n = dependencies.appendListNode();
+                        n.node("name").set(dependency);
+                        n.node("required").set(true);
+                        n.node("bootstrap").set(false);
+                    }
+
+                    if (!usedLoads.contains(dependency)) {
+                        usedLoads.add(dependency);
+                        var n2 = loadAfter.appendListNode();
+                        n2.node("name").set(dependency);
+                        n2.node("bootstrap").set(false);
+                    }
+                }
+            }
+
+            if (!softdepend.isEmpty()) {
+                for (var dependency : softdepend) {
+                    if (!usedDependencies.contains(dependency)) {
+                        usedDependencies.add(dependency);
+                        var n = dependencies.appendListNode();
+                        n.node("name").set(dependency);
+                        n.node("required").set(false);
+                        n.node("bootstrap").set(false);
+                    }
+
+                    if (!usedLoads.contains(dependency)) {
+                        usedLoads.add(dependency);
+                        var n2 = loadAfter.appendListNode();
+                        n2.node("name").set(dependency);
+                        n2.node("bootstrap").set(false);
+                    }
+                }
+            }
+
+            if (!loadbefore.isEmpty()) {
+                for (var dependency : loadbefore) {
+                    if (!usedLoads.contains(dependency)) {
+                        usedLoads.add(dependency);
+                        var n2 = loadBefore.appendListNode();
+                        n2.node("name").set(dependency);
+                        n2.node("bootstrap").set(false);
+                    }
+                }
+            }
+
+            if (implicitSoftDependencies != null && !implicitSoftDependencies.isEmpty()) {
+                for (var dependency : implicitSoftDependencies) {
+                    if (!usedDependencies.contains(dependency)) {
+                        usedDependencies.add(dependency);
+                        var n = dependencies.appendListNode();
+                        n.node("name").set(dependency);
+                        n.node("required").set(false);
+                        n.node("bootstrap").set(false);
+                    }
+                }
+            }
+
+            loader.save(node);
         }
-
-        if (!loadbefore.isEmpty()) {
-            node.node("loadbefore").set(loadbefore.stream().distinct().collect(Collectors.toList()));
-        }
-
-        loader.save(node);
-
     }
 
     @Override

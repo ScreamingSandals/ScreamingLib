@@ -8,7 +8,7 @@ velocity = "3.2.0-SNAPSHOT"
 adventure = "4.12.0"
 
 # paperlib (shaded)
-paperlib = "1.0.7"
+paperlib = "1.0.8"
 
 # annotation (implementation)
 javapoet = "1.13.0"

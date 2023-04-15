@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.utils.annotations.internal;
+package org.screamingsandals.lib.utils.annotations;
 
 import org.jetbrains.annotations.ApiStatus;
 
@@ -23,8 +23,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@ApiStatus.Internal
+@ApiStatus.Experimental
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.TYPE)
-public @interface InternalCoreService {
+@Target({ElementType.TYPE, ElementType.PACKAGE})
+public @interface ExperimentalGeneratePaperPluginYml {
 }

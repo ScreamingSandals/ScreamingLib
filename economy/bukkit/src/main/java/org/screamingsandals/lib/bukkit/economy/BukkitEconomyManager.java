@@ -27,10 +27,12 @@ import org.screamingsandals.lib.economy.TransactionResult;
 import org.screamingsandals.lib.plugin.Plugins;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.internal.AccessPluginClasses;
 import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 
 @Service
+@AccessPluginClasses("Vault")
 public class BukkitEconomyManager extends EconomyManager {
     private static final @NotNull TransactionResult MISSING_PLUGIN_FAILURE = new TransactionResult(0, 0, false, "Vault is not installed or economy is not supported!");
     private static final @NotNull TransactionResult VAULT_RETURNED_NULL = new TransactionResult(0, 0, false, "Vault returned null!");

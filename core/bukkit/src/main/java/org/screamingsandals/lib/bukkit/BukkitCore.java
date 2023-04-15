@@ -329,6 +329,7 @@ import org.screamingsandals.lib.event.world.WorldUnloadEvent;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.utils.annotations.internal.AccessPluginClasses;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -377,6 +378,7 @@ import java.util.function.Function;
             BukkitContainerFactory.class
     }
 )
+@AccessPluginClasses({"ViaVersion", "ProtocolSupport"})
 public class BukkitCore extends Core {
     @Getter
     private static SpigotBackend spectatorBackend;

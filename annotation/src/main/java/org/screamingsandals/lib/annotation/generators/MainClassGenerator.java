@@ -20,22 +20,24 @@ import com.squareup.javapoet.MethodSpec;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
-import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.Triple;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.QualifiedNameable;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public abstract class MainClassGenerator {
     public abstract void generate(@NotNull ProcessingEnvironment processingEnvironment, @NotNull QualifiedNameable pluginContainer, @NotNull List<@NotNull ServiceContainer> autoInit) throws IOException;
 
-    protected @NotNull Pair<@NotNull List<@NotNull ServiceContainer>, @NotNull List<@NotNull ServiceContainer>> sortServicesAndGetDependencies(@NotNull ProcessingEnvironment processingEnvironment, @NotNull List<@NotNull ServiceContainer> autoInit, PlatformType platformType) {
+    protected @NotNull Triple<@NotNull List<@NotNull ServiceContainer>, @NotNull List<@NotNull ServiceContainer>, @NotNull Set<@NotNull String>> sortServicesAndGetDependencies(@NotNull ProcessingEnvironment processingEnvironment, @NotNull List<@NotNull ServiceContainer> autoInit, PlatformType platformType) {
         // TODO: probably rewrite this f*cking sh*t
         var checkedDeps = new ArrayList<ServiceContainer>();
         var provided = new ArrayList<ServiceContainer>();
@@ -119,6 +121,8 @@ public abstract class MainClassGenerator {
                     + provided.stream().map(s -> s.getService().getQualifiedName().toString()).collect(Collectors.joining(", ")));
         }
 
+        var accessedPlugins = sorted.stream().flatMap(serviceContainer -> serviceContainer.getAccessedPlugins().stream()).collect(Collectors.toSet());
+
         var earlyInitialization = new ArrayList<ServiceContainer>();
 
         sorted.removeIf(serviceContainer -> {
@@ -129,7 +133,7 @@ public abstract class MainClassGenerator {
             return false;
         });
 
-        return Pair.of(earlyInitialization, sorted);
+        return Triple.of(earlyInitialization, sorted, accessedPlugins);
     }
 
     protected MethodSpec.@NotNull Builder preparePublicVoid(@NotNull String name) {

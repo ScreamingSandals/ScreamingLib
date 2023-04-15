@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.*;
+import org.screamingsandals.lib.utils.annotations.internal.AccessPluginClasses;
 import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 import org.screamingsandals.lib.utils.annotations.parameters.ProvidedBy;
@@ -163,6 +164,7 @@ public class MiscUtils {
                 checkServiceDependencies(environment, typeElement, container);
                 checkConstructorDependencies(environment, typeElement, container);
                 checkEventManagerRequirement(environment, typeElement, container);
+                checkAccessedPlugins(environment, typeElement, container);
 
                 return platformTypes
                         .stream()
@@ -229,6 +231,7 @@ public class MiscUtils {
                 checkServiceDependencies(environment, resolvedElement, container);
                 checkConstructorDependencies(environment, resolvedElement, container);
                 checkEventManagerRequirement(environment, resolvedElement, container);
+                checkAccessedPlugins(environment, resolvedElement, container);
                 map.put(platformType, container);
             }
         });
@@ -284,6 +287,19 @@ public class MiscUtils {
                                 container.getInit().add(typeElement1);
                             }
                         });
+                    });
+        } while ((superClass = (TypeElement) environment.getTypeUtils().asElement(superClass.getSuperclass())) != null);
+    }
+
+    private static void checkAccessedPlugins(ProcessingEnvironment environment, TypeElement typeElement, ServiceContainer container) {
+        var superClass = typeElement;
+        do {
+            Arrays.stream(superClass
+                    .getAnnotationsByType(AccessPluginClasses.class))
+                    .forEach(annotation -> {
+                        for (var v : annotation.value()) {
+                            container.getAccessedPlugins().add(v);
+                        }
                     });
         } while ((superClass = (TypeElement) environment.getTypeUtils().asElement(superClass.getSuperclass())) != null);
     }

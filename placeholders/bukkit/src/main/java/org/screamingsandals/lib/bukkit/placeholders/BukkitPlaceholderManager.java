@@ -31,11 +31,13 @@ import org.screamingsandals.lib.placeholders.hooks.DummyHook;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.utils.annotations.internal.AccessPluginClasses;
 import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 
 @Service
 @ServiceDependencies(dependsOn = BukkitPlayers.class)
+@AccessPluginClasses({"PlaceholderAPI", "Vault"})
 public class BukkitPlaceholderManager extends PlaceholderManager {
 
     @ApiStatus.Internal
