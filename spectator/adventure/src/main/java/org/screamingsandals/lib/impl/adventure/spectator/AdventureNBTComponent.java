@@ -41,21 +41,22 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
 
     @Override
     public @Nullable Component separator() {
-        try {
+        if (AdventureFeature.NBT_SEPARATOR.isSupported()) {
             return AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?,?>) wrappedObject).separator());
-        } catch (Throwable ignored) {
-            return null; // added in Adventure 4.8.0
+        } else {
+            // added in Adventure 4.8.0
+            return null;
         }
     }
 
     @Override
     public @NotNull NBTComponent withSeparator(@Nullable Component separator) {
-        try {
+        if (AdventureFeature.NBT_SEPARATOR.isSupported()) {
             return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?,?>) wrappedObject).separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class)));
-        } catch (Throwable ignored) {
+        } else {
             // added in Adventure 4.8.0
+            return this;
         }
-        return this;
     }
 
     @Override
@@ -93,11 +94,9 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
 
         @Override
         public @NotNull B separator(@Nullable Component separator) {
-            try {
+            if (AdventureFeature.NBT_SEPARATOR.isSupported()) {
                 getBuilder().separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class));
-            } catch (Throwable ignored) {
-                // added in Adventure 4.8.0
-            }
+            } // added in Adventure 4.8.0
             return self();
         }
     }

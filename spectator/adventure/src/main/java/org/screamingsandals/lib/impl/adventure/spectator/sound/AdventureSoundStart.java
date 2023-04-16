@@ -26,6 +26,7 @@ import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -82,22 +83,20 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
 
     @Override
     public @Nullable Long seed() {
-        try {
+        if (AdventureFeature.SOUND_SEED.isSupported()) {
             var seed = wrappedObject.seed();
             return seed.isPresent() ? seed.getAsLong() : null;
-        } catch (Throwable ignored) {
+        } else {
             // Only Adventure 4.12.0+
+            return null;
         }
-        return null;
     }
 
     @Override
     public @NotNull SoundStart withSeed(@Nullable Long seed) {
-        try {
+        if (AdventureFeature.SOUND_SEED.isSupported()) {
             return new AdventureSoundStart(Sound.sound(wrappedObject).seed(seed == null ? OptionalLong.empty() : OptionalLong.of(seed)).build());
-        } catch (Throwable ignored) {
-            // Only Adventure 4.12.0+
-        }
+        } // Only Adventure 4.12.0+
         return this;
     }
 
@@ -141,7 +140,7 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
         @Override
         public @NotNull SoundStart build() {
             Preconditions.checkNotNull(soundKey, "Sound key must be present!");
-            try {
+            if (AdventureFeature.SOUND_SEED.isSupported()) {
                 // Adventure 4.12.0+
                 return new AdventureSoundStart(
                         Sound.sound()
@@ -152,7 +151,7 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
                                 .seed(seed == null ? OptionalLong.empty() : OptionalLong.of(seed))
                                 .build()
                 );
-            } catch (Throwable ignored) {
+            } else {
                 // Adventure <= 4.11.0
                 return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.path()), source.as(Sound.Source.class), volume, pitch));
             }

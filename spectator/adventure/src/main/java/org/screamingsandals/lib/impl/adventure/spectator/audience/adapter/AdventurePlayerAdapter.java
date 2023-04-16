@@ -20,6 +20,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.TitleableAudienceComponentLike;
@@ -48,11 +49,9 @@ public class AdventurePlayerAdapter extends AdventureAdapter implements PlayerAd
 
     @Override
     public void sendPlayerListHeaderFooter(@NotNull ComponentLike header, @NotNull ComponentLike footer) {
-        try {
+        if (AdventureFeature.TAB_HEADER_FOOTER_SENDING.isSupported()) {
             wrappedObject.sendPlayerListHeaderAndFooter(resolveComponent(header), resolveComponent(footer));
-        } catch (Throwable ignored) {
-            // Doesn't work in Adventure older than 4.3.0
-        }
+        } // Doesn't work in Adventure older than 4.3.0
     }
 
     @Override

@@ -69,9 +69,6 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     protected static @NotNull SNBTSerializer snbtSerializer = SNBTSerializer.builder()
             .shouldSaveLongArraysDirectly(false)
             .build();
-    private static final boolean keybindSupported = Reflect.has("net.md_5.bungee.api.chat.KeybindComponent");
-    private static final boolean scoreSupported = Reflect.has("net.md_5.bungee.api.chat.ScoreComponent");
-    private static final boolean selectorSupported = Reflect.has("net.md_5.bungee.api.chat.SelectorComponent");
 
     static final boolean COMPONENTS_PORTED_SUCCESSFULLY;
 
@@ -119,7 +116,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public KeybindComponent.@NotNull Builder keybind() {
-        if (keybindSupported) {
+        if (BungeeChatFeature.KEYBIND_COMPONENT.isSupported()) {
             return new BungeeKeybindComponent.BungeeKeybindBuilder(new net.md_5.bungee.api.chat.KeybindComponent(""));
         } else {
             throw new UnsupportedOperationException("Not supported on this version of md_5 ChatComponent API!"); // TODO: not supported on this version
@@ -128,7 +125,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public ScoreComponent.@NotNull Builder score() {
-        if (scoreSupported) {
+        if (BungeeChatFeature.SCORE_COMPONENT.isSupported()) {
             return new BungeeScoreComponent.BungeeScoreBuilder(new net.md_5.bungee.api.chat.ScoreComponent("", ""));
         } else if (COMPONENTS_PORTED_SUCCESSFULLY) {
             return new PortedBungeeScoreComponent.BungeeScoreBuilder(new ScorePortedComponent("", ""));
@@ -139,7 +136,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public SelectorComponent.@NotNull Builder selector() {
-        if (selectorSupported) {
+        if (BungeeChatFeature.SELECTOR_COMPONENT.isSupported()) {
             if (COMPONENTS_PORTED_SUCCESSFULLY) {
                 // We prefer using the original component, but because it does not support everything, we may need to switch the underlying component to our own
                 return new BungeeSelectorComponent.MultipleImplementationsBuilder(new net.md_5.bungee.api.chat.SelectorComponent(""));
@@ -174,9 +171,9 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Override
     public @NotNull Color rgb(int red, int green, int blue) {
         int combined = red << 16 | green << 8 | blue;
-        try {
+        if (BungeeChatFeature.RGB_COLORS.isSupported()) {
             return new BungeeColor(ChatColor.of(String.format("#%06X", (0xFFFFFF & combined))));
-        } catch (Throwable ignored) {
+        } else {
             switch (combined) {
                 case 0x0000AA:
                     return new BungeeColor(ChatColor.DARK_BLUE);
@@ -239,22 +236,24 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
             hexOrName = "dark_gray";
         }
 
-        try {
-            return new BungeeColor(ChatColor.of(hexOrName.toLowerCase(Locale.ROOT)));
-        } catch (Throwable ignored) {
-        }
-        if (hexOrName.length() == 6) {
+        if (BungeeChatFeature.RGB_COLORS.isSupported()) {
             try {
-                return new BungeeColor(ChatColor.of("#" + hexOrName.toLowerCase(Locale.ROOT)));
+                return new BungeeColor(ChatColor.of(hexOrName.toLowerCase(Locale.ROOT)));
             } catch (Throwable ignored) {
             }
-        }
-        if (hexOrName.length() == 3) {
-            try {
-                return new BungeeColor(ChatColor.of("#" + hexOrName.charAt(0) + hexOrName.charAt(0)
-                        + hexOrName.charAt(1) + hexOrName.charAt(1)
-                        + hexOrName.charAt(2) + hexOrName.charAt(2)));
-            } catch (Throwable ignored) {
+            if (hexOrName.length() == 6) {
+                try {
+                    return new BungeeColor(ChatColor.of("#" + hexOrName.toLowerCase(Locale.ROOT)));
+                } catch (Throwable ignored) {
+                }
+            }
+            if (hexOrName.length() == 3) {
+                try {
+                    return new BungeeColor(ChatColor.of("#" + hexOrName.charAt(0) + hexOrName.charAt(0)
+                            + hexOrName.charAt(1) + hexOrName.charAt(1)
+                            + hexOrName.charAt(2) + hexOrName.charAt(2)));
+                } catch (Throwable ignored) {
+                }
             }
         }
         try {
@@ -343,7 +342,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public EntityContent.@NotNull Builder entityContent() {
-        if (Reflect.has("net.md_5.bungee.api.chat.hover.content.Entity")) {
+        if (BungeeChatFeature.MODERN_HOVER_CONTENTS.isSupported()) {
             return new BungeeEntityContent.BungeeEntityContentBuilder();
         } else {
             return new BungeeLegacyEntityContent.BungeeLegacyEntityContentBuilder();
@@ -352,7 +351,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public ItemContent.@NotNull Builder itemContent() {
-        if (Reflect.has("net.md_5.bungee.api.chat.hover.content.Item")) {
+        if (BungeeChatFeature.MODERN_HOVER_CONTENTS.isSupported()) {
             return new BungeeItemContent.BungeeItemContentBuilder();
         } else {
             return new BungeeLegacyItemContent.BungeeLegacyItemContentBuilder();
@@ -442,12 +441,12 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
         // there are no native components yet for nbt tags
 
         // ScoreComponent added in a3b44aa612c629955195b4697641de1b1665a587 (Feb 2018 (1.12), but existed in MC 1.8+), SelectorComponent added in the same commit
-        if (scoreSupported) {
+        if (BungeeChatFeature.SCORE_COMPONENT.isSupported()) {
             if (component instanceof net.md_5.bungee.api.chat.ScoreComponent) {
                 return new BungeeScoreComponent((net.md_5.bungee.api.chat.ScoreComponent) component);
             }
         }
-        if (selectorSupported) {
+        if (BungeeChatFeature.SELECTOR_COMPONENT.isSupported()) {
             if (component instanceof net.md_5.bungee.api.chat.SelectorComponent) {
                 return new BungeeSelectorComponent((net.md_5.bungee.api.chat.SelectorComponent) component);
             }
@@ -455,7 +454,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
         // KeybindComponent added in fbc5f514e28dbfc3f85cb936ad95b1a979086ab6 (1.12 released on June, this is from Nov of the same year)
         // TODO: is it worth to backport it? if yes, we probably also want to replace it with text component for versions older than 1.12
-        if (keybindSupported) {
+        if (BungeeChatFeature.KEYBIND_COMPONENT.isSupported()) {
             if (component instanceof net.md_5.bungee.api.chat.KeybindComponent) {
                 return new BungeeKeybindComponent((net.md_5.bungee.api.chat.KeybindComponent) component);
             }

@@ -71,20 +71,18 @@ public class BungeeTranslatableContent extends BungeeComponent implements Transl
 
     @Override
     public @Nullable String fallback() {
-        try {
+        if (BungeeChatFeature.TRANSLATABLE_FALLBACK.isSupported()) {
             return ((net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject).getFallback();
-        } catch (NoSuchMethodError ignored) {
         }
         return null;
     }
 
     @Override
     public @NotNull TranslatableComponent withFallback(@Nullable String fallback) {
-        try {
+        if (BungeeChatFeature.TRANSLATABLE_FALLBACK.isSupported()) {
             var duplicate = (net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject.duplicate();
             duplicate.setFallback(fallback);
             return (TranslatableComponent) AbstractBungeeBackend.wrapComponent(duplicate);
-        } catch (NoSuchMethodError ignored) {
         }
         return this;
     }
@@ -125,9 +123,8 @@ public class BungeeTranslatableContent extends BungeeComponent implements Transl
 
         @Override
         public TranslatableComponent.@NotNull Builder fallback(@Nullable String fallback) {
-            try {
+            if (BungeeChatFeature.TRANSLATABLE_FALLBACK.isSupported()) {
                 component.setFallback(fallback);
-            } catch (NoSuchMethodError ignored) {
             }
             return self();
         }

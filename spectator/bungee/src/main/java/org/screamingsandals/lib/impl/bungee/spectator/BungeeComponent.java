@@ -120,22 +120,24 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
 
     @Override
     public @Nullable ResourceLocation font() {
-        try {
-            return ResourceLocation.of(wrappedObject.getFontRaw());
-        } catch (Throwable ignored) {
-            // old version basically; or invalid font, thanks bungee for not checking the input
-            return null;
+        if (BungeeChatFeature.FONT.isSupported()) {
+            try {
+                return ResourceLocation.of(wrappedObject.getFontRaw());
+            } catch (Throwable ignored) {
+                // invalid font, thanks bungee for not checking the input
+            }
         }
+        return null;
     }
 
     @Override
     public @NotNull Component withFont(@Nullable ResourceLocation font) {
-        try {
+        if (BungeeChatFeature.FONT.isSupported()) {
             var duplicate = wrappedObject.duplicate();
             duplicate.setFont(font == null ? null : font.asString());
             return AbstractBungeeBackend.wrapComponent(duplicate);
-        } catch (Throwable ignored) {
-            // old version basically; or invalid font, thanks bungee for not checking the input
+        } else {
+            // old version basically
             return this;
         }
     }
@@ -376,11 +378,9 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
 
         @Override
         public @NotNull B font(@Nullable ResourceLocation font) {
-            try {
+            if (BungeeChatFeature.FONT.isSupported()) {
                 component.setFont(font == null ? null : font.asString());
-            } catch (Throwable ignored) {
-                // old version basically
-            }
+            } // old version basically
             return self();
         }
 

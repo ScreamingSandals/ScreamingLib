@@ -43,21 +43,22 @@ public class AdventureSelectorComponent extends AdventureComponent implements Se
 
     @Override
     public @Nullable Component separator() {
-        try {
+        if (AdventureFeature.SELECTOR_SEPARATOR.isSupported()) {
             return AdventureBackend.wrapComponent(((net.kyori.adventure.text.SelectorComponent) wrappedObject).separator());
-        } catch (Throwable ignored) {
-            return null; // added in Adventure 4.8.0
+        } else {
+            // added in Adventure 4.8.0
+            return null;
         }
     }
 
     @Override
     public @NotNull SelectorComponent withSeparator(@Nullable Component separator) {
-        try {
+        if (AdventureFeature.SELECTOR_SEPARATOR.isSupported()) {
             return (SelectorComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.SelectorComponent) wrappedObject).separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class)));
-        } catch (Throwable ignored) {
+        } else {
             // added in Adventure 4.8.0
+            return this;
         }
-        return this;
     }
 
     public static class AdventureSelectorBuilder extends AdventureBuilder<
@@ -79,11 +80,9 @@ public class AdventureSelectorComponent extends AdventureComponent implements Se
 
         @Override
         public SelectorComponent.@NotNull Builder separator(@Nullable Component separator) {
-            try {
+            if (AdventureFeature.SELECTOR_SEPARATOR.isSupported()) {
                 getBuilder().separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class));
-            } catch (Throwable ignored) {
-                // added in Adventure 4.8.0
-            }
+            } // added in Adventure 4.8.0
             return self();
         }
     }

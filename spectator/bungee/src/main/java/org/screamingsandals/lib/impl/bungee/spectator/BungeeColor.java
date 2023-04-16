@@ -28,9 +28,9 @@ public class BungeeColor extends BasicWrapper<ChatColor> implements Color {
 
     @Override
     public int red() {
-        try {
+        if (BungeeChatFeature.RGB_COLORS.isSupported()) {
             return wrappedObject.getColor().getRed();
-        } catch (Throwable ignored) {
+        } else {
             // Pre 1.16 Bungee Chat API (it was an enum, but javac is sus, at least the order was consistent)
             switch (wrappedObject.ordinal()) {
                 case 0: // BLACK
@@ -72,9 +72,9 @@ public class BungeeColor extends BasicWrapper<ChatColor> implements Color {
 
     @Override
     public int green() {
-        try {
+        if (BungeeChatFeature.RGB_COLORS.isSupported()) {
             return wrappedObject.getColor().getGreen();
-        } catch (Throwable ignored) {
+        } else {
             // Pre 1.16 Bungee Chat API (it was an enum, but javac is sus, at least the order was consistent)
             switch (wrappedObject.ordinal()) {
                 case 0: // BLACK
@@ -116,9 +116,9 @@ public class BungeeColor extends BasicWrapper<ChatColor> implements Color {
 
     @Override
     public int blue() {
-        try {
+        if (BungeeChatFeature.RGB_COLORS.isSupported()) {
             return wrappedObject.getColor().getBlue();
-        } catch (Throwable ignored) {
+        } else {
             // Pre 1.16 Bungee Chat API (it was an enum, but javac is sus, at least the order was consistent)
             switch (wrappedObject.ordinal()) {
                 case 0: // BLACK

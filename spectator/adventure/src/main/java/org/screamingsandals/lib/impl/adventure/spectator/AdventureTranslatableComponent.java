@@ -74,18 +74,16 @@ public class AdventureTranslatableComponent extends AdventureComponent implement
 
     @Override
     public @Nullable String fallback() {
-        try {
+        if (AdventureFeature.TRANSLATABLE_FALLBACK.isSupported()) {
             return ((net.kyori.adventure.text.TranslatableComponent) wrappedObject).fallback();
-        } catch (NoSuchMethodError ignored) {
         }
         return null;
     }
 
     @Override
     public @NotNull TranslatableComponent withFallback(@Nullable String fallback) {
-        try {
+        if (AdventureFeature.TRANSLATABLE_FALLBACK.isSupported()) {
             return (TranslatableComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.TranslatableComponent) wrappedObject).fallback(fallback));
-        } catch (NoSuchMethodError ignored) {
         }
         return this;
     }
@@ -126,9 +124,8 @@ public class AdventureTranslatableComponent extends AdventureComponent implement
 
         @Override
         public TranslatableComponent.@NotNull Builder fallback(@Nullable String fallback) {
-            try {
+            if (AdventureFeature.TRANSLATABLE_FALLBACK.isSupported()) {
                 getBuilder().fallback(fallback);
-            } catch (NoSuchMethodError ignored) {
             }
             return self();
         }

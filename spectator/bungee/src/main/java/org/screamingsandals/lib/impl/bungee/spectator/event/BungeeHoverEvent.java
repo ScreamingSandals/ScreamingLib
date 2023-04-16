@@ -23,6 +23,7 @@ import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bungee.spectator.AbstractBungeeBackend;
+import org.screamingsandals.lib.impl.bungee.spectator.BungeeChatFeature;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeEntityContent;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeItemContent;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeLegacyEntityContent;
@@ -52,20 +53,20 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
 
     @Override
     public @NotNull Content content() {
-        try {
+        if (BungeeChatFeature.MODERN_HOVER_CONTENTS.isSupported()) {
             // new api
             var content = wrappedObject.getContents();
             switch (wrappedObject.getAction()) {
                 case SHOW_ENTITY:
                     if (content.isEmpty()) {
-                        return null; // Dear API, this is not valid
+                        return null; // Dear API, this is not valid // TODO: fix nullability
                     } else {
                         // Dear API, more values are also not valid
                         return new BungeeEntityContent((Entity) content.get(0));
                     }
                 case SHOW_ITEM:
                     if (content.isEmpty()) {
-                        return null; // Dear API, this is not valid
+                        return null; // Dear API, this is not valid // TODO: fix nullability
                     } else {
                         // Dear API, more values are also not valid
                         return new BungeeItemContent((Item) content.get(0));
@@ -97,7 +98,7 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
                         return AbstractBungeeBackend.wrapComponent(new TextComponent(components.toArray(BaseComponent[]::new)));
                     }
             }
-        } catch (Throwable ignored) {
+        } else {
             // old api
             var values = wrappedObject.getValue();
             switch (wrappedObject.getAction()) {
@@ -105,13 +106,13 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
                     if (values.length == 1 && values[0] instanceof TextComponent) {
                         return new BungeeLegacyItemContent(((TextComponent) values[0]).getText());
                     } else {
-                        return null; // WTF??
+                        return null; // WTF?? // TODO: fix nullability
                     }
                 case SHOW_ITEM:
                     if (values.length == 1 && values[0] instanceof TextComponent) {
                         return new BungeeLegacyEntityContent(((TextComponent) values[0]).getText());
                     } else {
-                        return null; // WTF??
+                        return null; // WTF?? // TODO: fix nullability
                     }
                 default:
                     if (values.length == 0) {
@@ -155,12 +156,12 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
         @Override
         public @NotNull HoverEvent build() {
             Preconditions.checkNotNull(content, "Content of HoverEvent must be specified");
-            try {
+            if (BungeeChatFeature.MODERN_HOVER_CONTENTS.isSupported()) {
                 return new BungeeHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(
                         net.md_5.bungee.api.chat.HoverEvent.Action.valueOf(action.name()),
                         List.of(content.as(net.md_5.bungee.api.chat.hover.content.Content.class))
                         ));
-            } catch (Throwable t) {
+            } else {
                 return new BungeeHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(
                         net.md_5.bungee.api.chat.HoverEvent.Action.valueOf(action.name()),
                         new BaseComponent[] {

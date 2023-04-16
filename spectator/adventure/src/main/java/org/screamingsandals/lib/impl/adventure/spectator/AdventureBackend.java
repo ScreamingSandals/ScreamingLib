@@ -98,9 +98,9 @@ public class AdventureBackend implements SpectatorBackend {
 
     static {
         ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainText;
-        try {
+        if (AdventureFeature.PLAIN_TEXT_COMPONENT_SERIALIZER.isSupported()) {
             plainText = PlainTextComponentSerializer.plainText();
-        } catch (Throwable ignored) {
+        } else {
             // Adventure pre-4.8.0
             plainText = PlainComponentSerializer.plain();
         }
