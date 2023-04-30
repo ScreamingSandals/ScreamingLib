@@ -24,6 +24,7 @@ import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 import org.screamingsandals.lib.impl.block.snapshot.BlockSnapshots;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.ext.paperlib.PaperLib;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -50,7 +51,7 @@ public final class BukkitBlockPlacement extends BasicWrapper<org.bukkit.block.Bl
         final var bukkitLocation = wrappedObject.getLocation();
         PaperLib.getChunkAtAsync(bukkitLocation)
                 .thenAccept(result -> {
-                    if (!Version.isVersion(1,13)) {
+                    if (!BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
                         bukkitLocation.getBlock().setType(type.as(Material.class), !ignorePhysics);
                         Reflect.getMethod(bukkitLocation.getBlock(), "setData", byte.class, boolean.class).invoke(type instanceof BukkitBlock1_8 ? ((BukkitBlock1_8) type).legacyData() : 0, !ignorePhysics);
                     } else {
@@ -61,7 +62,7 @@ public final class BukkitBlockPlacement extends BasicWrapper<org.bukkit.block.Bl
 
     @Override
     public @NotNull Block block() {
-        if (!Version.isVersion(1,13)) {
+        if (!BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
             return Block.of(wrappedObject.getState().getData());
         } else {
             return Block.of(wrappedObject.getBlockData());
@@ -91,7 +92,7 @@ public final class BukkitBlockPlacement extends BasicWrapper<org.bukkit.block.Bl
     @SuppressWarnings("unchecked")
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
-        if (Version.isVersion(1,13)) {
+        if (BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
             if (type == BlockData.class) {
                 return (T) wrappedObject.getBlockData();
             }

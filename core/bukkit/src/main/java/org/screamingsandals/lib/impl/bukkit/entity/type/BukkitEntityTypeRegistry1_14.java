@@ -21,6 +21,7 @@ import org.bukkit.Registry;
 import org.bukkit.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.entity.type.EntityTypeTagBackPorts;
@@ -45,13 +46,13 @@ public class BukkitEntityTypeRegistry1_14 extends BukkitEntityTypeRegistry {
             /* we are probably not able to backport non-minecraft entity tags */
             if (namespaced != null && NamespacedKey.MINECRAFT.equals(namespaced.getNamespace())) {
                 var backPorts = EntityTypeTagBackPorts.getPortedTags(new BukkitEntityType1_11(entityType), s -> {
-                    if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
+                    if (BukkitFeature.REGISTRY_ENTITY_TYPES.isSupported()) {
                         return KeyedUtils.isTagged(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), org.bukkit.entity.EntityType.class, entityType);
-                    } else if (Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null) { // Paper implemented them earlier in 1.16.5
+                    } else if (BukkitFeature.REGISTRY_ENTITIES.isSupported()) { // Paper implemented them earlier in 1.16.5
                         return KeyedUtils.isTagged((String) Reflect.getField(Tag.class, "REGISTRY_ENTITIES"), new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), org.bukkit.entity.EntityType.class, entityType);
                     } // TODO: else bypass using NMS on CB-like servers
                     return false;
-                }, Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null || Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null);
+                }, BukkitFeature.REGISTRY_ENTITY_TYPES.isSupported() || BukkitFeature.REGISTRY_ENTITIES.isSupported());
                 if (backPorts != null && !backPorts.isEmpty()) {
                     tagBackPorts.put(entityType, backPorts);
                 }

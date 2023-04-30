@@ -17,18 +17,16 @@
 package org.screamingsandals.lib.impl.bukkit.particle;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.particle.ParticleTypeRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 
 @Service
 public abstract class BukkitParticleTypeRegistry extends ParticleTypeRegistry {
-    public static final boolean HAS_PARTICLES_API = Version.isVersion(1, 9);
-
     @ServiceInitializer
     public static @NotNull BukkitParticleTypeRegistry init() {
-        if (HAS_PARTICLES_API) {
+        if (BukkitFeature.PARTICLES_API.isSupported()) {
             return new BukkitParticleTypeRegistry1_9();
         } else {
             return new BukkitParticleTypeRegistry1_8();

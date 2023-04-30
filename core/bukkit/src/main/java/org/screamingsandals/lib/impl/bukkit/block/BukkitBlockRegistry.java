@@ -18,7 +18,7 @@ package org.screamingsandals.lib.impl.bukkit.block;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.block.BlockRegistry;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 
@@ -26,9 +26,9 @@ import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 public abstract class BukkitBlockRegistry extends BlockRegistry {
     @ServiceInitializer
     public static @NotNull BukkitBlockRegistry init() {
-        if (Version.isVersion(1, 14)) {
+        if (BukkitFeature.REGISTRY.isSupported()) {
             return new BukkitBlockRegistry1_14();
-        } else if (Version.isVersion(1, 13)) {
+        } else if (BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
             return new BukkitBlockRegistry1_13();
         } else {
             return new BukkitBlockRegistry1_8();

@@ -23,7 +23,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.material.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 
 import java.util.HashMap;
 import java.util.List;
@@ -335,7 +335,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         break;
                 }
             } else if (materialData instanceof Command) {
-                if (Server.isVersion(1, 9)) {
+                if (BukkitFeature.COMMAND_BLOCK_VERBOSE_BLOCK_STATE.isSupported()) {
                     switch (key.toLowerCase(Locale.ROOT)) {
                         case "conditional":
                             materialData.setData((byte) (Boolean.parseBoolean(value) ? (materialData.getData() | 0x8) : (materialData.getData()) & ~0x8));
@@ -1655,7 +1655,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         return ((CocoaPlant) materialData).getAttachedFace().name().toLowerCase(Locale.ROOT);
                 }
             } else if (materialData instanceof Command) {
-                if (Server.isVersion(1, 9)) {
+                if (BukkitFeature.COMMAND_BLOCK_VERBOSE_BLOCK_STATE.isSupported()) {
                     switch (key.toLowerCase(Locale.ROOT)) {
                         case "conditional":
                             return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";

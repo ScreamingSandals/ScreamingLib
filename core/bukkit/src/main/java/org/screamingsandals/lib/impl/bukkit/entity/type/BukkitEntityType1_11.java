@@ -20,7 +20,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
@@ -56,10 +56,10 @@ public class BukkitEntityType1_11 extends BasicWrapper<org.bukkit.entity.EntityT
             key = ResourceLocation.of(tag.toString());
         }
         // native tags (while they have been implemented in 1.14, Bukkit API didn't have them until late build of 1.17.1
-        if (Server.isVersion(1, 13)) {
-            if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
+        if (BukkitFeature.TAGS.isSupported()) {
+            if (BukkitFeature.REGISTRY_ENTITY_TYPES.isSupported()) {
                 KeyedUtils.isTagged(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey(key.namespace(), key.path()), org.bukkit.entity.EntityType.class, wrappedObject);
-            } else if (Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null) { // Paper implemented them earlier in 1.16.5
+            } else if (BukkitFeature.REGISTRY_ENTITIES.isSupported()) { // Paper implemented them earlier in 1.16.5
                 KeyedUtils.isTagged((String) Reflect.getField(Tag.class, "REGISTRY_ENTITIES"), new NamespacedKey(key.namespace(), key.path()), org.bukkit.entity.EntityType.class, wrappedObject);
             } // TODO: else bypass using NMS on CB-like servers
         }
@@ -98,7 +98,7 @@ public class BukkitEntityType1_11 extends BasicWrapper<org.bukkit.entity.EntityT
 
     @Override
     public @NotNull ResourceLocation location() {
-        if (Server.isVersion(1, 14)) {
+        if (BukkitFeature.ENTITY_KEYED.isSupported()) {
             var namespaced = wrappedObject.getKey();
             return ResourceLocation.of(namespaced.namespace(), namespaced.getKey());
         } else {

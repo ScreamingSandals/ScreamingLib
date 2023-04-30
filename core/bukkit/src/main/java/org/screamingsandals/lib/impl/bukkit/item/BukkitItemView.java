@@ -19,7 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.item;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemStackView;
 
@@ -37,7 +37,7 @@ public class BukkitItemView extends BukkitItem implements ItemStackView {
         var stack = replaceable.as(org.bukkit.inventory.ItemStack.class);
         wrappedObject.setType(stack.getType());
         wrappedObject.setAmount(stack.getAmount());
-        if (!Version.isVersion(1, 13)) {
+        if (!BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
             wrappedObject.setDurability(stack.getDurability());
         }
         if (stack.hasItemMeta()) {

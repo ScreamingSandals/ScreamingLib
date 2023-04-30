@@ -20,7 +20,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -76,7 +76,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
 
     @Override
     public @NotNull PotionEffect withDuration(int duration) {
-        try {
+        if (BukkitFeature.POTION_EFFECT_CONSTRUCTOR_WITH_ICON.isSupported()) {
             return new BukkitPotionEffect(
                     new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
@@ -87,7 +87,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
                             wrappedObject.hasIcon()
                     )
             );
-        } catch (Throwable ignored) {
+        } else {
             return new BukkitPotionEffect(
                     new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
@@ -102,7 +102,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
 
     @Override
     public @NotNull PotionEffect withAmplifier(int amplifier) {
-        try {
+        if (BukkitFeature.POTION_EFFECT_CONSTRUCTOR_WITH_ICON.isSupported()) {
             return new BukkitPotionEffect(
                     new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
@@ -113,7 +113,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
                             wrappedObject.hasIcon()
                     )
             );
-        } catch (Throwable ignored) {
+        } else {
             return new BukkitPotionEffect(
                     new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
@@ -128,7 +128,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
 
     @Override
     public @NotNull PotionEffect withAmbient(boolean ambient) {
-        try {
+        if (BukkitFeature.POTION_EFFECT_CONSTRUCTOR_WITH_ICON.isSupported()) {
             return new BukkitPotionEffect(
                     new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
@@ -139,7 +139,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
                             wrappedObject.hasIcon()
                     )
             );
-        } catch (Throwable ignored) {
+        } else {
             return new BukkitPotionEffect(
                     new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
@@ -154,7 +154,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
 
     @Override
     public @NotNull PotionEffect withParticles(boolean particles) {
-        try {
+        if (BukkitFeature.POTION_EFFECT_CONSTRUCTOR_WITH_ICON.isSupported()) {
             return new BukkitPotionEffect(
                     new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
@@ -165,7 +165,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
                             wrappedObject.hasIcon()
                     )
             );
-        } catch (Throwable ignored) {
+        } else {
             return new BukkitPotionEffect(
                     new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
@@ -180,7 +180,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
 
     @Override
     public @NotNull PotionEffect withIcon(boolean icon) {
-        try {
+        if (BukkitFeature.POTION_EFFECT_CONSTRUCTOR_WITH_ICON.isSupported()) {
             return new BukkitPotionEffect(
                     new org.bukkit.potion.PotionEffect(
                             wrappedObject.getType(),
@@ -191,7 +191,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
                             icon
                     )
             );
-        } catch (Throwable ignored) {
+        } else {
             return this;
         }
     }
@@ -228,7 +228,7 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
 
     @Override
     public @NotNull ResourceLocation location() {
-        if (Server.isVersion(1, 18)) {
+        if (BukkitFeature.POTION_EFFECT_KEYED.isSupported()) {
             var namespacedKey = wrappedObject.getType().getKey();
             return ResourceLocation.of(namespacedKey.getNamespace(), namespacedKey.getKey());
         } else {

@@ -33,4 +33,8 @@ public final class PlatformFeature {
         }
         return value;
     }
+
+    public @NotNull PlatformFeature and(@NotNull BooleanSupplier supplier) {
+        return new PlatformFeature(() -> this.isSupported() && supplier.getAsBoolean());
+    }
 }

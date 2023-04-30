@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.item.meta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
@@ -95,7 +96,7 @@ public class BukkitEnchantment extends BasicWrapper<Pair<org.bukkit.enchantments
 
     @Override
     public @NotNull ResourceLocation location() {
-        if (Server.isVersion(1, 13)) {
+        if (BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
             var bukkitKey = wrappedObject.first().getKey();
             return ResourceLocation.of(bukkitKey.getNamespace(), bukkitKey.getKey());
         } else {

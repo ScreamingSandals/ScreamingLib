@@ -16,11 +16,11 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.entity.type.BukkitEntityType1_8;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.*;
@@ -34,18 +34,14 @@ import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.tasker.DefaultThreads;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @Service
 public class BukkitEntities extends Entities {
-
-    public static final boolean HAS_MOB_INTERFACE = Reflect.has("org.bukkit.entity.Mob");
 
     @Override
     protected @Nullable Entity wrapEntity0(@NotNull Object entity) {
@@ -66,7 +62,7 @@ public class BukkitEntities extends Entities {
             return new BukkitHumanEntity((org.bukkit.entity.HumanEntity) entity);
         }
 
-        if (HAS_MOB_INTERFACE) {
+        if (BukkitFeature.MOB_INTERFACE.isSupported()) {
             if (entity instanceof Mob) {
                 return new BukkitPathfindingMob((org.bukkit.entity.LivingEntity) entity);
             }
@@ -103,68 +99,72 @@ public class BukkitEntities extends Entities {
 
     @Override
     public @Nullable Entity spawn0(@NotNull EntityType entityType, @NotNull Location locationHolder) {
-        return entityType.asNullable(org.bukkit.entity.EntityType.class).mapOrNull(entityType1 -> {
-            var bukkitLoc = locationHolder.as(org.bukkit.Location.class);
-            var world = bukkitLoc.getWorld();
-            if (world != null) {
-                // TODO: test all entity types
-                var entity = world.spawnEntity(bukkitLoc, entityType1);
-                if (!Server.isVersion(1, 11) && entityType instanceof BukkitEntityType1_8 && ((BukkitEntityType1_8) entityType).getAdditionalLegacyData() != 0) {
-                    var data = ((BukkitEntityType1_8) entityType).getAdditionalLegacyData();
-                    if (entity instanceof Horse) {
-                        switch (data) {
-                            case InternalEntityLegacyConstants.HORSE_VARIANT_DONKEY:
-                                //noinspection deprecation
-                                ((Horse) entity).setVariant(Horse.Variant.DONKEY);
-                                break;
-                            case InternalEntityLegacyConstants.HORSE_VARIANT_MULE:
-                                //noinspection deprecation
-                                ((Horse) entity).setVariant(Horse.Variant.MULE);
-                                break;
-                            case InternalEntityLegacyConstants.HORSE_VARIANT_SKELETON:
-                                //noinspection deprecation
-                                ((Horse) entity).setVariant(Horse.Variant.SKELETON_HORSE);
-                                break;
-                            case InternalEntityLegacyConstants.HORSE_VARIANT_ZOMBIE:
-                                //noinspection deprecation
-                                ((Horse) entity).setVariant(Horse.Variant.UNDEAD_HORSE);
-                                break;
-                        }
-                    } else if (entity instanceof Skeleton) {
-                        switch (data) {
-                            case InternalEntityLegacyConstants.SKELETON_VARIANT_WITHER:
-                                //noinspection deprecation
-                                ((Skeleton) entity).setSkeletonType(Skeleton.SkeletonType.WITHER);
-                                break;
-                            case InternalEntityLegacyConstants.SKELETON_VARIANT_STRAY:
-                                if (Server.isVersion(1, 10)) {
-                                    //noinspection deprecation
-                                    ((Skeleton) entity).setSkeletonType(Skeleton.SkeletonType.STRAY);
-                                }
-                                break;
-                        }
-                    } else if (entity instanceof Zombie) {
-                        switch (data) {
-                            case InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER:
-                                //noinspection deprecation
-                                ((Zombie) entity).setVillager(true);
-                                break;
-                            case InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK:
-                                if (Server.isVersion(1, 10)) {
-                                    // we need NMS to spawn Husk on 1.10, thank you md_5 -_-
-                                    Reflect.fastInvoke(ZombieAccessor.getMethodSetVillagerType1(), ClassStorage.getHandle(entity), EnumZombieTypeAccessor.getFieldHUSK());
-                                }
-                                break;
-                        }
-                    } else if (entity instanceof Guardian && data == InternalEntityLegacyConstants.ELDER_GUARDIAN) {
-                        //noinspection deprecation
-                        ((Guardian) entity).setElder(true);
-                    }
-                }
-                return wrapEntity0(entity);
-            }
+        var entityType1 = entityType.asNullable(org.bukkit.entity.EntityType.class);
+
+        if (entityType1 == null) {
             return null;
-        });
+        }
+
+        var bukkitLoc = locationHolder.as(org.bukkit.Location.class);
+        var world = bukkitLoc.getWorld();
+        if (world != null) {
+            // TODO: test all entity types
+            var entity = world.spawnEntity(bukkitLoc, entityType1);
+            if (!BukkitFeature.NORMAL_ENTITY_RESOURCE_LOCATIONS.isSupported() && entityType instanceof BukkitEntityType1_8 && ((BukkitEntityType1_8) entityType).getAdditionalLegacyData() != 0) {
+                var data = ((BukkitEntityType1_8) entityType).getAdditionalLegacyData();
+                if (entity instanceof Horse) {
+                    switch (data) {
+                        case InternalEntityLegacyConstants.HORSE_VARIANT_DONKEY:
+                            //noinspection deprecation
+                            ((Horse) entity).setVariant(Horse.Variant.DONKEY);
+                            break;
+                        case InternalEntityLegacyConstants.HORSE_VARIANT_MULE:
+                            //noinspection deprecation
+                            ((Horse) entity).setVariant(Horse.Variant.MULE);
+                            break;
+                        case InternalEntityLegacyConstants.HORSE_VARIANT_SKELETON:
+                            //noinspection deprecation
+                            ((Horse) entity).setVariant(Horse.Variant.SKELETON_HORSE);
+                            break;
+                        case InternalEntityLegacyConstants.HORSE_VARIANT_ZOMBIE:
+                            //noinspection deprecation
+                            ((Horse) entity).setVariant(Horse.Variant.UNDEAD_HORSE);
+                            break;
+                    }
+                } else if (entity instanceof Skeleton) {
+                    switch (data) {
+                        case InternalEntityLegacyConstants.SKELETON_VARIANT_WITHER:
+                            //noinspection deprecation
+                            ((Skeleton) entity).setSkeletonType(Skeleton.SkeletonType.WITHER);
+                            break;
+                        case InternalEntityLegacyConstants.SKELETON_VARIANT_STRAY:
+                            if (BukkitFeature.STRAY.isSupported()) {
+                                //noinspection deprecation
+                                ((Skeleton) entity).setSkeletonType(Skeleton.SkeletonType.STRAY);
+                            }
+                            break;
+                    }
+                } else if (entity instanceof Zombie) {
+                    switch (data) {
+                        case InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER:
+                            //noinspection deprecation
+                            ((Zombie) entity).setVillager(true);
+                            break;
+                        case InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK:
+                            if (BukkitFeature.HUSK.isSupported()) {
+                                // we need NMS to spawn Husk on 1.10, thank you md_5 -_-
+                                Reflect.fastInvoke(ZombieAccessor.getMethodSetVillagerType1(), ClassStorage.getHandle(entity), EnumZombieTypeAccessor.getFieldHUSK());
+                            }
+                            break;
+                    }
+                } else if (entity instanceof Guardian && data == InternalEntityLegacyConstants.ELDER_GUARDIAN) {
+                    //noinspection deprecation
+                    ((Guardian) entity).setElder(true);
+                }
+            }
+            return wrapEntity0(entity);
+        }
+        return null;
     }
 
     @Override

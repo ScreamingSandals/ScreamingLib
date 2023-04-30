@@ -20,7 +20,7 @@ import org.bukkit.attribute.Attribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -39,7 +39,7 @@ public class BukkitAttributeTypeRegistry1_9 extends BukkitAttributeTypeRegistry 
     public BukkitAttributeTypeRegistry1_9() {
         specialType(Attribute.class, BukkitAttributeType1_9::new);
 
-        if (Version.isVersion(1, 9, 1) && Reflect.getField(Attribute.class, "GENERIC_ARMOR_TOUGHNESS") == null) { // 1.9.1 - 1.11.2 (late builds)
+        if (BukkitFeature.ATTRIBUTE_ARMOR_TOUGHNESS_VANILLA.isSupported() && !BukkitFeature.ATTRIBUTE_ARMOR_TOUGHNESS.isSupported()) { // 1.9.1 - 1.11.2 (late builds)
             // I am sorry Java, but I had no other choice (manually creating the instance will work at least for obtaining AttributeInstance, so we won't inject it into values to not confuse other plugins)
             // md_5 has just completely forgotten about this type for more than a year (and a two major versions)
             // TODO: check if this shit actually works or not

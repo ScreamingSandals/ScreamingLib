@@ -23,7 +23,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.particle.DustOptions;
@@ -34,7 +34,7 @@ import org.screamingsandals.lib.particle.ParticleData;
 public class BukkitParticleConverter {
     public Object convertParticleData(@NotNull ParticleData data) {
         if (data instanceof Block) {
-            if (Version.isVersion(1, 13)) {
+            if (BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
                 return data.as(BlockData.class);
             } else {
                 return data.as(MaterialData.class);

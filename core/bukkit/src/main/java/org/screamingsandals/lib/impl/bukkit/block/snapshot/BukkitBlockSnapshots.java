@@ -20,6 +20,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.block.TileState;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacements;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
@@ -30,14 +31,12 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 @Service
 @ServiceDependencies(dependsOn = BukkitBlockPlacements.class)
 public class BukkitBlockSnapshots extends BlockSnapshots {
-    public static final boolean HAS_TILE_STATE = Reflect.has("org.bukkit.block.TileState");
-
     @SuppressWarnings("unchecked")
     @Override
     protected <T extends BlockSnapshot> @Nullable T wrapBlockSnapshot0(@Nullable Object blockState) {
         // ORDER IS IMPORTANT
 
-        if (HAS_TILE_STATE) {
+        if (BukkitFeature.TILE_STATE.isSupported()) {
             if (blockState instanceof Sign) {
                 return (T) new BukkitSignBlockSnapshot((Sign) blockState);
             }

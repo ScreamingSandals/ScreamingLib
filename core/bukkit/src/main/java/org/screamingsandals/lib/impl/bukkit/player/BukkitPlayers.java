@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.impl.bukkit.player;
 
 import io.netty.channel.Channel;
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -35,16 +34,15 @@ import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.player.OfflinePlayer;
 import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.sender.permissions.*;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.*;
 
 @Service
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPlayers extends Players {
     protected final @NotNull WeakHashMap<org.bukkit.entity.@NotNull Player, Channel> channelCache = new WeakHashMap<>();
 
@@ -72,12 +70,14 @@ public class BukkitPlayers extends Players {
 
     @Override
     public @Nullable Player getPlayer0(@NotNull String name) {
-        return Bukkit.getPlayer(name).mapOrNull(BukkitPlayer::new);
+        var bukkitPlayer = Bukkit.getPlayer(name);
+        return bukkitPlayer == null ? null : new BukkitPlayer(bukkitPlayer);
     }
 
     @Override
     public @Nullable Player getPlayer0(@NotNull UUID uuid) {
-        return Bukkit.getPlayer(uuid).mapOrNull(BukkitPlayer::new);
+        var bukkitPlayer = Bukkit.getPlayer(uuid);
+        return bukkitPlayer == null ? null : new BukkitPlayer(bukkitPlayer);
     }
 
     @Override
@@ -85,11 +85,11 @@ public class BukkitPlayers extends Players {
         if (sender instanceof CommandSender) {
             return (CommandSender) sender;
         } else if (sender instanceof OfflinePlayer) {
-            return getPlayer0(((OfflinePlayer) sender).getUuid()).orElseThrow();
+            return Preconditions.checkNotNull(getPlayer0(((OfflinePlayer) sender).getUuid()));
         } else if (sender instanceof org.bukkit.entity.Player) {
             return new BukkitPlayer((org.bukkit.entity.Player) sender);
         } else if (sender instanceof org.bukkit.OfflinePlayer) {
-            return getPlayer0(((org.bukkit.OfflinePlayer) sender).getUniqueId()).orElseThrow();
+            return Preconditions.checkNotNull(getPlayer0(((org.bukkit.OfflinePlayer) sender).getUniqueId()));
         } else if (sender instanceof org.bukkit.command.CommandSender) {
             return new GenericCommandSender((org.bukkit.command.CommandSender) sender);
         }
@@ -146,7 +146,8 @@ public class BukkitPlayers extends Players {
 
     @Override
     public @Nullable Player getPlayerExact0(@NotNull String name) {
-        return Bukkit.getPlayerExact(name).mapOrNull(BukkitPlayer::new);
+        var bukkitPlayer = Bukkit.getPlayerExact(name);
+        return bukkitPlayer == null ? null : new BukkitPlayer(bukkitPlayer);
     }
 
     @Override

@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.impl.bukkit.entity;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.ItemEntity;
 import org.screamingsandals.lib.item.ItemStack;
@@ -63,14 +64,20 @@ public class BukkitItemEntity extends BukkitEntity implements ItemEntity {
 
     @Override
     public boolean isPickable() {
-        //TODO: think about this
-        return getWrappedObject().canPlayerPickup();
+        if (BukkitFeature.ITEM_CAN_PLAYER_PICKUP.isSupported()) {
+            return getWrappedObject().canPlayerPickup(); // Paper
+        } else {
+            return true; // Spigot
+        }
     }
 
     @Override
     public void setPickable(boolean pickable) {
-        //TODO: think about this
-        getWrappedObject().setCanPlayerPickup(false);
+        if (BukkitFeature.ITEM_CAN_PLAYER_PICKUP.isSupported()) {
+            getWrappedObject().setCanPlayerPickup(pickable); // Paper
+        } else {
+            // Spigot
+        }
     }
 
     @Override

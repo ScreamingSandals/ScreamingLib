@@ -24,7 +24,6 @@ import org.screamingsandals.lib.impl.bukkit.block.BukkitBlock1_8;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockRegistry1_8;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemTypeRegistry1_8;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
@@ -37,7 +36,7 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
     public BukkitItemBlockIdsRemapper(@NotNull ItemTypeRegistry itemTypeMapper, @NotNull BlockRegistry blockTypeMapper) {
         super(itemTypeMapper, blockTypeMapper);
 
-        if (!Version.isVersion(1, 12)) {
+        if (!BukkitFeature.COLORED_BEDS.isSupported()) {
             mappingFlags.add(MappingFlags.NO_COLORED_BEDS);
         }
     }
@@ -45,7 +44,7 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
     @Override
     @OnPostConstruct
     public void doMapping() {
-        if (!Version.isVersion(1, 13)) {
+        if (!BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
             flatteningLegacyMappingJava();
         }
 

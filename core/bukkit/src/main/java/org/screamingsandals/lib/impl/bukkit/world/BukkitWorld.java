@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockPlacement;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleConverter1_8;
@@ -63,7 +64,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
 
     @Override
     public int getMinY() {
-        if (Reflect.hasMethod(wrappedObject, "getMinHeight")) {
+        if (BukkitFeature.WORLD_MIN_HEIGHT.isSupported()) {
             return wrappedObject.getMinHeight();
         }
         return 0;
@@ -105,7 +106,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
     @SuppressWarnings("unchecked")
     @Override
     public <T> @Nullable T getGameRuleValue(@NotNull GameRuleType holder) {
-        if (Reflect.has("org.bukkit.GameRule")) {
+        if (BukkitFeature.GAME_RULE_API.isSupported()) {
             return (T) wrappedObject.getGameRuleValue(holder.as(GameRule.class));
         } else {
             var val = wrappedObject.getGameRuleValue(holder.platformName());
@@ -127,7 +128,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
     @SuppressWarnings("unchecked")
     @Override
     public <T> void setGameRuleValue(@NotNull GameRuleType holder, @NotNull T value) {
-        if (Reflect.has("org.bukkit.GameRule")) {
+        if (BukkitFeature.GAME_RULE_API.isSupported()) {
             wrappedObject.setGameRule((GameRule<T>) holder.as(GameRule.class), value);
         } else {
             wrappedObject.setGameRuleValue(holder.platformName(), value.toString());
@@ -150,7 +151,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
             throw new IllegalArgumentException("The location of the sent particle is not in the correct world!");
         }
 
-        try {
+        if (BukkitFeature.EXTENDED_PARTICLE_METHOD.isSupported()) {
             // 1.13.1 +
             wrappedObject.spawnParticle(
                     particle.particleType().as(org.bukkit.Particle.class),
@@ -163,39 +164,37 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
                     particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null,
                     particle.longDistance()
             );
-        } catch (Throwable ignored) {
-            try {
-                // 1.9.+
-                wrappedObject.spawnParticle(
-                        particle.particleType().as(org.bukkit.Particle.class),
-                        location.as(org.bukkit.Location.class),
-                        particle.count(),
-                        particle.offset().getX(),
-                        particle.offset().getY(),
-                        particle.offset().getZ(),
-                        particle.particleData(),
-                        particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null
-                        // the official implementation set longDistance always to true for some reason in pre-flattening versions
-                );
-            } catch (Throwable ignored2) {
-                // 1.8.8
-                var enumParticle = particle.particleType().as(EnumParticleAccessor.getType());
-                Reflect.fastInvoke(
-                        ClassStorage.getHandle(wrappedObject),
-                        ServerLevelAccessor.getMethodA1(),
-                        enumParticle,
-                        particle.longDistance(),
-                        (float) location.getX(),
-                        (float) location.getY(),
-                        (float) location.getZ(),
-                        particle.count(),
-                        (float) particle.offset().getX(),
-                        (float) particle.offset().getY(),
-                        (float) particle.offset().getZ(),
-                        (float) particle.particleData(),
-                        particle.specialData() != null ? BukkitParticleConverter1_8.convertParticleData(particle.specialData()) : new int[0]
-                );
-            }
+        } else if (BukkitFeature.PARTICLES_API.isSupported()) {
+            // 1.9.+
+            wrappedObject.spawnParticle(
+                    particle.particleType().as(org.bukkit.Particle.class),
+                    location.as(org.bukkit.Location.class),
+                    particle.count(),
+                    particle.offset().getX(),
+                    particle.offset().getY(),
+                    particle.offset().getZ(),
+                    particle.particleData(),
+                    particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null
+                    // the official implementation set longDistance always to true for some reason in pre-flattening versions
+            );
+        } else {
+            // 1.8.8
+            var enumParticle = particle.particleType().as(EnumParticleAccessor.getType());
+            Reflect.fastInvoke(
+                    ClassStorage.getHandle(wrappedObject),
+                    ServerLevelAccessor.getMethodA1(),
+                    enumParticle,
+                    particle.longDistance(),
+                    (float) location.getX(),
+                    (float) location.getY(),
+                    (float) location.getZ(),
+                    particle.count(),
+                    (float) particle.offset().getX(),
+                    (float) particle.offset().getY(),
+                    (float) particle.offset().getZ(),
+                    (float) particle.particleData(),
+                    particle.specialData() != null ? BukkitParticleConverter1_8.convertParticleData(particle.specialData()) : new int[0]
+            );
         }
     }
 

@@ -20,7 +20,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.impl.item.meta.EnchantmentRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -41,12 +41,12 @@ public class BukkitEnchantmentRegistry extends EnchantmentRegistry {
 
     @Override
     protected @Nullable Enchantment resolveMappingPlatform(@NotNull ResourceLocation location) {
-        if (Server.isVersion(1, 14)) {
+        if (BukkitFeature.REGISTRY.isSupported()) {
             var entityType = Registry.ENCHANTMENT.get(new NamespacedKey(location.namespace(), location.path()));
             if (entityType != null) {
                 return new BukkitEnchantment(entityType);
             }
-        } else if (Server.isVersion(1, 13)) {
+        } else if (BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
             // 1.13.x didn't have registries yet, but we got something similar to them in this case
             var entityType = org.bukkit.enchantments.Enchantment.getByKey(new NamespacedKey(location.namespace(), location.path()));
             if (entityType != null) {
@@ -107,7 +107,7 @@ public class BukkitEnchantmentRegistry extends EnchantmentRegistry {
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull Enchantment> getRegistryItemStream0() {
-        if (Server.isVersion(1, 13)) {
+        if (BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(org.bukkit.enchantments.Enchantment.values()),
                     BukkitEnchantment::new,

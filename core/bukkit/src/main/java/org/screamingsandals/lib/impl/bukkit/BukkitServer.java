@@ -47,7 +47,7 @@ public class BukkitServer extends Server {
         try {
             UNSAFE_SOUND_CACHE.clear();
 
-            if (Reflect.hasMethod(Sound.class, "getKey")) {
+            if (BukkitFeature.SOUND_KEYED.isSupported()) {
                 for (var v : Sound.values()) {
                     if ("minecraft".equals(v.getKey().getNamespace())) {
                         UNSAFE_SOUND_CACHE.put(v.name(), v.getKey().getKey());
@@ -133,7 +133,7 @@ public class BukkitServer extends Server {
         // Server.Spigot#getConfig() exists in 1.9.4 and resolves to org.spigotmc.SpigotConfig#config in 1.9.4 and latest
         // verified with https://github.com/PaperMC/Paper/blob/ver/1.9.4/Spigot-Server-Patches/0005-Timings-v2.patch#L991
         // and https://github.com/PaperMC/Paper/blob/master/patches/server/0010-Timings-v2.patch#L1727
-        if (Reflect.hasMethod(org.bukkit.Server.Spigot.class, "getPaperConfig")) {
+        if (BukkitFeature.HAS_PAPER_CONFIG.isSupported()) {
             if (Bukkit.spigot().getPaperConfig().getBoolean("settings.velocity-support.enabled", false)) {
                 return ProxyType.VELOCITY;
             }

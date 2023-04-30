@@ -17,19 +17,16 @@
 package org.screamingsandals.lib.impl.bukkit.item.meta;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.item.meta.PotionRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 
 @Service
 public abstract class BukkitPotionRegistry extends PotionRegistry {
-    public static final boolean IS_POTION_SUPPORTED = Version.isVersion(1, 9);
-
-
     @ServiceInitializer
     public static @NotNull BukkitPotionRegistry init() {
-        if (IS_POTION_SUPPORTED) {
+        if (BukkitFeature.POTION_API.isSupported()) {
             return new BukkitPotionRegistry1_9();
         } else {
             return new BukkitPotionRegistry1_8();

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.container;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.item.ItemStack;
@@ -120,7 +121,7 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
 
     @Override
     public @NotNull ItemStack getItemInMainHand() {
-        if (Version.isVersion(1, 9)) {
+        if (BukkitFeature.OFF_HAND.isSupported()) {
             return new BukkitItem(((PlayerInventory) wrappedObject).getItemInMainHand());
         } else {
             return new BukkitItem(((PlayerInventory) wrappedObject).getItemInHand());
@@ -130,7 +131,7 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
     @Override
     public void setItemInMainHand(@Nullable ItemStack item) {
         var inventory = (PlayerInventory) wrappedObject;
-        if (Version.isVersion(1, 9)) {
+        if (BukkitFeature.OFF_HAND.isSupported()) {
             if (item == null) {
                 inventory.setItemInMainHand(null);
                 return;
@@ -147,7 +148,7 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
 
     @Override
     public @NotNull ItemStack getItemInOffHand() {
-        if (Version.isVersion(1, 9)) {
+        if (BukkitFeature.OFF_HAND.isSupported()) {
             return new BukkitItem(((PlayerInventory) wrappedObject).getItemInOffHand());
         } else {
             return ItemStackFactory.getAir();
@@ -157,7 +158,7 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
     @Override
     public void setItemInOffHand(@Nullable ItemStack item) {
         var inventory = (PlayerInventory) wrappedObject;
-        if (Version.isVersion(1, 9)) {
+        if (BukkitFeature.OFF_HAND.isSupported()) {
             if (item == null) {
                 inventory.setItemInOffHand(null);
                 return;

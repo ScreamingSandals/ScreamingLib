@@ -16,8 +16,10 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.HumanEntity;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 
 public class BukkitHumanEntity extends BukkitLivingEntity implements HumanEntity {
     public BukkitHumanEntity(@NotNull org.bukkit.entity.HumanEntity wrappedObject) {
@@ -31,64 +33,76 @@ public class BukkitHumanEntity extends BukkitLivingEntity implements HumanEntity
 
     @Override
     public float getSaturation() {
-        try {
+        if (BukkitFeature.HUMAN_SATURATION.isSupported()) {
             // 1.16.5+
             return ((org.bukkit.entity.HumanEntity) wrappedObject).getSaturation();
-        } catch (Throwable ignored) {
-            // TODO: backport missing api <= 1.16.4
+        } else {
+            if (wrappedObject instanceof Player) {
+                return ((org.bukkit.entity.Player) wrappedObject).getSaturation();
+            }
             return 0;
         }
     }
 
     @Override
     public void setSaturation(float saturation) {
-        try {
+        if (BukkitFeature.HUMAN_SATURATION.isSupported()) {
             // 1.16.5+
             ((org.bukkit.entity.HumanEntity) wrappedObject).setSaturation(saturation);
-        } catch (Throwable ignored) {
-            // TODO: backport missing api <= 1.16.4
+        } else {
+            if (wrappedObject instanceof Player) {
+                ((org.bukkit.entity.Player) wrappedObject).setSaturation(saturation);
+            }
         }
     }
 
     @Override
     public float getExhaustion() {
-        try {
+        if (BukkitFeature.HUMAN_EXHAUSTION.isSupported()) {
             // 1.16.5+
             return ((org.bukkit.entity.HumanEntity) wrappedObject).getExhaustion();
-        } catch (Throwable ignored) {
-            // TODO: backport missing api <= 1.16.4
+        } else {
+            if (wrappedObject instanceof Player) {
+                return ((org.bukkit.entity.Player) wrappedObject).getExhaustion();
+            }
             return 0;
         }
     }
 
     @Override
     public void setExhaustion(float exhaustion) {
-        try {
+        if (BukkitFeature.HUMAN_EXHAUSTION.isSupported()) {
             // 1.16.5+
             ((org.bukkit.entity.HumanEntity) wrappedObject).setExhaustion(exhaustion);
-        } catch (Throwable ignored) {
-            // TODO: backport missing api <= 1.16.4
+        } else  {
+            if (wrappedObject instanceof Player) {
+                ((org.bukkit.entity.Player) wrappedObject).setExhaustion(exhaustion);
+            }
         }
     }
 
     @Override
     public int getFoodLevel() {
-        try {
+        if (BukkitFeature.FOOD_LEVEL.isSupported()) {
             // 1.16.5+
             return ((org.bukkit.entity.HumanEntity) wrappedObject).getFoodLevel();
-        } catch (Throwable ignored) {
-            // TODO: backport missing api <= 1.16.4
+        } else {
+            if (wrappedObject instanceof Player) {
+                return ((org.bukkit.entity.Player) wrappedObject).getFoodLevel();
+            }
             return 0;
         }
     }
 
     @Override
     public void setFoodLevel(int foodLevel) {
-        try {
+        if (BukkitFeature.FOOD_LEVEL.isSupported()) {
             // 1.16.5+
             ((org.bukkit.entity.HumanEntity) wrappedObject).setFoodLevel(foodLevel);
-        } catch (Throwable ignored) {
-            // TODO: backport missing api <= 1.16.4
+        } else {
+            if (wrappedObject instanceof Player) {
+                ((org.bukkit.entity.Player) wrappedObject).setFoodLevel(foodLevel);
+            }
         }
     }
 }

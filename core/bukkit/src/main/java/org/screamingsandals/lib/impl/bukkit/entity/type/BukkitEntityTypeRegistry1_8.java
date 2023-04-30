@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.type.EntityType;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.entity.type.EntityTypeTagBackPorts;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.ResourceLocation;
@@ -218,7 +219,7 @@ public class BukkitEntityTypeRegistry1_8 extends BukkitEntityTypeRegistry {
                 () -> Arrays.stream(org.bukkit.entity.EntityType.values()).filter(e -> e != org.bukkit.entity.EntityType.UNKNOWN).flatMap(type1 -> {
                     switch (type1) {
                         case ZOMBIE:
-                            if (Server.isVersion(1, 10)) {
+                            if (BukkitFeature.HUSK.isSupported()) {
                                 return Stream.of(
                                         Pair.of(type1, 0),
                                         Pair.of(type1, InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER),
@@ -231,7 +232,7 @@ public class BukkitEntityTypeRegistry1_8 extends BukkitEntityTypeRegistry {
                                 );
                             }
                         case SKELETON:
-                            if (Server.isVersion(1, 10)) {
+                            if (BukkitFeature.STRAY.isSupported()) {
                                 return Stream.of(
                                         Pair.of(type1, 0),
                                         Pair.of(type1, InternalEntityLegacyConstants.SKELETON_VARIANT_WITHER),

@@ -20,6 +20,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.attribute.*;
 import org.screamingsandals.lib.impl.attribute.Attributes;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.AttributeInstanceAccessor;
 import org.screamingsandals.lib.nms.accessors.IAttributeAccessor;
@@ -53,9 +54,9 @@ public class BukkitAttribute1_9 extends BasicWrapper<AttributeInstance> implemen
 
     @Override
     public double getDefaultValue() {
-        try {
-            return wrappedObject.getDefaultValue(); // TODO: fix this since it was added in 1.11
-        } catch (Throwable ignored) {
+        if (BukkitFeature.ATTRIBUTE_DEFAULT_VALUE.isSupported()) {
+            return wrappedObject.getDefaultValue();
+        } else {
             // 1.9-1.11
             return (double) Reflect.fastInvokeResulted(ClassStorage.getHandleOfItemStack(wrappedObject), AttributeInstanceAccessor.getMethodGetAttribute1()).fastInvoke(IAttributeAccessor.getMethodB1());
         }

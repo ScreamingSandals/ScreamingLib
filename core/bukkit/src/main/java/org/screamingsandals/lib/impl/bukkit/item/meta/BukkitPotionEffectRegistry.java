@@ -21,12 +21,11 @@ import org.bukkit.Registry;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.impl.item.meta.PotionEffectRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
@@ -36,8 +35,6 @@ import java.util.Locale;
 
 @Service
 public class BukkitPotionEffectRegistry extends PotionEffectRegistry {
-    public static final boolean HAS_POTION_EFFECT_TYPE_REGISTRY = Version.isVersion(1, 18, 2) && Reflect.getField("org.bukkit.Registry", "POTION_EFFECT_TYPE") != null; // exclusive to paper
-
     @SuppressWarnings("ConstantConditions")
     public BukkitPotionEffectRegistry() {
         specialType(PotionEffectType.class, BukkitPotionEffect::new);
@@ -46,12 +43,12 @@ public class BukkitPotionEffectRegistry extends PotionEffectRegistry {
 
     @Override
     protected @Nullable PotionEffect resolveMappingPlatform(@NotNull ResourceLocation location) {
-        if (HAS_POTION_EFFECT_TYPE_REGISTRY) {
+        if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY.isSupported()) {
             var entityType = Registry.POTION_EFFECT_TYPE.get(new NamespacedKey(location.namespace(), location.path()));
             if (entityType != null) {
                 return new BukkitPotionEffect(entityType);
             }
-        } else if (Version.isVersion(1, 18)) {
+        } else if (BukkitFeature.POTION_EFFECT_KEYED.isSupported()) {
             // Spigot and pre-1.18.2 Paper don't have registries for this, but have method that works the similar way
             var entityType = PotionEffectType.getByKey(new NamespacedKey(location.namespace(), location.path()));
             if (entityType != null) {
@@ -114,7 +111,7 @@ public class BukkitPotionEffectRegistry extends PotionEffectRegistry {
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull PotionEffect> getRegistryItemStream0() {
-        if (Version.isVersion(1, 18)) {
+        if (BukkitFeature.POTION_EFFECT_KEYED.isSupported()) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(PotionEffectType.values()),
                     BukkitPotionEffect::new,

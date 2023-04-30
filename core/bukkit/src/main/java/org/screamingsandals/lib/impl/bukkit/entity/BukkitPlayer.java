@@ -17,16 +17,15 @@
 package org.screamingsandals.lib.impl.bukkit.entity;
 
 import com.viaversion.viaversion.api.Via;
-import lombok.experimental.ExtensionMethod;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleConverter1_8;
-import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
@@ -45,7 +44,7 @@ import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.impl.world.Locations;
@@ -57,7 +56,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPlayer extends BukkitHumanEntity implements Player {
     public BukkitPlayer(@NotNull org.bukkit.entity.Player wrappedObject) {
         super(wrappedObject);
@@ -173,7 +171,7 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     public @NotNull Locale getLocale() {
         var bukkitPlayer = (org.bukkit.entity.Player) wrappedObject;
         var locale = Locale.US;
-        if (Reflect.hasMethod(bukkitPlayer, "getLocale")) {
+        if (BukkitFeature.PLAYER_GET_LOCALE.isSupported()) {
             var locale2 = bukkitPlayer.getLocale();
             try {
                 locale = Locale.forLanguageTag(locale2);
@@ -190,12 +188,12 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
 
     @Override
     public @NotNull Container getEnderChest() {
-        return ContainerFactory.<Container>wrapContainer(((org.bukkit.entity.Player) wrappedObject).getEnderChest()).orElseThrow();
+        return Preconditions.checkNotNull(ContainerFactory.<Container>wrapContainer(((org.bukkit.entity.Player) wrappedObject).getEnderChest()));
     }
 
     @Override
     public @NotNull PlayerContainer getPlayerInventory() {
-        return ContainerFactory.<PlayerContainer>wrapContainer(((org.bukkit.entity.Player) wrappedObject).getInventory()).orElseThrow();
+        return Preconditions.checkNotNull(ContainerFactory.<PlayerContainer>wrapContainer(((org.bukkit.entity.Player) wrappedObject).getInventory()));
     }
 
     @Override
@@ -303,7 +301,7 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
             throw new IllegalArgumentException("The location of the sent particle is not in the correct world!");
         }
 
-        if (BukkitParticleTypeRegistry.HAS_PARTICLES_API) {
+        if (BukkitFeature.PARTICLES_API.isSupported()) {
             // 1.9.+
             ((org.bukkit.entity.Player) wrappedObject).spawnParticle(
                     particle.particleType().as(org.bukkit.Particle.class),
@@ -373,18 +371,18 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
 
     @Override
     public void hidePlayer(@NotNull Player player) {
-        try {
+        if (BukkitFeature.PLAYER_HIDE_API_PLUGIN_TICKET.isSupported()) {
             ((org.bukkit.entity.Player) wrappedObject).hidePlayer(BukkitCore.getPlugin(), player.as(org.bukkit.entity.Player.class));
-        } catch (Throwable ignored) {
+        } else {
             ((org.bukkit.entity.Player) wrappedObject).hidePlayer(player.as(org.bukkit.entity.Player.class));
         }
     }
 
     @Override
     public void showPlayer(@NotNull Player player) {
-        try {
+        if (BukkitFeature.PLAYER_HIDE_API_PLUGIN_TICKET.isSupported()) {
             ((org.bukkit.entity.Player) wrappedObject).showPlayer(BukkitCore.getPlugin(), player.as(org.bukkit.entity.Player.class));
-        } catch (Throwable ignored) {
+        } else {
             ((org.bukkit.entity.Player) wrappedObject).showPlayer(player.as(org.bukkit.entity.Player.class));
         }
     }

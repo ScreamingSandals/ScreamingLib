@@ -20,10 +20,10 @@ import org.bukkit.entity.Pose;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.pose.EntityPose;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.entity.pose.EntityPoseRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
@@ -33,17 +33,15 @@ import java.util.Locale;
 
 @Service
 public class BukkitEntityPoseRegistry extends EntityPoseRegistry {
-    private final boolean HAS_POSE = Reflect.has("org.bukkit.entity.Pose");
-
     public BukkitEntityPoseRegistry() {
-        if (HAS_POSE) {
+        if (BukkitFeature.ENTITY_POSE.isSupported()) {
             specialType(Pose.class, BukkitEntityPose::new);
         }
     }
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull EntityPose> getRegistryItemStream0() {
-        if (HAS_POSE) {
+        if (BukkitFeature.ENTITY_POSE.isSupported()) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(Pose.values()),
                     BukkitEntityPose::new,
@@ -73,7 +71,7 @@ public class BukkitEntityPoseRegistry extends EntityPoseRegistry {
 
     @Override
     protected @Nullable EntityPose resolveMappingPlatform(@NotNull ResourceLocation location) {
-        if (HAS_POSE) {
+        if (BukkitFeature.ENTITY_POSE.isSupported()) {
             if (!"minecraft".equals(location.namespace())) {
                 return null;
             }

@@ -162,7 +162,6 @@ import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerLocaleChang
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerLoginEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerMoveEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerPortalEvent;
-import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerProjectileLaunchEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerRespawnEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerShearEntityEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerSwapHandItemsEvent;
@@ -191,6 +190,7 @@ import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitPotionRegistry;
 import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.player.BukkitPlayers;
 import org.screamingsandals.lib.impl.bukkit.player.gamemode.BukkitGameModeRegistry;
+import org.screamingsandals.lib.impl.bukkit.plugin.BukkitPlugin;
 import org.screamingsandals.lib.impl.bukkit.slot.BukkitEquipmentSlotRegistry;
 import org.screamingsandals.lib.impl.bukkit.spectator.SpigotBackend;
 import org.screamingsandals.lib.impl.bukkit.tasker.BukkitTasker;
@@ -326,11 +326,12 @@ import org.screamingsandals.lib.event.world.WorldLoadEvent;
 import org.screamingsandals.lib.event.world.WorldSaveEvent;
 import org.screamingsandals.lib.event.world.WorldUnloadEvent;
 import org.screamingsandals.lib.impl.spectator.Spectator;
+import org.screamingsandals.lib.plugin.event.PluginDisabledEvent;
+import org.screamingsandals.lib.plugin.event.PluginEnabledEvent;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.internal.AccessPluginClasses;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -393,23 +394,23 @@ public class BukkitCore extends Core {
     @OnEnable
     public void onEnable() {
         // entity
-        if (Reflect.has("org.bukkit.event.entity.AreaCloudApplyEvent")) {
+        if (BukkitFeature.AREA_CLOUD_APPLY_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.AreaEffectCloudApplyEvent.class, AreaEffectCloudApplyEvent.class, BukkitAreaEffectCloudApplyEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.ArrowBodyCountChangeEvent")) {
+        if (BukkitFeature.ARROW_BODY_COUNT_CHANGE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.ArrowBodyCountChangeEvent.class, ArrowBodyCountChangeEvent.class, BukkitArrowBodyCountChangeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.BatToggleSleepEvent")) {
+        if (BukkitFeature.BAT_TOGGLE_SLEEP_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.BatToggleSleepEvent.class, BatToggleSleepEvent.class, BukkitBatToggleSleepEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.CreeperPowerEvent.class, CreeperPowerEvent.class, BukkitCreeperPowerEvent::new);
-        if (Reflect.has("org.bukkit.event.entity.EnderDragonChangePhaseEvent")) {
+        if (BukkitFeature.ENDER_DRAGON_CHANGE_PHASE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EnderDragonChangePhaseEvent.class, EnderDragonChangePhaseEvent.class, BukkitEnderDragonChangePhaseEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.EntityAirChangeEvent")) {
+        if (BukkitFeature.ENTITY_AIR_CHANGE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityAirChangeEvent.class, EntityAirChangeEvent.class, BukkitEntityAirChangeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.EntityBreedEvent")) {
+        if (BukkitFeature.ENTITY_BREED_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityBreedEvent.class, EntityBreedEvent.class, BukkitEntityBreedEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.EntityChangeBlockEvent.class, EntityChangeBlockEvent.class, BukkitEntityChangeBlockEvent::new);
@@ -425,21 +426,21 @@ public class BukkitCore extends Core {
         constructDefaultListener(org.bukkit.event.entity.EntityDeathEvent.class, EntityDeathEvent.class, factory(BukkitEntityDeathEvent::new)
                 .sub(org.bukkit.event.entity.PlayerDeathEvent.class, BukkitPlayerDeathEvent::new)
         );
-        if (Reflect.has("org.bukkit.event.entity.EntityDropItemEvent")) {
+        if (BukkitFeature.ENTITY_DROP_ITEM_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityDropItemEvent.class, EntityDropItemEvent.class, BukkitEntityDropItemEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.EntityEnterBlockEvent")) {
+        if (BukkitFeature.ENTITY_ENTER_BLOCK_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityEnterBlockEvent.class, EntityEnterBlockEvent.class, BukkitEntityEnterBlockEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.EntityEnterLoveModeEvent")) {
+        if (BukkitFeature.ENTITY_ENTER_LOVE_MODE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityEnterLoveModeEvent.class, EntityEnterLoveModeEvent.class, BukkitEntityEnterLoveModeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.EntityExhaustionEvent")) {
+        if (BukkitFeature.ENTITY_EXHAUSTION_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityExhaustionEvent.class, EntityExhaustionEvent.class, BukkitEntityExhaustionEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.EntityExplodeEvent.class, EntityExplodeEvent.class, BukkitEntityExplodeEvent::new);
         constructDefaultListener(org.bukkit.event.entity.EntityInteractEvent.class, EntityInteractEvent.class, BukkitEntityInteractEvent::new);
-        if (Reflect.has("org.bukkit.event.entity.EntityPickupItemEvent")) {
+        if (BukkitFeature.ENTITY_PICKUP_ITEM_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityPickupItemEvent.class, EntityPickupItemEvent.class, event -> {
                 if (event.getEntity() instanceof Player) {
                     return new BukkitModernPlayerPickupItemEvent(event);
@@ -449,7 +450,7 @@ public class BukkitCore extends Core {
         } else {
             constructDefaultListener(org.bukkit.event.player.PlayerPickupItemEvent.class, EntityPickupItemEvent.class, BukkitLegacyPlayerPickupItemEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.EntityPlaceEvent")) {
+        if (BukkitFeature.ENTITY_PLACE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityPlaceEvent.class, EntityPlaceEvent.class, BukkitEntityPlaceEvent::new);
         }
 
@@ -459,25 +460,20 @@ public class BukkitCore extends Core {
 
         constructDefaultListener(org.bukkit.event.entity.EntityPortalEnterEvent.class, EntityPortalEnterEvent.class, BukkitEntityPortalEnterEvent::new);
         constructDefaultListener(org.bukkit.event.entity.EntityPortalExitEvent.class, EntityPortalExitEvent.class, BukkitEntityPortalExitEvent::new);
-        if (Reflect.has("org.bukkit.event.entity.EntityPoseChangeEvent")) {
+        if (BukkitFeature.ENTITY_POSE_CHANGE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityPoseChangeEvent.class, EntityPoseChangeEvent.class, BukkitEntityPoseChangeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.EntityPotionEffectEvent")) {
+        if (BukkitFeature.ENTITY_POTION_EFFECT_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityPotionEffectEvent.class, EntityPotionEffectEvent.class, BukkitEntityPotionEffectEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.EntityRegainHealthEvent.class, EntityRegainHealthEvent.class, BukkitEntityRegainHealthEvent::new);
-        if (Reflect.has("org.bukkit.event.entity.EntityResurrectEvent")) {
+        if (BukkitFeature.ENTITY_RESURRECT_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityResurrectEvent.class, EntityResurrectEvent.class, BukkitEntityResurrectEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.EntityShootBowEvent.class, EntityShootBowEvent.class, BukkitEntityShootBowEvent::new);
         constructDefaultListener(org.bukkit.event.entity.EntitySpawnEvent.class, EntitySpawnEvent.class, factory(BukkitEntitySpawnEvent::new)
                 .sub(org.bukkit.event.entity.ItemSpawnEvent.class, BukkitItemSpawnEvent::new)
-                .sub(org.bukkit.event.entity.ProjectileLaunchEvent.class, projectileLaunchEvent -> {
-                    if (projectileLaunchEvent.getEntity().getShooter() instanceof Player) {
-                        return new BukkitPlayerProjectileLaunchEvent(projectileLaunchEvent);
-                    }
-                    return new BukkitProjectileLaunchEvent(projectileLaunchEvent);
-                })
+                .sub(org.bukkit.event.entity.ProjectileLaunchEvent.class, BukkitProjectileLaunchEvent::new)
                 .sub(org.bukkit.event.entity.CreatureSpawnEvent.class, BukkitCreatureSpawnEvent::new)
         );
         constructDefaultListener(org.bukkit.event.entity.EntityTameEvent.class, EntityTameEvent.class, BukkitEntityTameEvent::new);
@@ -491,29 +487,29 @@ public class BukkitCore extends Core {
 
         // ProjectileHitEvent is a weird event, the child has its own HandlerList
         constructDefaultListener(org.bukkit.event.entity.ProjectileHitEvent.class, ProjectileHitEvent.class, BukkitProjectileHitEvent::new);
-        if (Reflect.has("org.bukkit.event.entity.ExpBottleEvent")) {
+        if (BukkitFeature.EXP_BOTTLE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.ExpBottleEvent.class, ProjectileHitEvent.class, BukkitExpBottleEvent::new);
         }
 
         constructDefaultListener(org.bukkit.event.entity.SheepDyeWoolEvent.class, SheepDyeWoolEvent.class, BukkitSheepDyeWoolEvent::new);
         constructDefaultListener(org.bukkit.event.entity.SheepRegrowWoolEvent.class, SheepRegrowWoolEvent.class, BukkitSheepRegrowWoolEvent::new);
         constructDefaultListener(org.bukkit.event.entity.SlimeSplitEvent.class, SlimeSplitEvent.class, BukkitSlimeSplitEvent::new);
-        if (Reflect.has("org.bukkit.event.entity.StriderTemperatureChangeEvent")) {
+        if (BukkitFeature.STRIDER_TEMPERATURE_CHANGE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.StriderTemperatureChangeEvent.class, StriderTemperatureChangeEvent.class, BukkitStriderTemperatureChangeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.VillagerAcquireTradeEvent")) {
+        if (BukkitFeature.VILLAGER_ACQUIRE_TRADE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.VillagerAcquireTradeEvent.class, VillagerAcquireTradeEvent.class, BukkitVillagerAcquireTradeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.VillagerCareerChangeEvent")) {
+        if (BukkitFeature.VILLAGER_CAREER_CHANGE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.VillagerCareerChangeEvent.class, VillagerCareerChangeEvent.class, BukkitVillagerCareerChangeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.VillagerReplenishTradeEvent")) {
+        if (BukkitFeature.VILLAGER_REPLENISH_TRADE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.VillagerReplenishTradeEvent.class, VillagerReplenishTradeEvent.class, BukkitVillagerReplenishTradeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.EntityToggleGlideEvent")) {
+        if (BukkitFeature.ENTITY_TOGGLE_GLIDE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityToggleGlideEvent.class, EntityToggleGlideEvent.class, BukkitEntityToggleGlideEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.entity.EntityToggleSwimEvent")) {
+        if (BukkitFeature.ENTITY_TOGGLE_SWIM_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.entity.EntityToggleSwimEvent.class, EntityToggleSwimEvent.class, BukkitEntityToggleSwimEvent::new);
         }
         constructDefaultListener(org.bukkit.event.entity.EntityUnleashEvent.class, EntityUnleashEvent.class, factory(BukkitEntityUnleashEvent::new)
@@ -556,7 +552,7 @@ public class BukkitCore extends Core {
         // PlayerInteractEntityEvent is a weird event, each child has its own HandlerList
         constructDefaultListener(org.bukkit.event.player.PlayerInteractEntityEvent.class, PlayerInteractEntityEvent.class, BukkitPlayerInteractEntityEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerInteractAtEntityEvent.class, PlayerInteractEntityEvent.class, BukkitPlayerInteractAtEntityEvent::new);
-        if (Reflect.has("org.bukkit.event.player.PlayerArmorStandManipulateEvent")) {
+        if (BukkitFeature.PLAYER_ARMOR_STAND_MANIPULATE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.player.PlayerArmorStandManipulateEvent.class, PlayerInteractEntityEvent.class, BukkitPlayerArmorStandManipulateEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerBedLeaveEvent.class, PlayerBedLeaveEvent.class, BukkitPlayerBedLeaveEvent::new);
@@ -565,31 +561,31 @@ public class BukkitCore extends Core {
         constructDefaultListener(org.bukkit.event.player.PlayerBucketEmptyEvent.class, PlayerBucketEvent.class, BukkitPlayerBucketEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerBucketFillEvent.class, PlayerBucketEvent.class, BukkitPlayerBucketEvent::new);
 
-        if (Reflect.has("org.bukkit.event.player.PlayerCommandSendEvent")) {
+        if (BukkitFeature.PLAYER_COMMAND_SEND_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.player.PlayerCommandSendEvent.class, PlayerCommandSendEvent.class, BukkitPlayerCommandSendEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerEggThrowEvent.class, PlayerEggThrowEvent.class, BukkitPlayerEggThrowEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerExpChangeEvent.class, PlayerExpChangeEvent.class, BukkitPlayerExpChangeEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerFishEvent.class, PlayerFishEvent.class, BukkitPlayerFishEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerGameModeChangeEvent.class, PlayerGameModeChangeEvent.class, BukkitPlayerGameModeChangeEvent::new);
-        if (Reflect.has("org.bukkit.event.player.PlayerHarvestBlockEvent")) {
+        if (BukkitFeature.PLAYER_HARVEST_BLOCK_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.player.PlayerHarvestBlockEvent.class, PlayerHarvestBlockEvent.class, BukkitPlayerHarvestBlockEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerInteractEvent.class, PlayerInteractEvent.class, BukkitPlayerInteractEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerItemConsumeEvent.class, PlayerItemConsumeEvent.class, BukkitPlayerItemConsumeEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerItemDamageEvent.class, PlayerItemDamageEvent.class, BukkitPlayerItemDamageEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerItemHeldEvent.class, PlayerItemHeldEvent.class, BukkitPlayerItemHeldEvent::new);
-        if (Reflect.has("org.bukkit.event.player.PlayerItemMendEvent")) {
+        if (BukkitFeature.PLAYER_ITEM_MEND_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.player.PlayerItemMendEvent.class, PlayerItemMendEvent.class, BukkitPlayerItemMendEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerKickEvent.class, PlayerKickEvent.class, BukkitPlayerKickEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerLevelChangeEvent.class, PlayerLevelChangeEvent.class, BukkitPlayerLevelChangeEvent::new);
-        if (Reflect.has("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
+        if (BukkitFeature.PLAYER_LOCALE_CHANGE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.player.PlayerLocaleChangeEvent.class, PlayerLocaleChangeEvent.class, BukkitPlayerLocaleChangeEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerLoginEvent.class, PlayerLoginEvent.class, BukkitPlayerLoginEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerShearEntityEvent.class, PlayerShearEntityEvent.class, BukkitPlayerShearEntityEvent::new);
-        if (Reflect.has("org.bukkit.event.player.PlayerSwapHandItemsEvent")) {
+        if (BukkitFeature.PLAYER_SWAP_HAND_ITEMS_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.player.PlayerSwapHandItemsEvent.class, PlayerSwapHandItemsEvent.class, BukkitPlayerSwapHandItemsEvent::new);
         }
         constructDefaultListener(org.bukkit.event.player.PlayerToggleFlightEvent.class, PlayerToggleFlightEvent.class, BukkitPlayerToggleFlightEvent::new);
@@ -601,11 +597,11 @@ public class BukkitCore extends Core {
 
         // block
         constructDefaultListener(org.bukkit.event.block.BlockBurnEvent.class, BlockBurnEvent.class, BukkitBlockBurnEvent::new);
-        if (Reflect.has("org.bukkit.event.block.BlockCookEvent")) {
+        if (BukkitFeature.BLOCK_COOK_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.block.BlockCookEvent.class, BlockCookEvent.class, BukkitBlockCookEvent::new);
         }
         constructDefaultListener(org.bukkit.event.block.BlockDispenseEvent.class, BlockDispenseEvent.class, BukkitBlockDispenseEvent::new);
-        if (Reflect.has("org.bukkit.event.block.BlockDropItemEvent")) {
+        if (BukkitFeature.BLOCK_DROP_ITEM_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.block.BlockDropItemEvent.class, BlockDropItemEvent.class, BukkitBlockDropItemEvent::new);
         }
         constructDefaultListener(org.bukkit.event.block.BlockExpEvent.class, BlockExperienceEvent.class, factory(BukkitBlockExperienceEvent::new)
@@ -613,7 +609,7 @@ public class BukkitCore extends Core {
         );
         constructDefaultListener(org.bukkit.event.block.BlockExplodeEvent.class, BlockExplodeEvent.class, BukkitBlockExplodeEvent::new);
         constructDefaultListener(org.bukkit.event.block.BlockFadeEvent.class, BlockFadeEvent.class, BukkitBlockFadeEvent::new);
-        if (Reflect.has("org.bukkit.event.block.BlockFertilizeEvent")) {
+        if (BukkitFeature.BLOCK_FERTILIZE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.block.BlockFertilizeEvent.class, BlockFertilizeEvent.class, BukkitBlockFertilizeEvent::new);
         }
 
@@ -634,29 +630,29 @@ public class BukkitCore extends Core {
         constructDefaultListener(org.bukkit.event.block.BlockPistonExtendEvent.class, BlockPistonEvent.class, BukkitBlockPistonExtendEvent::new);
         constructDefaultListener(org.bukkit.event.block.BlockPistonRetractEvent.class, BlockPistonEvent.class, BukkitBlockPistonRetractEvent::new);
 
-        if (Reflect.has("org.bukkit.event.block.BlockShearEntityEvent")) {
+        if (BukkitFeature.BLOCK_SHEAR_ENTITY_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.block.BlockShearEntityEvent.class, BlockShearEntityEvent.class, BukkitBlockShearEntityEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.block.CauldronLevelChangeEvent")) {
+        if (BukkitFeature.CAULDRON_LEVEL_CHANGE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.block.CauldronLevelChangeEvent.class, CauldronLevelChangeEvent.class, BukkitCauldronLevelChangeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.block.FluidLevelChangeEvent")) {
+        if (BukkitFeature.FLUID_LEVEL_CHANGE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.block.FluidLevelChangeEvent.class, FluidLevelChangeEvent.class, BukkitFluidLevelChangeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.block.MoistureChangeEvent")) {
+        if (BukkitFeature.MOISTURE_CHANGE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.block.MoistureChangeEvent.class, MoistureChangeEvent.class, BukkitMoistureChangeEvent::new);
         }
         constructDefaultListener(org.bukkit.event.world.StructureGrowEvent.class, PlantGrowEvent.class, BukkitPlantGrowEvent::new);
-        if (Reflect.has("org.bukkit.event.block.SpongeAbsorbEvent")) {
+        if (BukkitFeature.SPONGE_ABSORB_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.block.SpongeAbsorbEvent.class, SpongeAbsorbEvent.class, BukkitSpongeAbsorbEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.block.BlockReceiveGameEvent")) {
+        if (BukkitFeature.BLOCK_RECEIVE_GAME_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.block.BlockReceiveGameEvent.class, BlockReceivedGameEvent.class, BukkitBlockReceivedGameEvent::new);
         }
 
         // world
         constructDefaultListener(org.bukkit.event.world.SpawnChangeEvent.class, SpawnChangeEvent.class, BukkitSpawnChangeEvent::new);
-        if (Reflect.has("org.bukkit.event.world.TimeSkipEvent")) {
+        if (BukkitFeature.TIME_SKIP_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.world.TimeSkipEvent.class, TimeSkipEvent.class, BukkitTimeSkipEvent::new);
         }
         constructDefaultListener(org.bukkit.event.world.WorldInitEvent.class, WorldInitEvent.class, BukkitWorldInitEvent::new);
@@ -668,6 +664,10 @@ public class BukkitCore extends Core {
         constructDefaultListener(org.bukkit.event.world.ChunkLoadEvent.class, ChunkLoadEvent.class, BukkitChunkLoadEvent::new);
         constructDefaultListener(org.bukkit.event.world.ChunkPopulateEvent.class, ChunkPopulateEvent.class, BukkitChunkPopulateEvent::new);
         constructDefaultListener(org.bukkit.event.world.ChunkUnloadEvent.class, ChunkUnloadEvent.class, BukkitChunkUnloadEvent::new);
+
+        // plugins
+        constructDefaultListener(org.bukkit.event.server.PluginEnableEvent.class, PluginEnabledEvent.class, event -> () -> new BukkitPlugin(event.getPlugin()));
+        constructDefaultListener(org.bukkit.event.server.PluginDisableEvent.class, PluginDisabledEvent.class, event -> () -> new BukkitPlugin(event.getPlugin()));
     }
 
     /**

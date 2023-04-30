@@ -24,12 +24,13 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.LivingEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.PathfindingMob;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 
 public class BukkitPathfindingMob extends BukkitLivingEntity implements PathfindingMob {
     public BukkitPathfindingMob(@NotNull org.bukkit.entity.LivingEntity wrappedObject) {
         super(wrappedObject);
 
-        if (BukkitEntities.HAS_MOB_INTERFACE) {
+        if (BukkitFeature.MOB_INTERFACE.isSupported()) {
             if (!(wrappedObject instanceof Mob)) {
                 throw new UnsupportedOperationException("Wrapped object is not instance of Mob!");
             }
@@ -41,10 +42,12 @@ public class BukkitPathfindingMob extends BukkitLivingEntity implements Pathfind
     @Override
     public void setCurrentTarget(@Nullable LivingEntity target) {
         var living = target == null ? null : target.as(org.bukkit.entity.LivingEntity.class);
-        if (BukkitEntities.HAS_MOB_INTERFACE) {
+        if (BukkitFeature.MOB_INTERFACE.isSupported()) {
             ((Mob) wrappedObject).setTarget(living);
         } else if (wrappedObject instanceof Slime) {
-            ((Slime) wrappedObject).setTarget(living);
+            if (BukkitFeature.SLIME_TARGET.isSupported()) {
+                ((Slime) wrappedObject).setTarget(living);
+            } // TODO: <= 1.12.1
         } else {
             ((Creature) wrappedObject).setTarget(living);
         }
@@ -53,10 +56,14 @@ public class BukkitPathfindingMob extends BukkitLivingEntity implements Pathfind
     @Override
     public @Nullable LivingEntity getCurrentTarget() {
         org.bukkit.entity.LivingEntity living;
-        if (BukkitEntities.HAS_MOB_INTERFACE) {
+        if (BukkitFeature.MOB_INTERFACE.isSupported()) {
             living = ((Mob) wrappedObject).getTarget();
         } else if (wrappedObject instanceof Slime) {
-            living = ((Slime) wrappedObject).getTarget();
+            if (BukkitFeature.SLIME_TARGET.isSupported()) {
+                living = ((Slime) wrappedObject).getTarget();
+            } else {
+                return null; // TODO: <= 1.12.1
+            }
         } else {
             living = ((Creature) wrappedObject).getTarget();
         }

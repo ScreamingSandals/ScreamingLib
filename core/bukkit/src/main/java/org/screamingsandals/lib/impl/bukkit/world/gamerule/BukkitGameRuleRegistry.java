@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.world.gamerule;
 import org.bukkit.GameRule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -35,11 +36,10 @@ import java.util.Locale;
 public class BukkitGameRuleRegistry extends GameRuleRegistry {
     // TODO: is there any bukkit-like server supporting custom values for this registry?
 
-    private final boolean hasGameRule = Reflect.has("org.bukkit.GameRule");
     private final @NotNull List<@NotNull String> compat;
 
     public BukkitGameRuleRegistry() {
-        if (!hasGameRule) {
+        if (!BukkitFeature.GAME_RULE_API.isSupported()) {
             // bukkit api for legacy version didn't have proper game rules api
             // TODO: Actually fix this using NMS
             //Arrays.stream(Bukkit.getWorlds().get(0).getGameRules())
@@ -61,7 +61,7 @@ public class BukkitGameRuleRegistry extends GameRuleRegistry {
             return null; // non-minecraft game rules probably don't exist on this platform
         }
 
-        if (hasGameRule) {
+        if (BukkitFeature.GAME_RULE_API.isSupported()) {
             var g = GameRule.getByName(location.path());
             if (g != null) {
                 return new BukkitGameRuleType1_13(g);
@@ -79,7 +79,7 @@ public class BukkitGameRuleRegistry extends GameRuleRegistry {
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull GameRuleType> getRegistryItemStream0() {
-        if (hasGameRule) {
+        if (BukkitFeature.GAME_RULE_API.isSupported()) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(GameRule.values()),
                     BukkitGameRuleType1_13::new,

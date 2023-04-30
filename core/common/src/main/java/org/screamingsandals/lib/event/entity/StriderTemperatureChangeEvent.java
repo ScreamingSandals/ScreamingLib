@@ -22,7 +22,7 @@ import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
-@LimitedVersionSupport("Bukkit >= 1.16")
+@LimitedVersionSupport(">= 1.16")
 public interface StriderTemperatureChangeEvent extends Event, PlatformEvent {
 
     @NotNull LivingEntity entity();

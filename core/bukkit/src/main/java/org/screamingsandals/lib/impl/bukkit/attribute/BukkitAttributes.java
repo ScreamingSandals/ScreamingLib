@@ -18,7 +18,7 @@ package org.screamingsandals.lib.impl.bukkit.attribute;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.attribute.Attributes;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 
@@ -26,7 +26,7 @@ import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 public abstract class BukkitAttributes extends Attributes {
     @ServiceInitializer
     public static @NotNull BukkitAttributes init() {
-        if (Version.isVersion(1, 9)) {
+        if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
             return new BukkitAttributes1_9();
         } else {
             return new BukkitAttributes1_8();

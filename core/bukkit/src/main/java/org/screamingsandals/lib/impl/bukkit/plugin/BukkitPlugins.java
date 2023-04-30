@@ -17,17 +17,13 @@
 package org.screamingsandals.lib.impl.bukkit.plugin;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.impl.bukkit.plugin.event.PluginDisabledEventListener;
-import org.screamingsandals.lib.impl.bukkit.plugin.event.PluginEnabledEventListener;
 import org.screamingsandals.lib.plugin.Plugins;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.Plugin;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
-import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,11 +32,6 @@ import java.util.stream.Collectors;
 @Service
 @InternalEarlyInitialization
 public class BukkitPlugins extends Plugins {
-    @OnEnable
-    public void onEnable(@NotNull JavaPlugin plugin) {
-        new PluginEnabledEventListener(plugin);
-        new PluginDisabledEventListener(plugin);
-    }
 
     @Override
     protected boolean isEnabled0(@NotNull String pluginKey) {

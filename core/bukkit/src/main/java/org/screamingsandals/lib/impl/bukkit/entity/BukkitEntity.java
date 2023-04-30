@@ -16,9 +16,12 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity;
 
-import org.bukkit.entity.*;
+import org.bukkit.entity.Guardian;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Zombie;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.entity.type.BukkitEntityType1_11;
 import org.screamingsandals.lib.impl.bukkit.entity.type.BukkitEntityType1_8;
 import org.screamingsandals.lib.impl.bukkit.entity.type.InternalEntityLegacyConstants;
@@ -58,7 +61,7 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
 
     @Override
     public @NotNull EntityType getEntityType() {
-        if (!Server.isVersion(1, 11)) {
+        if (!BukkitFeature.NORMAL_ENTITY_RESOURCE_LOCATIONS.isSupported()) {
             if (wrappedObject instanceof Horse) {
                 var variant = ((Horse) wrappedObject).getVariant();
                 switch (variant) {
@@ -75,7 +78,7 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
                 if (((Zombie) wrappedObject).isVillager()) {
                     return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER);
                 }
-                if (Server.isVersion(1, 10)) {
+                if (BukkitFeature.HUSK.isSupported()) {
                     var villager = Reflect.fastInvoke(ZombieAccessor.getMethodGetVillagerType1(), ClassStorage.getHandle(wrappedObject));
                     if (villager != null && villager == EnumZombieTypeAccessor.getFieldHUSK()) {
                         return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK);
@@ -210,19 +213,19 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
     @Override
     public boolean addPassenger(@NotNull Entity passenger) {
         var bukkitPassenger = passenger.as(org.bukkit.entity.Entity.class);
-        try {
+        if (BukkitFeature.ENTITY_ADD_PASSENGER.isSupported()) {
             return wrappedObject.addPassenger(bukkitPassenger);
-        } catch (Throwable ignored) { // probably old version
-            return wrappedObject.setPassenger(bukkitPassenger);
+        } else { // probably old version
+            return wrappedObject.setPassenger(bukkitPassenger); // TODO: don't remove old entities
         }
     }
 
     @Override
     public boolean removePassenger(@NotNull Entity passenger) {
-        try {
+        if (BukkitFeature.ENTITY_REMOVE_PASSENGER.isSupported()) {
             return wrappedObject.removePassenger(passenger.as(org.bukkit.entity.Entity.class));
-        } catch (Throwable ignored) { // probably old version
-            return wrappedObject.eject();
+        } else { // probably old version
+            return wrappedObject.eject(); // TODO: somehow remove just the specified entity
         }
     }
 
@@ -311,52 +314,82 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
 
     @Override
     public void setGlowing(boolean flag) {
-        wrappedObject.setGlowing(flag);
+        if (BukkitFeature.ENTITY_IS_GLOWING.isSupported()) {
+            wrappedObject.setGlowing(flag);
+        } // 1.8
     }
 
     @Override
     public boolean isGlowing() {
-        return wrappedObject.isGlowing();
+        if (BukkitFeature.ENTITY_IS_GLOWING.isSupported()) {
+            return wrappedObject.isGlowing();
+        } else {
+            return false; // 1.8
+        }
     }
 
     @Override
     public void setInvulnerable(boolean flag) {
-        wrappedObject.setInvulnerable(flag);
+        if (BukkitFeature.ENTITY_IS_INVULNERABLE.isSupported()) {
+            wrappedObject.setInvulnerable(flag);
+        } // 1.8
     }
 
     @Override
     public boolean isInvulnerable() {
-        return wrappedObject.isInvulnerable();
+        if (BukkitFeature.ENTITY_IS_INVULNERABLE.isSupported()) {
+            return wrappedObject.isInvulnerable();
+        } else {
+            return false; // 1.8
+        }
     }
 
     @Override
     public boolean isSilent() {
-        return wrappedObject.isSilent();
+        if (BukkitFeature.ENTITY_IS_SILENT.isSupported()) {
+            return wrappedObject.isSilent();
+        } else {
+            return false; // 1.8-1.9.3
+        }
     }
 
     @Override
     public void setSilent(boolean flag) {
-        wrappedObject.setSilent(flag);
+        if (BukkitFeature.ENTITY_IS_SILENT.isSupported()) {
+            wrappedObject.setSilent(flag);
+        } // 1.8-1.9.3
     }
 
     @Override
     public boolean hasGravity() {
-        return wrappedObject.hasGravity();
+        if (BukkitFeature.ENTITY_HAS_GRAVITY.isSupported()) {
+            return wrappedObject.hasGravity();
+        } else {
+            return false; // 1.8-1.9.4
+        }
     }
 
     @Override
     public void setGravity(boolean gravity) {
-        wrappedObject.setGravity(gravity);
+        if (BukkitFeature.ENTITY_HAS_GRAVITY.isSupported()) {
+            wrappedObject.setGravity(gravity);
+        } // 1.8-1.9.4
     }
 
     @Override
     public int getPortalCooldown() {
-        return wrappedObject.getPortalCooldown();
+        if (BukkitFeature.ENTITY_PORTAL_COOLDOWN.isSupported()) {
+            return wrappedObject.getPortalCooldown();
+        } else {
+            return 0; // 1.8-1.10
+        }
     }
 
     @Override
     public void setPortalCooldown(int cooldown) {
-        wrappedObject.setPortalCooldown(cooldown);
+        if (BukkitFeature.ENTITY_PORTAL_COOLDOWN.isSupported()) {
+            wrappedObject.setPortalCooldown(cooldown);
+        } // 1.8-1.10
     }
 
     @Override
