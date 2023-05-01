@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.attribute.ItemAttribute;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
 import org.screamingsandals.lib.impl.bukkit.item.builder.BukkitItemBuilder;
@@ -32,7 +33,6 @@ import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
 import org.screamingsandals.lib.impl.bukkit.nbt.NBTVanillaSerializer;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
@@ -52,7 +52,14 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
@@ -65,7 +72,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
 
     @Override
     public @NotNull ItemType getType() {
-        if (Version.isVersion(1, 13)) {
+        if (BukkitFeature.FLATTENING.isSupported()) {
             return ItemType.of(wrappedObject.getType());
         } else {
             return new BukkitItemType1_8(wrappedObject.getType(), wrappedObject.getType().getMaxDurability() >= 0 ? 0 : wrappedObject.getDurability()); // distinguish between durability and data value
@@ -114,7 +121,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
             // TODO: find solution: missing Bukkit API for older versions
-            if (Reflect.hasMethod(meta, "hasAttributeModifiers")) { // 1.13.1
+            if (BukkitFeature.ITEM_ATTRIBUTE_MODIFIERS_API.isSupported()) { // 1.13.1
                 if (meta.hasAttributeModifiers()) {
                     var bukkitModifiers = meta.getAttributeModifiers();
                     var list = new ArrayList<ItemAttribute>(bukkitModifiers.size());
@@ -153,9 +160,9 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
     public @NotNull ItemData getData() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
-            if (Reflect.hasMethod(meta, "getPersistentDataContainer")) { // 1.14+
+            if (BukkitFeature.ITEM_META_PDC.isSupported()) { // 1.14+
                 return new BukkitItemDataPersistentContainer(meta.getPersistentDataContainer());
-            } else if (Reflect.hasMethod(meta, "getCustomTagContainer")) { // 1.13.2
+            } else if (BukkitFeature.ITEM_META_CUSTOM_TAG.isSupported()) { // 1.13.2
                 return new BukkitItemDataCustomTags(meta.getCustomTagContainer());
             } else {
                 var unhandled = (Map<String, Object>) Reflect.getField(meta, "unhandledTags");
@@ -192,12 +199,9 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
     @Override
     public @Nullable Integer getCustomModelData() {
         var meta = wrappedObject.getItemMeta();
-        if (meta != null) {
-            try {
-                if (meta.hasCustomModelData()) {
-                    return meta.getCustomModelData();
-                }
-            } catch (Throwable ignored) {
+        if (BukkitFeature.ITEM_META_CUSTOM_MODEL_DATA.isSupported()) {
+            if (meta.hasCustomModelData()) {
+                return meta.getCustomModelData();
             }
         }
         return null;
@@ -207,7 +211,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
     public boolean isUnbreakable() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
-            if (Reflect.hasMethod(meta, "isUnbreakable")) {
+            if (BukkitFeature.ITEM_META_IS_UNBREAKABLE.isSupported()) {
                 return meta.isUnbreakable();
             } else {
                 var spigot = Reflect.fastInvoke(meta, "spigot");
@@ -308,7 +312,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
 
     @Override
     public @NotNull CompoundTag getTag() {
-        var isMutable = this instanceof ItemStackView; // ItemView is a mutable item, don't cache if the item can randomly change
+        var isMutable = this instanceof ItemStackView; // ItemStackView is a mutable item, don't cache if the item can randomly change
         if (!isMutable && tagCache != null) {
             return tagCache;
         }

@@ -18,6 +18,7 @@ package org.screamingsandals.lib.impl.adventure.spectator;
 
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.NBTComponent;
@@ -35,4 +36,5 @@ public class AdventureFeature {
     public static final @NotNull PlatformFeature TRANSLATABLE_FALLBACK = PlatformFeature.of(() -> Reflect.hasMethod(TranslatableComponent.class, "fallback"));
     public static final @NotNull PlatformFeature TAB_HEADER_FOOTER_SENDING = PlatformFeature.of(() -> Reflect.hasMethod(Audience.class, "sendPlayerListHeaderAndFooter", Component.class, Component.class));
     public static final @NotNull PlatformFeature SOUND_SEED = PlatformFeature.of(() -> Reflect.hasMethod(Sound.class, "seed"));
+    public static final @NotNull PlatformFeature BINARY_TAG_HOLDER_NEW_FACTORY_METHOD = PlatformFeature.of(() -> Reflect.hasMethod(BinaryTagHolder.class, "binaryTagHolder", String.class));
 }

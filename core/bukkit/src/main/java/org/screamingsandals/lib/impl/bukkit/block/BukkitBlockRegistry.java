@@ -28,7 +28,7 @@ public abstract class BukkitBlockRegistry extends BlockRegistry {
     public static @NotNull BukkitBlockRegistry init() {
         if (BukkitFeature.REGISTRY.isSupported()) {
             return new BukkitBlockRegistry1_14();
-        } else if (BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
+        } else if (BukkitFeature.FLATTENING.isSupported()) {
             return new BukkitBlockRegistry1_13();
         } else {
             return new BukkitBlockRegistry1_8();

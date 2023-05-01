@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.entity.BukkitPlayer;
-import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.event.player.PlayerBedEnterEvent;
 import org.screamingsandals.lib.player.Player;
 
@@ -33,7 +32,7 @@ import org.screamingsandals.lib.player.Player;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-public class BukkitPlayerBedEnterEvent implements PlayerBedEnterEvent, NoAutoCancellable {
+public class BukkitPlayerBedEnterEvent implements PlayerBedEnterEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include

@@ -18,7 +18,14 @@ package org.screamingsandals.lib.impl.adventure.spectator;
 
 import lombok.Getter;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.*;
+import net.kyori.adventure.text.BlockNBTComponent;
+import net.kyori.adventure.text.EntityNBTComponent;
+import net.kyori.adventure.text.KeybindComponent;
+import net.kyori.adventure.text.ScoreComponent;
+import net.kyori.adventure.text.SelectorComponent;
+import net.kyori.adventure.text.StorageNBTComponent;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
@@ -102,6 +109,7 @@ public class AdventureBackend implements SpectatorBackend {
             plainText = PlainTextComponentSerializer.plainText();
         } else {
             // Adventure pre-4.8.0
+            //noinspection UnstableApiUsage
             plainText = PlainComponentSerializer.plain();
         }
         plainTextComponentSerializer = plainText;

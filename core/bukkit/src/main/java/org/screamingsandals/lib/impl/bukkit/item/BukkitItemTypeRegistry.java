@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.impl.bukkit.item;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
@@ -26,9 +26,9 @@ import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 public abstract class BukkitItemTypeRegistry extends ItemTypeRegistry {
     @ServiceInitializer
     public static @NotNull BukkitItemTypeRegistry init() {
-        if (Version.isVersion(1, 14)) {
+        if (BukkitFeature.REGISTRY.isSupported()) {
             return new BukkitItemTypeRegistry1_14();
-        } else if (Version.isVersion(1, 13)) {
+        } else if (BukkitFeature.FLATTENING.isSupported()) {
             return new BukkitItemTypeRegistry1_13();
         } else {
             return new BukkitItemTypeRegistry1_8();

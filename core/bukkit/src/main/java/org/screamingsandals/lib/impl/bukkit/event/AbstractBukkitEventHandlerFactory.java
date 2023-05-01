@@ -23,7 +23,10 @@ import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.*;
+import org.screamingsandals.lib.event.Event;
+import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.HandlerRegisteredEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,10 +79,6 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends org.bukkit.eve
                         return;
                     }
 
-                    if (!(wrapped instanceof NoAutoCancellable) && wrapped instanceof Cancellable && event instanceof org.bukkit.event.Cancellable) {
-                        ((Cancellable) wrapped).cancelled(((org.bukkit.event.Cancellable) event).isCancelled());
-                    }
-
                     if (this.fireAsync) {
                         try {
                             EventManager.getDefaultEventManager().fireEventAsync(wrapped, priority).get();
@@ -92,11 +91,6 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends org.bukkit.eve
                        } catch (Throwable throwable) {
                            throw new EventException(throwable);
                        }
-                    }
-
-                    if (!(wrapped instanceof NoAutoCancellable) && wrapped instanceof Cancellable && event instanceof org.bukkit.event.Cancellable) {
-                        final var isCancelled = ((Cancellable) wrapped).cancelled();
-                        ((org.bukkit.event.Cancellable) event).setCancelled(isCancelled);
                     }
                 };
 

@@ -22,7 +22,6 @@ import lombok.experimental.Accessors;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.impl.bukkit.world.chunk.BukkitChunk;
 import org.screamingsandals.lib.event.chunk.ChunkUnloadEvent;
 import org.screamingsandals.lib.world.chunk.Chunk;
@@ -31,7 +30,7 @@ import org.screamingsandals.lib.world.chunk.Chunk;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-public class BukkitChunkUnloadEvent implements ChunkUnloadEvent, NoAutoCancellable {
+public class BukkitChunkUnloadEvent implements ChunkUnloadEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include

@@ -37,7 +37,7 @@ public class BukkitItemView extends BukkitItem implements ItemStackView {
         var stack = replaceable.as(org.bukkit.inventory.ItemStack.class);
         wrappedObject.setType(stack.getType());
         wrappedObject.setAmount(stack.getAmount());
-        if (!BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
+        if (!BukkitFeature.FLATTENING.isSupported()) {
             wrappedObject.setDurability(stack.getDurability());
         }
         if (stack.hasItemMeta()) {

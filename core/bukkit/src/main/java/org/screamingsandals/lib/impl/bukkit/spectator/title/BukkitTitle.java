@@ -32,11 +32,11 @@ import java.time.Duration;
 @Data
 @Accessors(fluent = true)
 public class BukkitTitle implements Title {
-    private final Component title;
-    private final Component subtitle;
-    private final Duration fadeIn;
-    private final Duration stay;
-    private final Duration fadeOut;
+    private final @NotNull Component title;
+    private final @NotNull Component subtitle;
+    private final @NotNull Duration fadeIn;
+    private final @NotNull Duration stay;
+    private final @NotNull Duration fadeOut;
 
     @SuppressWarnings("unchecked")
     @Override

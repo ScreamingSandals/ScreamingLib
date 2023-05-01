@@ -32,6 +32,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
 import org.screamingsandals.lib.impl.adventure.spectator.audience.adapter.AdventureAdapter;
 import org.screamingsandals.lib.impl.adventure.spectator.audience.adapter.AdventureConsoleAdapter;
 import org.screamingsandals.lib.impl.adventure.spectator.audience.adapter.AdventurePlayerAdapter;
@@ -56,6 +57,7 @@ class SpigotBackendAdventureExtension {
         };
 
         // TODO: Fix for upcoming paper versions
+        @SuppressWarnings("removal")
         var gson = PaperComponents.gsonSerializer();
 
         AdventureBackend.getAdditionalComponentConverter()
@@ -147,10 +149,11 @@ class SpigotBackendAdventureExtension {
                     var tag = bungeeItemContent.tag();
                     BinaryTagHolder value = null;
                     if (tag != null) {
-                        try {
+                        if (AdventureFeature.BINARY_TAG_HOLDER_NEW_FACTORY_METHOD.isSupported()) {
                             value = BinaryTagHolder.binaryTagHolder(snbtSerializerLocal.serialize(tag));
-                        } catch (Throwable ignored) {
+                        } else {
                             // Old Adventure
+                            //noinspection UnstableApiUsage
                             value = BinaryTagHolder.of(snbtSerializerLocal.serialize(tag));
                         }
                     }

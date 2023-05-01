@@ -23,9 +23,9 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockPlacement;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.entity.BukkitPlayer;
-import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemView;
 import org.screamingsandals.lib.event.player.PlayerInteractEvent;
 import org.screamingsandals.lib.item.ItemStackView;
@@ -37,7 +37,7 @@ import org.screamingsandals.lib.utils.BlockFace;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-public class BukkitPlayerInteractEvent implements PlayerInteractEvent, NoAutoCancellable {
+public class BukkitPlayerInteractEvent implements PlayerInteractEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
@@ -123,12 +123,12 @@ public class BukkitPlayerInteractEvent implements PlayerInteractEvent, NoAutoCan
     @Override
     public @Nullable EquipmentSlot hand() {
         if (!handCached) {
-            try {
+            if (BukkitFeature.OFF_HAND.isSupported()) {
                 if (event.getHand() != null) {
                     hand = EquipmentSlot.of(event.getHand());
                 }
                 handCached = true;
-            } catch (Throwable ignored) {
+            } else {
                 // 1.8.8
                 hand = event.getAction() == org.bukkit.event.block.Action.PHYSICAL ? null : EquipmentSlot.of("main_hand");
                 handCached = true;

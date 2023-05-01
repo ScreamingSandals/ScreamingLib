@@ -32,7 +32,8 @@ public enum HideFlags {
     CAN_DESTROY("HIDE_DESTROYS"),
     CAN_PLACE_ON("HIDE_PLACED_ON"),
     MISC("HIDE_POTION_EFFECTS"),
-    DYED("HIDE_DYE");
+    DYED("HIDE_DYE"),
+    ARMOR_TRIM("HIDE_ARMOR_TRIM");
 
     @Getter
     private final @NotNull String bukkitName;

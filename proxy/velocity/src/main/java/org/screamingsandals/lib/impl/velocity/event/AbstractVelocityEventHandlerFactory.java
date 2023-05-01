@@ -18,9 +18,9 @@ package org.screamingsandals.lib.impl.velocity.event;
 
 import com.velocitypowered.api.event.EventHandler;
 import com.velocitypowered.api.event.PostOrder;
-import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.*;
 
 import java.util.HashMap;
@@ -78,6 +78,10 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends Event> {
             if (!eventMap.containsKey(priority)) {
                 final EventHandler<T> handler = event -> {
                     final var wrapped = wrapEvent(event, priority);
+                    if (wrapped == null) {
+                        return;
+                    }
+
                     if (this.fireAsync) {
                         try {
                             EventManager.getDefaultEventManager().fireEventAsync(wrapped, priority).get();
@@ -87,17 +91,6 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends Event> {
                     } else {
                         EventManager.getDefaultEventManager().fireEvent(wrapped, priority);
                     }
-                    if (wrapped instanceof Cancellable
-                            && event instanceof ResultedEvent && !(wrapped instanceof NoAutoCancellable)) {
-                        final var isCancelled = ((Cancellable) wrapped).cancelled();
-                        if (isCancelled) {
-                            ((ResultedEvent<ResultedEvent.Result>) event).setResult(ResultedEvent.GenericResult.denied());
-                        } else {
-                            ((ResultedEvent<ResultedEvent.Result>) event).setResult(ResultedEvent.GenericResult.allowed());
-                        }
-                    }
-
-                    postProcess(wrapped, event);
                 };
 
                 eventMap.put(handlerRegisteredEvent.getHandler().getEventPriority(), handler);
@@ -107,15 +100,5 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends Event> {
         });
     }
 
-    protected abstract @NotNull SE wrapEvent(@NotNull T event, @NotNull EventPriority priority);
-
-    /**
-     * For additional processing of the event.
-     * If the event is instance of {@link com.velocitypowered.api.event.ResultedEvent}, the result is set from our wrapped event
-     *
-     * @param wrappedEvent wrapped event
-     * @param event        velocity event
-     */
-    protected void postProcess(@NotNull SE wrappedEvent, @NotNull T event) {
-    }
+    protected abstract @Nullable SE wrapEvent(@NotNull T event, @NotNull EventPriority priority);
 }

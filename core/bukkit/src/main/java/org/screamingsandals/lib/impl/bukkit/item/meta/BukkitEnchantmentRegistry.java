@@ -46,7 +46,7 @@ public class BukkitEnchantmentRegistry extends EnchantmentRegistry {
             if (entityType != null) {
                 return new BukkitEnchantment(entityType);
             }
-        } else if (BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
+        } else if (BukkitFeature.FLATTENING.isSupported()) {
             // 1.13.x didn't have registries yet, but we got something similar to them in this case
             var entityType = org.bukkit.enchantments.Enchantment.getByKey(new NamespacedKey(location.namespace(), location.path()));
             if (entityType != null) {
@@ -107,7 +107,7 @@ public class BukkitEnchantmentRegistry extends EnchantmentRegistry {
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull Enchantment> getRegistryItemStream0() {
-        if (BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
+        if (BukkitFeature.FLATTENING.isSupported()) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(org.bukkit.enchantments.Enchantment.values()),
                     BukkitEnchantment::new,

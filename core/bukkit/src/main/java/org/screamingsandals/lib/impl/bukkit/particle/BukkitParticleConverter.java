@@ -34,7 +34,7 @@ import org.screamingsandals.lib.particle.ParticleData;
 public class BukkitParticleConverter {
     public Object convertParticleData(@NotNull ParticleData data) {
         if (data instanceof Block) {
-            if (BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
+            if (BukkitFeature.FLATTENING.isSupported()) {
                 return data.as(BlockData.class);
             } else {
                 return data.as(MaterialData.class);

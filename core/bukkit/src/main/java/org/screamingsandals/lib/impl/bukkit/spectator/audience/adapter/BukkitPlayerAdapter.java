@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.spectator.bossbar.BukkitBossBar1_8;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.ItemTagKeys;
@@ -33,8 +33,22 @@ import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nbt.StringTag;
-import org.screamingsandals.lib.nms.accessors.*;
-import org.screamingsandals.lib.spectator.*;
+import org.screamingsandals.lib.nms.accessors.ClientboundCustomPayloadPacketAccessor;
+import org.screamingsandals.lib.nms.accessors.ClientboundOpenBookPacketAccessor;
+import org.screamingsandals.lib.nms.accessors.ClientboundSetSubtitleTextPacketAccessor;
+import org.screamingsandals.lib.nms.accessors.ClientboundSetTitleTextPacketAccessor;
+import org.screamingsandals.lib.nms.accessors.ClientboundSetTitlesAnimationPacketAccessor;
+import org.screamingsandals.lib.nms.accessors.ClientboundSetTitlesPacketAccessor;
+import org.screamingsandals.lib.nms.accessors.ClientboundSetTitlesPacket_i_TypeAccessor;
+import org.screamingsandals.lib.nms.accessors.ClientboundTabListPacketAccessor;
+import org.screamingsandals.lib.nms.accessors.FriendlyByteBufAccessor;
+import org.screamingsandals.lib.nms.accessors.InteractionHandAccessor;
+import org.screamingsandals.lib.nms.accessors.ResourceLocationAccessor;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
+import org.screamingsandals.lib.spectator.Book;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.TitleableAudienceComponentLike;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
@@ -77,7 +91,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
     public void sendPlayerListHeaderFooter(@NotNull ComponentLike header, @NotNull ComponentLike footer) {
         var headerC = header instanceof AudienceComponentLike ? ((AudienceComponentLike) header).asComponent(owner()) : header.asComponent();
         var footerC = footer instanceof AudienceComponentLike ? ((AudienceComponentLike) footer).asComponent(owner()) : footer.asComponent();
-        if (Reflect.hasMethod(commandSender(), "setPlayerListHeaderFooter", BaseComponent.class, BaseComponent.class)) {
+        if (BukkitFeature.PLAYER_SET_PLAYER_LIST_HEADER_FOOTER_COMPONENT.isSupported()) {
             commandSender().setPlayerListHeaderFooter(headerC.as(BaseComponent.class), footerC.as(BaseComponent.class));
         } else {
             try {
@@ -85,7 +99,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
                 @NotNull Object footerComponent;
                 if (Component.empty().equals(headerC)) {
                     String clearString;
-                    if (Server.isVersion(1, 15)) {
+                    if (BukkitFeature.EMPTY_COMPONENT_1_15.isSupported()) {
                         clearString = "{\"text\": \"\"}";
                     } else {
                         clearString = "{\"translate\": \"\"}";
@@ -96,7 +110,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
                 }
                 if (Component.empty().equals(footerC)) {
                     String clearString;
-                    if (Server.isVersion(1, 15)) {
+                    if (BukkitFeature.EMPTY_COMPONENT_1_15.isSupported()) {
                         clearString = "{\"text\": \"\"}";
                     } else {
                         clearString = "{\"translate\": \"\"}";
@@ -115,19 +129,17 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
                     Reflect.setField(packet, ClientboundTabListPacketAccessor.getFieldFooter(), footerComponent);
                 }
                 ClassStorage.sendNMSConstructedPacket(commandSender(), packet);
-            } catch (Throwable ignored) {
-                try {
+            } catch (Throwable ignored) {  // will it ever crash? our reflect library is kinda safe
+                if (BukkitFeature.PLAYER_SET_PLAYER_LIST_HEADER_FOOTER_TEXT.isSupported()) {
                     commandSender().setPlayerListHeaderFooter(headerC.toLegacy(), footerC.toLegacy());
-                } catch (Throwable ignored2) {
-                    // method is too new
-                }
+                } // method is too new
             }
         }
     }
 
     @Override
     public void showTitle(@NotNull Title title) {
-        if (Reflect.has("com.destroystokyo.paper.Title")) {
+        if (BukkitFeature.DESTROYSTOKYO_TITLE.isSupported()) {
             commandSender().sendTitle(
                     com.destroystokyo.paper.Title.builder()
                             .title(title.title().as(BaseComponent.class))
@@ -165,13 +177,12 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
                 ClassStorage.sendNMSConstructedPacket(commandSender(), subtitleP);
                 return;
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable ignored) { // will it ever crash? our reflect library is kinda safe
         }
         // Hello Glowstone ;)
-        try {
+        if (BukkitFeature.VERBOSE_TITLE_METHOD.isSupported()) {
             commandSender().sendTitle(title.title().toLegacy(), title.subtitle().toLegacy(), (int) (title.fadeIn().toMillis() / 50), (int) (title.stay().toMillis() / 50), (int) (title.fadeOut().toMillis() / 50));
             return;
-        } catch (Throwable ignored) {
         }
         commandSender().sendTitle(title.title().toLegacy(), title.subtitle().toLegacy());
     }
@@ -210,42 +221,70 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
 
     @Override
     public void playSound(@NotNull SoundStart sound) {
-        try {
+        var s = sound.soundKey().asString();
+        if (!BukkitFeature.FLATTENING.isSupported()) {
+            if (s.startsWith("minecraft:")) {
+                s = s.substring(10);
+            } // what to do with custom namespaces?
+        }
+        if (BukkitFeature.SOUND_CATEGORY.isSupported()) {
             // TODO: 1.19: add seed if implemented by Spigot API
-            commandSender().playSound(commandSender().getLocation(), sound.soundKey().asString(), sound.source().as(SoundCategory.class), sound.volume(), sound.pitch());
-        } catch (Throwable ignored) {
-            commandSender().playSound(commandSender().getLocation(), sound.soundKey().asString(), sound.volume(), sound.pitch());
+            commandSender().playSound(commandSender().getLocation(), s, sound.source().as(SoundCategory.class), sound.volume(), sound.pitch());
+        } else {
+            commandSender().playSound(commandSender().getLocation(), s, sound.volume(), sound.pitch());
         }
     }
 
     @Override
     public void playSound(@NotNull SoundStart sound, double x, double y, double z) {
+        var s = sound.soundKey().asString();
+        if (!BukkitFeature.FLATTENING.isSupported()) {
+            if (s.startsWith("minecraft:")) {
+                s = s.substring(10);
+            } // what to do with custom namespaces?
+        }
         var location = new Location(commandSender().getWorld(), x, y, z); // I'm not sure if these locations are absolute or relative
-        try {
+        if (BukkitFeature.SOUND_CATEGORY.isSupported()) {
             // TODO: 1.19: add seed if implemented by Spigot API
-            commandSender().playSound(location, sound.soundKey().asString(), sound.source().as(SoundCategory.class), sound.volume(), sound.pitch());
-        } catch (Throwable ignored) {
-            commandSender().playSound(location, sound.soundKey().asString(), sound.volume(), sound.pitch());
+            commandSender().playSound(location, s, sound.source().as(SoundCategory.class), sound.volume(), sound.pitch());
+        } else {
+            commandSender().playSound(location, s, sound.volume(), sound.pitch());
         }
     }
 
     @Override
     public void stopSound(@NotNull SoundStop sound) {
-        try {
-            if (sound.soundKey() != null && sound.source() != null) {
-                try {
-                    commandSender().stopSound(sound.soundKey().asString(), sound.source().as(SoundCategory.class));
-                } catch (Throwable ignored) {
-                    commandSender().stopSound(sound.soundKey().asString()); // fallback to normal sound stop if SoundCategory doesn't work
+        if (BukkitFeature.STOP_SOUND.isSupported()) {
+            var key = sound.soundKey();
+            var source = sound.source();
+            if (key != null && source != null) {
+                var s = key.asString();
+                if (!BukkitFeature.FLATTENING.isSupported()) {
+                    if (s.startsWith("minecraft:")) {
+                        s = s.substring(10);
+                    } // what to do with custom namespaces?
                 }
-            } else if (sound.soundKey() != null) {
-                commandSender().stopSound(sound.soundKey().asString());
-            } else if (sound.source() != null) {
+
+                if (BukkitFeature.SOUND_CATEGORY.isSupported()) {
+                    commandSender().stopSound(s, sound.source().as(SoundCategory.class));
+                } else {
+                    commandSender().stopSound(s); // fallback to normal sound stop if SoundCategory doesn't work
+                }
+            } else if (key != null) {
+                var s = key.asString();
+                if (!BukkitFeature.FLATTENING.isSupported()) {
+                    if (s.startsWith("minecraft:")) {
+                        s = s.substring(10);
+                    } // what to do with custom namespaces?
+                }
+
+                commandSender().stopSound(s);
+            } else if (source != null) {
                 // looks like we don't have method for this one :(
-            } else {
+            } else if (BukkitFeature.STOP_ALL_SOUNDS.isSupported()) {
                 commandSender().stopAllSounds();
             }
-        } catch (Throwable ignored) {
+        } else {
             // Too old Bukkit version
         }
     }
@@ -275,17 +314,17 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
         player.setItemInHand(item.as(ItemStack.class));
 
         try {
-            if (!Server.isVersion(1, 13)) {
-                var bytebuf = Reflect.construct(FriendlyByteBufAccessor.getConstructor0(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));
-                var packet = Reflect.construct(ClientboundCustomPayloadPacketAccessor.getConstructor0(), "MC|BOpen", bytebuf);
+            if (BukkitFeature.MODERN_OPEN_BOOK_PACKET.isSupported()) {
+                var packet = Reflect.construct(ClientboundOpenBookPacketAccessor.getConstructor0(), InteractionHandAccessor.getFieldMAIN_HAND());
                 ClassStorage.sendNMSConstructedPacket(player, packet);
-            } else if (!Server.isVersion(1, 13, 1)) {
+            } else if (BukkitFeature.MODERN_OPEN_BOOK_PLUGIN_MESSAGE.isSupported()) {
                 var bytebuf = Reflect.construct(FriendlyByteBufAccessor.getConstructor0(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));
                 var location = Reflect.construct(ResourceLocationAccessor.getConstructor0(), "minecraft:book_open");
                 var packet = Reflect.construct(ClientboundCustomPayloadPacketAccessor.getConstructor1(), location, bytebuf);
                 ClassStorage.sendNMSConstructedPacket(player, packet);
             } else {
-                var packet = Reflect.construct(ClientboundOpenBookPacketAccessor.getConstructor0(), InteractionHandAccessor.getFieldMAIN_HAND());
+                var bytebuf = Reflect.construct(FriendlyByteBufAccessor.getConstructor0(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));
+                var packet = Reflect.construct(ClientboundCustomPayloadPacketAccessor.getConstructor0(), "MC|BOpen", bytebuf);
                 ClassStorage.sendNMSConstructedPacket(player, packet);
             }
         } catch (Throwable ignored) {

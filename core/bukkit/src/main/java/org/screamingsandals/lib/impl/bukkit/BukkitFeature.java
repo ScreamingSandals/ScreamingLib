@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.impl.bukkit;
 
 import lombok.experimental.UtilityClass;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -31,12 +32,16 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.utils.feature.PlatformFeature;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 @UtilityClass
@@ -94,7 +99,14 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature TILE_STATE = PlatformFeature.of(() -> Reflect.has("org.bukkit.block.TileState"));
 
     // Material API (Block & Item)
-    public static final @NotNull PlatformFeature FLATTENING_MATERIAL = PlatformFeature.of(() -> Version.isVersion(1, 13));
+    public static final @NotNull PlatformFeature FLATTENING = PlatformFeature.of(() -> Version.isVersion(1, 13));
+
+    // Item API
+    public static final @NotNull PlatformFeature ITEM_ATTRIBUTE_MODIFIERS_API = PlatformFeature.of(() -> Reflect.hasMethod(ItemMeta.class, "hasAttributeModifiers"));
+    public static final @NotNull PlatformFeature ITEM_META_PDC = PlatformFeature.of(() -> Reflect.hasMethod(ItemMeta.class, "getPersistentDataContainer"));
+    public static final @NotNull PlatformFeature ITEM_META_CUSTOM_TAG = PlatformFeature.of(() -> Reflect.hasMethod(ItemMeta.class, "getCustomTagContainer"));
+    public static final @NotNull PlatformFeature ITEM_META_CUSTOM_MODEL_DATA = PlatformFeature.of(() -> Reflect.hasMethod(ItemMeta.class, "hasCustomModelData"));
+    public static final @NotNull PlatformFeature ITEM_META_IS_UNBREAKABLE = PlatformFeature.of(() -> Reflect.hasMethod(ItemMeta.class, "isUnbreakable"));
 
     // Registry API
     public static final @NotNull PlatformFeature REGISTRY = PlatformFeature.of(() -> Version.isVersion(1, 14));
@@ -149,10 +161,29 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature POTION_EFFECT_KEYED = PlatformFeature.of(() -> Version.isVersion(1, 18));
     public static final @NotNull PlatformFeature POTION_EFFECT_CONSTRUCTOR_WITH_ICON = PlatformFeature.of(() -> Reflect.constructor(PotionEffect.class, PotionEffectType.class, int.class, int.class, boolean.class, boolean.class, boolean.class).isPresent());
 
+    // CHAT MESSAGE API
+    public static final @NotNull PlatformFeature COMMAND_SENDER_SKELETON_API = PlatformFeature.of(() -> Reflect.hasMethod(CommandSender.class, "spigot"));
+    public static final @NotNull PlatformFeature ADVENTURE = PlatformFeature.of(() -> Reflect.has("net.kyori.adventure.Adventure") && Reflect.has("io.papermc.paper.text.PaperComponents"));
+    public static final @NotNull PlatformFeature NBT_LONG_ARRAYS = PlatformFeature.of(() -> Version.isVersion(1, 12));
+    public static final @NotNull PlatformFeature MODERN_BOSSBARS = PlatformFeature.of(() -> Version.isVersion(1, 9));
+    public static final @NotNull PlatformFeature SOUND_CATEGORY = PlatformFeature.of(() -> Reflect.has("org.bukkit.SoundCategory"));
+    public static final @NotNull PlatformFeature PLAYER_SET_PLAYER_LIST_HEADER_FOOTER_COMPONENT = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "setPlayerListHeaderFooter", BaseComponent.class, BaseComponent.class));
+    public static final @NotNull PlatformFeature PLAYER_SET_PLAYER_LIST_HEADER_FOOTER_TEXT = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "setPlayerListHeaderFooter", String.class, String.class));
+    public static final @NotNull PlatformFeature EMPTY_COMPONENT_1_15 = PlatformFeature.of(() -> Version.isVersion(1, 15));
+    public static final @NotNull PlatformFeature DESTROYSTOKYO_TITLE = PlatformFeature.of(() -> Reflect.has("com.destroystokyo.paper.Title"));
+    public static final @NotNull PlatformFeature VERBOSE_TITLE_METHOD = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "sendTitle", String.class, String.class, int.class, int.class, int.class));
+    public static final @NotNull PlatformFeature STOP_ALL_SOUNDS = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "stopAllSounds"));
+    public static final @NotNull PlatformFeature STOP_SOUND = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "stopSound", String.class));
+    public static final @NotNull PlatformFeature MODERN_OPEN_BOOK_PACKET = PlatformFeature.of(() -> Version.isVersion(1, 13, 1));
+    public static final @NotNull PlatformFeature MODERN_OPEN_BOOK_PLUGIN_MESSAGE = PlatformFeature.of(() -> Version.isVersion(1, 13) && !Version.isVersion(1, 13, 1));
+
     // MISC
     public static final @NotNull PlatformFeature SOUND_KEYED = PlatformFeature.of(() -> Reflect.hasMethod(Sound.class, "getKey"));
     public static final @NotNull PlatformFeature HAS_PAPER_CONFIG = PlatformFeature.of(() -> Reflect.hasMethod(org.bukkit.Server.Spigot.class, "getPaperConfig"));
     public static final @NotNull PlatformFeature COLORED_BEDS = PlatformFeature.of(() -> Version.isVersion(1, 12));
     public static final @NotNull PlatformFeature OFF_HAND = PlatformFeature.of(() -> Version.isVersion(1, 9));
     public static final @NotNull PlatformFeature ENTITY_POSE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Pose"));
+    public static final @NotNull PlatformFeature ENTITY_SHOOT_BOW_EVENT_CONSUMABLE = PlatformFeature.of(() -> Reflect.hasMethod(EntityShootBowEvent.class, "getConsumable"));
+    public static final @NotNull PlatformFeature ENTITY_SHOOT_BOW_EVENT_HAND = PlatformFeature.of(() -> Reflect.hasMethod(EntityShootBowEvent.class, "getHand"));
+    public static final @NotNull PlatformFeature PLAYER_SHEAR_ENTITY_EVENT_ITEM_HAND = PlatformFeature.of(() -> Reflect.hasMethod(PlayerShearEntityEvent.class, "getItem"));
 }

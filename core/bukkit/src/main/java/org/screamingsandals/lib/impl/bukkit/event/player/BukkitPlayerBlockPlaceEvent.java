@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 import org.screamingsandals.lib.impl.block.snapshot.BlockSnapshots;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
@@ -83,9 +84,9 @@ public class BukkitPlayerBlockPlaceEvent implements PlayerBlockPlaceEvent, Bukki
     @Override
     public @NotNull EquipmentSlot playerHand() {
         if (playerHand == null) {
-            try {
+            if (BukkitFeature.OFF_HAND.isSupported()) {
                 playerHand = EquipmentSlot.of(event.getHand());
-            } catch (Throwable ignored) {
+            } else {
                 playerHand = EquipmentSlot.of("main_hand"); // 1.8.8
             }
         }

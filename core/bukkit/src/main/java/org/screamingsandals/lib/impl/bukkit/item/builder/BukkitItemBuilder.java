@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
@@ -37,7 +38,6 @@ import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
 import org.screamingsandals.lib.impl.bukkit.nbt.NBTVanillaSerializer;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
@@ -54,6 +54,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -82,7 +83,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     public ItemStackBuilder durability(short durability) {
-        if (!Version.isVersion(1, 13)) {
+        if (!BukkitFeature.FLATTENING.isSupported()) {
             this.item.setDurability(durability);
         } else {
             var meta = item.getItemMeta();
@@ -157,7 +158,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         var meta = item.getItemMeta();
         if (meta != null) {
             // TODO: find solution: missing Bukkit API for older versions
-            if (Reflect.hasMethod(meta, "hasAttributeModifiers")) { // 1.13.1
+            if (BukkitFeature.ITEM_ATTRIBUTE_MODIFIERS_API.isSupported()) { // 1.13.1
                 meta.setAttributeModifiers(null);
                 if (modifiers != null) {
                     modifiers.stream()
@@ -178,9 +179,50 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         var meta = item.getItemMeta();
         if (meta != null) {
             // TODO: find solution: missing Bukkit API for older versions
-            if (Reflect.hasMethod(meta, "hasAttributeModifiers")) { // 1.13.1
+            if (BukkitFeature.ITEM_ATTRIBUTE_MODIFIERS_API.isSupported()) { // 1.13.1
                 var mod = modifier.as(BukkitItemAttribute.class);
                 meta.addAttributeModifier(mod.getAttribute(), mod.getAttributeModifier());
+                item.setItemMeta(meta);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public @NotNull ItemStackBuilder data(@NotNull Consumer<@NotNull ItemData> dataBuilder) {
+        if (item == null) {
+            return this;
+        }
+
+        var meta = item.getItemMeta();
+        if (meta != null) {
+            if (BukkitFeature.ITEM_META_PDC.isSupported()) { // 1.14+
+                dataBuilder.accept(new BukkitItemDataPersistentContainer(meta.getPersistentDataContainer()));
+                item.setItemMeta(meta);
+            } else if (BukkitFeature.ITEM_META_CUSTOM_TAG.isSupported()) { // 1.13.2
+                dataBuilder.accept(new BukkitItemDataCustomTags(meta.getCustomTagContainer()));
+                item.setItemMeta(meta);
+            } else {
+                var unhandled = (Map<String,Object>) Reflect.getField(meta, "unhandledTags");
+                Object compound;
+                if (unhandled.containsKey("PublicBukkitValues")) {
+                    compound = unhandled.get("PublicBukkitValues");
+                } else {
+                    compound = Reflect.construct(CompoundTagAccessor.getConstructor0());
+                    unhandled.put("PublicBukkitValues", compound);
+                }
+                var nmap = new HashMap<String, Object>();
+                if (CompoundTagAccessor.getType().isInstance(compound)) {
+                    var keys = (Set) Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodGetAllKeys1());
+                    for (var key : keys) {
+                        nmap.put(key.toString(), Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodGet1(), key));
+                    }
+                }
+                var cbItemData = new CraftBukkitItemData(nmap);
+                dataBuilder.accept(cbItemData);
+                cbItemData.getKeyNBTMap().forEach((s, o) ->
+                        Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodPut1(), s, o)
+                );
                 item.setItemMeta(meta);
             }
         }
@@ -194,14 +236,14 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         }
         var meta = item.getItemMeta();
         if (meta != null) {
-            if (Reflect.hasMethod(meta, "getPersistentDataContainer")) { // 1.14+
+            if (BukkitFeature.ITEM_META_PDC.isSupported()) { // 1.14+
                 if (data instanceof BukkitItemDataPersistentContainer && !data.isEmpty()) {
                     var origDataContainer = ((BukkitItemDataPersistentContainer) data).getDataContainer();
                     Reflect.getMethod(meta.getPersistentDataContainer(), "putAll", Map.class)
                             .invoke(Reflect.fastInvoke(origDataContainer, "getRaw"));
                     item.setItemMeta(meta);
                 }
-            } else if (Reflect.hasMethod(meta, "getCustomTagContainer")) { // 1.13.2
+            } else if (BukkitFeature.ITEM_META_CUSTOM_TAG.isSupported()) { // 1.13.2
                 if (data instanceof BukkitItemDataCustomTags && !data.isEmpty()) {
                     var origDataContainer = ((BukkitItemDataCustomTags) data).getDataContainer();
                     Reflect.getMethod(meta.getCustomTagContainer(), "putAll", Map.class)
@@ -242,7 +284,9 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                 }
 
                 item.setItemMeta(meta);
-            } catch (Throwable ignored) {}
+            } catch (IllegalArgumentException ignored) {
+                // unknown flag
+            }
         }
         return this;
     }
@@ -258,7 +302,9 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                 meta.addItemFlags(ItemFlag.valueOf(flag.getBukkitName()));
 
                 item.setItemMeta(meta);
-            } catch (Throwable ignored) {}
+            } catch (IllegalArgumentException ignored) {
+                // unknown flag
+            }
         }
         return this;
     }
@@ -309,10 +355,10 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         }
         var meta = item.getItemMeta();
         if (meta != null) {
-            try {
+            if (BukkitFeature.ITEM_META_CUSTOM_MODEL_DATA.isSupported()) {
                 meta.setCustomModelData(data);
                 item.setItemMeta(meta);
-            } catch (Throwable ignored) {}
+            }
         }
         return this;
     }
@@ -324,7 +370,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         }
         var meta = item.getItemMeta();
         if (meta != null) {
-            if (Reflect.hasMethod(meta, "setUnbreakable", boolean.class)) {
+            if (BukkitFeature.ITEM_META_IS_UNBREAKABLE.isSupported()) {
                 meta.setUnbreakable(unbreakable);
                 item.setItemMeta(meta);
             } else {
@@ -360,6 +406,30 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             item = ClassStorage.asCBStack(item);
         }
         Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodSetTag1(), NBTVanillaSerializer.serialize(tag));
+        return this;
+    }
+
+    @Override
+    public @NotNull ItemStackBuilder mergeTag(@NotNull CompoundTag tag) {
+        if (item == null) {
+            item = new org.bukkit.inventory.ItemStack(Material.AIR); // shouldn't we throw error instead?
+        }
+
+        if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
+            item = ClassStorage.asCBStack(item);
+        }
+
+        var serialized = NBTVanillaSerializer.serialize(tag);
+
+        var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodGetTag1());
+
+        if (nbt != null) {
+            Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodMerge1(), serialized);
+        } else {
+            nbt = serialized;
+        }
+
+        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodSetTag1(), nbt);
         return this;
     }
 

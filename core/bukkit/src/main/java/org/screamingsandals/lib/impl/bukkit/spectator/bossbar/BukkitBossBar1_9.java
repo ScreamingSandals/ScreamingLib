@@ -74,7 +74,7 @@ public class BukkitBossBar1_9 extends BasicWrapper<BossBar> implements org.screa
                 .filter(bossBarFlag -> {
                     try {
                         return wrappedObject.hasFlag(BarFlag.valueOf(bossBarFlag.name().replace("CREATE_WORLD_FOG", "CREATE_FOG")));
-                    } catch (Throwable ignored) {
+                    } catch (IllegalArgumentException ignored) { // invalid enum value
                         return false;
                     }
                 })
@@ -94,18 +94,18 @@ public class BukkitBossBar1_9 extends BasicWrapper<BossBar> implements org.screa
                         wrappedObject.removeFlag(value);
                         try {
                             removed.add(BossBarFlag.valueOf(value.name().replace("CREATE_FOG", "CREATE_WORLD_FOG")));
-                        } catch (Throwable ignored) {}
+                        } catch (IllegalArgumentException ignored) {} // invalid enum value
                     }
                 } else if (b.isPresent()) {
                     wrappedObject.addFlag(value);
                     added.add(b.get());
                 }
-            } catch (Throwable ignored) {
+            } catch (Throwable ignored) { // does someone remember what this catch is supposed to catch?
                 if (wrappedObject.hasFlag(value)) {
                     wrappedObject.removeFlag(value);
                     try {
                         removed.add(BossBarFlag.valueOf(value.name().replace("CREATE_FOG", "CREATE_WORLD_FOG")));
-                    } catch (Throwable ignored2) {}
+                    } catch (IllegalArgumentException ignored2) {} // invalid enum value
                 }
             }
         }
@@ -117,7 +117,7 @@ public class BukkitBossBar1_9 extends BasicWrapper<BossBar> implements org.screa
     public @NotNull BossBarColor color() {
         try {
             return BossBarColor.valueOf(wrappedObject.getColor().name());
-        } catch (Throwable ignored) {
+        } catch (IllegalArgumentException ignored) { // invalid enum value
             return BossBarColor.PURPLE;
         }
     }
@@ -128,7 +128,7 @@ public class BukkitBossBar1_9 extends BasicWrapper<BossBar> implements org.screa
             var old = color();
             wrappedObject.setColor(BarColor.valueOf(color.name()));
             internalListeners.forEach(registeredListener -> registeredListener.listener().onColorChanged(this, old, color));
-        } catch (Throwable ignored) {
+        } catch (IllegalArgumentException ignored) { // invalid enum value
         }
         return this;
     }
@@ -138,7 +138,7 @@ public class BukkitBossBar1_9 extends BasicWrapper<BossBar> implements org.screa
         try {
             var style = wrappedObject.getStyle().name().replace("SEGMENTED", "NOTCHED").replace("SOLID", "NO_DIVISION");
             return BossBarDivision.valueOf(style);
-        } catch (Throwable ignored) {
+        } catch (IllegalArgumentException ignored) { // invalid enum value
             return BossBarDivision.NO_DIVISION;
         }
     }
@@ -150,7 +150,7 @@ public class BukkitBossBar1_9 extends BasicWrapper<BossBar> implements org.screa
             var old = division();
             wrappedObject.setStyle(BarStyle.valueOf(style));
             internalListeners.forEach(registeredListener -> registeredListener.listener().onDivisionChanged(this, old, division));
-        } catch (Throwable ignored) {
+        } catch (IllegalArgumentException ignored) { // invalid enum value
         }
         return this;
     }

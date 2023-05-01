@@ -41,7 +41,7 @@ public class BukkitBlockSnapshot extends BasicWrapper<BlockState> implements Blo
 
     @Override
     public @NotNull Block block() {
-        if (!BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
+        if (!BukkitFeature.FLATTENING.isSupported()) {
             return Block.of(wrappedObject.getData());
         } else {
             return Block.of(wrappedObject.getBlockData());
@@ -50,7 +50,7 @@ public class BukkitBlockSnapshot extends BasicWrapper<BlockState> implements Blo
 
     @Override
     public void block(@NotNull Block type) {
-        if (!BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
+        if (!BukkitFeature.FLATTENING.isSupported()) {
             wrappedObject.setType(type.as(Material.class));
             wrappedObject.setRawData(type instanceof BukkitBlock1_8 ? ((BukkitBlock1_8) type).legacyData() : 0);
         } else {

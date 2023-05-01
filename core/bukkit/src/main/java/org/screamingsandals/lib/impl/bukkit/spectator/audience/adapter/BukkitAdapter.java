@@ -21,11 +21,11 @@ import lombok.experimental.Accessors;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.Audience;
 import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 
 @Data
 @Accessors(fluent = true)
@@ -36,7 +36,7 @@ public class BukkitAdapter implements Adapter {
     @Override
     public void sendMessage(@NotNull ComponentLike message) {
         var comp = message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(owner) : message.asComponent();
-        if (Reflect.hasMethod(owner, "spigot")) {
+        if (BukkitFeature.COMMAND_SENDER_SKELETON_API.isSupported()) {
             commandSender.spigot().sendMessage(comp.as(BaseComponent.class));
         } else {
             commandSender.sendMessage(comp.toLegacy());

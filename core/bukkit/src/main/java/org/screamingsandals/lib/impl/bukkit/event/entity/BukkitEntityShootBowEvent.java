@@ -16,12 +16,16 @@
 
 package org.screamingsandals.lib.impl.bukkit.event.entity;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.Entity;
@@ -72,16 +76,15 @@ public class BukkitEntityShootBowEvent implements EntityShootBowEvent, BukkitCan
     @Override
     public @Nullable ItemStack consumable() {
         if (!consumableCached) {
-            try {
+            if (BukkitFeature.ENTITY_SHOOT_BOW_EVENT_CONSUMABLE.isSupported()) {
                 if (event.getConsumable() != null) {
                     consumable = new BukkitItem(event.getConsumable());
                 }
-                consumableCached = true;
-            } catch (Throwable ignored) {
+            } else {
                 // <= 1.16.1
                 consumable = null;
-                consumableCached = true;
             }
+            consumableCached = true;
         }
         return consumable;
     }
@@ -94,9 +97,9 @@ public class BukkitEntityShootBowEvent implements EntityShootBowEvent, BukkitCan
     @Override
     public @NotNull EquipmentSlot hand() {
         if (hand == null) {
-            try {
+            if (BukkitFeature.ENTITY_SHOOT_BOW_EVENT_HAND.isSupported()) {
                 hand = EquipmentSlot.of(event.getHand());
-            } catch (Throwable ignored) {
+            } else {
                 hand = EquipmentSlot.of("main_hand"); // event#getHand added to the event in 1.16.2
             }
         }
@@ -110,18 +113,18 @@ public class BukkitEntityShootBowEvent implements EntityShootBowEvent, BukkitCan
 
     @Override
     public boolean consumeItem() {
-        try {
+        if (BukkitFeature.ENTITY_SHOOT_BOW_EVENT_CONSUMABLE.isSupported()) {
             return event.shouldConsumeItem();
-        } catch (Throwable ignored) {
+        } else {
             return false; // <= 1.16.1
         }
     }
 
     @Override
     public void consumeItem(boolean consumeItem) {
-        try {
+        if (BukkitFeature.ENTITY_SHOOT_BOW_EVENT_CONSUMABLE.isSupported()) {
             event.setConsumeItem(consumeItem);
-        } catch (Throwable ignored) {
+        } else {
             // <= 1.16.1
         }
     }

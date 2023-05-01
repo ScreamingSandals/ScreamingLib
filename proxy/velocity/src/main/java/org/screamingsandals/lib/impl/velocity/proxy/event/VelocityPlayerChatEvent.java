@@ -19,13 +19,12 @@ package org.screamingsandals.lib.impl.velocity.proxy.event;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.impl.velocity.proxy.VelocityProxiedPlayerWrapper;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 import org.screamingsandals.lib.proxy.event.SPlayerChatEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
-public class VelocityPlayerChatEvent extends BasicWrapper<PlayerChatEvent> implements SPlayerChatEvent, NoAutoCancellable {
+public class VelocityPlayerChatEvent extends BasicWrapper<PlayerChatEvent> implements SPlayerChatEvent {
     protected VelocityPlayerChatEvent(@NotNull PlayerChatEvent wrappedObject) {
         super(wrappedObject);
     }

@@ -21,6 +21,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.spectator.audience.adapter.BukkitAdapter;
 import org.screamingsandals.lib.impl.bukkit.spectator.audience.adapter.BukkitConsoleAdapter;
 import org.screamingsandals.lib.impl.bukkit.spectator.audience.adapter.BukkitPlayerAdapter;
@@ -31,7 +32,6 @@ import org.screamingsandals.lib.impl.bukkit.spectator.sound.BukkitSoundSource;
 import org.screamingsandals.lib.impl.bukkit.spectator.sound.BukkitSoundStart;
 import org.screamingsandals.lib.impl.bukkit.spectator.sound.BukkitSoundStop;
 import org.screamingsandals.lib.impl.bukkit.spectator.title.BukkitTitle;
-import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.impl.spectator.SpectatorBackend;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
@@ -49,22 +49,21 @@ import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
 import org.screamingsandals.lib.spectator.title.Title;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Locale;
 
 
-// I don't think we have to implement backend for raw CraftBukkit without md_5's retarded library, who uses raw CraftBukkit in 2023 anyways
+// I don't think we have to implement backend for raw CraftBukkit without md_5's retarded library, who uses raw CraftBukkit in 2023 anyway
 public class SpigotBackend extends AbstractBungeeBackend {
     private SpectatorBackend adventureBackend;
 
     public SpigotBackend() {
-        if (Version.isVersion(1, 12)) {
+        if (BukkitFeature.NBT_LONG_ARRAYS.isSupported()) {
             snbtSerializer = SNBTSerializer.builder()
                     .shouldSaveLongArraysDirectly(true)
                     .build();
         }
-        if (Reflect.has("net.kyori.adventure.Adventure") && Reflect.has("io.papermc.paper.text.PaperComponents")) {
+        if (BukkitFeature.ADVENTURE.isSupported()) {
             adventureBackend = SpigotBackendAdventureExtension.initAdventureBackend(snbtSerializer);
         }
     }
@@ -79,7 +78,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
             return adventureBackend.bossBar();
         }
 
-        if (Version.isVersion(1, 9)) {
+        if (BukkitFeature.MODERN_BOSSBARS.isSupported()) {
             return new BukkitBossBar1_9.BukkitBossBarBuilder();
         } else {
             return new BukkitBossBar1_8.BukkitBossBarBuilder();
@@ -110,7 +109,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
             return adventureBackend.soundSource(source);
         }
 
-        if (!Reflect.has("org.bukkit.SoundCategory")) {
+        if (!BukkitFeature.SOUND_CATEGORY.isSupported()) {
             return new BukkitDummySoundSource(); // WHAT????
         }
 

@@ -26,7 +26,6 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
@@ -42,7 +41,7 @@ import java.util.Collection;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class BukkitEntityDeathEvent implements EntityDeathEvent, NoAutoCancellable {
+public class BukkitEntityDeathEvent implements EntityDeathEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include

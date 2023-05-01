@@ -74,6 +74,11 @@ public class BukkitSoundStop implements SoundStop {
         @Tolerate
         @Override
         public @NotNull Builder soundKey(@Nullable String key) {
+            if (key == null) {
+                soundKey = null;
+                return this;
+            }
+
             var k = ResourceLocation.of(key);
             if ("minecraft".equals(k.namespace())) {
                 this.soundKey = ResourceLocation.of("minecraft", BukkitServer.UNSAFE_normalizeSoundKey0(k.path()));

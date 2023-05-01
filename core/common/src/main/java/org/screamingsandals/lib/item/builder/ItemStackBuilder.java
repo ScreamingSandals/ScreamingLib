@@ -45,6 +45,7 @@ import org.screamingsandals.lib.utils.ResourceLocation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 public interface ItemStackBuilder extends MetadataConsumer {
     @Contract("_ -> this")
@@ -72,6 +73,9 @@ public interface ItemStackBuilder extends MetadataConsumer {
     @NotNull ItemStackBuilder data(@NotNull ItemData data);
 
     @Contract("_ -> this")
+    @NotNull ItemStackBuilder data(@NotNull Consumer<@NotNull ItemData> dataBuilder);
+
+    @Contract("_ -> this")
     @NotNull ItemStackBuilder hideFlags(@Nullable List<@NotNull HideFlags> flags);
 
     @Contract("_ -> this")
@@ -92,8 +96,24 @@ public interface ItemStackBuilder extends MetadataConsumer {
     @Contract("_ -> this")
     @NotNull ItemStackBuilder repairCost(int repairCost);
 
+    /**
+     * Sets new item tag for this item. This means that everything except amount and type will be overriden.
+     *
+     * @param tag which will be assigned to this item
+     * @return this builder
+     * @see #mergeTag(CompoundTag)
+     */
     @Contract("_ -> this")
     @NotNull ItemStackBuilder tag(@NotNull CompoundTag tag);
+
+    /**
+     * Merges provided tag with this item tag
+     *
+     * @param tag which will be merged to this item tag
+     * @return this builder
+     */
+    @Contract("_ -> this")
+    @NotNull ItemStackBuilder mergeTag(@NotNull CompoundTag tag);
 
     @Contract(pure = true)
     @Nullable ItemStack build();

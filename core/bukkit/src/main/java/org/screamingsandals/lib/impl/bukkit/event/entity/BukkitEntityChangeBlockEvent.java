@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.Entity;
@@ -69,9 +70,9 @@ public class BukkitEntityChangeBlockEvent implements EntityChangeBlockEvent, Buk
     @Override
     public @NotNull Block to() {
         if (to == null) {
-            try {
+            if (BukkitFeature.FLATTENING.isSupported()) {
                 to = Block.of(event.getBlockData());
-            } catch (Throwable ignored) {
+            } else {
                 to = Block.of(event.getTo().getNewData((byte) 0));
             }
         }

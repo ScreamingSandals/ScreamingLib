@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @RequiredArgsConstructor
-public class HandlerRegisteredEvent implements Event {
+public final class HandlerRegisteredEvent implements Event {
     private final @NotNull EventManager eventManager;
     private final @NotNull Class<?> eventClass;
     private final @NotNull EventHandler<?> handler;

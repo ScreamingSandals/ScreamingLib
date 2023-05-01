@@ -44,7 +44,7 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
     @Override
     @OnPostConstruct
     public void doMapping() {
-        if (!BukkitFeature.FLATTENING_MATERIAL.isSupported()) {
+        if (!BukkitFeature.FLATTENING.isSupported()) {
             flatteningLegacyMappingJava();
         }
 

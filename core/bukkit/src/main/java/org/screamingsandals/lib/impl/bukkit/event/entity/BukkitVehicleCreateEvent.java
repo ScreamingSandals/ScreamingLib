@@ -23,7 +23,6 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.VehicleCreateEvent;
@@ -34,7 +33,7 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class BukkitVehicleCreateEvent implements VehicleCreateEvent, NoAutoCancellable {
+public class BukkitVehicleCreateEvent implements VehicleCreateEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include

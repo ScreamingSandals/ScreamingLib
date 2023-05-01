@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
@@ -69,9 +70,9 @@ public class BukkitPlayerShearEntityEvent implements PlayerShearEntityEvent, Buk
     @Override
     public @NotNull ItemStack item() {
         if (item == null) {
-            try {
+            if (BukkitFeature.PLAYER_SHEAR_ENTITY_EVENT_ITEM_HAND.isSupported()) {
                 item = new BukkitItem(event.getItem());
-            } catch (Throwable ignored) {
+            } else {
                 item = new BukkitItem(event.getPlayer().getItemInHand()); // <= 1.15.1: let's assume he used the item in his main hand (deprecated method used for 1.8.8 compat)
             }
         }
@@ -81,9 +82,9 @@ public class BukkitPlayerShearEntityEvent implements PlayerShearEntityEvent, Buk
     @Override
     public @NotNull EquipmentSlot hand() {
         if (hand == null) {
-            try {
+            if (BukkitFeature.PLAYER_SHEAR_ENTITY_EVENT_ITEM_HAND.isSupported()) {
                 hand = EquipmentSlot.of(event.getHand());
-            } catch (Throwable ignored) {
+            } else {
                 hand = EquipmentSlot.of("main_hand"); // <= 1.15.1
             }
         }
