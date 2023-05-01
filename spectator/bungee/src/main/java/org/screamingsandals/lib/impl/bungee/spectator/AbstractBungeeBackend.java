@@ -229,13 +229,6 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public @NotNull Color hexOrName(@NotNull String hexOrName) {
-        // bri'ish
-        if ("grey".equalsIgnoreCase(hexOrName)) {
-            hexOrName = "gray";
-        } else if ("dark_grey".equalsIgnoreCase(hexOrName)) {
-            hexOrName = "dark_gray";
-        }
-
         if (BungeeChatFeature.RGB_COLORS.isSupported()) {
             try {
                 return new BungeeColor(ChatColor.of(hexOrName.toLowerCase(Locale.ROOT)));

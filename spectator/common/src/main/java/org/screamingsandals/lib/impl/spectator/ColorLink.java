@@ -22,20 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Color;
 
-@RequiredArgsConstructor
 @ApiStatus.Internal
-public final class ColorLink implements Color {
-    private final @NotNull String name;
-    private @Nullable Color cache;
-
-    private @NotNull Color obtainColor() {
-        if (cache == null) {
-            cache = Color.named(name);
-        }
-        assert cache != null;
-        return cache;
-    }
-
+public abstract class ColorLink implements Color {
     @Override
     public int red() {
         return obtainColor().red();
@@ -74,5 +62,36 @@ public final class ColorLink implements Color {
     @Override
     public @NotNull Object raw() {
         return obtainColor().raw();
+    }
+
+    protected abstract @NotNull Color obtainColor();
+
+    @RequiredArgsConstructor
+    public static class Named extends ColorLink {
+        private final @NotNull String name;
+        private @Nullable Color cache;
+
+        protected @NotNull Color obtainColor() {
+            if (cache == null) {
+                cache = Spectator.getBackend().named(name); // Color.named() looks in the list of links, we don't want the link to point to itself
+            }
+            assert cache != null && !(cache instanceof ColorLink);
+            return cache;
+        }
+    }
+
+    @RequiredArgsConstructor
+    public static class RGB extends ColorLink {
+        private final int red;
+        private final int green;
+        private final int blue;
+        private @Nullable Color cache;
+
+        protected @NotNull Color obtainColor() {
+            if (cache == null) {
+                cache = Color.rgb(red, green, blue);
+            }
+            return cache;
+        }
     }
 }

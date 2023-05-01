@@ -408,6 +408,11 @@ public final class MiniMessageParser {
 
         @Contract("-> this")
         public @NotNull Builder defaultStylingTags() {
+            return defaultStylingTags(true);
+        }
+
+        @Contract("-> this")
+        public @NotNull Builder defaultStylingTags(boolean bedrockColorNames) {
             // colors
             registerStylingTag("color", new ColorResolver(), "colour", "c");
 
@@ -428,6 +433,21 @@ public final class MiniMessageParser {
             putStylingAlias("light_purple", colorTransformer);
             putStylingAlias("yellow", colorTransformer);
             putStylingAlias("white", colorTransformer);
+
+            if (bedrockColorNames) {
+                putStylingAlias("minecoin_gold", colorTransformer);
+                putStylingAlias("material_quartz", colorTransformer);
+                putStylingAlias("material_iron", colorTransformer);
+                putStylingAlias("material_netherite", colorTransformer);
+                putStylingAlias("material_redstone", colorTransformer);
+                putStylingAlias("material_copper", colorTransformer);
+                putStylingAlias("material_gold", colorTransformer);
+                putStylingAlias("material_emerald", colorTransformer);
+                putStylingAlias("material_diamond", colorTransformer);
+                putStylingAlias("material_lapis", colorTransformer);
+                putStylingAlias("material_amethyst", colorTransformer);
+            }
+
             putStylingAlias(Pattern.compile("#([\\dA-Fa-f]{6}|[\\dA-Fa-f]{3})"), colorTransformer);
 
             // decorations
