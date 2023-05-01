@@ -19,7 +19,15 @@ package org.screamingsandals.lib.item;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.nbt.*;
+import org.screamingsandals.lib.nbt.ByteTag;
+import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.DoubleTag;
+import org.screamingsandals.lib.nbt.IntArrayTag;
+import org.screamingsandals.lib.nbt.IntTag;
+import org.screamingsandals.lib.nbt.ListTag;
+import org.screamingsandals.lib.nbt.ShortTag;
+import org.screamingsandals.lib.nbt.StringTag;
+import org.screamingsandals.lib.nbt.TreeInspectorKey;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 @UtilityClass
@@ -134,7 +142,7 @@ public class ItemTagKeys {
         public static final @NotNull TreeInspectorKey<ByteTag> TRAIL = TreeInspectorKey.of(ByteTag.class, "Trail");
         public static final @NotNull TreeInspectorKey<ByteTag> TYPE = TreeInspectorKey.of(ByteTag.class, "Type");
     }
-    public static final @NotNull TreeInspectorKey<ListTag> FIREWORKS_FLIGHT = TreeInspectorKey.of(ListTag.class, "Fireworks", "Flight");
+    public static final @NotNull TreeInspectorKey<ByteTag> FIREWORKS_FLIGHT = TreeInspectorKey.of(ByteTag.class, "Fireworks", "Flight");
 
     // FIREWORK STAR
     public static final @NotNull TreeInspectorKey<CompoundTag> EXPLOSION = TreeInspectorKey.of(CompoundTag.class, "Explosion");
@@ -175,5 +183,9 @@ public class ItemTagKeys {
         public static final @NotNull TreeInspectorKey<IntTag> EFFECT_DURATION = TreeInspectorKey.of(IntTag.class, "EffectDuration");
     }
 
+    // Knowledge Book
+    public static final @NotNull TreeInspectorKey<ListTag> RECIPES = TreeInspectorKey.of(ListTag.class, "Recipes");
+
+    // Custom
     public static final @NotNull TreeInspectorKey<CompoundTag> PUBLIC_BUKKIT_VALUES = TreeInspectorKey.of(CompoundTag.class, "PublicBukkitValues");
 }

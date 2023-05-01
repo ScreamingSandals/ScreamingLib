@@ -23,7 +23,6 @@ import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.Enchantment;
-import org.screamingsandals.lib.metadata.MetadataProvider;
 import org.screamingsandals.lib.nbt.*;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.spectator.Component;
@@ -40,7 +39,7 @@ import java.util.stream.Collectors;
 /**
  * Represents an immutable Item.
  */
-public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, CompoundTagLike, CompoundTagTreeInspector, ItemContentLike, MetadataProvider {
+public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, CompoundTagLike, CompoundTagTreeInspector, ItemContentLike {
     @NotNull ItemType getType();
 
     default @NotNull ItemType getMaterial() { // alternative getter (old name)

@@ -68,6 +68,10 @@ public interface Color extends Wrapper, ComponentBuilderApplicable, RawValueHold
 
     int blue();
 
+    default int compoundRgb() {
+        return red() << 16 | green() << 8 | blue();
+    }
+
     @NotNull String toString();
 
     static @NotNull Color rgb(int red, int green, int blue) {

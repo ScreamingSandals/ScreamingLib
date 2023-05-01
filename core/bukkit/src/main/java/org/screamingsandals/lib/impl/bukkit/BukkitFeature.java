@@ -18,6 +18,7 @@ package org.screamingsandals.lib.impl.bukkit;
 
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -35,6 +36,7 @@ import org.bukkit.entity.Slime;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -107,6 +109,8 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ITEM_META_CUSTOM_TAG = PlatformFeature.of(() -> Reflect.hasMethod(ItemMeta.class, "getCustomTagContainer"));
     public static final @NotNull PlatformFeature ITEM_META_CUSTOM_MODEL_DATA = PlatformFeature.of(() -> Reflect.hasMethod(ItemMeta.class, "hasCustomModelData"));
     public static final @NotNull PlatformFeature ITEM_META_IS_UNBREAKABLE = PlatformFeature.of(() -> Reflect.hasMethod(ItemMeta.class, "isUnbreakable"));
+    public static final @NotNull PlatformFeature KNOWLEDGE_BOOK_META = PlatformFeature.of(() -> Reflect.has("org.bukkit.inventory.meta.KnowledgeBookMeta"));
+    public static final @NotNull PlatformFeature POTION_META_COLOR = PlatformFeature.of(() -> Reflect.hasMethod(PotionMeta.class, "setColor", Color.class));
 
     // Registry API
     public static final @NotNull PlatformFeature REGISTRY = PlatformFeature.of(() -> Version.isVersion(1, 14));

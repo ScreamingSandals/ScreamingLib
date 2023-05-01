@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.impl.bukkit.item;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.Repairable;
@@ -42,27 +41,21 @@ import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.Enchantment;
-import org.screamingsandals.lib.metadata.MetadataCollectionKey;
-import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
 import org.screamingsandals.lib.nms.accessors.ItemStackAccessor;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> implements ItemStack {
     private @Nullable CompoundTag tagCache;
 
@@ -126,10 +119,12 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
                     var bukkitModifiers = meta.getAttributeModifiers();
                     var list = new ArrayList<ItemAttribute>(bukkitModifiers.size());
                     bukkitModifiers
-                            .forEach((attribute, attributeModifier) ->
-                                    Attributes.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
-                                            .ifNotNull(list::add)
-                            );
+                            .forEach((attribute, attributeModifier) -> {
+                                var itemAttribute = Attributes.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier));
+                                if (itemAttribute != null) {
+                                    list.add(itemAttribute);
+                                }
+                            });
                     return list;
                 }
             }
@@ -143,13 +138,19 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
         if (meta != null) {
             var list = new ArrayList<Enchantment>();
             if (meta instanceof EnchantmentStorageMeta) {
-                ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet().forEach(entry ->
-                        Enchantment.ofNullable(entry).ifNotNull(list::add)
-                );
+                ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet().forEach(entry -> {
+                    var enchantment = Enchantment.ofNullable(entry);
+                    if (enchantment != null) {
+                        list.add(enchantment);
+                    }
+                });
             } else {
-                meta.getEnchants().entrySet().forEach(entry ->
-                        Enchantment.ofNullable(entry).ifNotNull(list::add)
-                );
+                meta.getEnchants().entrySet().forEach(entry ->{
+                    var enchantment = Enchantment.ofNullable(entry);
+                    if (enchantment != null) {
+                        list.add(enchantment);
+                    }
+                });
             }
             return list;
         }
@@ -246,56 +247,6 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
     @Override
     public @NotNull ItemStack clone() {
         return new BukkitItem(wrappedObject.clone());
-    }
-
-    @Deprecated
-    @Override
-    public boolean supportsMetadata(MetadataKey<?> key) {
-        var meta = wrappedObject.getItemMeta();
-        if (meta != null) {
-            return ItemMetaHelper.supportsMetadata(meta, key);
-        }
-        return false;
-    }
-
-    @Deprecated
-    @Override
-    public boolean supportsMetadata(MetadataCollectionKey<?> key) {
-        var meta = wrappedObject.getItemMeta();
-        if (meta != null) {
-            return ItemMetaHelper.supportsMetadata(meta, key);
-        }
-        return false;
-    }
-
-    @Deprecated
-    @Override
-    public <T> @Nullable T getMetadata(MetadataKey<T> key) {
-        var meta = wrappedObject.getItemMeta();
-        if (meta != null) {
-            return ItemMetaHelper.getMetadata(meta, key);
-        }
-        return null;
-    }
-
-    @Deprecated
-    @Override
-    public <T> Optional<T> getMetadataOptional(MetadataKey<T> key) {
-        var meta = wrappedObject.getItemMeta();
-        if (meta != null) {
-            return Optional.ofNullable(ItemMetaHelper.getMetadata(meta, key));
-        }
-        return Optional.empty();
-    }
-
-    @Deprecated
-    @Override
-    public <T> @Nullable Collection<T> getMetadata(MetadataCollectionKey<T> key) {
-        var meta = wrappedObject.getItemMeta();
-        if (meta != null) {
-            return ItemMetaHelper.getMetadata(meta, key);
-        }
-        return null;
     }
 
     /**

@@ -21,33 +21,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.attribute.ItemAttribute;
-import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.impl.item.builder.ShortStackDeserializer;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemMeta;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.Enchantment;
-import org.screamingsandals.lib.item.meta.PotionEffect;
-import org.screamingsandals.lib.item.meta.Potion;
-import org.screamingsandals.lib.metadata.MetadataCollectionKey;
-import org.screamingsandals.lib.metadata.MetadataConsumer;
-import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.ResourceLocation;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-public interface ItemStackBuilder extends MetadataConsumer {
+public interface ItemStackBuilder {
     @Contract("_ -> this")
     @NotNull ItemStackBuilder type(@NotNull ItemType type);
 
@@ -236,10 +227,7 @@ public interface ItemStackBuilder extends MetadataConsumer {
     }
 
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder potion(@MinecraftType(MinecraftType.Type.POTION) @NotNull Object potion) {
-        NullableExtension.ifNotNull(Potion.ofNullable(potion), potionHolder -> this.setMetadata(ItemMeta.POTION_TYPE, potionHolder));
-        return this;
-    }
+    @NotNull ItemStackBuilder potion(@MinecraftType(MinecraftType.Type.POTION) @NotNull Object potion);
 
     @Contract("_ -> this")
     default @NotNull ItemStackBuilder attribute(@NotNull Object itemAttribute) {
@@ -251,17 +239,7 @@ public interface ItemStackBuilder extends MetadataConsumer {
     }
 
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder effect(@MinecraftType(MinecraftType.Type.POTION_EFFECT) @NotNull Object effect) {
-        if (effect instanceof List) {
-            final var list = (List<?>) effect;
-            list.forEach(effect1 -> NullableExtension.ifNotNull(PotionEffect.ofNullable(effect1), potionEffectHolder -> this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder)));
-            return this;
-        }
-
-        NullableExtension.ifNotNull(PotionEffect.ofNullable(effect), potionEffectHolder -> this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder));
-        return this;
-    }
-
+    @NotNull ItemStackBuilder effect(@MinecraftType(MinecraftType.Type.POTION_EFFECT) @NotNull Object effect);
 
     @Contract("_ -> this")
     default @NotNull ItemStackBuilder recipe(@NotNull String key) {
@@ -269,29 +247,15 @@ public interface ItemStackBuilder extends MetadataConsumer {
     }
 
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder recipe(@NotNull ResourceLocation key) {
-        this.addToListMetadata(ItemMeta.RECIPES, key);
-        return this;
-    }
+    @NotNull ItemStackBuilder recipe(@NotNull ResourceLocation key);
 
     @Contract("_ -> this")
     default @NotNull ItemStackBuilder color(@NotNull String color) {
-        var c = Color.hexOrName(color);
-        if (c != null) {
-            return color(c);
-        }
-        return this;
+        return color(Color.hexOrName(color));
     }
 
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder color(@NotNull Color color) {
-        if (this.supportsMetadata(ItemMeta.CUSTOM_POTION_COLOR)) {
-            this.setMetadata(ItemMeta.CUSTOM_POTION_COLOR, color);
-        } else {
-            this.setMetadata(ItemMeta.COLOR, color);
-        }
-        return this;
-    }
+    @NotNull ItemStackBuilder color(@NotNull Color color);
 
     @Contract("_,_,_ -> this")
     default @NotNull ItemStackBuilder color(int r, int g, int b) {
@@ -299,52 +263,16 @@ public interface ItemStackBuilder extends MetadataConsumer {
     }
 
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder skullOwner(@Nullable String skullOwner) {
-        this.setMetadata(ItemMeta.SKULL_OWNER, skullOwner);
-        return this;
-    }
+    @NotNull ItemStackBuilder skullOwner(@Nullable String skullOwner);
 
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder fireworkEffect(@NotNull Object effect) {
-        if (effect instanceof List) {
-            final var list = (List<?>) effect;
-            list.forEach(effect1 -> NullableExtension.ifNotNull(FireworkEffect.ofNullable(effect1), fireworkEffectHolder -> this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder)));
-            return this;
-        }
-
-        NullableExtension.ifNotNull(FireworkEffect.ofNullable(effect), fireworkEffectHolder -> {
-            if (this.supportsMetadata(ItemMeta.FIREWORK_EFFECTS)) {
-                this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder);
-            } else {
-                this.setMetadata(ItemMeta.FIREWORK_STAR_EFFECT, fireworkEffectHolder);
-            }
-        });
-        return this;
-    }
+    @NotNull ItemStackBuilder fireworkEffect(@NotNull Object effect);
 
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder power(int power) {
-        this.setMetadata(ItemMeta.FIREWORK_POWER, power);
-        return this;
-    }
+    @NotNull ItemStackBuilder power(int power);
 
     @Contract("_ -> this")
     default @NotNull ItemStackBuilder damage(int damage) {
         return durability(damage);
     }
-
-    @Override
-    @Contract("_,_ -> this")
-    @Deprecated
-    <T> @NotNull ItemStackBuilder setMetadata(MetadataKey<T> key, T value);
-
-    @Override
-    @Contract("_,_ -> this")
-    @Deprecated
-    <T> @NotNull ItemStackBuilder setMetadata(MetadataCollectionKey<T> key, Collection<T> value);
-
-    @Override
-    @Contract("_,_ -> this")
-    @Deprecated
-    <T> @NotNull ItemStackBuilder addToListMetadata(MetadataCollectionKey<T> key, T value);
 }

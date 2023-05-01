@@ -18,14 +18,22 @@ package org.screamingsandals.lib.impl.bukkit.item.builder;
 
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.FireworkEffectMeta;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.KnowledgeBookMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
@@ -33,7 +41,6 @@ import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
-import org.screamingsandals.lib.impl.bukkit.item.ItemMetaHelper;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
@@ -41,19 +48,27 @@ import org.screamingsandals.lib.impl.bukkit.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
+import org.screamingsandals.lib.item.ItemTagKeys;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.Enchantment;
-import org.screamingsandals.lib.metadata.MetadataCollectionKey;
-import org.screamingsandals.lib.metadata.MetadataKey;
+import org.screamingsandals.lib.item.meta.Potion;
+import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
 import org.screamingsandals.lib.nms.accessors.ItemStackAccessor;
+import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -479,36 +494,55 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     @Override
-    @Deprecated
-    public boolean supportsMetadata(MetadataKey<?> key) {
-        if (item != null) {
+    public @NotNull ItemStackBuilder potion(@NotNull Object potion) {
+        var potionData = Potion.ofNullable(potion);
+        if (item != null && potionData != null) {
             var meta = item.getItemMeta();
-            if (meta != null) {
-                return ItemMetaHelper.supportsMetadata(meta, key);
+            if (meta instanceof PotionMeta) {
+                if (BukkitFeature.POTION_API.isSupported()) {
+                    ((PotionMeta) meta).setBasePotionData(potionData.as(PotionData.class));
+                    item.setItemMeta(meta);
+                } else {
+                    item.setDurability(potionData.as(org.bukkit.potion.Potion.class).toDamageValue());
+                }
             }
         }
-        return false;
+        return this;
     }
 
     @Override
-    @Deprecated
-    public boolean supportsMetadata(MetadataCollectionKey<?> key) {
+    public @NotNull ItemStackBuilder effect(@NotNull Object effect) {
         if (item != null) {
             var meta = item.getItemMeta();
-            if (meta != null) {
-                return ItemMetaHelper.supportsMetadata(meta, key);
+            if (meta instanceof PotionMeta) {
+                if (effect instanceof List) {
+                    final var list = (List<?>) effect;
+                    list.forEach(effect1 -> {
+                        var potionEffect = PotionEffect.ofNullable(effect1);
+                        if (potionEffect != null) {
+                            ((PotionMeta) meta).addCustomEffect(potionEffect.as(org.bukkit.potion.PotionEffect.class), true);
+                        }
+                    });
+                    item.setItemMeta(meta);
+                    return this;
+                }
+
+                var potionEffect = PotionEffect.ofNullable(effect);
+                if (potionEffect != null) {
+                    ((PotionMeta) meta).addCustomEffect(potionEffect.as(org.bukkit.potion.PotionEffect.class), true);
+                    item.setItemMeta(meta);
+                }
             }
         }
-        return false;
+        return this;
     }
 
     @Override
-    @Deprecated
-    public <T> @NotNull ItemStackBuilder setMetadata(MetadataKey<T> key, T value) {
-        if (item != null) {
+    public @NotNull ItemStackBuilder recipe(@NotNull ResourceLocation key) {
+        if (BukkitFeature.KNOWLEDGE_BOOK_META.isSupported() && item != null) {
             var meta = item.getItemMeta();
-            if (meta != null) {
-                ItemMetaHelper.setMetadata(meta, key, value);
+            if (meta instanceof KnowledgeBookMeta) {
+                ((KnowledgeBookMeta) meta).addRecipe(new NamespacedKey(key.namespace(), key.path()));
                 item.setItemMeta(meta);
             }
         }
@@ -516,12 +550,27 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     @Override
-    @Deprecated
-    public <T> @NotNull ItemStackBuilder setMetadata(MetadataCollectionKey<T> key, Collection<T> value) {
+    public @NotNull ItemStackBuilder color(@NotNull Color color)  {
+        if (BukkitFeature.POTION_META_COLOR.isSupported()) {
+            if (item != null) {
+                var meta = item.getItemMeta();
+                if (meta instanceof PotionMeta) {
+                    ((PotionMeta) meta).setColor(org.bukkit.Color.fromRGB(color.red(), color.green(), color.blue()));
+                    item.setItemMeta(meta);
+                }
+            }
+            return this;
+        } else {
+            return mergeTag(CompoundTag.EMPTY.with(ItemTagKeys.CUSTOM_POTION_COLOR, color.compoundRgb())); // are we supposed to use NBT? was it even supported by Vanilla MC back then?
+        }
+    }
+
+    @Override
+    public @NotNull ItemStackBuilder skullOwner(@Nullable String skullOwner)  {
         if (item != null) {
             var meta = item.getItemMeta();
-            if (meta != null) {
-                ItemMetaHelper.setMetadata(meta, key, value);
+            if (meta instanceof SkullMeta) {
+                ((SkullMeta) meta).setOwner(skullOwner);
                 item.setItemMeta(meta);
             }
         }
@@ -529,12 +578,44 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     @Override
-    @Deprecated
-    public <T> @NotNull ItemStackBuilder addToListMetadata(MetadataCollectionKey<T> key, T value) {
+    public @NotNull ItemStackBuilder fireworkEffect(@NotNull Object effect) {
         if (item != null) {
             var meta = item.getItemMeta();
-            if (meta != null) {
-                ItemMetaHelper.addMetadata(meta, key, value);
+            if (meta instanceof FireworkMeta) {
+                if (effect instanceof List) {
+                    final var list = (List<?>) effect;
+                    list.forEach(effect1 -> {
+                        var fireworkEffect = FireworkEffect.ofNullable(effect1);
+                        if (fireworkEffect != null) {
+                            ((FireworkMeta) meta).addEffect(fireworkEffect.as(org.bukkit.FireworkEffect.class));
+                        }
+                    });
+                    item.setItemMeta(meta);
+                    return this;
+                }
+
+                var fireworkEffect = FireworkEffect.ofNullable(effect);
+                if (fireworkEffect != null) {
+                    ((FireworkMeta) meta).addEffect(fireworkEffect.as(org.bukkit.FireworkEffect.class));
+                    item.setItemMeta(meta);
+                }
+            } else if (meta instanceof FireworkEffectMeta) {
+                var fireworkEffect = FireworkEffect.ofNullable(effect);
+                if (fireworkEffect != null) {
+                    ((FireworkEffectMeta) meta).setEffect(fireworkEffect.as(org.bukkit.FireworkEffect.class));
+                    item.setItemMeta(meta);
+                }
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public @NotNull ItemStackBuilder power(int power) {
+        if (item != null) {
+            var meta = item.getItemMeta();
+            if (meta instanceof FireworkMeta) {
+                ((FireworkMeta) meta).setPower(power);
                 item.setItemMeta(meta);
             }
         }
