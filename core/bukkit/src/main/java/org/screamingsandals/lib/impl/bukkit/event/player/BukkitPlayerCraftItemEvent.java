@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.PlayerCraftItemEvent;
 import org.screamingsandals.lib.item.ItemStack;
+import org.screamingsandals.lib.item.recipe.Recipe;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 public class BukkitPlayerCraftItemEvent extends BukkitPlayerInventoryClickEvent implements PlayerCraftItemEvent {

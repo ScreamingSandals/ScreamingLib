@@ -19,6 +19,8 @@ package org.screamingsandals.lib.impl.utils.registry;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.ResourceLocation;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 import java.util.ArrayList;
 import java.util.List;

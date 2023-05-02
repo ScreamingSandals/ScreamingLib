@@ -25,6 +25,7 @@ import org.screamingsandals.lib.impl.entity.pose.EntityPoseRegistry;
 import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.impl.ItemBlockIdsRemapper;
+import org.screamingsandals.lib.impl.gameevent.GameEventRegistry;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.impl.attribute.AttributeTypeRegistry;
@@ -89,7 +90,8 @@ import org.screamingsandals.lib.impl.world.weather.WeatherRegistry;
         ParticleTypeRegistry.class,
         GameRuleRegistry.class,
         Worlds.class,
-        ContainerFactory.class
+        ContainerFactory.class,
+        GameEventRegistry.class
 })
 @InternalCoreService
 public abstract class Core {

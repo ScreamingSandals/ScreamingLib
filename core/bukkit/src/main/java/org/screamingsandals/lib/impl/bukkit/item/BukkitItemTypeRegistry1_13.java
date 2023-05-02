@@ -26,7 +26,7 @@ import org.screamingsandals.lib.impl.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.impl.item.tags.ModernItemTagsBackPorts;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
 import java.util.Arrays;

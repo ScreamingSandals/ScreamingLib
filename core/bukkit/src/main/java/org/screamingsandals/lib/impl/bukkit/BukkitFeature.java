@@ -187,6 +187,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature COLORED_BEDS = PlatformFeature.of(() -> Version.isVersion(1, 12));
     public static final @NotNull PlatformFeature OFF_HAND = PlatformFeature.of(() -> Version.isVersion(1, 9));
     public static final @NotNull PlatformFeature ENTITY_POSE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Pose"));
+    public static final @NotNull PlatformFeature GAME_EVENT = PlatformFeature.of(() -> Reflect.has("org.bukkit.GameEvent"));
     public static final @NotNull PlatformFeature ENTITY_SHOOT_BOW_EVENT_CONSUMABLE = PlatformFeature.of(() -> Reflect.hasMethod(EntityShootBowEvent.class, "getConsumable"));
     public static final @NotNull PlatformFeature ENTITY_SHOOT_BOW_EVENT_HAND = PlatformFeature.of(() -> Reflect.hasMethod(EntityShootBowEvent.class, "getHand"));
     public static final @NotNull PlatformFeature PLAYER_SHEAR_ENTITY_EVENT_ITEM_HAND = PlatformFeature.of(() -> Reflect.hasMethod(PlayerShearEntityEvent.class, "getItem"));

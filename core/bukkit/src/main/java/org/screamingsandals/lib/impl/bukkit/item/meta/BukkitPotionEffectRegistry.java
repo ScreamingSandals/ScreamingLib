@@ -26,7 +26,7 @@ import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.impl.item.meta.PotionEffectRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
 import java.util.Arrays;

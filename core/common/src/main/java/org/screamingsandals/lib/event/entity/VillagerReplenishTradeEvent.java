@@ -16,22 +16,19 @@
 
 package org.screamingsandals.lib.event.entity;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.CancellableEvent;
-import org.screamingsandals.lib.event.player.PlayerCraftItemEvent;
+import org.screamingsandals.lib.item.recipe.Recipe;
 
 public interface VillagerReplenishTradeEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Entity entity();
 
-    PlayerCraftItemEvent.@NotNull Recipe recipe();
+    @NotNull Recipe recipe();
 
-    @ApiStatus.Internal
-    @Deprecated // because there's no proper Recipe API yet
-    void recipe(PlayerCraftItemEvent.@NotNull Recipe recipe);
+    void recipe(@NotNull Recipe recipe);
 
     int bonus();
 

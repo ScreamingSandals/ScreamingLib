@@ -16,7 +16,10 @@
 
 package org.screamingsandals.lib.impl.bukkit.event.block;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import lombok.experimental.ExtensionMethod;
@@ -24,13 +27,14 @@ import org.bukkit.event.block.BlockReceiveGameEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockPlacement;
+import org.screamingsandals.lib.gameevent.GameEvent;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.block.BlockReceivedGameEvent;
+import org.screamingsandals.lib.impl.bukkit.gameevent.BukkitGameEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.ResourceLocation;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
@@ -47,7 +51,7 @@ public class BukkitBlockReceivedGameEvent implements BlockReceivedGameEvent, Buk
     private @Nullable BlockPlacement block;
     private @Nullable Entity entity;
     private boolean entityConverted;
-    private @Nullable ResourceLocation underlyingEvent;
+    private @Nullable GameEvent underlyingEvent;
 
     @Override
     public @NotNull BlockPlacement block() {
@@ -69,9 +73,9 @@ public class BukkitBlockReceivedGameEvent implements BlockReceivedGameEvent, Buk
     }
 
     @Override
-    public @NotNull ResourceLocation underlyingEvent() {
+    public @NotNull GameEvent underlyingEvent() {
         if (underlyingEvent == null) {
-            underlyingEvent = ResourceLocation.of(event.getEvent().getKey().toString());
+            underlyingEvent = new BukkitGameEvent(event.getEvent());
         }
         return underlyingEvent;
     }

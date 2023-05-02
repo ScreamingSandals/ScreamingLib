@@ -28,7 +28,7 @@ import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerCraftItemEv
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.VillagerAcquireTradeEvent;
-import org.screamingsandals.lib.event.player.PlayerCraftItemEvent;
+import org.screamingsandals.lib.item.recipe.Recipe;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
@@ -54,12 +54,12 @@ public class BukkitVillagerAcquireTradeEvent implements VillagerAcquireTradeEven
     }
 
     @Override
-    public PlayerCraftItemEvent.@NotNull Recipe recipe() {
+    public @NotNull Recipe recipe() {
         return new BukkitPlayerCraftItemEvent.BukkitRecipe(event.getRecipe());
     }
 
     @Override
-    public void recipe(PlayerCraftItemEvent.@NotNull Recipe recipe) {
+    public void recipe(@NotNull Recipe recipe) {
         event.setRecipe((MerchantRecipe) recipe.raw());
     }
 }

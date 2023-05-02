@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.event.player;
+package org.screamingsandals.lib.utils.registry;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.item.recipe.Recipe;
+import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
-public interface PlayerCraftItemEvent extends PlayerInventoryClickEvent {
-    @NotNull Recipe recipe();
+public interface RegistryItem extends ComparableWrapper {
+    @NotNull ResourceLocation location();
 }

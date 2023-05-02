@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.CancellableEvent;
+import org.screamingsandals.lib.gameevent.GameEvent;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.block.BlockPlacement;
 
 @LimitedVersionSupport(">= 1.17")
@@ -32,8 +32,5 @@ public interface BlockReceivedGameEvent extends CancellableEvent, PlatformEvent 
 
     @Nullable Entity entity();
 
-    /**
-     * TODO: Create game event mapping
-     */
-    @NotNull ResourceLocation underlyingEvent();
+    @NotNull GameEvent underlyingEvent();
 }

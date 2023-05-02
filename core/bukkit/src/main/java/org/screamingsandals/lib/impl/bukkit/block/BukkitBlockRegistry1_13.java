@@ -27,7 +27,7 @@ import org.screamingsandals.lib.impl.block.tags.ModernBlockTagBackPorts;
 import org.screamingsandals.lib.impl.bukkit.item.MaterialRegistry1_13_X;
 import org.screamingsandals.lib.impl.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
 import java.util.*;

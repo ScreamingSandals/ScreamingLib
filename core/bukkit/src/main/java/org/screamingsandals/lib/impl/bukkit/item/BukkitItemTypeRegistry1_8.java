@@ -25,7 +25,7 @@ import org.screamingsandals.lib.impl.bukkit.item.tags.BukkitLegacyItemTagResolut
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
 import java.util.*;

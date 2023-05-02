@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.utils.registry;
+package org.screamingsandals.lib.item.recipe;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.utils.ComparableWrapper;
-import org.screamingsandals.lib.utils.ResourceLocation;
+import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.item.ItemStack;
+import org.screamingsandals.lib.utils.RawValueHolder;
 
-public interface RegistryItem extends ComparableWrapper {
-    @NotNull ResourceLocation location();
+// TODO: create proper Recipe API
+public interface Recipe extends Wrapper, RawValueHolder {
+    @NotNull ItemStack result();
 }

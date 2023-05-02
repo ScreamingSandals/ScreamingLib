@@ -22,7 +22,7 @@ import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.impl.player.gamemode.GameModeRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
 import java.util.Arrays;

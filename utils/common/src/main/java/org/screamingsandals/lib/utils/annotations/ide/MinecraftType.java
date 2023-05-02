@@ -47,6 +47,7 @@ public @interface MinecraftType {
         ENTITY_TYPE_TAG,
         EQUIPMENT_SLOT,
         FIREWORK_EFFECT,
+        GAME_EVENT,
         GAME_MODE,
         GAME_RULE_TYPE,
         INVENTORY_TYPE,

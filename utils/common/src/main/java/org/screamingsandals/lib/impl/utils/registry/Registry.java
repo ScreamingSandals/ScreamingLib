@@ -23,6 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.utils.cache.Cache;
 import org.screamingsandals.lib.impl.utils.cache.LFUCache;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 import java.util.HashMap;
 import java.util.Map;

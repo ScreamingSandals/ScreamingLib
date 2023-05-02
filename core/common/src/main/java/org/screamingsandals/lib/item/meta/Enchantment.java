@@ -22,8 +22,8 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.item.meta.EnchantmentRegistry;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.impl.utils.registry.RegistryItem;
-import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 public interface Enchantment extends RegistryItem {
 

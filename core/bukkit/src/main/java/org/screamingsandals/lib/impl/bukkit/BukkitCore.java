@@ -182,6 +182,7 @@ import org.screamingsandals.lib.impl.bukkit.event.world.BukkitWorldLoadEvent;
 import org.screamingsandals.lib.impl.bukkit.event.world.BukkitWorldSaveEvent;
 import org.screamingsandals.lib.impl.bukkit.event.world.BukkitWorldUnloadEvent;
 import org.screamingsandals.lib.impl.bukkit.firework.BukkitFireworkEffectRegistry;
+import org.screamingsandals.lib.impl.bukkit.gameevent.BukkitGameEventRegistry;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.item.builder.BukkitItemStackFactory;
 import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitEnchantmentRegistry;
@@ -375,7 +376,8 @@ import java.util.function.Function;
             BukkitParticleTypeRegistry.class,
             BukkitGameRuleRegistry.class,
             BukkitWorlds.class,
-            BukkitContainerFactory.class
+            BukkitContainerFactory.class,
+            BukkitGameEventRegistry.class
     }
 )
 @AccessPluginClasses({"ViaVersion", "ProtocolSupport"})

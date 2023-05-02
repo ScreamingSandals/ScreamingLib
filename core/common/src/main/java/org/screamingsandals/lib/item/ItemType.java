@@ -27,8 +27,8 @@ import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.impl.utils.registry.RegistryItem;
-import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 @Accessors(fluent = true)
 public interface ItemType extends RegistryItem, ParticleData, TaggableHolder {

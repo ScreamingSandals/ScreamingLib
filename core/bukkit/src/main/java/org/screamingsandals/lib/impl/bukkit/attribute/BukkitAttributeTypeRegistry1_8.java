@@ -25,7 +25,7 @@ import org.screamingsandals.lib.nms.accessors.SharedMonsterAttributesAccessor;
 import org.screamingsandals.lib.nms.accessors.ZombieAccessor;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.impl.utils.registry.RegistryItemStream;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
 import java.util.HashMap;
