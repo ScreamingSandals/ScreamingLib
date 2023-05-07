@@ -18,6 +18,7 @@ package org.screamingsandals.lib.entity.type;
 
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.TaggableHolder;
+import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -26,6 +27,8 @@ import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.world.Location;
+
+import java.util.function.Consumer;
 
 public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder {
     @ApiStatus.Experimental
@@ -54,7 +57,13 @@ public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder
     @Override
     boolean is(@MinecraftType(MinecraftType.Type.ENTITY_TYPE_OR_TAG) @Nullable Object @NotNull... entityTypes);
 
-    @Nullable Entity spawn(@NotNull Location location);
+    default @Nullable Entity spawn(@NotNull Location location) {
+        return spawn(location, null);
+    }
+
+    default @Nullable Entity spawn(@NotNull Location location, @Nullable Consumer<? super @NotNull Entity> preSpawnFunction) {
+        return Entities.spawn(this, location, preSpawnFunction);
+    }
 
     static @NotNull EntityType of(@MinecraftType(MinecraftType.Type.ENTITY_TYPE) @NotNull Object entityType) {
         var result = ofNullable(entityType);

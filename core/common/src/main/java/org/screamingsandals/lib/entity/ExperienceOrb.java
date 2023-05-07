@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.world.Location;
 
+import java.util.function.Consumer;
+
 public interface ExperienceOrb extends Entity {
     int getExperience();
 
@@ -27,5 +29,9 @@ public interface ExperienceOrb extends Entity {
 
     static @Nullable ExperienceOrb dropExperience(int experience, @NotNull Location location) {
         return Entities.dropExperience(experience, location);
+    }
+
+    static @Nullable ExperienceOrb dropExperience(int experience, @NotNull Location location, @Nullable Consumer<? super @NotNull ExperienceOrb> preSpawnFunction) {
+        return Entities.dropExperience(experience, location, preSpawnFunction);
     }
 }

@@ -35,11 +35,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.utils.feature.PlatformFeature;
@@ -151,6 +153,8 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature SLIME_TARGET = PlatformFeature.of(() -> Reflect.hasMethod(Slime.class, "getTarget"));
     public static final @NotNull PlatformFeature PLAYER_GET_LOCALE = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "getLocale"));
     public static final @NotNull PlatformFeature PLAYER_HIDE_API_PLUGIN_TICKET = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "hidePlayer", Plugin.class, Player.class));
+    public static final @NotNull PlatformFeature ENTITY_PRE_SPAWN_FUNCTION = PlatformFeature.of(() -> Reflect.has("org.bukkit.util.Consumer")); // org.bukkit.util.Consumer added in the same commit as the overloaded method
+    public static final @NotNull PlatformFeature ITEM_ENTITY_PRE_SPAWN_FUNCTION = ENTITY_PRE_SPAWN_FUNCTION.and(() -> Reflect.hasMethod(World.class, "dropItem", Location.class, ItemStack.class, Consumer.class));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));

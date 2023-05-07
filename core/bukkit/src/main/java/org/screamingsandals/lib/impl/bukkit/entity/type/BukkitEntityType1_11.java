@@ -22,13 +22,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.tags.KeyedUtils;
-import org.screamingsandals.lib.entity.Entity;
-import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.world.Location;
 
 import java.util.Arrays;
 
@@ -89,11 +86,6 @@ public class BukkitEntityType1_11 extends BasicWrapper<org.bukkit.entity.EntityT
     @Override
     public boolean is(@Nullable Object @NotNull... entityTypes) {
         return Arrays.stream(entityTypes).anyMatch(this::is);
-    }
-
-    @Override
-    public @Nullable Entity spawn(@NotNull Location location) {
-        return Entities.spawn(this, location);
     }
 
     @Override

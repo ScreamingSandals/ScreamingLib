@@ -31,6 +31,7 @@ import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.impl.world.Locations;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 @ProvidedService
 @ServiceDependencies(dependsOn = {
@@ -156,28 +157,56 @@ public abstract class Entities {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
-        return mapper.spawn0(entityType, locationHolder);
+        return mapper.spawn0(entityType, locationHolder, null);
+    }
+
+    public static @Nullable Entity spawn(@NotNull EntityType entityType, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull Entity> preSpawnFunction) {
+        if (mapper == null) {
+            throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
+        }
+        return mapper.spawn0(entityType, locationHolder, preSpawnFunction);
     }
 
     public static @Nullable ItemEntity dropItem(@NotNull ItemStack item, @NotNull Location locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
-        return mapper.dropItem0(item, locationHolder);
+        return mapper.dropItem0(item, locationHolder, null);
+    }
+
+    public static @Nullable ItemEntity dropItem(@NotNull ItemStack item, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull ItemEntity> preSpawnFunction) {
+        if (mapper == null) {
+            throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
+        }
+        return mapper.dropItem0(item, locationHolder, preSpawnFunction);
     }
 
     public static @Nullable ExperienceOrb dropExperience(int experience, @NotNull Location locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
-        return mapper.dropExperience0(experience, locationHolder);
+        return mapper.dropExperience0(experience, locationHolder, null);
+    }
+
+    public static @Nullable ExperienceOrb dropExperience(int experience, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull ExperienceOrb> preSpawnFunction) {
+        if (mapper == null) {
+            throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
+        }
+        return mapper.dropExperience0(experience, locationHolder, preSpawnFunction);
     }
 
     public static @Nullable LightningStrike strikeLightning(@NotNull Location locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
-        return mapper.strikeLightning0(locationHolder);
+        return mapper.strikeLightning0(locationHolder, null);
+    }
+
+    public static @Nullable LightningStrike strikeLightning(@NotNull Location locationHolder, @Nullable Consumer<? super @NotNull LightningStrike> preSpawnFunction) {
+        if (mapper == null) {
+            throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
+        }
+        return mapper.strikeLightning0(locationHolder, preSpawnFunction);
     }
 
     public static int getNewEntityId() {
@@ -199,13 +228,13 @@ public abstract class Entities {
 
     protected abstract @Nullable Entity wrapEntity0(@NotNull Object entity);
 
-    public abstract @Nullable Entity spawn0(@NotNull EntityType entityType, @NotNull Location locationHolder);
+    public abstract @Nullable Entity spawn0(@NotNull EntityType entityType, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull Entity> preSpawnFunction);
 
-    public abstract @Nullable ItemEntity dropItem0(@NotNull ItemStack item, @NotNull Location locationHolder);
+    public abstract @Nullable ItemEntity dropItem0(@NotNull ItemStack item, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull ItemEntity> preSpawnFunction);
 
-    public abstract @Nullable ExperienceOrb dropExperience0(int experience, @NotNull Location locationHolder);
+    public abstract @Nullable ExperienceOrb dropExperience0(int experience, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull ExperienceOrb> preSpawnFunction);
 
-    public abstract @Nullable LightningStrike strikeLightning0(@NotNull Location locationHolder);
+    public abstract @Nullable LightningStrike strikeLightning0(@NotNull Location locationHolder, @Nullable Consumer<? super @NotNull LightningStrike> preSpawnFunction);
 
     public abstract int getNewEntityId0();
 

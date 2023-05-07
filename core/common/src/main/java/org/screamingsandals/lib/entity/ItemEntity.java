@@ -22,6 +22,7 @@ import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.world.Location;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public interface ItemEntity extends Entity {
 
@@ -55,5 +56,9 @@ public interface ItemEntity extends Entity {
 
     static @Nullable ItemEntity dropItem(@NotNull ItemStack item, @NotNull Location location) {
         return Entities.dropItem(item, location);
+    }
+
+    static @Nullable ItemEntity dropItem(@NotNull ItemStack item, @NotNull Location location, @Nullable Consumer<? super @NotNull ItemEntity> preSpawnFunction) {
+        return Entities.dropItem(item, location, preSpawnFunction);
     }
 }

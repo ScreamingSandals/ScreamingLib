@@ -20,10 +20,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.world.Location;
 
+import java.util.function.Consumer;
+
 public interface LightningStrike extends Entity {
     boolean isEffect();
 
     static @Nullable LightningStrike strike(@NotNull Location locationHolder) {
         return Entities.strikeLightning(locationHolder);
+    }
+
+    static @Nullable LightningStrike strike(@NotNull Location locationHolder, @Nullable Consumer<? super @NotNull LightningStrike> preSpawnFunction) {
+        return Entities.strikeLightning(locationHolder, preSpawnFunction);
     }
 }

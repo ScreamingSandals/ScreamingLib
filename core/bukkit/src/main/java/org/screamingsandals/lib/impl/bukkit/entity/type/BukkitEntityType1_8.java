@@ -91,11 +91,6 @@ public class BukkitEntityType1_8 extends BasicWrapper<org.bukkit.entity.EntityTy
     }
 
     @Override
-    public @Nullable Entity spawn(@NotNull Location location) {
-        return Entities.spawn(this, location);
-    }
-
-    @Override
     public @NotNull ResourceLocation location() {
         return InternalEntityLegacyConstants.translateLegacyName1_8(wrappedObject, additionalLegacyData);
     }
