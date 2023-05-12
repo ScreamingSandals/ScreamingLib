@@ -33,6 +33,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.BukkitEntities;
 import org.screamingsandals.lib.impl.bukkit.entity.damage.BukkitDamageTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.entity.pose.BukkitEntityPoseRegistry;
 import org.screamingsandals.lib.impl.bukkit.entity.type.BukkitEntityTypeRegistry;
+import org.screamingsandals.lib.impl.bukkit.entity.villager.BukkitProfessionRegistry;
 import org.screamingsandals.lib.impl.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitEventManager;
 import org.screamingsandals.lib.impl.bukkit.event.block.BukkitBlockBurnEvent;
@@ -377,7 +378,8 @@ import java.util.function.Function;
             BukkitGameRuleRegistry.class,
             BukkitWorlds.class,
             BukkitContainerFactory.class,
-            BukkitGameEventRegistry.class
+            BukkitGameEventRegistry.class,
+            BukkitProfessionRegistry.class
     }
 )
 @AccessPluginClasses({"ViaVersion", "ProtocolSupport"})

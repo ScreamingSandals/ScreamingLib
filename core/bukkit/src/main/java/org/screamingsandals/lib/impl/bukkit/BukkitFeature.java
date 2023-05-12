@@ -33,6 +33,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -155,6 +156,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature PLAYER_HIDE_API_PLUGIN_TICKET = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "hidePlayer", Plugin.class, Player.class));
     public static final @NotNull PlatformFeature ENTITY_PRE_SPAWN_FUNCTION = PlatformFeature.of(() -> Reflect.has("org.bukkit.util.Consumer")); // org.bukkit.util.Consumer added in the same commit as the overloaded method
     public static final @NotNull PlatformFeature ITEM_ENTITY_PRE_SPAWN_FUNCTION = ENTITY_PRE_SPAWN_FUNCTION.and(() -> Reflect.hasMethod(World.class, "dropItem", Location.class, ItemStack.class, Consumer.class));
+    public static final @NotNull PlatformFeature NEW_VILLAGERS = PlatformFeature.of(() -> Reflect.hasMethod(Villager.Profession.class, "getKey"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));

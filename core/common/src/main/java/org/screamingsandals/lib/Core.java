@@ -25,6 +25,7 @@ import org.screamingsandals.lib.impl.entity.pose.EntityPoseRegistry;
 import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.impl.ItemBlockIdsRemapper;
+import org.screamingsandals.lib.impl.entity.villager.ProfessionRegistry;
 import org.screamingsandals.lib.impl.gameevent.GameEventRegistry;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.impl.attribute.Attributes;
@@ -88,6 +89,7 @@ import org.screamingsandals.lib.impl.world.weather.WeatherRegistry;
         GameRuleRegistry.class,
         WeatherRegistry.class,
         ParticleTypeRegistry.class,
+        ProfessionRegistry.class,
         GameRuleRegistry.class,
         Worlds.class,
         ContainerFactory.class,

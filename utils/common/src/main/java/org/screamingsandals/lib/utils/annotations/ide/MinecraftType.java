@@ -58,6 +58,7 @@ public @interface MinecraftType {
         POTION,
         POTION_EFFECT,
         POTION_EFFECT_TYPE,
+        PROFESSION,
         SOUND,
         SOUND_SOURCE,
         WEATHER;
