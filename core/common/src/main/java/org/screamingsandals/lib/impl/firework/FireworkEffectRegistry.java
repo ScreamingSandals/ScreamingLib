@@ -23,43 +23,51 @@ import org.screamingsandals.lib.configurate.FireworkEffectSerializer;
 import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
-import org.screamingsandals.lib.impl.utils.registry.SimpleRegistry;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
-import java.util.*;
+import java.util.Map;
 
 @ProvidedService
 @ApiStatus.Internal
-public abstract class FireworkEffectRegistry extends SimpleRegistry<FireworkEffect> {
+public abstract class FireworkEffectRegistry {
     private static @Nullable FireworkEffectRegistry registry;
 
     public FireworkEffectRegistry() {
-        super(FireworkEffect.class);
         Preconditions.checkArgument(registry == null, "FireworkEffectRegistry is already initialized!");
         registry = this;
-
-        specialType(ConfigurationNode.class, node -> {
-            try {
-                return FireworkEffectSerializer.INSTANCE.deserialize(FireworkEffect.class, node);
-            } catch (SerializationException e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
-
-        specialType(Map.class, map  -> {
-            try {
-                FireworkEffectSerializer.INSTANCE.deserialize(FireworkEffect.class, BasicConfigurationNode.root().set(map));
-            } catch (SerializationException e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
     }
 
-    public static @NotNull FireworkEffectRegistry getInstance() {
-        return Preconditions.checkNotNull(registry, "FireworkEffectRegistry is not initialized yet!");
+    public static @Nullable FireworkEffect resolve(@Nullable Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
+        if (obj instanceof FireworkEffect) {
+            return (FireworkEffect) obj;
+        }
+
+        if (obj instanceof ConfigurationNode) {
+            try {
+                return FireworkEffectSerializer.INSTANCE.deserialize(FireworkEffect.class, (ConfigurationNode) obj);
+            } catch (SerializationException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        if (obj instanceof Map) {
+            try {
+                return FireworkEffectSerializer.INSTANCE.deserialize(FireworkEffect.class, BasicConfigurationNode.root().set(obj));
+            } catch (SerializationException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        return Preconditions.checkNotNull(registry, "FireworkEffectRegistry is not initialized yet!").resolvePlatform(obj);
     }
+
+    protected abstract @Nullable FireworkEffect resolvePlatform(@NotNull Object obj);
 }

@@ -98,7 +98,7 @@ public class FireworkEffectSerializer implements TypeSerializer<FireworkEffect> 
             return;
         }
 
-        node.node(TYPE_KEY).set(obj.location().asString());
+        node.node(TYPE_KEY).set(obj.type().location().asString());
         node.node(FLICKER_KEY).set(obj.flicker());
         node.node(TRAIL_KEY).set(obj.trail());
         for (var color : obj.colors()) {

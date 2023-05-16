@@ -18,53 +18,26 @@ package org.screamingsandals.lib.impl.bukkit.firework;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.firework.FireworkEffectType;
 import org.screamingsandals.lib.impl.firework.FireworkEffectRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.firework.FireworkEffect;
-import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 @Service
 public class BukkitFireworkEffectRegistry extends FireworkEffectRegistry {
-    public BukkitFireworkEffectRegistry() {
-        specialType(org.bukkit.FireworkEffect.Type.class, BukkitFireworkEffect::new);
-        specialType(org.bukkit.FireworkEffect.class, BukkitFireworkEffect::new);
-    }
-
     @Override
-    protected @NotNull RegistryItemStream<@NotNull FireworkEffect> getRegistryItemStream0() {
-        return new SimpleRegistryItemStream<>(
-                () -> Arrays.stream(org.bukkit.FireworkEffect.Type.values()),
-                BukkitFireworkEffect::new,
-                fireworkEffect -> ResourceLocation.of(BukkitFireworkEffect.getLocationPath(fireworkEffect)),
-                (fireworkEffect, literal) -> BukkitFireworkEffect.getLocationPath(fireworkEffect).contains(literal),
-                (fireworkEffect, namespace) -> "minecraft".equals(namespace),
-                List.of()
-        );
-    }
-
-    @Override
-    protected @Nullable FireworkEffect resolveMappingPlatform(@NotNull ResourceLocation location) {
-        if (!"minecraft".equals(location.namespace())) {
-            return null;
+    protected @Nullable FireworkEffect resolvePlatform(@NotNull Object obj) {
+        if (obj instanceof org.bukkit.FireworkEffect) {
+            return new BukkitFireworkEffect((org.bukkit.FireworkEffect) obj);
         }
 
-        try {
-            var path = location.path();
-            if ("small_ball".equalsIgnoreCase(path)) {
-                path = "BALL";
-            } else if ("large_ball".equalsIgnoreCase(path)) {
-                path = "BALL_LARGE";
-            }
+        if (obj instanceof org.bukkit.FireworkEffect.Type) {
+            return new BukkitFireworkEffect((org.bukkit.FireworkEffect.Type) obj);
+        }
 
-            var value = org.bukkit.FireworkEffect.Type.valueOf(path.toUpperCase(Locale.ROOT));
-            return new BukkitFireworkEffect(value);
-        } catch (IllegalArgumentException ignored) {
+        var effectType = FireworkEffectType.ofNullable(obj);
+        if (effectType != null) {
+            return new BukkitFireworkEffect(effectType.as(org.bukkit.FireworkEffect.Type.class));
         }
 
         return null;

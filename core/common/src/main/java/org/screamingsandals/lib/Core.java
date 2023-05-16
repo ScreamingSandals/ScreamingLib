@@ -26,6 +26,7 @@ import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.impl.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.impl.entity.villager.ProfessionRegistry;
+import org.screamingsandals.lib.impl.firework.FireworkEffectTypeRegistry;
 import org.screamingsandals.lib.impl.gameevent.GameEventRegistry;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.impl.attribute.Attributes;
@@ -66,6 +67,7 @@ import org.screamingsandals.lib.impl.world.weather.WeatherRegistry;
         Entities.class,
         AttributeTypeRegistry.class,
         Attributes.class,
+        FireworkEffectTypeRegistry.class,
         FireworkEffectRegistry.class,
         EnchantmentRegistry.class,
         PotionEffectRegistry.class,

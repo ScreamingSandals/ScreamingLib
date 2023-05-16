@@ -20,8 +20,8 @@ import org.bukkit.Color;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.firework.FireworkEffect;
+import org.screamingsandals.lib.firework.FireworkEffectType;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +39,11 @@ public class BukkitFireworkEffect extends BasicWrapper<org.bukkit.FireworkEffect
     @Override
     public @NotNull String platformName() {
         return wrappedObject.getType().name();
+    }
+
+    @Override
+    public @NotNull FireworkEffectType type() {
+        return new BukkitFireworkEffectType(wrappedObject.getType());
     }
 
     @Override
@@ -65,6 +70,20 @@ public class BukkitFireworkEffect extends BasicWrapper<org.bukkit.FireworkEffect
     @Override
     public boolean trail() {
         return wrappedObject.hasTrail();
+    }
+
+    @Override
+    public @NotNull FireworkEffect withType(@NotNull FireworkEffectType type) {
+        /* Dear Bukkit API, I hate your inconsistency so much */
+        return new BukkitFireworkEffect(
+                org.bukkit.FireworkEffect.builder()
+                        .with(type.as(org.bukkit.FireworkEffect.Type.class))
+                        .withColor(wrappedObject.getColors())
+                        .withFade(wrappedObject.getFadeColors())
+                        .flicker(wrappedObject.hasFlicker())
+                        .trail(wrappedObject.hasTrail())
+                        .build()
+        );
     }
 
     @Override
@@ -146,19 +165,5 @@ public class BukkitFireworkEffect extends BasicWrapper<org.bukkit.FireworkEffect
             return (T) wrappedObject.getType();
         }
         return super.as(type);
-    }
-
-    @Override
-    public @NotNull ResourceLocation location() {
-        return ResourceLocation.of(getLocationPath(wrappedObject.getType()));
-    }
-
-    public static @NotNull String getLocationPath(org.bukkit.FireworkEffect.@NotNull Type type) {
-        if (type == org.bukkit.FireworkEffect.Type.BALL) {
-            return "small_ball";
-        } else if (type == org.bukkit.FireworkEffect.Type.BALL_LARGE) {
-            return "large_ball";
-        }
-        return type.name();
     }
 }

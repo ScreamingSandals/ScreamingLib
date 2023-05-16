@@ -22,17 +22,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.firework.FireworkEffectRegistry;
 import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.registry.RegistryItem;
-import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 import java.util.List;
 
-public interface FireworkEffect extends RegistryItem {
-
+public interface FireworkEffect extends ComparableWrapper, RawValueHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();
+
+    @NotNull FireworkEffectType type();
 
     @NotNull List<@NotNull Color> colors();
 
@@ -41,6 +42,9 @@ public interface FireworkEffect extends RegistryItem {
     boolean flicker();
 
     boolean trail();
+
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull FireworkEffect withType(@NotNull FireworkEffectType type);
 
     @Contract(value = "_ -> new", pure = true)
     @NotNull FireworkEffect withColors(@NotNull List<@NotNull Color> colors);
@@ -59,21 +63,17 @@ public interface FireworkEffect extends RegistryItem {
     @Override
     boolean is(@MinecraftType(MinecraftType.Type.FIREWORK_EFFECT) @Nullable Object object);
 
-    static @NotNull FireworkEffect of(@MinecraftType(MinecraftType.Type.FIREWORK_EFFECT) @NotNull Object effect) {
+    static @NotNull FireworkEffect of(@MinecraftType(MinecraftType.Type.FIREWORK_EFFECT_OR_FIREWORK_EFFECT_TYPE) @NotNull Object effect) {
         var result = ofNullable(effect);
         Preconditions.checkNotNullIllegal(result, "Could not find firework effect: " + effect);
         return result;
     }
 
     @Contract("null -> null")
-    static @Nullable FireworkEffect ofNullable(@MinecraftType(MinecraftType.Type.FIREWORK_EFFECT) @Nullable Object effect) {
+    static @Nullable FireworkEffect ofNullable(@MinecraftType(MinecraftType.Type.FIREWORK_EFFECT_OR_FIREWORK_EFFECT_TYPE) @Nullable Object effect) {
         if (effect instanceof FireworkEffect) {
             return (FireworkEffect) effect;
         }
-        return FireworkEffectRegistry.getInstance().resolveMapping(effect);
-    }
-
-    static @NotNull RegistryItemStream<@NotNull FireworkEffect> all() {
-        return FireworkEffectRegistry.getInstance().getRegistryItemStream();
+        return FireworkEffectRegistry.resolve(effect);
     }
 }
