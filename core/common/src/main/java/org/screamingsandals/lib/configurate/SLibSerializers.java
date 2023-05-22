@@ -27,11 +27,13 @@ import org.screamingsandals.lib.entity.damage.DamageType;
 import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.firework.FireworkEffect;
+import org.screamingsandals.lib.firework.FireworkEffectType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.item.meta.Potion;
+import org.screamingsandals.lib.item.meta.PotionEffectType;
 import org.screamingsandals.lib.nbt.Tag;
 import org.screamingsandals.lib.nbt.configurate.TagSerializer;
 import org.screamingsandals.lib.particle.ParticleType;
@@ -63,9 +65,11 @@ public class SLibSerializers {
                 .register(InventoryType.class, InventoryTypeSerializer.INSTANCE)
                 .register(ParticleType.class, ParticleTypeSerializer.INSTANCE)
                 .register(PotionEffect.class, PotionEffectSerializer.INSTANCE)
+                .register(PotionEffectType.class, PotionEffectTypeSerializer.INSTANCE)
                 .register(Potion.class, PotionSerializer.INSTANCE)
                 .register(WeatherType.class, WeatherTypeSerializer.INSTANCE)
                 .register(FireworkEffect.class, FireworkEffectSerializer.INSTANCE)
+                .register(FireworkEffectType.class, FireworkEffectTypeSerializer.INSTANCE)
                 .register(ItemType.class, ItemTypeSerializer.INSTANCE)
                 .register(Block.class, BlockTypeSerializer.INSTANCE)
                 .register(EquipmentSlot.class, EquipmentSlotSerializer.INSTANCE)

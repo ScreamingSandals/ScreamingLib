@@ -22,37 +22,52 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.PotionEffectSerializer;
 import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.item.meta.PotionEffect;
+import org.screamingsandals.lib.item.meta.PotionEffectType;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.impl.utils.registry.Registry;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 @ProvidedService
 @ApiStatus.Internal
-public abstract class PotionEffectRegistry extends Registry<PotionEffect> {
+public abstract class PotionEffectRegistry {
 
     private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z][A-Za-z0-9_.\\-/:]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
     private static @Nullable PotionEffectRegistry registry;
+    private final @NotNull Map<@NotNull Class<?>, Function<@NotNull Object, @Nullable PotionEffect>> specialMapping = new HashMap<>();
 
     protected PotionEffectRegistry() {
-        super(PotionEffect.class);
         Preconditions.checkArgument(registry == null, "PotionEffectRegistry is already initialized!");
         registry = this;
     }
 
-    public static @NotNull PotionEffectRegistry getInstance() {
-        return Preconditions.checkNotNull(registry, "PotionEffectRegistry is not initialized yet!");
-    }
+    public static @Nullable PotionEffect resolve(@Nullable Object object) {
+        if (object == null) {
+            return null;
+        }
 
-    @Override
-    protected final @Nullable PotionEffect resolveMapping0(@NotNull Object object) {
+        if (object instanceof PotionEffect) {
+            return (PotionEffect) object;
+        }
+
+        Preconditions.checkNotNull(registry, "PotionEffectRegistry is not initialized yet!");
+
+        if (!registry.specialMapping.isEmpty()) {
+            for (var sm : registry.specialMapping.entrySet()) {
+                if (sm.getKey().isInstance(object)) {
+                    return sm.getValue().apply(object);
+                }
+            }
+        }
+
         if (object instanceof ConfigurationNode) {
             try {
                 return PotionEffectSerializer.INSTANCE.deserialize(Enchantment.class, (ConfigurationNode) object);
@@ -91,22 +106,31 @@ public abstract class PotionEffectRegistry extends Registry<PotionEffect> {
             return null;
         }
 
-        var result = this.resolveMappingPlatform(location);
-        if (result != null) {
-            if (levelStr != null && !levelStr.isEmpty()) {
-                int level;
-                try {
-                    level = Integer.parseInt(levelStr);
-                } catch (Throwable t) {
-                    level = RomanToDecimal.romanToDecimal(levelStr);
+        var type = PotionEffectType.ofNullable(location);
+        if (type != null) {
+            var result = registry.construct(type);
+            if (result != null) {
+                if (levelStr != null && !levelStr.isEmpty()) {
+                    int level;
+                    try {
+                        level = Integer.parseInt(levelStr);
+                    } catch (Throwable t) {
+                        level = RomanToDecimal.romanToDecimal(levelStr);
+                    }
+                    return result.withDuration(level);
                 }
-                return result.withDuration(level);
+                return result;
             }
-            return result;
         }
 
         return null;
     }
 
-    protected abstract @Nullable PotionEffect resolveMappingPlatform(@NotNull ResourceLocation location);
+    @SuppressWarnings("unchecked")
+    @ApiStatus.Internal
+    protected <E> void specialType(@NotNull Class<E> eClass, @NotNull Function<@NotNull E, @Nullable PotionEffect> function) {
+        specialMapping.put(eClass, (Function<Object, PotionEffect>) function);
+    }
+
+    protected abstract @Nullable PotionEffect construct(@NotNull PotionEffectType type);
 }

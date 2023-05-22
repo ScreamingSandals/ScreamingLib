@@ -24,10 +24,8 @@ import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEffect> implements PotionEffect {
@@ -41,8 +39,8 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
     }
 
     @Override
-    public @NotNull String platformName() {
-        return wrappedObject.getType().getName();
+    public org.screamingsandals.lib.item.meta.@NotNull PotionEffectType type() {
+        return org.screamingsandals.lib.item.meta.PotionEffectType.of(wrappedObject.getType());
     }
 
     @Override
@@ -207,77 +205,5 @@ public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEff
     @Override
     public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
-    }
-
-    @Override
-    public boolean isSameType(@Nullable Object object) {
-        if (object instanceof org.bukkit.potion.PotionEffect) {
-            return ((org.bukkit.potion.PotionEffect) object).getType().equals(wrappedObject.getType());
-        } else if (object instanceof BukkitPotionEffect) {
-            return ((BukkitPotionEffect) object).wrappedObject.getType().equals(wrappedObject.getType());
-        } else if (object instanceof PotionEffectType) {
-            return object.equals(wrappedObject.getType());
-        }
-        return platformName().equals(PotionEffect.ofNullable(object).mapOrNull(PotionEffect::platformName));
-    }
-
-    @Override
-    public boolean isSameType(@Nullable Object @NotNull... objects) {
-        return Arrays.stream(objects).anyMatch(this::isSameType);
-    }
-
-    @Override
-    public @NotNull ResourceLocation location() {
-        if (BukkitFeature.POTION_EFFECT_KEYED.isSupported()) {
-            var namespacedKey = wrappedObject.getType().getKey();
-            return ResourceLocation.of(namespacedKey.getNamespace(), namespacedKey.getKey());
-        } else {
-            return ResourceLocation.of(getLocationPath(wrappedObject.getType()));
-        }
-    }
-
-    public static @NotNull String getLocationPath(@NotNull PotionEffectType effectType) {
-        String path = effectType.getName();
-        switch (path) {
-            //<editor-fold desc="Enum constants -> 1.18 flattening names" defaultstate="collapsed">
-            // @formatter:off
-
-            //case "SPEED": path = "speed"; break; - same
-            case "SLOW": path = "slowness"; break;
-            case "FAST_DIGGING": path = "haste"; break;
-            case "SLOW_DIGGING": path = "mining_fatigue"; break;
-            case "INCREASE_DAMAGE": path = "strength"; break;
-            case "HEAL": path = "instant_health"; break;
-            case "HARM": path = "instant_damage"; break;
-            case "JUMP": path = "jump_boost"; break;
-            case "CONFUSION": path = "nausea"; break;
-            //case "REGENERATION": path = "regeneration"; break; - same
-            case "DAMAGE_RESISTANCE": path = "resistance"; break;
-            //case "FIRE_RESISTANCE": path = "fire_resistance"; break; - same
-            //case "WATER_BREATHING": path = "water_breathing"; break; - same
-            //case "INVISIBILITY": path = "invisibility"; break; - same
-            //case "BLINDNESS": path = "blindness"; break; - same
-            //case "NIGHT_VISION": path = "night_vision"; break; - same
-            //case "HUNGER": path = "hunger"; break; - same
-            //case "WEAKNESS": path = "weakness"; break; - same
-            //case "POISON": path = "poison"; break; - same
-            //case "WITHER": path = "wither"; break; - same
-            //case "HEALTH_BOOST": path = "health_boost"; break; - same
-            //case "ABSORPTION": path = "absorption"; break; - same
-            //case "SATURATION": path = "saturation"; break; - same
-            //case "GLOWING": path = "glowing"; break; - same
-            //case "LEVITATION": path = "levitation"; break; - same
-            //case "LUCK": path = "luck"; break; - same
-            //case "UNLUCK": path = "unluck"; break; - same
-            //case "SLOW_FALLING": path = "slow_falling"; break; - same
-            //case "CONDUIT_POWER": path = "conduit_power"; break; - same
-            //case "DOLPHINS_GRACE": path = "dolphins_grace"; break; - same
-            //case "BAD_OMEN": path = "bad_omen"; break; - same
-            //case "HERO_OF_THE_VILLAGE": path = "hero_of_the_village"; break; - same
-
-            // @formatter:on
-            //</editor-fold>
-        }
-        return path.toLowerCase(Locale.ROOT);
     }
 }

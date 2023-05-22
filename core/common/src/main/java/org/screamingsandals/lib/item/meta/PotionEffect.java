@@ -20,13 +20,13 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.item.meta.PotionEffectRegistry;
+import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.registry.RegistryItem;
-import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-public interface PotionEffect extends RegistryItem {
-    @NotNull String platformName();
+public interface PotionEffect extends ComparableWrapper, RawValueHolder {
+    @NotNull PotionEffectType type();
 
     int duration();
 
@@ -59,10 +59,6 @@ public interface PotionEffect extends RegistryItem {
     @Override
     boolean is(@MinecraftType(MinecraftType.Type.POTION_EFFECT) @Nullable Object @NotNull... objects);
 
-    boolean isSameType(@MinecraftType(MinecraftType.Type.POTION_EFFECT_TYPE) @Nullable Object object);
-
-    boolean isSameType(@MinecraftType(MinecraftType.Type.POTION_EFFECT_TYPE) @Nullable Object @NotNull... objects);
-
     static @NotNull PotionEffect of(@MinecraftType(MinecraftType.Type.POTION_EFFECT) @NotNull Object effect) {
         var result = ofNullable(effect);
         Preconditions.checkNotNullIllegal(result, "Could not find potion effect: " + effect);
@@ -74,10 +70,6 @@ public interface PotionEffect extends RegistryItem {
         if (effect instanceof PotionEffect) {
             return (PotionEffect) effect;
         }
-        return PotionEffectRegistry.getInstance().resolveMapping(effect);
-    }
-
-    static @NotNull RegistryItemStream<@NotNull PotionEffect> all() {
-        return PotionEffectRegistry.getInstance().getRegistryItemStream();
+        return PotionEffectRegistry.resolve(effect);
     }
 }

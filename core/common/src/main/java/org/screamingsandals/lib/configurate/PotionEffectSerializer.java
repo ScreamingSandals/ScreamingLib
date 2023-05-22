@@ -68,7 +68,7 @@ public class PotionEffectSerializer implements TypeSerializer<PotionEffect> {
             return;
         }
 
-        node.node(EFFECT_KEY).set(obj.location().asString());
+        node.node(EFFECT_KEY).set(obj.type().location().asString());
         node.node(DURATION_KEY).set(obj.duration());
         node.node(AMPLIFIER_KEY).set(obj.amplifier());
         node.node(AMBIENT_KEY).set(obj.ambient());
