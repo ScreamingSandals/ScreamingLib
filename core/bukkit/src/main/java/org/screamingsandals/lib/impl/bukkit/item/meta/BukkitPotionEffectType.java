@@ -20,6 +20,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.item.meta.PotionEffectType;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
@@ -38,6 +39,32 @@ public class BukkitPotionEffectType extends BasicWrapper<org.bukkit.potion.Potio
     @Override
     public @NotNull String platformName() {
         return wrappedObject.getName();
+    }
+
+    @Override
+    public @NotNull PotionEffect asEffect(int duration, int amplifier, boolean ambient, boolean particles, boolean icon) {
+        if (BukkitFeature.POTION_EFFECT_CONSTRUCTOR_WITH_ICON.isSupported()) {
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
+                            wrappedObject,
+                            duration,
+                            amplifier,
+                            ambient,
+                            particles,
+                            icon
+                    )
+            );
+        } else {
+            return new BukkitPotionEffect(
+                    new org.bukkit.potion.PotionEffect(
+                            wrappedObject,
+                            duration,
+                            amplifier,
+                            ambient,
+                            particles
+                    )
+            );
+        }
     }
 
     @Override

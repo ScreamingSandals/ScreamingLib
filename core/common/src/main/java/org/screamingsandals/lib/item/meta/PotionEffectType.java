@@ -31,6 +31,34 @@ public interface PotionEffectType extends RegistryItem, RawValueHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();
 
+    @Contract(pure = true)
+    default @NotNull PotionEffect asEffect() {
+        return asEffect(0);
+    }
+
+    @Contract(pure = true)
+    default @NotNull PotionEffect asEffect(int duration) {
+        return asEffect(duration, 0);
+    }
+
+    @Contract(pure = true)
+    default @NotNull PotionEffect asEffect(int duration, int amplifier) {
+        return asEffect(duration, amplifier, true);
+    }
+
+    @Contract(pure = true)
+    default @NotNull PotionEffect asEffect(int duration, int amplifier, boolean ambient) {
+        return asEffect(duration, amplifier, ambient, true);
+    }
+
+    @Contract(pure = true)
+    default @NotNull PotionEffect asEffect(int duration, int amplifier, boolean ambient, boolean particles) {
+        return asEffect(duration, amplifier, ambient, particles, true);
+    }
+
+    @Contract(pure = true)
+    @NotNull PotionEffect asEffect(int duration, int amplifier, boolean ambient, boolean particles, boolean icon);
+
     @Override
     boolean is(@MinecraftType(MinecraftType.Type.POTION_EFFECT_TYPE) @Nullable Object object);
 

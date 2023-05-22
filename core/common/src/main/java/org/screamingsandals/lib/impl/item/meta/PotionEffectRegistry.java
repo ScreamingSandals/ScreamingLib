@@ -108,19 +108,16 @@ public abstract class PotionEffectRegistry {
 
         var type = PotionEffectType.ofNullable(location);
         if (type != null) {
-            var result = registry.construct(type);
-            if (result != null) {
-                if (levelStr != null && !levelStr.isEmpty()) {
-                    int level;
-                    try {
-                        level = Integer.parseInt(levelStr);
-                    } catch (Throwable t) {
-                        level = RomanToDecimal.romanToDecimal(levelStr);
-                    }
-                    return result.withDuration(level);
+            if (levelStr != null && !levelStr.isEmpty()) {
+                int level;
+                try {
+                    level = Integer.parseInt(levelStr);
+                } catch (Throwable t) {
+                    level = RomanToDecimal.romanToDecimal(levelStr);
                 }
-                return result;
+                return type.asEffect(level);
             }
+            return type.asEffect();
         }
 
         return null;
@@ -131,6 +128,4 @@ public abstract class PotionEffectRegistry {
     protected <E> void specialType(@NotNull Class<E> eClass, @NotNull Function<@NotNull E, @Nullable PotionEffect> function) {
         specialMapping.put(eClass, (Function<Object, PotionEffect>) function);
     }
-
-    protected abstract @Nullable PotionEffect construct(@NotNull PotionEffectType type);
 }

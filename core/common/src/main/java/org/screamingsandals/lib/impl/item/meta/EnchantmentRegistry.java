@@ -21,36 +21,51 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.EnchantmentSerializer;
 import org.screamingsandals.lib.item.meta.Enchantment;
+import org.screamingsandals.lib.item.meta.EnchantmentType;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.impl.utils.registry.Registry;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 @ProvidedService
 @ApiStatus.Internal
-public abstract class EnchantmentRegistry extends Registry<Enchantment> {
+public abstract class EnchantmentRegistry {
 
     private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z][A-Za-z0-9_.\\-/:]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
     private static @Nullable EnchantmentRegistry registry;
+    private final @NotNull Map<@NotNull Class<?>, Function<@NotNull Object, @Nullable Enchantment>> specialMapping = new HashMap<>();
 
     protected EnchantmentRegistry() {
-        super(Enchantment.class);
         Preconditions.checkArgument(registry == null, "EnchantmentRegistry is already initialized!");
         registry = this;
     }
 
-    public static @NotNull EnchantmentRegistry getInstance() {
-        return Preconditions.checkNotNull(registry, "EnchantmentRegistry is not initialized yet!");
-    }
+    public static @Nullable Enchantment resolve(@Nullable Object object) {
+        if (object == null) {
+            return null;
+        }
 
-    @Override
-    protected final @Nullable Enchantment resolveMapping0(@NotNull Object object) {
+        if (object instanceof Enchantment) {
+            return (Enchantment) object;
+        }
+
+        Preconditions.checkNotNull(registry, "EnchantmentRegistry is not initialized yet!");
+
+        if (!registry.specialMapping.isEmpty()) {
+            for (var sm : registry.specialMapping.entrySet()) {
+                if (sm.getKey().isInstance(object)) {
+                    return sm.getValue().apply(object);
+                }
+            }
+        }
+
         if (object instanceof ConfigurationNode) {
             try {
                 return EnchantmentSerializer.INSTANCE.deserialize(Enchantment.class, (ConfigurationNode) object);
@@ -60,7 +75,7 @@ public abstract class EnchantmentRegistry extends Registry<Enchantment> {
             }
         } else if (object instanceof Map.Entry) {
             var entry = (Map.Entry<?, ?>) object;
-            Enchantment holder = resolveMapping(entry.getKey());
+            EnchantmentType holder = EnchantmentType.ofNullable(entry.getKey());
             if (holder != null) {
                 int level;
                 if (entry.getValue() instanceof Number) {
@@ -78,7 +93,7 @@ public abstract class EnchantmentRegistry extends Registry<Enchantment> {
                         level = RomanToDecimal.romanToDecimal(entry.getValue().toString());
                     }
                 }
-                return holder.withLevel(level);
+                return holder.asEnchantment(level);
             }
             return null;
         }
@@ -105,7 +120,7 @@ public abstract class EnchantmentRegistry extends Registry<Enchantment> {
             return null;
         }
 
-        var result = this.resolveMappingPlatform(location);
+        var result = EnchantmentType.ofNullable(location);
         if (result != null) {
             if (levelStr != null && !levelStr.isEmpty()) {
                 int level;
@@ -114,13 +129,17 @@ public abstract class EnchantmentRegistry extends Registry<Enchantment> {
                 } catch (Throwable t) {
                     level = RomanToDecimal.romanToDecimal(levelStr);
                 }
-                return result.withLevel(level);
+                return result.asEnchantment(level);
             }
-            return result;
+            return result.asEnchantment();
         }
 
         return null;
     }
 
-    protected abstract @Nullable Enchantment resolveMappingPlatform(@NotNull ResourceLocation location);
+    @SuppressWarnings("unchecked")
+    @ApiStatus.Internal
+    protected <E> void specialType(@NotNull Class<E> eClass, @NotNull Function<@NotNull E, @Nullable Enchantment> function) {
+        specialMapping.put(eClass, (Function<Object, Enchantment>) function);
+    }
 }

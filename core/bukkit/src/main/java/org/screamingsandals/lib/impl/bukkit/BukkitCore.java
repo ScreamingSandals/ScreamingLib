@@ -188,6 +188,7 @@ import org.screamingsandals.lib.impl.bukkit.gameevent.BukkitGameEventRegistry;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.item.builder.BukkitItemStackFactory;
 import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitEnchantmentRegistry;
+import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitEnchantmentTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitPotionEffectRegistry;
 import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitPotionEffectTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitPotionRegistry;
@@ -356,6 +357,7 @@ import java.util.function.Function;
             BukkitAttributes.class,
             BukkitFireworkEffectTypeRegistry.class,
             BukkitFireworkEffectRegistry.class,
+            BukkitEnchantmentTypeRegistry.class,
             BukkitEnchantmentRegistry.class,
             BukkitPotionEffectTypeRegistry.class,
             BukkitPotionEffectRegistry.class,

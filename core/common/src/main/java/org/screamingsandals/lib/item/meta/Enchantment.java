@@ -20,14 +20,14 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.item.meta.EnchantmentRegistry;
+import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.registry.RegistryItem;
-import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-public interface Enchantment extends RegistryItem {
+public interface Enchantment extends ComparableWrapper, RawValueHolder {
 
-    @NotNull String platformName();
+    @NotNull EnchantmentType type();
 
     int level();
 
@@ -40,10 +40,6 @@ public interface Enchantment extends RegistryItem {
     @Override
     boolean is(@MinecraftType(MinecraftType.Type.ENCHANTMENT) @Nullable Object @NotNull... objects);
 
-    boolean isSameType(@MinecraftType(MinecraftType.Type.ENCHANTMENT_TYPE) @Nullable Object object);
-
-    boolean isSameType(@MinecraftType(MinecraftType.Type.ENCHANTMENT_TYPE) @Nullable Object @NotNull... objects);
-
     static @NotNull Enchantment of(@MinecraftType(MinecraftType.Type.ENCHANTMENT) @NotNull Object enchantment) {
         var result = ofNullable(enchantment);
         Preconditions.checkNotNullIllegal(result, "Could not find enchantment: " + enchantment);
@@ -55,10 +51,6 @@ public interface Enchantment extends RegistryItem {
         if (enchantment instanceof Enchantment) {
             return (Enchantment) enchantment;
         }
-        return EnchantmentRegistry.getInstance().resolveMapping(enchantment);
-    }
-
-    static @NotNull RegistryItemStream<@NotNull Enchantment> all() {
-        return EnchantmentRegistry.getInstance().getRegistryItemStream();
+        return EnchantmentRegistry.resolve(enchantment);
     }
 }

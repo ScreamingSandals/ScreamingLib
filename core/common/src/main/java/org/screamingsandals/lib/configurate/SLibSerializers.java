@@ -31,6 +31,7 @@ import org.screamingsandals.lib.firework.FireworkEffectType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.meta.Enchantment;
+import org.screamingsandals.lib.item.meta.EnchantmentType;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.item.meta.PotionEffectType;
@@ -57,6 +58,7 @@ public class SLibSerializers {
                 .register(DamageType.class, DamageTypeSerializer.INSTANCE)
                 .register(DifficultyType.class, DifficultyTypeSerializer.INSTANCE)
                 .register(DimensionType.class, DimensionTypeSerializer.INSTANCE)
+                .register(EnchantmentType.class, EnchantmentTypeSerializer.INSTANCE)
                 .register(Enchantment.class, EnchantmentSerializer.INSTANCE)
                 .register(EntityPose.class, EntityPoseSerializer.INSTANCE)
                 .register(EntityType.class, EntityTypeSerializer.INSTANCE)

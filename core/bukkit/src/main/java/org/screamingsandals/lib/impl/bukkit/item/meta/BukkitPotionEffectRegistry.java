@@ -17,9 +17,6 @@
 package org.screamingsandals.lib.impl.bukkit.item.meta;
 
 import org.bukkit.potion.PotionEffectType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.impl.item.meta.PotionEffectRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 
@@ -28,10 +25,5 @@ public class BukkitPotionEffectRegistry extends PotionEffectRegistry {
     public BukkitPotionEffectRegistry() {
         specialType(PotionEffectType.class, BukkitPotionEffect::new);
         specialType(org.bukkit.potion.PotionEffect.class, BukkitPotionEffect::new);
-    }
-
-    @Override
-    protected @Nullable PotionEffect construct(org.screamingsandals.lib.item.meta.@NotNull PotionEffectType type) {
-        return new BukkitPotionEffect(type.as(PotionEffectType.class));
     }
 }

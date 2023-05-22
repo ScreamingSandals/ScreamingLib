@@ -18,38 +18,32 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.meta.Enchantment;
+import org.screamingsandals.lib.item.meta.EnchantmentType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class EnchantmentSerializer implements TypeSerializer<Enchantment> {
-    public static final @NotNull EnchantmentSerializer INSTANCE = new EnchantmentSerializer();
+public class EnchantmentTypeSerializer implements TypeSerializer<EnchantmentType> {
+    public static final @NotNull EnchantmentTypeSerializer INSTANCE = new EnchantmentTypeSerializer();
 
     @Override
-    public @NotNull Enchantment deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull EnchantmentType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            if (node.isMap()) {
-                var typeNode = node.node("type").getString();
-                var levelNode = node.node("level").getInt(1);
-
-                if (typeNode != null && !typeNode.isEmpty()) {
-                    return Enchantment.of(typeNode).withLevel(levelNode);
-                }
-            }
-
-            // TODO: read Map.Entry? Is it possible?
-
-            return Enchantment.of(node.getString());
+            return EnchantmentType.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable Enchantment obj, @NotNull ConfigurationNode node) throws SerializationException {
-        node.set(obj == null ? null : (obj.type().location().asString() + " " + obj.level()));
+    public void serialize(@NotNull Type type, @Nullable EnchantmentType obj, @NotNull ConfigurationNode node) throws SerializationException {
+        if (obj == null) {
+            node.set(null);
+            return;
+        }
+
+        node.set(obj.location().asString());
     }
 }
