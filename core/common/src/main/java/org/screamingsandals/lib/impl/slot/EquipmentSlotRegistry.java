@@ -41,10 +41,12 @@ public abstract class EquipmentSlotRegistry extends SimpleRegistry<EquipmentSlot
     }
 
     @OnPostConstruct
-    public void legacyMapping() {
+    public void legacyMapping() { // TODO: from where are these "Vanilla" names??? I forgor
         // Vanilla <-> Bukkit
         mapAlias("MAIN_HAND", "HAND");
+        mapAlias("MAIN_HAND", "MAINHAND");
         mapAlias("OFF_HAND", "OFF_HAND");
+        mapAlias("OFF_HAND", "OFFHAND");
         mapAlias("BOOTS", "FEET");
         mapAlias("LEGGINGS", "LEGS");
         mapAlias("CHESTPLATE", "CHEST");

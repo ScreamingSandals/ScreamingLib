@@ -58,9 +58,11 @@ import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
 import org.screamingsandals.lib.nms.accessors.ItemStackAccessor;
+import org.screamingsandals.lib.nms.accessors.ListTagAccessor;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.ResourceLocation;
+import org.screamingsandals.lib.utils.StringUtils;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.ArrayList;
@@ -172,7 +174,6 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         }
         var meta = item.getItemMeta();
         if (meta != null) {
-            // TODO: find solution: missing Bukkit API for older versions
             if (BukkitFeature.ITEM_ATTRIBUTE_MODIFIERS_API.isSupported()) { // 1.13.1
                 meta.setAttributeModifiers(null);
                 if (modifiers != null) {
@@ -181,6 +182,28 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                             .forEach(holder -> meta.addAttributeModifier(holder.getAttribute(), holder.getAttributeModifier()));
                 }
                 item.setItemMeta(meta);
+            } else {
+                // Pre 1.13.1
+                if (modifiers != null) {
+                    fillStackWithModifiers(
+                            modifiers.stream()
+                                    .map(this::constructPre1_13AttributeModifier)
+                                    .map(NBTVanillaSerializer::serialize)
+                                    .collect(Collectors.toList())
+                    );
+                } else {
+                    if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
+                        item = ClassStorage.asCBStack(item);
+                    }
+
+                    var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodGetTag1());
+
+                    if (nbt != null && Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodGet1(), "AttributeModifiers") != null) {
+                        Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodRemove1(), "AttributeModifiers");
+
+                        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodSetTag1(), nbt);
+                    }
+                }
             }
         }
         return this;
@@ -193,14 +216,73 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         }
         var meta = item.getItemMeta();
         if (meta != null) {
-            // TODO: find solution: missing Bukkit API for older versions
             if (BukkitFeature.ITEM_ATTRIBUTE_MODIFIERS_API.isSupported()) { // 1.13.1
                 var mod = modifier.as(BukkitItemAttribute.class);
                 meta.addAttributeModifier(mod.getAttribute(), mod.getAttributeModifier());
                 item.setItemMeta(meta);
+            } else {
+                // Pre 1.13.1
+                var tag = constructPre1_13AttributeModifier(modifier);
+
+                var serialized = NBTVanillaSerializer.serialize(tag);
+
+                fillStackWithModifiers(List.of(serialized));
             }
         }
         return this;
+    }
+
+    private void fillStackWithModifiers(@NotNull List<@NotNull Object> modifiers) {
+        if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
+            item = ClassStorage.asCBStack(item);
+        }
+
+        var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodGetTag1());
+
+        Object attributes = nbt != null ? Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodGet1(), "AttributeModifiers") : null;
+        if (nbt == null) {
+            nbt = Reflect.construct(CompoundTagAccessor.getConstructor0());
+        }
+        if (attributes == null || !ListTagAccessor.getType().isInstance(attributes)) {
+            attributes = Reflect.construct(ListTagAccessor.getConstructor0());
+            Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodPut1(), "AttributeModifiers", attributes);
+        }
+        for (var modifier : modifiers) {
+            Reflect.fastInvoke(attributes, ListTagAccessor.getMethodAdd1(), modifier);
+        }
+
+        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodSetTag1(), nbt);
+    }
+
+    private @NotNull CompoundTag constructPre1_13AttributeModifier(@NotNull ItemAttribute modifier) {
+        CompoundTag ct = CompoundTag.EMPTY
+                .with("AttributeName", StringUtils.snakeToCamel(modifier.getType().location().path()))
+                .with("Name", modifier.getName())
+                .with("Amount", modifier.getAmount())
+                .with("Operation", modifier.getOperation().ordinal())
+                .with("UUIDLeast", modifier.getUuid().getLeastSignificantBits())
+                .with("UUIDMost", modifier.getUuid().getMostSignificantBits());
+        if (modifier.getSlot() != null) {
+            String value = null;
+            switch (modifier.getSlot().platformName()) {
+                case "HAND":
+                    if (BukkitFeature.OFF_HAND.isSupported()) {
+                        value = "mainhand";
+                    } else {
+                        value = "hand";
+                    }
+                    break;
+                case "OFF_HAND": value = "offhand"; break;
+                case "FEET": value = "feet"; break;
+                case "LEGS": value = "legs"; break;
+                case "CHEST": value = "chest"; break;
+                case "HEAD": value = "head"; break;
+            }
+            if (value != null) {
+                ct = ct.with("Slot", value);
+            }
+        }
+        return ct;
     }
 
     @Override

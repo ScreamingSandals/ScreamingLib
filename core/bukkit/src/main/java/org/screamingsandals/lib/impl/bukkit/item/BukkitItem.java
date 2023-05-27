@@ -21,6 +21,8 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.attribute.AttributeModifier;
+import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.attribute.ItemAttribute;
@@ -42,18 +44,19 @@ import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.IntTag;
+import org.screamingsandals.lib.nbt.NumericTag;
+import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
 import org.screamingsandals.lib.nms.accessors.ItemStackAccessor;
+import org.screamingsandals.lib.nms.accessors.ListTagAccessor;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.StringUtils;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> implements ItemStack {
@@ -113,7 +116,6 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
     public @NotNull List<@NotNull ItemAttribute> getAttributeModifiers() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
-            // TODO: find solution: missing Bukkit API for older versions
             if (BukkitFeature.ITEM_ATTRIBUTE_MODIFIERS_API.isSupported()) { // 1.13.1
                 if (meta.hasAttributeModifiers()) {
                     var bukkitModifiers = meta.getAttributeModifiers();
@@ -126,6 +128,36 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
                                 }
                             });
                     return list;
+                }
+            } else {
+                // Pre 1.13.1
+                Object tag;
+                if (!ClassStorage.CB.CraftItemStack.isInstance(wrappedObject)) {
+                    var unhandled = (Map<String, Object>) Reflect.getField(meta, "unhandledTags");
+                    if (!unhandled.containsKey("AttributeModifiers")) {
+                        return List.of();
+                    }
+                    tag = unhandled.get("AttributeModifiers");
+                } else {
+                    var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(wrappedObject), ItemStackAccessor.getMethodGetTag1());
+                    tag = Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodGet1(), "AttributeModifiers");
+                }
+                if (tag != null) {
+                    var size = Reflect.fastInvoke(tag, ListTagAccessor.getMethodSize1());
+                    if (size instanceof Integer) {
+                        var list = new ArrayList<ItemAttribute>((int) size);
+                        for (var i = 0; i < (int) size; i++) {
+                            var t = (CompoundTag) NBTVanillaSerializer.deserialize(Reflect.fastInvoke(tag, ListTagAccessor.getMethodGet1(), i));
+                            list.add(new ItemAttribute(
+                                    AttributeType.of(StringUtils.camelToSnake(((StringTag) t.tag("AttributeName")).value())),
+                                    new UUID(((NumericTag) t.tag("UUIDMost")).longValue(), ((NumericTag) t.tag("UUIDLeast")).longValue()),
+                                    ((StringTag) t.tag("Name")).value(),
+                                    ((NumericTag) t.tag("Amount")).doubleValue(),
+                                    AttributeModifier.Operation.byOrdinal(((NumericTag) t.tag("Operation")).intValue()),
+                                    t.hasTag("Slot") ? EquipmentSlot.of(((StringTag) t.tag("Slot")).value()) : null
+                            ));
+                        }
+                    }
                 }
             }
         }

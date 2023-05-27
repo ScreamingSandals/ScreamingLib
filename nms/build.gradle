@@ -340,6 +340,7 @@ nmsGen {
         reqConstructor()
         reqMethod('getAllKeys')
         reqMethod('get', String)
+        reqMethod('remove', String)
         reqMethod(chain('put', 'searge:func_74782_a:1.13.2'), String, '@Tag')
         reqMethod(chain('merge', 'searge:func_179237_a:1.12.2'), '@CompoundTag') // 1.13 method returns `this` for chaining
     }
