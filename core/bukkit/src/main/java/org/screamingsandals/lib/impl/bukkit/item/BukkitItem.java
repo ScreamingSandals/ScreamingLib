@@ -157,6 +157,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
                                     t.hasTag("Slot") ? EquipmentSlot.of(((StringTag) t.tag("Slot")).value()) : null
                             ));
                         }
+                        return list;
                     }
                 }
             }
