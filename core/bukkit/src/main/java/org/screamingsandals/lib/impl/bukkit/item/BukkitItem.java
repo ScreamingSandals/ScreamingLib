@@ -117,8 +117,8 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
             if (BukkitFeature.ITEM_ATTRIBUTE_MODIFIERS_API.isSupported()) { // 1.13.1
-                if (meta.hasAttributeModifiers()) {
-                    var bukkitModifiers = meta.getAttributeModifiers();
+                var bukkitModifiers = meta.getAttributeModifiers();
+                if (bukkitModifiers != null && !bukkitModifiers.isEmpty()) {
                     var list = new ArrayList<ItemAttribute>(bukkitModifiers.size());
                     bukkitModifiers
                             .forEach((attribute, attributeModifier) -> {
@@ -234,9 +234,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
     public @Nullable Integer getCustomModelData() {
         var meta = wrappedObject.getItemMeta();
         if (BukkitFeature.ITEM_META_CUSTOM_MODEL_DATA.isSupported()) {
-            if (meta.hasCustomModelData()) {
-                return meta.getCustomModelData();
-            }
+            return meta.getCustomModelData();
         }
         return null;
     }

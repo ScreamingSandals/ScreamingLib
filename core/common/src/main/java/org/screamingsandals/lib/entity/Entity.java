@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.ContainerHolder;
 import org.screamingsandals.lib.entity.type.EntityType;
+import org.screamingsandals.lib.particle.Vibration;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public interface Entity extends Wrapper, RawValueHolder, ContainerHolder, ThreadProperty {
+public interface Entity extends Wrapper, RawValueHolder, ContainerHolder, ThreadProperty, Vibration.Destination {
     @NotNull EntityType getEntityType();
 
     @NotNull Location getLocation();

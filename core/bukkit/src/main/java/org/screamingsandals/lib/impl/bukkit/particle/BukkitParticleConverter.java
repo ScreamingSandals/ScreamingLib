@@ -18,31 +18,31 @@ package org.screamingsandals.lib.impl.bukkit.particle;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Entity;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
-import org.screamingsandals.lib.particle.DustOptions;
-import org.screamingsandals.lib.particle.DustTransition;
-import org.screamingsandals.lib.particle.ParticleData;
+import org.screamingsandals.lib.particle.*;
 
 @UtilityClass
 public class BukkitParticleConverter {
     public Object convertParticleData(@NotNull ParticleData data) {
         if (data instanceof Block) {
             if (BukkitFeature.FLATTENING.isSupported()) {
-                return data.as(BlockData.class);
+                return ((Block) data).as(BlockData.class);
             } else {
-                return data.as(MaterialData.class);
+                return ((Block) data).as(MaterialData.class);
             }
         } else if (data instanceof ItemType) {
-            return data.as(org.bukkit.inventory.ItemStack.class);
+            return ((ItemType) data).as(org.bukkit.inventory.ItemStack.class);
         } else if (data instanceof ItemStack) {
-            return data.as(org.bukkit.inventory.ItemStack.class);
+            return ((ItemStack) data).as(org.bukkit.inventory.ItemStack.class);
         } else if (data instanceof DustOptions) {
             return new Particle.DustOptions(getBukkitColor(((DustOptions) data).color()), ((DustOptions) data).size());
         } else if (data instanceof DustTransition) {
@@ -50,6 +50,21 @@ public class BukkitParticleConverter {
                     getBukkitColor(((DustTransition) data).fromColor()),
                     getBukkitColor(((DustTransition) data).toColor()),
                     ((DustTransition) data).size()
+            );
+        } else if (data instanceof FloatData) {
+            return ((FloatData) data).get();
+        } else if (data instanceof IntegerData) {
+            return ((IntegerData) data).get();
+        } else if (data instanceof Vibration) {
+            var origin = ((Vibration) data).origin();
+            var dest = ((Vibration) data).destination();
+            //noinspection removal
+            return new org.bukkit.Vibration(
+                    origin != null ? origin.as(Location.class) : new Location(null, 0, 0, 0), // useless since Spigot 1.19, but Spigot is fukin sh*t and needs non-null value
+                    dest instanceof org.screamingsandals.lib.entity.Entity ?
+                            new org.bukkit.Vibration.Destination.EntityDestination(dest.as(Entity.class))
+                            : new org.bukkit.Vibration.Destination.BlockDestination(dest.as(Location.class)),
+                    ((Vibration) data).arrivalTime()
             );
         }
         return null;

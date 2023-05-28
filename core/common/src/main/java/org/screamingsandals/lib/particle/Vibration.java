@@ -17,13 +17,28 @@
 package org.screamingsandals.lib.particle;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.spectator.Color;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.world.Location;
 
 @Data
 @Accessors(chain = true, fluent = true)
-public class DustOptions implements ParticleData {
-    private final @NotNull Color color;
-    private final float size;
+@RequiredArgsConstructor
+public class Vibration implements ParticleData {
+    private final @Nullable Location origin;
+    private final @NotNull Destination destination;
+    private final int arrivalTime;
+
+    public Vibration(@NotNull Destination destination, int arrivalTime) {
+        this.origin = null;
+        this.destination = destination;
+        this.arrivalTime = arrivalTime;
+    }
+
+    public interface Destination extends Wrapper {
+
+    }
 }

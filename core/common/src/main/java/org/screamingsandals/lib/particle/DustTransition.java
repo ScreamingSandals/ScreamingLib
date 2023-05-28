@@ -27,12 +27,4 @@ public class DustTransition implements ParticleData {
     private final @NotNull Color fromColor;
     private final @NotNull Color toColor;
     private final float size;
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> @NotNull T as(@NotNull Class<T> type) {
-        throw new UnsupportedOperationException("Not supported.");
-    }
 }

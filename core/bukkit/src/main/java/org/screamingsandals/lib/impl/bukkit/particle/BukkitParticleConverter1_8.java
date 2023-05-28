@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.particle;
 import lombok.experimental.UtilityClass;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
@@ -28,10 +29,10 @@ import org.screamingsandals.lib.particle.ParticleData;
 public class BukkitParticleConverter1_8 {
     public int @NotNull [] convertParticleData(@NotNull ParticleData data) {
         if (data instanceof Block) {
-            var materialData = data.as(MaterialData.class);
+            var materialData = ((Block) data).as(MaterialData.class);
             return new int[] {materialData.getItemType().getId() + ((int)(materialData.getData()) << 12)};
         } else if (data instanceof ItemType || data instanceof ItemStack) {
-            var stack = data.as(org.bukkit.inventory.ItemStack.class);
+            var stack = ((Wrapper) data).as(org.bukkit.inventory.ItemStack.class);
             return new int[] {stack.getType().getId(), stack.getDurability()};
         }
         return new int[0];

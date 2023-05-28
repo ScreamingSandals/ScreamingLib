@@ -25,6 +25,7 @@ import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.impl.world.Locations;
 import org.screamingsandals.lib.particle.Particle;
+import org.screamingsandals.lib.particle.Vibration;
 import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -46,7 +47,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @With
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class Location implements Wrapper, ThreadProperty {
+public class Location implements Wrapper, ThreadProperty, Vibration.Destination {
     /**
      * The X coordinate of this location.
      */

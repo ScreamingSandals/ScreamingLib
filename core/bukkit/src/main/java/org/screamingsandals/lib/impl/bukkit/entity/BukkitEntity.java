@@ -37,11 +37,13 @@ import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityType;
+import org.screamingsandals.lib.nms.accessors.EntityAccessor;
 import org.screamingsandals.lib.nms.accessors.EnumZombieTypeAccessor;
 import org.screamingsandals.lib.nms.accessors.ZombieAccessor;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -213,10 +215,16 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
     @Override
     public boolean addPassenger(@NotNull Entity passenger) {
         var bukkitPassenger = passenger.as(org.bukkit.entity.Entity.class);
+        Preconditions.checkArgument(bukkitPassenger != wrappedObject, "Entity cannot ride itself.");
+
         if (BukkitFeature.ENTITY_ADD_PASSENGER.isSupported()) {
             return wrappedObject.addPassenger(bukkitPassenger);
-        } else { // probably old version
-            return wrappedObject.setPassenger(bukkitPassenger); // TODO: don't remove old entities
+        } else {
+            if (EntityAccessor.getMethodStartRiding1() != null) { // 1.9+
+                return (boolean) Reflect.fastInvoke(ClassStorage.getHandle(bukkitPassenger), EntityAccessor.getMethodStartRiding1(), ClassStorage.getHandle(wrappedObject), true);
+            } else {
+                return wrappedObject.setPassenger(bukkitPassenger); // is it possible to have multiple passengers in 1.8.8?
+            }
         }
     }
 
@@ -224,8 +232,13 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
     public boolean removePassenger(@NotNull Entity passenger) {
         if (BukkitFeature.ENTITY_REMOVE_PASSENGER.isSupported()) {
             return wrappedObject.removePassenger(passenger.as(org.bukkit.entity.Entity.class));
-        } else { // probably old version
-            return wrappedObject.eject(); // TODO: somehow remove just the specified entity
+        } else {
+            if (EntityAccessor.getMethodStopRiding1() != null) { // 1.9+
+                Reflect.fastInvoke(ClassStorage.getHandle(passenger.as(org.bukkit.entity.Entity.class)), EntityAccessor.getMethodStopRiding1());
+                return true;
+            } else {
+                return wrappedObject.eject(); // is it possible to have multiple passengers in 1.8.8?
+            }
         }
     }
 

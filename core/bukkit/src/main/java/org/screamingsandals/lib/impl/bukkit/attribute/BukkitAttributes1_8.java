@@ -21,10 +21,6 @@ import org.screamingsandals.lib.attribute.Attribute;
 import org.screamingsandals.lib.nms.accessors.AttributeInstanceAccessor;
 
 public class BukkitAttributes1_8 extends BukkitAttributes {
-    public BukkitAttributes1_8() {
-        // TODO: Item attributes
-    }
-
     @Override
     protected @Nullable Attribute wrapAttribute0(@Nullable Object attribute) {
         if (AttributeInstanceAccessor.getType() != null && AttributeInstanceAccessor.getType().isInstance(attribute)) {

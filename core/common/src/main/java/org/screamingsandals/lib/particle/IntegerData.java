@@ -16,14 +16,13 @@
 
 package org.screamingsandals.lib.particle;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
-import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.spectator.Color;
+import lombok.RequiredArgsConstructor;
 
-@Data
-@Accessors(chain = true, fluent = true)
-public class DustOptions implements ParticleData {
-    private final @NotNull Color color;
-    private final float size;
+@RequiredArgsConstructor
+public class IntegerData implements ParticleData {
+    private final int number;
+
+    public int get() {
+        return number;
+    }
 }

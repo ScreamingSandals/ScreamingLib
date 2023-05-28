@@ -60,6 +60,8 @@ nmsGen {
         reqMethod('setCustomName', '@Component')
         reqMethod('absMoveTo', double, double, double, float, float)
         reqMethod('getCustomName')
+        reqMethod('startRiding', '@Entity', boolean)
+        reqMethod('stopRiding')
         reqField('searge:field_70159_w') // velocity x
         reqField('searge:field_70181_x') // velocity y
         reqField('searge:field_70179_y') // velocity z
@@ -75,6 +77,11 @@ nmsGen {
         reqField('searge:field_70170_p') // world
     }
 
+    reqClass('net.minecraft.world.InteractionHand') {
+        reqEnumField('MAIN_HAND')
+        reqEnumField('OFF_HAND')
+    }
+
     // 1.8.8 compat - Attributes (LivingEntity requires to be defined earlier)
     reqClass('spigot:IAttribute:1.8.8') {
         reqMethod('obfuscated:b:1.8.8')
@@ -82,6 +89,20 @@ nmsGen {
 
     reqClass('net.minecraft.world.entity.LivingEntity') { // 1.8.8 compat - BossBar
         reqMethod('spigot:getAttributeInstance:1.8.8', '@IAttribute') // 1.8.8 compat - Attributes
+        reqField('removeArrowTime')
+        reqMethod('getArrowCount')
+        reqMethod('setArrowCount', int)
+        reqMethod('doHurtTarget', '@Entity')
+        reqMethod('swing', '@InteractionHand')
+        reqMethod('getAbsorptionAmount')
+        reqMethod('setAbsorptionAmount', float)
+    }
+
+    reqClass('net.minecraft.world.entity.Mob') {
+        reqMethod('spigot:setAI', boolean) // 1.8.8
+        reqMethod('spigot:hasAI') // 1.8.8
+        reqMethod('setTarget', '@LivingEntity')
+        reqMethod('getTarget')
     }
     // end 1.8.8 compat
 
@@ -123,6 +144,10 @@ nmsGen {
         reqMethod('isMarker')
     }
 
+    reqClass('net.minecraft.world.entity.player.Player') {
+        reqMethod('attack', '@Entity')
+    }
+
     reqClass('net.minecraft.server.level.ServerPlayer') {
         reqField('connection')
         reqField('latency')
@@ -130,11 +155,6 @@ nmsGen {
 
     reqClass('net.minecraft.resources.ResourceLocation') {
         reqConstructor(String)
-    }
-
-    reqClass('net.minecraft.world.InteractionHand') {
-        reqEnumField('MAIN_HAND')
-        reqEnumField('OFF_HAND')
     }
 
     var FriendlyByteBuf = reqClass('net.minecraft.network.FriendlyByteBuf') {

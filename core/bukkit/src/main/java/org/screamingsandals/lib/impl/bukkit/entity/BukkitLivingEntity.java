@@ -36,7 +36,8 @@ import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.meta.PotionEffect;
-import org.screamingsandals.lib.nms.accessors.LivingEntityAccessor;
+import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -117,8 +118,7 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         if (BukkitFeature.ARROW_COOLDOWN.isSupported()) {
             return ((org.bukkit.entity.LivingEntity) wrappedObject).getArrowCooldown();
         } else {
-            // TODO: <= 1.16.2
-            return 0;
+            return (int) Reflect.getField(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getFieldRemoveArrowTime());
         }
     }
 
@@ -127,7 +127,7 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         if (BukkitFeature.ARROW_COOLDOWN.isSupported()) {
             ((org.bukkit.entity.LivingEntity) wrappedObject).setArrowCooldown(ticks);
         } else  {
-            // TODO: <= 1.16.2
+            Reflect.setField(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getFieldRemoveArrowTime(), ticks);
         }
     }
 
@@ -136,17 +136,17 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         if (BukkitFeature.ARROWS_IN_BODY.isSupported()) {
             return ((org.bukkit.entity.LivingEntity) wrappedObject).getArrowsInBody();
         } else  {
-            // TODO: <= 1.16.2
-            return 0;
+            return (int) Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getMethodGetArrowCount1());
         }
     }
 
     @Override
     public void setArrowsInBody(int count) {
+        Preconditions.checkArgument(count >= 0, "Arrow count cannot be negative.");
         if (BukkitFeature.ARROWS_IN_BODY.isSupported()) {
             ((org.bukkit.entity.LivingEntity) wrappedObject).setArrowsInBody(count);
         } else {
-            // TODO: <= 1.16.2
+            Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getMethodSetArrowCount1(), count);
         }
     }
 
@@ -323,7 +323,9 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         if (BukkitFeature.SET_AI.isSupported()) {
             ((org.bukkit.entity.LivingEntity) wrappedObject).setAI(ai);
         } else {
-            // TODO: 1.8.8
+            if (MobAccessor.getType().isInstance(ClassStorage.getHandle(wrappedObject))) {
+                Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), MobAccessor.getMethodSetAI1(), !ai); // NOTE: the spigot name is confusing, it should be something like disableAi
+            }
         }
     }
 
@@ -332,7 +334,10 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         if (BukkitFeature.SET_AI.isSupported()) {
             return ((org.bukkit.entity.LivingEntity) wrappedObject).hasAI();
         } else {
-            return true; // TODO: 1.8.8: who knows
+            if (MobAccessor.getType().isInstance(ClassStorage.getHandle(wrappedObject))) {
+                return !((boolean) Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), MobAccessor.getMethodHasAI1()));// NOTE: the spigot name is confusing, it should be something like isAiDisabled
+            }
+            return false;
         }
     }
 
@@ -341,7 +346,11 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         if (BukkitFeature.ATTACK.isSupported()) {
             ((org.bukkit.entity.LivingEntity) wrappedObject).attack(target.as(org.bukkit.entity.Entity.class));
         } else {
-            // TODO: <= 1.15.2
+            if (PlayerAccessor.getType().isInstance(ClassStorage.getHandle(wrappedObject))) {
+                Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), PlayerAccessor.getMethodAttack1(), ClassStorage.getHandle(target.as(org.bukkit.entity.Entity.class)));
+            } else {
+                Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getMethodDoHurtTarget1(), ClassStorage.getHandle(target.as(org.bukkit.entity.Entity.class)));
+            }
         }
     }
 
@@ -350,7 +359,11 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         if (BukkitFeature.SWING_HAND.isSupported()) {
             ((org.bukkit.entity.LivingEntity) wrappedObject).swingMainHand();
         } else {
-            // TODO: <= 1.15.2
+            if (LivingEntityAccessor.getMethodSwing1() != null) {
+                Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getMethodSwing1(), InteractionHandAccessor.getFieldMAIN_HAND());
+            } else {
+                // TODO: 1.8.8?
+            }
         }
     }
 
@@ -359,7 +372,9 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         if (BukkitFeature.SWING_HAND.isSupported()) {
             ((org.bukkit.entity.LivingEntity) wrappedObject).swingOffHand();
         } else {
-            // TODO: <= 1.15.2
+            if (LivingEntityAccessor.getMethodSwing1() != null) {
+                Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getMethodSwing1(), InteractionHandAccessor.getFieldOFF_HAND());
+            } // 1.8.8: No off-hand
         }
     }
 
@@ -389,8 +404,9 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         } else {
             if (wrappedObject instanceof ArmorStand) {
                 ((ArmorStand) wrappedObject).setVisible(!invisible);
+            } else {
+                Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), EntityAccessor.getMethodSetInvisible1(), invisible);
             }
-            // TODO: <= 1.16.3
         }
     }
 
@@ -401,8 +417,9 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         } else {
             if (wrappedObject instanceof ArmorStand) {
                 return !((ArmorStand) wrappedObject).isVisible();
+            } else {
+                return (boolean) Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), EntityAccessor.getMethodIsInvisible1());
             }
-            return false; // TODO: <= 1.16.3
         }
     }
 
@@ -421,7 +438,7 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         if (BukkitFeature.ABSORPTION_AMOUNT.isSupported()) {
             return ((org.bukkit.entity.LivingEntity) wrappedObject).getAbsorptionAmount();
         } else {
-            return 0; // TODO: <= 1.14.4
+            return (float) Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getMethodGetAbsorptionAmount1()); // <= 1.14.4
         }
     }
 
@@ -435,7 +452,7 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         if (BukkitFeature.ABSORPTION_AMOUNT.isSupported()) {
             ((org.bukkit.entity.LivingEntity) wrappedObject).setAbsorptionAmount(amount);
         } else {
-            // TODO: <= 1.14.4
+            Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getMethodSetAbsorptionAmount1(), (float) amount); // <= 1.14.4
         }
     }
 

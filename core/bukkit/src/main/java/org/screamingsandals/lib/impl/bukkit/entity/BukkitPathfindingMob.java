@@ -19,12 +19,17 @@ package org.screamingsandals.lib.impl.bukkit.entity;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Slime;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.LivingEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.PathfindingMob;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.nms.accessors.LivingEntityAccessor;
+import org.screamingsandals.lib.nms.accessors.MobAccessor;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public class BukkitPathfindingMob extends BukkitLivingEntity implements PathfindingMob {
     public BukkitPathfindingMob(@NotNull org.bukkit.entity.LivingEntity wrappedObject) {
@@ -47,7 +52,10 @@ public class BukkitPathfindingMob extends BukkitLivingEntity implements Pathfind
         } else if (wrappedObject instanceof Slime) {
             if (BukkitFeature.SLIME_TARGET.isSupported()) {
                 ((Slime) wrappedObject).setTarget(living);
-            } // TODO: <= 1.12.1
+            } else {
+                Reflect.getMethod(ClassStorage.getHandle(wrappedObject), MobAccessor.getMethodSetTarget1().getName(), LivingEntityAccessor.getType(), EntityTargetEvent.TargetReason.class, boolean.class)
+                        .invoke(target != null ? ClassStorage.getHandle(target) : null, null, false);
+            }
         } else {
             ((Creature) wrappedObject).setTarget(living);
         }
@@ -61,8 +69,12 @@ public class BukkitPathfindingMob extends BukkitLivingEntity implements Pathfind
         } else if (wrappedObject instanceof Slime) {
             if (BukkitFeature.SLIME_TARGET.isSupported()) {
                 living = ((Slime) wrappedObject).getTarget();
-            } else {
-                return null; // TODO: <= 1.12.1
+            } else { // <= 1.12.1
+                var result = Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), MobAccessor.getMethodGetTarget1());
+                if (result != null) {
+                    return Entities.wrapEntityLiving(Reflect.fastInvoke(result, "getBukkitEntity"));
+                }
+                return null;
             }
         } else {
             living = ((Creature) wrappedObject).getTarget();

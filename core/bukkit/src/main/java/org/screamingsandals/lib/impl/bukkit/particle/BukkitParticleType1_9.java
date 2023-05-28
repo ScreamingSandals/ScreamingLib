@@ -42,6 +42,7 @@ public class BukkitParticleType1_9 extends BasicWrapper<Particle> implements Par
     public @Nullable Class<? extends ParticleData> expectedDataClass() {
         var dataType = wrappedObject.getDataType();
         if (dataType != Void.class) {
+            // some of these classes may not exist in specific versions, that's why it looks like this
             switch (dataType.getSimpleName()) {
                 case "MaterialData":
                 case "BlockData":
@@ -52,8 +53,13 @@ public class BukkitParticleType1_9 extends BasicWrapper<Particle> implements Par
                     return DustOptions.class;
                 case "DustTransition":
                     return DustTransition.class;
+                case "Integer":
+                    return IntegerData.class;
+                case "Float":
+                    return FloatData.class;
+                case "Vibration":
+                    return Vibration.class;
             }
-            // TODO: Integer, Float, Vibration
         }
         return null;
     }
