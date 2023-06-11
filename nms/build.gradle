@@ -48,7 +48,7 @@ nmsGen {
         reqMethod('setNoGravity', boolean)
         reqMethod('isNoGravity')
         reqMethod('setOnGround', boolean)
-        reqMethod('isOnGround')
+        reqMethod(chain('onGround', 'isOnGround'))
         reqMethod('getUUID')
         reqMethod('setCustomNameVisible', boolean)
         reqMethod('isCustomNameVisible')
