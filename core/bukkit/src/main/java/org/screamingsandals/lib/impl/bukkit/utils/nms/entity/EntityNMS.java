@@ -158,7 +158,7 @@ public class EntityNMS {
 		if (onGround_field != null) {
 			return (boolean) onGround_field;
 		}
-		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.getMethodIsOnGround1());
+		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.getMethodOnGround1());
 	}
 
 	public UUID getUniqueId() {
