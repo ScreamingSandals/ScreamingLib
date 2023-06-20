@@ -198,7 +198,7 @@ import org.screamingsandals.lib.impl.bukkit.player.gamemode.BukkitGameModeRegist
 import org.screamingsandals.lib.impl.bukkit.plugin.BukkitPlugin;
 import org.screamingsandals.lib.impl.bukkit.slot.BukkitEquipmentSlotRegistry;
 import org.screamingsandals.lib.impl.bukkit.spectator.SpigotBackend;
-import org.screamingsandals.lib.impl.bukkit.tasker.BukkitTasker;
+import org.screamingsandals.lib.impl.bukkit.tasker.AbstractBukkitTasker;
 import org.screamingsandals.lib.impl.bukkit.world.BukkitLocations;
 import org.screamingsandals.lib.impl.bukkit.world.BukkitWorlds;
 import org.screamingsandals.lib.impl.bukkit.world.chunk.BukkitChunks;
@@ -350,7 +350,7 @@ import java.util.function.Function;
             BukkitServer.class,
             BukkitCustomPayload.class,
             BukkitEventManager.class,
-            BukkitTasker.class,
+            AbstractBukkitTasker.class,
             BukkitEntityTypeRegistry.class,
             BukkitEntities.class,
             BukkitAttributeTypeRegistry.class,
