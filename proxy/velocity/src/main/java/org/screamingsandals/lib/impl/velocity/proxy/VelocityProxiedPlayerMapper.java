@@ -23,9 +23,9 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.impl.velocity.proxy.event.ChatEventHandlerFactory;
-import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
-import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.ServerWrapper;
+import org.screamingsandals.lib.impl.proxy.ProxiedPlayerMapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.Server;
 import org.screamingsandals.lib.impl.spectator.Spectator;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -52,32 +52,32 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public @Nullable ServerWrapper getServer0(@NotNull String name) {
-        return proxyServer.getServer(name).map(VelocityServerWrapper::new).orElse(null);
+    public @Nullable Server getServer0(@NotNull String name) {
+        return proxyServer.getServer(name).map(VelocityServer::new).orElse(null);
     }
 
     @Override
-    public @NotNull List<@NotNull ServerWrapper> getServers0() {
-        return proxyServer.getAllServers().stream().map(VelocityServerWrapper::new).collect(Collectors.toList());
+    public @NotNull List<@NotNull Server> getServers0() {
+        return proxyServer.getAllServers().stream().map(VelocityServer::new).collect(Collectors.toList());
     }
 
     @Override
-    public @Nullable ProxiedPlayerWrapper getPlayer0(@NotNull String name) {
-        return proxyServer.getPlayer(name).map(VelocityProxiedPlayerWrapper::new).orElse(null);
+    public @Nullable ProxiedPlayer getPlayer0(@NotNull String name) {
+        return proxyServer.getPlayer(name).map(VelocityProxiedPlayer::new).orElse(null);
     }
 
     @Override
-    public @Nullable ProxiedPlayerWrapper getPlayer0(@NotNull UUID uuid) {
-        return proxyServer.getPlayer(uuid).map(VelocityProxiedPlayerWrapper::new).orElse(null);
+    public @Nullable ProxiedPlayer getPlayer0(@NotNull UUID uuid) {
+        return proxyServer.getPlayer(uuid).map(VelocityProxiedPlayer::new).orElse(null);
     }
 
     @Override
-    public @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers0() {
-        return proxyServer.getAllPlayers().stream().map(VelocityProxiedPlayerWrapper::new).collect(Collectors.toList());
+    public @NotNull List<@NotNull ProxiedPlayer> getPlayers0() {
+        return proxyServer.getAllPlayers().stream().map(VelocityProxiedPlayer::new).collect(Collectors.toList());
     }
 
     @Override
-    public @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers0(@NotNull ServerWrapper serverWrapper) {
-        return serverWrapper.as(RegisteredServer.class).getPlayersConnected().stream().map(VelocityProxiedPlayerWrapper::new).collect(Collectors.toList());
+    public @NotNull List<@NotNull ProxiedPlayer> getPlayers0(@NotNull Server serverWrapper) {
+        return serverWrapper.as(RegisteredServer.class).getPlayersConnected().stream().map(VelocityProxiedPlayer::new).collect(Collectors.toList());
     }
 }

@@ -26,7 +26,6 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 import org.screamingsandals.lib.impl.block.snapshot.BlockSnapshots;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 
 @Service
 @ServiceDependencies(dependsOn = BukkitBlockPlacements.class)
@@ -38,7 +37,11 @@ public class BukkitBlockSnapshots extends BlockSnapshots {
 
         if (BukkitFeature.TILE_STATE.isSupported()) {
             if (blockState instanceof Sign) {
-                return (T) new BukkitSignBlockSnapshot((Sign) blockState);
+                if (BukkitFeature.SIGN_BILATERAL.isSupported()) {
+                    return (T) new BukkitBilateralSignBlockSnapshot((Sign) blockState);
+                } else {
+                    return (T) new BukkitSignBlockSnapshot((Sign) blockState);
+                }
             }
 
             if (blockState instanceof TileState) {

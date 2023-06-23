@@ -24,9 +24,9 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bungee.proxy.listener.ChatEventListener;
 import org.screamingsandals.lib.impl.bungee.spectator.BungeeBackend;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
-import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.ServerWrapper;
+import org.screamingsandals.lib.impl.proxy.ProxiedPlayerMapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.Server;
 import org.screamingsandals.lib.impl.spectator.Spectator;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -45,56 +45,56 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public @Nullable ServerWrapper getServer0(@NotNull String name) {
+    public @Nullable Server getServer0(@NotNull String name) {
         var serverInfo = ProxyServer.getInstance().getServerInfo(name);
         if (serverInfo != null) {
-            return new BungeeServerWrapper(serverInfo);
+            return new BungeeServer(serverInfo);
         }
         return null;
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public @NotNull List<@NotNull ServerWrapper> getServers0() {
+    public @NotNull List<@NotNull Server> getServers0() {
         return ProxyServer.getInstance().getServers()
                 .values()
                 .stream()
-                .map(BungeeServerWrapper::new)
+                .map(BungeeServer::new)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public @Nullable ProxiedPlayerWrapper getPlayer0(@NotNull String name) {
+    public @Nullable ProxiedPlayer getPlayer0(@NotNull String name) {
         var player = ProxyServer.getInstance().getPlayer(name);
         if (player != null) {
-            return new BungeeProxiedPlayerWrapper(player);
+            return new BungeeProxiedPlayer(player);
         }
         return null;
     }
 
     @Override
-    public @Nullable ProxiedPlayerWrapper getPlayer0(@NotNull UUID uuid) {
+    public @Nullable ProxiedPlayer getPlayer0(@NotNull UUID uuid) {
         var player = ProxyServer.getInstance().getPlayer(uuid);
         if (player != null) {
-            return new BungeeProxiedPlayerWrapper(player);
+            return new BungeeProxiedPlayer(player);
         }
         return null;
     }
 
     @Override
-    public @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers0() {
+    public @NotNull List<@NotNull ProxiedPlayer> getPlayers0() {
         return ProxyServer.getInstance().getPlayers()
                 .stream()
-                .map(BungeeProxiedPlayerWrapper::new)
+                .map(BungeeProxiedPlayer::new)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public @NotNull List<ProxiedPlayerWrapper> getPlayers0(@NotNull ServerWrapper serverWrapper) {
+    public @NotNull List<ProxiedPlayer> getPlayers0(@NotNull Server serverWrapper) {
         return serverWrapper.as(ServerInfo.class)
                 .getPlayers()
                 .stream()
-                .map(BungeeProxiedPlayerWrapper::new)
+                .map(BungeeProxiedPlayer::new)
                 .collect(Collectors.toList());
     }
 }

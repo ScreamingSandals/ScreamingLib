@@ -24,10 +24,10 @@ import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
+import org.screamingsandals.lib.proxy.ProxiedSender;
 import org.screamingsandals.lib.sender.CommandSender;
-import org.screamingsandals.lib.impl.velocity.proxy.VelocityProxiedPlayerWrapper;
-import org.screamingsandals.lib.impl.velocity.proxy.VelocityProxiedSenderWrapper;
+import org.screamingsandals.lib.impl.velocity.proxy.VelocityProxiedPlayer;
+import org.screamingsandals.lib.impl.velocity.proxy.VelocityProxiedSender;
 
 import java.util.function.Function;
 
@@ -45,11 +45,11 @@ public class VelocityScreamingCloudManager extends VelocityCommandManager<Comman
                                          @NotNull Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> commandCoordinator) {
         super(plugin, proxyServer, commandCoordinator, sender -> {
             if (sender instanceof Player) {
-                return new VelocityProxiedPlayerWrapper((Player) sender);
+                return new VelocityProxiedPlayer((Player) sender);
             }
-            return new VelocityProxiedSenderWrapper(sender);
+            return new VelocityProxiedSender(sender);
         }, sender -> {
-            if (sender.getType() == ProxiedSenderWrapper.Type.PLAYER) {
+            if (sender.getType() == ProxiedSender.Type.PLAYER) {
                 return sender.as(Player.class);
             }
             return sender.as(CommandSource.class);

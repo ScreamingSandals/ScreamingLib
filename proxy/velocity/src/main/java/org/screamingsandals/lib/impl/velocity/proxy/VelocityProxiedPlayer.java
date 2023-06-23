@@ -14,36 +14,41 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bungee.proxy;
+package org.screamingsandals.lib.impl.velocity.proxy;
 
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.ServerWrapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.Server;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 
 import java.util.Locale;
 import java.util.UUID;
 
-public class BungeeProxiedPlayerWrapper extends BungeeProxiedSenderWrapper implements ProxiedPlayerWrapper {
-    public BungeeProxiedPlayerWrapper(@NotNull ProxiedPlayer wrappedObject) {
+public class VelocityProxiedPlayer extends VelocityProxiedSender implements ProxiedPlayer {
+    public VelocityProxiedPlayer(@NotNull Player wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public @NotNull UUID getUuid() {
-        return ((ProxiedPlayer) wrappedObject).getUniqueId();
+        return ((Player) wrappedObject).getUniqueId();
     }
 
     @Override
-    public void switchServer(@NotNull ServerWrapper server) {
-        ((ProxiedPlayer) wrappedObject).connect(server.as(ServerInfo.class));
+    public void switchServer(@NotNull Server server) {
+        ((Player) wrappedObject).createConnectionRequest(server.as(RegisteredServer.class));
     }
 
     @Override
     public @NotNull Locale getLocale() {
-        return ((ProxiedPlayer) wrappedObject).getLocale();
+        return ((Player) wrappedObject).getPlayerSettings().getLocale();
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return ((Player) wrappedObject).getUsername();
     }
 
     @Override

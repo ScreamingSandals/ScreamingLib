@@ -30,17 +30,35 @@ public class BukkitLegacySignBlockSnapshot extends BukkitBlockSnapshot implement
     }
 
     @Override
-    public @NotNull Component @NotNull [] lines() {
+    public @NotNull Component @NotNull [] frontLines() {
         return Arrays.stream(((Sign) wrappedObject).getLines()).map(Component::fromLegacy).toArray(Component[]::new);
     }
 
     @Override
-    public @NotNull Component line(@Range(from = 0, to = 3) int index) {
-        return lines()[index];
+    public @NotNull Component frontLine(@Range(from = 0, to = 3) int index) {
+        return frontLines()[index];
     }
 
     @Override
-    public void line(@Range(from = 0, to = 3) int index, Component component) {
+    public void frontLine(@Range(from = 0, to = 3) int index, Component component) {
         ((Sign) wrappedObject).setLine(index, component.toLegacy());
+    }
+
+    @Override
+    public boolean waxed() {
+        return false;
+    }
+
+    @Override
+    public void waxed(boolean waxed) {
+    }
+
+    @Override
+    public boolean frontSideGlowing() {
+        return false;
+    }
+
+    @Override
+    public void frontSideGlowing(boolean glowing) {
     }
 }

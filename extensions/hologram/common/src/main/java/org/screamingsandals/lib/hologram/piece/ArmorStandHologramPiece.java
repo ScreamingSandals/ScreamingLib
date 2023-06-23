@@ -14,17 +14,36 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.hologram;
+package org.screamingsandals.lib.hologram.piece;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.packet.entity.FakeArmorStandEntity;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.world.Location;
 
-public final class HologramPiece extends FakeArmorStandEntity {
+public final class ArmorStandHologramPiece extends FakeArmorStandEntity implements HologramPiece {
     public static final int ENTITY_TYPE_ID = PacketMapper.getArmorStandTypeId();
 
-    public HologramPiece(@NotNull Location location) {
+    public ArmorStandHologramPiece(@NotNull Location location) {
         super(location, ENTITY_TYPE_ID);
+    }
+
+    @Override
+    public void setText(@NotNull Component text, @Nullable AudienceComponentLike audienceComponentLike) {
+        setCustomName(text);
+        setCustomNameSenderMessage(audienceComponentLike);
+    }
+
+    @Override
+    public @NotNull Component getText() {
+        return getCustomName();
+    }
+
+    @Override
+    public @Nullable AudienceComponentLike getAudienceComponent() {
+        return getCustomNameSenderMessage();
     }
 }

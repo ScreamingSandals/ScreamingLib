@@ -80,6 +80,11 @@ public class BukkitPacketMapper extends PacketMapper {
         return ClassStorage.getEntityTypeId("armor_stand", ArmorStandAccessor.getType());
     }
 
+    @Override
+    public int getTextDisplayTypeId0() {
+        return ClassStorage.getEntityTypeId("text_display", null); // second argument is irrelevant for 1.19.4+
+    }
+
     // TODO: Optimize: usage of write() instead and flushing manually at the end for multiple writes, also expose this method later on
     protected void sendRawPacket(Player player, ByteBuf buffer) {
         var channel = Players.getNettyChannel(player);

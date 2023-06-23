@@ -22,13 +22,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.proxy.PendingConnection;
-import org.screamingsandals.lib.proxy.event.SPlayerLoginEvent;
+import org.screamingsandals.lib.proxy.event.PlayerLoginEvent;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 import java.util.Optional;
 
-public class VelocityPlayerLoginEvent extends BasicWrapper<LoginEvent> implements SPlayerLoginEvent {
+public class VelocityPlayerLoginEvent extends BasicWrapper<LoginEvent> implements PlayerLoginEvent {
     protected VelocityPlayerLoginEvent(@NotNull LoginEvent wrappedObject) {
         super(wrappedObject);
     }

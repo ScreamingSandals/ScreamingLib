@@ -23,6 +23,11 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.hologram.piece.ArmorStandHologramPiece;
+import org.screamingsandals.lib.hologram.piece.HologramPiece;
+import org.screamingsandals.lib.hologram.piece.TextDisplayHologramPiece;
+import org.screamingsandals.lib.impl.utils.feature.PlatformFeature;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.ClientboundRemoveEntitiesPacket;
@@ -53,10 +58,12 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 public class HologramImpl extends AbstractLinedVisual<Hologram> implements Hologram {
+    private static final @NotNull PlatformFeature DISPLAY_ENTITIES_AVAILABLE = PlatformFeature.of(() -> Server.isVersion(1, 19, 4));
+
     @Getter(AccessLevel.NONE)
     private final @NotNull Map<@NotNull Integer, HologramPiece> entitiesOnLines;
     @Getter(AccessLevel.NONE)
-    private volatile @Nullable HologramPiece itemEntity;
+    private volatile @Nullable ArmorStandHologramPiece itemEntity;
     private volatile @Nullable Task rotationTask;
     private @NotNull Location cachedLocation;
     private @NotNull Location location;
@@ -252,40 +259,43 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
             lines.forEach((key, value) -> {
                 try {
+                    var isSenderMessage = value instanceof SimpleCLTextEntry && ((SimpleCLTextEntry) value).getComponentLike() instanceof AudienceComponentLike;
                     if (entitiesOnLines.containsKey(key)) {
                         final var entityOnLine = entitiesOnLines.get(key);
-                        var isSenderMessage = value instanceof SimpleCLTextEntry && ((SimpleCLTextEntry) value).getComponentLike() instanceof AudienceComponentLike;
                         if (originalLinesSize == lines.size()) {
                             if (isSenderMessage) {
-                                if (entityOnLine.getCustomNameSenderMessage() != null && entityOnLine.getCustomNameSenderMessage().equals(((SimpleCLTextEntry) value).getComponentLike())) {
+                                if (entityOnLine.getAudienceComponent() != null && entityOnLine.getAudienceComponent().equals(((SimpleCLTextEntry) value).getComponentLike())) {
                                     return;
                                 }
-                            } else if (entityOnLine.getCustomName().equals(value.getText())) {
+                            } else if (entityOnLine.getText() != null && entityOnLine.getText().equals(value.getText())) {
                                 return;
                             }
                         }
 
-                        entityOnLine.setCustomName(value.getText());
-                        entityOnLine.setCustomNameSenderMessage(isSenderMessage ? (AudienceComponentLike) ((SimpleCLTextEntry) value).getComponentLike() : null);
+                        entityOnLine.setText(value.getText(), isSenderMessage ? (AudienceComponentLike) ((SimpleCLTextEntry) value).getComponentLike() : null);
                         packets.add(p -> List.of(entityOnLine.getMetadataPacket(p)));
                         entityOnLine.setLocation(cachedLocation.clone().add(0, (lines.size() - key) * .25, 0));
                         packets.add(p -> List.of(entityOnLine.getTeleportPacket()));
                     } else {
                         final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
-                        final var entity = new HologramPiece(newLocation);
-                        entity.setCustomName(value.getText());
-                        if (value instanceof SimpleCLTextEntry && ((SimpleCLTextEntry) value).getComponentLike() instanceof AudienceComponentLike) {
-                            entity.setCustomNameSenderMessage((AudienceComponentLike) ((SimpleCLTextEntry) value).getComponentLike());
+                        HologramPiece piece;
+                        if (!touchable && HologramManager.isPreferDisplayEntities() && DISPLAY_ENTITIES_AVAILABLE.isSupported()) {
+                            piece = new TextDisplayHologramPiece(newLocation);
+                            // TODO: 1.19.4 touchable hologram: text display + interaction entity
+                        } else {
+                            final var entity = new ArmorStandHologramPiece(newLocation);
+                            entity.setCustomNameVisible(true);
+                            entity.setInvisible(true);
+                            entity.setSmall(!touchable);
+                            entity.setArms(false);
+                            entity.setBasePlate(false);
+                            entity.setGravity(false);
+                            entity.setMarker(!touchable);
+                            piece = entity;
                         }
-                        entity.setCustomNameVisible(true);
-                        entity.setInvisible(true);
-                        entity.setSmall(!touchable);
-                        entity.setArms(false);
-                        entity.setBasePlate(false);
-                        entity.setGravity(false);
-                        entity.setMarker(!touchable);
-                        packets.add(entity::getSpawnPackets);
-                        entitiesOnLines.put(key, entity);
+                        piece.setText(value.getText(), isSenderMessage ? (AudienceComponentLike) ((SimpleCLTextEntry) value).getComponentLike() : null);
+                        packets.add(piece::getSpawnPackets);
+                        entitiesOnLines.put(key, piece);
                     }
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
@@ -295,10 +305,11 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
             try {
                 if (rotationMode != RotationMode.NONE) {
                     if (itemEntity == null && item != null) {
+                        // TODO: 1.19.4 hologram: item entity + interaction entity if touchable
                         final var newLocation = cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
                                 ? (-lines.size() * .25 - .5)
                                 : (lines.size() * .25), 0);
-                        final var entity = new HologramPiece(newLocation);
+                        final var entity = new ArmorStandHologramPiece(newLocation);
                         entity.setInvisible(true);
                         entity.setSmall(!touchable);
                         entity.setArms(false);
@@ -346,7 +357,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         viewers.forEach(viewer -> update(viewer, packets.stream().map(f -> f.apply(viewer)).flatMap(Collection::stream).collect(Collectors.toList()), true));
     }
 
-    private ClientboundSetEquipmentPacket getEquipmentPacket(@NotNull HologramPiece entity, @NotNull ItemStack item) {
+    private ClientboundSetEquipmentPacket getEquipmentPacket(@NotNull ArmorStandHologramPiece entity, @NotNull ItemStack item) {
         return ClientboundSetEquipmentPacket.builder()
                 .entityId(entity.getId())
                 .slots(Map.of(EquipmentSlot.of("HEAD"), item))

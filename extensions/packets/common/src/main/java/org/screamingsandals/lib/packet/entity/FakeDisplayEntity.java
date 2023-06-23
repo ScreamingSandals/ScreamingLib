@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.proxy.event;
+package org.screamingsandals.lib.packet.entity;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.CancellableEvent;
-import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
+import org.screamingsandals.lib.world.Location;
 
-public interface SPlayerChatEvent extends CancellableEvent {
-    @NotNull ProxiedPlayerWrapper getPlayer();
-
-    boolean isCommand();
-
-    @NotNull String getMessage();
-
-    void setMessage(@NotNull String message);
+@Getter
+public class FakeDisplayEntity extends FakeEntity {
+    public FakeDisplayEntity(@NotNull Location location, int typeId) {
+        super(location, typeId);
+    }
 }

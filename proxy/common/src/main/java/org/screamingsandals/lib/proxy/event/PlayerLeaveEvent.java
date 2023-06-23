@@ -18,15 +18,15 @@ package org.screamingsandals.lib.proxy.event;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.Event;
-import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayer;
 
 import java.util.Arrays;
 import java.util.List;
 
-public interface SPlayerLeaveEvent extends Event {
+public interface PlayerLeaveEvent extends Event {
     @NotNull LoginStatus getStatus();
 
-    @NotNull ProxiedPlayerWrapper getPlayer();
+    @NotNull ProxiedPlayer getPlayer();
 
     enum LoginStatus {
         CANCELLED_BY_PROXY,

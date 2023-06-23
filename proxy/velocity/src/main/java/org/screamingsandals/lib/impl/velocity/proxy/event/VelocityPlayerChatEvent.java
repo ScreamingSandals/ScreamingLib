@@ -16,25 +16,24 @@
 
 package org.screamingsandals.lib.impl.velocity.proxy.event;
 
-import com.velocitypowered.api.event.player.PlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.impl.velocity.proxy.VelocityProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.event.SPlayerChatEvent;
+import org.screamingsandals.lib.impl.velocity.proxy.VelocityProxiedPlayer;
+import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.event.PlayerChatEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
-public class VelocityPlayerChatEvent extends BasicWrapper<PlayerChatEvent> implements SPlayerChatEvent {
-    protected VelocityPlayerChatEvent(@NotNull PlayerChatEvent wrappedObject) {
+public class VelocityPlayerChatEvent extends BasicWrapper<com.velocitypowered.api.event.player.PlayerChatEvent> implements PlayerChatEvent {
+    protected VelocityPlayerChatEvent(@NotNull com.velocitypowered.api.event.player.PlayerChatEvent wrappedObject) {
         super(wrappedObject);
     }
 
-    private @Nullable ProxiedPlayerWrapper player;
+    private @Nullable ProxiedPlayer player;
 
     @Override
-    public @NotNull ProxiedPlayerWrapper getPlayer() {
+    public @NotNull ProxiedPlayer getPlayer() {
         if (player == null) {
-            player = new VelocityProxiedPlayerWrapper(wrappedObject.getPlayer());
+            player = new VelocityProxiedPlayer(wrappedObject.getPlayer());
         }
         return player;
     }
@@ -52,7 +51,7 @@ public class VelocityPlayerChatEvent extends BasicWrapper<PlayerChatEvent> imple
     @Override
     public void setMessage(@NotNull String message) {
         if (wrappedObject.getResult().isAllowed()) {
-            wrappedObject.setResult(PlayerChatEvent.ChatResult.message(message));
+            wrappedObject.setResult(com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult.message(message));
         }
     }
 
@@ -64,9 +63,9 @@ public class VelocityPlayerChatEvent extends BasicWrapper<PlayerChatEvent> imple
     @Override
     public void cancelled(boolean cancel) {
         if (cancel && wrappedObject.getResult().isAllowed()) {
-            wrappedObject.setResult(PlayerChatEvent.ChatResult.denied());
+            wrappedObject.setResult(com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult.denied());
         } else if (!cancel && !wrappedObject.getResult().isAllowed()) {
-            wrappedObject.setResult(PlayerChatEvent.ChatResult.allowed());
+            wrappedObject.setResult(com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult.allowed());
         }
     }
 }

@@ -14,41 +14,35 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.velocity.proxy;
+package org.screamingsandals.lib.impl.bungee.proxy;
 
-import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.server.RegisteredServer;
+import net.md_5.bungee.api.config.ServerInfo;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.ServerWrapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.Server;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 
 import java.util.Locale;
 import java.util.UUID;
 
-public class VelocityProxiedPlayerWrapper extends VelocityProxiedSenderWrapper implements ProxiedPlayerWrapper {
-    public VelocityProxiedPlayerWrapper(@NotNull Player wrappedObject) {
+public class BungeeProxiedPlayer extends BungeeProxiedSender implements ProxiedPlayer {
+    public BungeeProxiedPlayer(@NotNull net.md_5.bungee.api.connection.ProxiedPlayer wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public @NotNull UUID getUuid() {
-        return ((Player) wrappedObject).getUniqueId();
+        return ((net.md_5.bungee.api.connection.ProxiedPlayer) wrappedObject).getUniqueId();
     }
 
     @Override
-    public void switchServer(@NotNull ServerWrapper server) {
-        ((Player) wrappedObject).createConnectionRequest(server.as(RegisteredServer.class));
+    public void switchServer(@NotNull Server server) {
+        ((net.md_5.bungee.api.connection.ProxiedPlayer) wrappedObject).connect(server.as(ServerInfo.class));
     }
 
     @Override
     public @NotNull Locale getLocale() {
-        return ((Player) wrappedObject).getPlayerSettings().getLocale();
-    }
-
-    @Override
-    public @NotNull String getName() {
-        return ((Player) wrappedObject).getUsername();
+        return ((net.md_5.bungee.api.connection.ProxiedPlayer) wrappedObject).getLocale();
     }
 
     @Override

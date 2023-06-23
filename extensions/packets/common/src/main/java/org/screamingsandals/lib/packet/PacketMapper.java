@@ -97,7 +97,16 @@ public abstract class PacketMapper {
         return packetMapper.getArmorStandTypeId0();
     }
 
+    public static int getTextDisplayTypeId() {
+        if (packetMapper == null) {
+            throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
+        }
+        return packetMapper.getTextDisplayTypeId0();
+    }
+
     public abstract int getId0(@NotNull Class<? extends AbstractPacket> clazz);
 
     public abstract int getArmorStandTypeId0();
+
+    public abstract int getTextDisplayTypeId0();
 }

@@ -21,16 +21,16 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.impl.velocity.event.AbstractVelocityEventHandlerFactory;
-import org.screamingsandals.lib.proxy.event.SPlayerLeaveEvent;
+import org.screamingsandals.lib.proxy.event.PlayerLeaveEvent;
 
-public class PlayerLeaveEventFactory extends AbstractVelocityEventHandlerFactory<DisconnectEvent, SPlayerLeaveEvent> {
+public class PlayerLeaveEventFactory extends AbstractVelocityEventHandlerFactory<DisconnectEvent, PlayerLeaveEvent> {
 
     public PlayerLeaveEventFactory(@NotNull Object plugin, @NotNull ProxyServer proxyServer) {
-        super(DisconnectEvent.class, SPlayerLeaveEvent.class, plugin, proxyServer);
+        super(DisconnectEvent.class, PlayerLeaveEvent.class, plugin, proxyServer);
     }
 
     @Override
-    protected @NotNull SPlayerLeaveEvent wrapEvent(@NotNull DisconnectEvent event, @NotNull EventPriority priority) {
+    protected @NotNull PlayerLeaveEvent wrapEvent(@NotNull DisconnectEvent event, @NotNull EventPriority priority) {
         return new VelocityPlayerLeaveEvent(event);
     }
 }

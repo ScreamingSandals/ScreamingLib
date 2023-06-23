@@ -26,6 +26,7 @@ import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -102,6 +103,9 @@ public class BukkitFeature {
     // Block API
     public static final @NotNull PlatformFeature COMMAND_BLOCK_VERBOSE_BLOCK_STATE = PlatformFeature.of(() -> Version.isVersion(1, 9));
     public static final @NotNull PlatformFeature TILE_STATE = PlatformFeature.of(() -> Reflect.has("org.bukkit.block.TileState"));
+    public static final @NotNull PlatformFeature SIGN_IS_WAXED = PlatformFeature.of(() -> Reflect.hasMethod(Sign.class, "isWaxed"));
+    public static final @NotNull PlatformFeature SIGN_IS_GLOWING_TEXT = PlatformFeature.of(() -> Reflect.hasMethod(Sign.class, "isGlowingText"));
+    public static final @NotNull PlatformFeature SIGN_BILATERAL = PlatformFeature.of(() -> Reflect.has("rg.bukkit.block.sign.SignSide") && Version.isVersion(1, 20)); // md_5 decided to introduce the API before updating to a version which supports this
 
     // Material API (Block & Item)
     public static final @NotNull PlatformFeature FLATTENING = PlatformFeature.of(() -> Version.isVersion(1, 13));
@@ -198,4 +202,5 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_SHOOT_BOW_EVENT_HAND = PlatformFeature.of(() -> Reflect.hasMethod(EntityShootBowEvent.class, "getHand"));
     public static final @NotNull PlatformFeature PLAYER_SHEAR_ENTITY_EVENT_ITEM_HAND = PlatformFeature.of(() -> Reflect.hasMethod(PlayerShearEntityEvent.class, "getItem"));
     public static final @NotNull PlatformFeature FOLIA_TASKER = PlatformFeature.of(() -> Reflect.has("io.papermc.paper.threadedregions.scheduler.ScheduledTask"));
+    public static final @NotNull PlatformFeature DISPLAY_ENTITIES_AVAILABLE = PlatformFeature.of(() -> Version.isVersion(1, 19, 4));
 }

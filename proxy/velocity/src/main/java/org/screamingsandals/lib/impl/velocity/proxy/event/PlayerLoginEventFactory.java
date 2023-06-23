@@ -21,16 +21,16 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.impl.velocity.event.AbstractVelocityEventHandlerFactory;
-import org.screamingsandals.lib.proxy.event.SPlayerLoginEvent;
+import org.screamingsandals.lib.proxy.event.PlayerLoginEvent;
 
-public class PlayerLoginEventFactory extends AbstractVelocityEventHandlerFactory<LoginEvent, SPlayerLoginEvent> {
+public class PlayerLoginEventFactory extends AbstractVelocityEventHandlerFactory<LoginEvent, PlayerLoginEvent> {
 
     public PlayerLoginEventFactory(@NotNull Object plugin, @NotNull ProxyServer proxyServer) {
-        super(LoginEvent.class, SPlayerLoginEvent.class, plugin, proxyServer, true);
+        super(LoginEvent.class, PlayerLoginEvent.class, plugin, proxyServer, true);
     }
 
     @Override
-    protected @NotNull SPlayerLoginEvent wrapEvent(@NotNull LoginEvent event, @NotNull EventPriority priority) {
+    protected @NotNull PlayerLoginEvent wrapEvent(@NotNull LoginEvent event, @NotNull EventPriority priority) {
         return new VelocityPlayerLoginEvent(event);
     }
 }

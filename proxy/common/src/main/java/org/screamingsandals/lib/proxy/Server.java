@@ -19,12 +19,13 @@ package org.screamingsandals.lib.proxy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.impl.proxy.ProxiedPlayerMapper;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.List;
 
-public interface ServerWrapper extends Wrapper {
+public interface Server extends Wrapper {
 
     @NotNull String getName();
 
@@ -42,7 +43,7 @@ public interface ServerWrapper extends Wrapper {
         }
     }
 
-    default @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers() {
+    default @NotNull List<@NotNull ProxiedPlayer> getPlayers() {
         return ProxiedPlayerMapper.getPlayers(this);
     }
 }

@@ -18,13 +18,13 @@ package org.screamingsandals.lib.impl.velocity.proxy;
 
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.proxy.ServerWrapper;
+import org.screamingsandals.lib.proxy.Server;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 import java.net.SocketAddress;
 
-public class VelocityServerWrapper extends BasicWrapper<RegisteredServer> implements ServerWrapper {
-    public VelocityServerWrapper(@NotNull RegisteredServer wrappedObject) {
+public class VelocityServer extends BasicWrapper<RegisteredServer> implements Server {
+    public VelocityServer(@NotNull RegisteredServer wrappedObject) {
         super(wrappedObject);
     }
 

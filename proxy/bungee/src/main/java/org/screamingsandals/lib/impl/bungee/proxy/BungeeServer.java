@@ -14,17 +14,27 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.proxy.event;
+package org.screamingsandals.lib.impl.bungee.proxy;
 
+import net.md_5.bungee.api.config.ServerInfo;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.CancellableAsyncEvent;
-import org.screamingsandals.lib.proxy.PendingConnection;
-import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.proxy.Server;
+import org.screamingsandals.lib.utils.BasicWrapper;
 
-public interface SPlayerLoginEvent extends CancellableAsyncEvent {
-    @NotNull PendingConnection getPlayer();
+import java.net.SocketAddress;
 
-    @NotNull Component getCancelMessage();
+public class BungeeServer extends BasicWrapper<ServerInfo> implements Server {
+    public BungeeServer(@NotNull ServerInfo wrappedObject) {
+        super(wrappedObject);
+    }
 
-    void setCancelMessage(@NotNull Component cancelMessage);
+    @Override
+    public @NotNull String getName() {
+        return wrappedObject.getName();
+    }
+
+    @Override
+    public @NotNull SocketAddress getSocketAddress() {
+        return wrappedObject.getSocketAddress();
+    }
 }

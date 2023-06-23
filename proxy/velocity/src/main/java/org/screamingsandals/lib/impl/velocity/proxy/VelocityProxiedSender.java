@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bungee.proxy;
+package org.screamingsandals.lib.impl.velocity.proxy;
 
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.permission.Tristate;
+import com.velocitypowered.api.proxy.ConsoleCommandSource;
+import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.impl.bungee.spectator.audience.adapter.BungeeAdapter;
-import org.screamingsandals.lib.impl.bungee.spectator.audience.adapter.BungeePlayerAdapter;
-import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
+import org.screamingsandals.lib.impl.adventure.spectator.audience.adapter.AdventureAdapter;
+import org.screamingsandals.lib.impl.adventure.spectator.audience.adapter.AdventurePlayerAdapter;
+import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.ProxiedSender;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
@@ -30,14 +32,14 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 
 import java.util.Locale;
 
-public class BungeeProxiedSenderWrapper extends BasicWrapper<CommandSender> implements ProxiedSenderWrapper {
-    public BungeeProxiedSenderWrapper(@NotNull CommandSender wrappedObject) {
+public class VelocityProxiedSender extends BasicWrapper<CommandSource> implements ProxiedSender {
+    public VelocityProxiedSender(@NotNull CommandSource wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public @NotNull Type getType() {
-        return wrappedObject instanceof ProxiedPlayer ? Type.PLAYER : Type.UNKNOWN;
+        return wrappedObject instanceof Player ? Type.PLAYER : (wrappedObject instanceof ConsoleCommandSource ? Type.CONSOLE : Type.UNKNOWN);
     }
 
     @Override
@@ -61,14 +63,14 @@ public class BungeeProxiedSenderWrapper extends BasicWrapper<CommandSender> impl
     @Override
     public boolean isPermissionSet(@NotNull Permission permission) {
         if (permission instanceof SimplePermission) {
-            return wrappedObject.getPermissions().contains(((SimplePermission) permission).getPermissionString());
+            return wrappedObject.getPermissionValue(((SimplePermission) permission).getPermissionString()) != Tristate.UNDEFINED;
         }
         return true;
     }
 
     @Override
     public @NotNull String getName() {
-        return wrappedObject.getName();
+        return "CONSOLE";
     }
 
     @Override
@@ -78,11 +80,11 @@ public class BungeeProxiedSenderWrapper extends BasicWrapper<CommandSender> impl
 
     @Override
     public @NotNull Adapter adapter() {
-        if (wrappedObject instanceof ProxiedPlayer && this instanceof ProxiedPlayerWrapper) {
-            return new BungeePlayerAdapter((ProxiedPlayer) wrappedObject, (PlayerAudience) this);
-        /*} else if (source instanceof ConsoleCommandSource && TODO) {
-            return new BungeeConsoleAudience(wrappedObject, (ConsoleAudience) this);*/
+        if (wrappedObject instanceof Player && this instanceof ProxiedPlayer) {
+            return new AdventurePlayerAdapter(wrappedObject, (PlayerAudience) this);
+        /*} else if (wrappedObject instanceof ConsoleCommandSource && TODO) {
+            return new AdventureConsoleAdapter(wrappedObject, (ConsoleAudience) this);*/
         }
-        return new BungeeAdapter(wrappedObject, this);
+        return new AdventureAdapter(wrappedObject, this);
     }
 }

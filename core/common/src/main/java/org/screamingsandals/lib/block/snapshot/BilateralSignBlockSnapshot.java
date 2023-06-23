@@ -22,26 +22,19 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
-public interface SignBlockSnapshot extends BlockEntitySnapshot {
-    @NotNull Component @NotNull [] frontLines();
+@LimitedVersionSupport(">= 1.20")
+public interface BilateralSignBlockSnapshot extends SignBlockSnapshot {
+    @NotNull Component @NotNull [] backLines();
 
-    @NotNull Component frontLine(@Range(from = 0, to = 3) int index);
+    @NotNull Component backLine(@Range(from = 0, to = 3) int index);
 
-    void frontLine(@Range(from = 0, to = 3) int index, @NotNull Component component);
+    void backLine(@Range(from = 0, to = 3) int index, @NotNull Component component);
 
-    default void frontLine(@Range(from = 0, to = 3) int index, @NotNull ComponentLike component) {
-        frontLine(index, component.asComponent());
+    default void backLine(@Range(from = 0, to = 3) int index, @NotNull ComponentLike component) {
+        backLine(index, component.asComponent());
     }
 
-    @LimitedVersionSupport(">= 1.20, unknown behaviour on older Bukkit versions")
-    boolean waxed();
+    boolean backSideGlowing();
 
-    @LimitedVersionSupport(">= 1.20, unknown behaviour on older Bukkit versions")
-    void waxed(boolean waxed);
-
-    @LimitedVersionSupport(">= 1.17")
-    boolean frontSideGlowing();
-
-    @LimitedVersionSupport(">= 1.17")
-    void frontSideGlowing(boolean glowing);
+    void backSideGlowing(boolean glowing);
 }

@@ -16,13 +16,17 @@
 
 package org.screamingsandals.lib.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.spectator.audience.PlayerAudience;
+import org.screamingsandals.lib.sender.CommandSender;
+import org.screamingsandals.lib.api.Wrapper;
 
-import java.util.UUID;
+public interface ProxiedSender extends Wrapper, CommandSender {
 
-public interface ProxiedPlayerWrapper extends ProxiedSenderWrapper, PlayerAudience.ForwardingToAdapter {
-    @NotNull UUID getUuid();
-
-    void switchServer(@NotNull ServerWrapper server);
+    /**
+     * @deprecated Operators are not supported on Proxy servers.
+     */
+    @Override
+    @Deprecated
+    default boolean isOp() {
+        return this.getType() == Type.CONSOLE; // No OP on proxies
+    }
 }

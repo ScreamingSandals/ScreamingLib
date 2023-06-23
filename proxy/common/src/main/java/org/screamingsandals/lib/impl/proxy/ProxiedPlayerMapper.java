@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.proxy;
+package org.screamingsandals.lib.impl.proxy;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.Server;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 
 import java.util.List;
@@ -38,57 +40,57 @@ public abstract class ProxiedPlayerMapper {
         proxiedPlayerMapper = this;
     }
 
-    public static @Nullable ServerWrapper getServer(@NotNull String name) {
+    public static @Nullable Server getServer(@NotNull String name) {
         if (proxiedPlayerMapper == null) {
             throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
         }
         return proxiedPlayerMapper.getServer0(name);
     }
 
-    public abstract @Nullable ServerWrapper getServer0(@NotNull String name);
+    public abstract @Nullable Server getServer0(@NotNull String name);
 
-    public static @NotNull List<@NotNull ServerWrapper> getServers() {
+    public static @NotNull List<@NotNull Server> getServers() {
         if (proxiedPlayerMapper == null) {
             throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
         }
         return proxiedPlayerMapper.getServers0();
     }
 
-    public abstract @NotNull List<@NotNull ServerWrapper> getServers0();
+    public abstract @NotNull List<@NotNull Server> getServers0();
 
-    public static @Nullable ProxiedPlayerWrapper getPlayer(@NotNull String name) {
+    public static @Nullable ProxiedPlayer getPlayer(@NotNull String name) {
         if (proxiedPlayerMapper == null) {
             throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
         }
         return proxiedPlayerMapper.getPlayer0(name);
     }
 
-    public abstract @Nullable ProxiedPlayerWrapper getPlayer0(@NotNull String name);
+    public abstract @Nullable ProxiedPlayer getPlayer0(@NotNull String name);
 
-    public static @Nullable ProxiedPlayerWrapper getPlayer(@NotNull UUID uuid) {
+    public static @Nullable ProxiedPlayer getPlayer(@NotNull UUID uuid) {
         if (proxiedPlayerMapper == null) {
             throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
         }
         return proxiedPlayerMapper.getPlayer0(uuid);
     }
 
-    public abstract @Nullable ProxiedPlayerWrapper getPlayer0(@NotNull UUID uuid);
+    public abstract @Nullable ProxiedPlayer getPlayer0(@NotNull UUID uuid);
 
-    public static @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers() {
+    public static @NotNull List<@NotNull ProxiedPlayer> getPlayers() {
         if (proxiedPlayerMapper == null) {
             throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
         }
         return proxiedPlayerMapper.getPlayers0();
     }
 
-    public abstract @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers0();
+    public abstract @NotNull List<@NotNull ProxiedPlayer> getPlayers0();
 
-    public static @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers(@NotNull ServerWrapper serverWrapper) {
+    public static @NotNull List<@NotNull ProxiedPlayer> getPlayers(@NotNull Server serverWrapper) {
         if (proxiedPlayerMapper == null) {
             throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
         }
         return proxiedPlayerMapper.getPlayers0(serverWrapper);
     }
 
-    public abstract @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers0(@NotNull ServerWrapper serverWrapper);
+    public abstract @NotNull List<@NotNull ProxiedPlayer> getPlayers0(@NotNull Server serverWrapper);
 }

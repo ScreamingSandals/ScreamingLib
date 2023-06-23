@@ -19,17 +19,17 @@ package org.screamingsandals.lib.impl.velocity.proxy.event;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.impl.velocity.proxy.VelocityProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.event.SPlayerLeaveEvent;
+import org.screamingsandals.lib.impl.velocity.proxy.VelocityProxiedPlayer;
+import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.event.PlayerLeaveEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
-public class VelocityPlayerLeaveEvent extends BasicWrapper<DisconnectEvent> implements SPlayerLeaveEvent {
+public class VelocityPlayerLeaveEvent extends BasicWrapper<DisconnectEvent> implements PlayerLeaveEvent {
     protected VelocityPlayerLeaveEvent(@NotNull DisconnectEvent wrappedObject) {
         super(wrappedObject);
     }
 
-    private @Nullable ProxiedPlayerWrapper player;
+    private @Nullable ProxiedPlayer player;
     private @Nullable LoginStatus status;
 
     @Override
@@ -41,9 +41,9 @@ public class VelocityPlayerLeaveEvent extends BasicWrapper<DisconnectEvent> impl
     }
 
     @Override
-    public @NotNull ProxiedPlayerWrapper getPlayer() {
+    public @NotNull ProxiedPlayer getPlayer() {
         if (player == null) {
-            player = new VelocityProxiedPlayerWrapper(wrappedObject.getPlayer());
+            player = new VelocityProxiedPlayer(wrappedObject.getPlayer());
         }
         return player;
     }

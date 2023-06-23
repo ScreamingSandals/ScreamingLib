@@ -22,9 +22,9 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.impl.bungee.proxy.BungeeProxiedPlayerWrapper;
-import org.screamingsandals.lib.impl.bungee.proxy.BungeeProxiedSenderWrapper;
-import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
+import org.screamingsandals.lib.impl.bungee.proxy.BungeeProxiedPlayer;
+import org.screamingsandals.lib.impl.bungee.proxy.BungeeProxiedSender;
+import org.screamingsandals.lib.proxy.ProxiedSender;
 import org.screamingsandals.lib.sender.CommandSender;
 
 import java.util.function.Function;
@@ -40,11 +40,11 @@ public class BungeeScreamingCloudManager extends BungeeCommandManager<CommandSen
                                        @NotNull Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> commandCoordinator) {
         super(owningPlugin, commandCoordinator, sender -> {
             if (sender instanceof ProxiedPlayer) {
-                return new BungeeProxiedPlayerWrapper((ProxiedPlayer) sender);
+                return new BungeeProxiedPlayer((ProxiedPlayer) sender);
             }
-            return new BungeeProxiedSenderWrapper(sender);
+            return new BungeeProxiedSender(sender);
         }, sender -> {
-            if (sender.getType() == ProxiedSenderWrapper.Type.PLAYER) {
+            if (sender.getType() == ProxiedSender.Type.PLAYER) {
                 return sender.as(ProxiedPlayer.class);
             }
             return sender.as(net.md_5.bungee.api.CommandSender.class);

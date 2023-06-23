@@ -16,26 +16,25 @@
 
 package org.screamingsandals.lib.impl.bungee.proxy.listener;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.impl.bungee.proxy.BungeeProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxy.event.SPlayerChatEvent;
+import org.screamingsandals.lib.impl.bungee.proxy.BungeeProxiedPlayer;
+import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.event.PlayerChatEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
-public class BungeePlayerChatEvent extends BasicWrapper<ChatEvent> implements SPlayerChatEvent {
+public class BungeePlayerChatEvent extends BasicWrapper<ChatEvent> implements PlayerChatEvent {
     protected BungeePlayerChatEvent(@NotNull ChatEvent wrappedObject) {
         super(wrappedObject);
     }
 
-    private @Nullable ProxiedPlayerWrapper player;
+    private @Nullable ProxiedPlayer player;
 
     @Override
-    public @NotNull ProxiedPlayerWrapper getPlayer() {
+    public @NotNull ProxiedPlayer getPlayer() {
         if (player == null) {
-            player = new BungeeProxiedPlayerWrapper((ProxiedPlayer) wrappedObject.getSender());
+            player = new BungeeProxiedPlayer((net.md_5.bungee.api.connection.ProxiedPlayer) wrappedObject.getSender());
         }
         return player;
     }

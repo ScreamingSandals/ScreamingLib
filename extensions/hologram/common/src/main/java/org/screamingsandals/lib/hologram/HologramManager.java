@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.hologram;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +42,9 @@ import java.util.UUID;
 })
 public class HologramManager extends AbstractVisualsManager<Hologram> {
     private static @Nullable HologramManager manager;
+    @Getter
+    @Setter
+    private static boolean preferDisplayEntities = true;
 
     public HologramManager() {
         if (manager != null) {

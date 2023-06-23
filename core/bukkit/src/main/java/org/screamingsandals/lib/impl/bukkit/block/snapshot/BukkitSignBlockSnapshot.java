@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.block.snapshot.SignBlockSnapshot;
 
@@ -32,7 +33,7 @@ public class BukkitSignBlockSnapshot extends BukkitBlockEntitySnapshot implement
     }
 
     @Override
-    public @NotNull Component @NotNull [] lines() {
+    public @NotNull Component @NotNull [] frontLines() {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return ((Sign) wrappedObject).lines().stream().map(AdventureBackend::wrapComponent).toArray(Component[]::new);
         } else {
@@ -41,16 +42,50 @@ public class BukkitSignBlockSnapshot extends BukkitBlockEntitySnapshot implement
     }
 
     @Override
-    public @NotNull Component line(@Range(from = 0, to = 3) int index) {
-        return lines()[index];
+    public @NotNull Component frontLine(@Range(from = 0, to = 3) int index) {
+        return frontLines()[index];
     }
 
     @Override
-    public void line(@Range(from = 0, to = 3) int index, Component component) {
+    public void frontLine(@Range(from = 0, to = 3) int index, Component component) {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             ((Sign) wrappedObject).line(index, component.as(net.kyori.adventure.text.Component.class));
         } else {
             ((Sign) wrappedObject).setLine(index, component.toLegacy());
         }
+    }
+
+    @Override
+    public boolean waxed() {
+        if (BukkitFeature.SIGN_IS_WAXED.isSupported()) {
+            return ((Sign) wrappedObject).isWaxed();
+        } else {
+            return !((Sign) wrappedObject).isEditable();
+        }
+    }
+
+    @Override
+    public void waxed(boolean waxed) {
+        if (BukkitFeature.SIGN_IS_WAXED.isSupported()) {
+            ((Sign) wrappedObject).setWaxed(waxed);
+        } else {
+            ((Sign) wrappedObject).setEditable(!waxed);
+        }
+    }
+
+    @Override
+    public boolean frontSideGlowing() {
+        if (BukkitFeature.SIGN_IS_GLOWING_TEXT.isSupported()) {
+            return ((Sign) wrappedObject).isGlowingText();
+        } else {
+            return false; // else: not supported on < 1.17
+        }
+    }
+
+    @Override
+    public void frontSideGlowing(boolean glowing) {
+        if (BukkitFeature.SIGN_IS_GLOWING_TEXT.isSupported()) {
+            ((Sign) wrappedObject).setGlowingText(glowing);
+        } // else: not supported on < 1.17
     }
 }
