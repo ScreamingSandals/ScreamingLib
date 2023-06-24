@@ -16,78 +16,73 @@
 
 package org.screamingsandals.lib.impl.bungee.proxy.listener;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.ChatEvent;
+import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.impl.bungee.event.AbstractBungeeEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.impl.bungee.event.AbstractBungeeEventHandlerFactory;
 
 import java.util.function.Consumer;
 
-public class ChatEventListener extends AbstractBungeeEventHandlerFactory<ChatEvent, BungeePlayerChatEvent> {
-    public ChatEventListener(@NotNull Plugin plugin, @NotNull PluginManager pluginManager) {
-        super(ChatEvent.class, BungeePlayerChatEvent.class, plugin, pluginManager);
+public class LoginEventListener extends AbstractBungeeEventHandlerFactory<LoginEvent, BungeePlayerLoginEvent> {
+    public LoginEventListener(@NotNull Plugin plugin, @NotNull PluginManager pluginManager) {
+        super(LoginEvent.class, BungeePlayerLoginEvent.class, plugin, pluginManager);
     }
 
     @Override
-    protected @Nullable BungeePlayerChatEvent wrapEvent(@NotNull ChatEvent event, @NotNull EventPriority priority) {
-        if (!(event.getSender() instanceof ProxiedPlayer)) {
-            return null;
-        }
-
-        return new BungeePlayerChatEvent(event);
+    protected @Nullable BungeePlayerLoginEvent wrapEvent(@NotNull LoginEvent event, @NotNull EventPriority priority) {
+        return new BungeePlayerLoginEvent(event);
     }
 
     @Override
-    protected @NotNull Listener constructLowestPriorityHandler(@NotNull Consumer<@NotNull ChatEvent> handler) {
+    protected @NotNull Listener constructLowestPriorityHandler(@NotNull Consumer<@NotNull LoginEvent> handler) {
         return new Listener() {
             @EventHandler(priority = net.md_5.bungee.event.EventPriority.LOWEST)
-            public void onEvent(@NotNull ChatEvent event) {
+            public void onEvent(@NotNull LoginEvent event) {
                 handler.accept(event);
             }
         };
     }
 
     @Override
-    protected @NotNull Listener constructLowPriorityHandler(@NotNull Consumer<@NotNull ChatEvent> handler) {
+    protected @NotNull Listener constructLowPriorityHandler(@NotNull Consumer<@NotNull LoginEvent> handler) {
         return new Listener() {
             @EventHandler(priority = net.md_5.bungee.event.EventPriority.LOW)
-            public void onEvent(@NotNull ChatEvent event) {
+            public void onEvent(@NotNull LoginEvent event) {
                 handler.accept(event);
             }
         };
     }
 
     @Override
-    protected @NotNull Listener constructNormalPriorityHandler(@NotNull Consumer<@NotNull ChatEvent> handler) {
+    protected @NotNull Listener constructNormalPriorityHandler(@NotNull Consumer<@NotNull LoginEvent> handler) {
         return new Listener() {
             @EventHandler(priority = net.md_5.bungee.event.EventPriority.NORMAL)
-            public void onEvent(@NotNull ChatEvent event) {
+            public void onEvent(@NotNull LoginEvent event) {
                 handler.accept(event);
             }
         };
     }
 
     @Override
-    protected @NotNull Listener constructHighPriorityHandler(@NotNull Consumer<@NotNull ChatEvent> handler) {
+    protected @NotNull Listener constructHighPriorityHandler(@NotNull Consumer<@NotNull LoginEvent> handler) {
         return new Listener() {
             @EventHandler(priority = net.md_5.bungee.event.EventPriority.HIGH)
-            public void onEvent(@NotNull ChatEvent event) {
+            public void onEvent(@NotNull LoginEvent event) {
                 handler.accept(event);
             }
         };
     }
 
     @Override
-    protected @NotNull Listener constructHighestPriorityHandler(@NotNull Consumer<@NotNull ChatEvent> handler) {
+    protected @NotNull Listener constructHighestPriorityHandler(@NotNull Consumer<@NotNull LoginEvent> handler) {
         return new Listener() {
             @EventHandler(priority = net.md_5.bungee.event.EventPriority.HIGHEST)
-            public void onEvent(@NotNull ChatEvent event) {
+            public void onEvent(@NotNull LoginEvent event) {
                 handler.accept(event);
             }
         };

@@ -22,6 +22,8 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bungee.proxy.listener.ChatEventListener;
+import org.screamingsandals.lib.impl.bungee.proxy.listener.LoginEventListener;
+import org.screamingsandals.lib.impl.bungee.proxy.listener.PlayerDisconnectEventListener;
 import org.screamingsandals.lib.impl.bungee.spectator.BungeeBackend;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.impl.proxy.ProxiedPlayerMapper;
@@ -41,7 +43,11 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
 
     public BungeeProxiedPlayerMapper(@NotNull Plugin plugin) {
         Spectator.setBackend(new BungeeBackend());
-        plugin.getProxy().getPluginManager().registerListener(plugin, new ChatEventListener());
+
+        var pluginManager = plugin.getProxy().getPluginManager();
+        new ChatEventListener(plugin, pluginManager);
+        new LoginEventListener(plugin, pluginManager);
+        new PlayerDisconnectEventListener(plugin, pluginManager);
     }
 
     @Override
