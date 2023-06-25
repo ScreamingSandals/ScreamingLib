@@ -14,23 +14,10 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity;
+package org.screamingsandals.lib.entity.hanging;
 
-import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.firework.FireworkEffect;
-import org.screamingsandals.lib.utils.Pair;
-
-import java.util.List;
-
-public interface Firework extends ProjectileEntity {
-
-    void setEffect(@NotNull List<@NotNull FireworkEffect> fireworkEffect, int power);
-
-    @NotNull Pair<@NotNull List<@NotNull FireworkEffect>, @NotNull Integer> getEffect();
-
-    void detonate();
-
-    boolean isShotAtAngle();
-
-    void setShotAtAngle(boolean shotAtAngle);
+/**
+ * Represents an entity with identifier {@code minecraft:leash_knot}.
+ */
+public interface LeashKnot extends HangingEntity {
 }

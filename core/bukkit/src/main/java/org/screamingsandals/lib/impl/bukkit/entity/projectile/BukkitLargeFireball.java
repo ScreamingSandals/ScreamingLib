@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity;
+package org.screamingsandals.lib.impl.bukkit.entity.projectile;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.world.Location;
+import org.screamingsandals.lib.entity.projectile.LargeFireball;
 
-import java.util.function.Consumer;
-
-public interface LightningStrike extends Entity {
-    boolean isEffect();
-
-    static @Nullable LightningStrike strike(@NotNull Location locationHolder) {
-        return Entities.strikeLightning(locationHolder);
-    }
-
-    static @Nullable LightningStrike strike(@NotNull Location locationHolder, @Nullable Consumer<? super @NotNull LightningStrike> preSpawnFunction) {
-        return Entities.strikeLightning(locationHolder, preSpawnFunction);
+public class BukkitLargeFireball extends BukkitFireball implements LargeFireball {
+    public BukkitLargeFireball(@NotNull org.bukkit.entity.LargeFireball wrappedObject) {
+        super(wrappedObject);
     }
 }

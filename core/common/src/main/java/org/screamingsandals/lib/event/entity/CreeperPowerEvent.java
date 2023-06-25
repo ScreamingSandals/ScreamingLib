@@ -19,14 +19,14 @@ package org.screamingsandals.lib.event.entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
-import org.screamingsandals.lib.entity.LightningStrike;
+import org.screamingsandals.lib.entity.LightningBolt;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.CancellableEvent;
 
 public interface CreeperPowerEvent extends CancellableEvent, PlatformEvent {
     @NotNull Entity entity();
 
-    @Nullable LightningStrike bolt();
+    @Nullable LightningBolt bolt();
 
     @NotNull PowerCause cause();
 

@@ -37,10 +37,10 @@ public class BukkitPathfindingMob extends BukkitLivingEntity implements Pathfind
 
         if (BukkitFeature.MOB_INTERFACE.isSupported()) {
             if (!(wrappedObject instanceof Mob)) {
-                throw new UnsupportedOperationException("Wrapped object is not instance of Mob!");
+                throw new IllegalArgumentException("Wrapped object is not instance of Mob!");
             }
         } else if (!(wrappedObject instanceof Slime || wrappedObject instanceof Creature)) {
-            throw new UnsupportedOperationException("Wrapped object is not instance of Slime or Creature!");
+            throw new IllegalArgumentException("Wrapped object is not instance of Slime or Creature!");
         }
     }
 

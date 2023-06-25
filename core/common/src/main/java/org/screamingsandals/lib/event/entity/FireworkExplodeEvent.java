@@ -17,10 +17,10 @@
 package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.Firework;
+import org.screamingsandals.lib.entity.projectile.FireworkRocket;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.CancellableEvent;
 
 public interface FireworkExplodeEvent extends CancellableEvent, PlatformEvent {
-    @NotNull Firework entity();
+    @NotNull FireworkRocket entity();
 }

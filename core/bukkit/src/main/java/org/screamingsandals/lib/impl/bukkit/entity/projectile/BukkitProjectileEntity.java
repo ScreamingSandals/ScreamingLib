@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.entity;
+package org.screamingsandals.lib.impl.bukkit.entity.projectile;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
@@ -23,8 +23,9 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.entity.ProjectileEntity;
-import org.screamingsandals.lib.entity.ProjectileShooter;
+import org.screamingsandals.lib.entity.projectile.ProjectileEntity;
+import org.screamingsandals.lib.entity.projectile.ProjectileShooter;
+import org.screamingsandals.lib.impl.bukkit.entity.BukkitEntity;
 
 public class BukkitProjectileEntity extends BukkitEntity implements ProjectileEntity {
     public BukkitProjectileEntity(@NotNull Projectile wrappedObject) {

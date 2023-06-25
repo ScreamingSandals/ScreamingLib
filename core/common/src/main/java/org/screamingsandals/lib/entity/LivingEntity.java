@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.attribute.Attribute;
 import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.entity.projectile.ProjectileShooter;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.block.BlockPlacement;

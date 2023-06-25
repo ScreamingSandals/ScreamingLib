@@ -18,8 +18,8 @@ package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.ProjectileEntity;
-import org.screamingsandals.lib.entity.ProjectileShooter;
+import org.screamingsandals.lib.entity.projectile.ProjectileEntity;
+import org.screamingsandals.lib.entity.projectile.ProjectileShooter;
 
 public interface ProjectileLaunchEvent extends EntitySpawnEvent {
 

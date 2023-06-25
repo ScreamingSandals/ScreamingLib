@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.Entity;
-import org.screamingsandals.lib.entity.LightningStrike;
+import org.screamingsandals.lib.entity.LightningBolt;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.CreeperPowerEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -45,7 +45,7 @@ public class BukkitCreeperPowerEvent implements CreeperPowerEvent, BukkitCancell
 
     // Internal cache
     private @Nullable Entity entity;
-    private @Nullable LightningStrike bolt;
+    private @Nullable LightningBolt bolt;
     private boolean boltCached;
     private @Nullable PowerCause cause;
 
@@ -58,7 +58,7 @@ public class BukkitCreeperPowerEvent implements CreeperPowerEvent, BukkitCancell
     }
 
     @Override
-    public @Nullable LightningStrike bolt() {
+    public @Nullable LightningBolt bolt() {
         if (!boltCached) {
             if (event.getLightning() != null) {
                 bolt = Entities.wrapEntityLightning(event.getLightning()).orElseThrow();

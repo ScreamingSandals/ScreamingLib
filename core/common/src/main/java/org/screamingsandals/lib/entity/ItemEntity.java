@@ -24,6 +24,9 @@ import org.screamingsandals.lib.world.Location;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+/**
+ * Represents an entity with identifier {@code minecraft:item}.
+ */
 public interface ItemEntity extends Entity {
 
     @NotNull ItemStack getItem();

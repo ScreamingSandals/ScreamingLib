@@ -16,21 +16,77 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity;
 
-import org.bukkit.entity.*;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Guardian;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Mob;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Zombie;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.impl.bukkit.entity.type.BukkitEntityType1_8;
-import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.entity.*;
+import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.ExperienceOrb;
-import org.screamingsandals.lib.entity.LightningStrike;
+import org.screamingsandals.lib.entity.ItemEntity;
+import org.screamingsandals.lib.entity.LightningBolt;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitHangingEntity;
+import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitItemFrame;
+import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitLeashKnot;
+import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitPainting;
+import org.screamingsandals.lib.impl.bukkit.entity.illager.BukkitEvokerFangs;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitAbstractArrow;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitArrow;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitDragonFireball;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitEgg;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitEnderPearl;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitExperienceBottle;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitEyeOfEnder;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitFireball;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitFireworkRocket;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitFishingBobber;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitHurtingProjectileEntity;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitLargeFireball;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitLlamaSpit;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitProjectileEntity;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitShulkerBullet;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitSmallFireball;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitSnowball;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitSpectralArrow;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitThrowableProjectileEntity;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitThrownPotion;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitTrident;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitWitherSkull;
+import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitBlockDisplay;
+import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitDisplay;
+import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitInteraction;
+import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitItemDisplay;
+import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitMarker;
+import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitTextDisplay;
+import org.screamingsandals.lib.impl.bukkit.entity.type.BukkitEntityType1_8;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitBoat;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitChestBoat;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitChestMinecart;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitCommandBlockMinecart;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitFurnaceMinecart;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitHopperMinecart;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitMinecart;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitRideableMinecart;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitSpawnerMinecart;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitTntMinecart;
+import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitVehicle;
+import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.entity.type.InternalEntityLegacyConstants;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.nms.accessors.EntityAccessor;
+import org.screamingsandals.lib.nms.accessors.EnumZombieTypeAccessor;
+import org.screamingsandals.lib.nms.accessors.ZombieAccessor;
 import org.screamingsandals.lib.tasker.DefaultThreads;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -54,32 +110,194 @@ public class BukkitEntities extends Entities {
             return null;
         }
 
-        // order is important here
-        if (entity instanceof Player) {
-            return new BukkitPlayer((Player) entity);
-        }
+        // TODO: this operation of looking for correct implementation looks heavy to me, maybe introduce some type-based cache?
 
-        if (entity instanceof org.bukkit.entity.HumanEntity) {
-            return new BukkitHumanEntity((org.bukkit.entity.HumanEntity) entity);
-        }
+        // ORDER IS IMPORTANT HERE - KEEP IT RIGHT
+        if (entity instanceof org.bukkit.entity.LivingEntity) {
+            if (entity instanceof org.bukkit.entity.HumanEntity) {
+                if (entity instanceof Player) {
+                    return new BukkitPlayer((Player) entity);
+                }
 
-        if (BukkitFeature.MOB_INTERFACE.isSupported()) {
-            if (entity instanceof Mob) {
+                return new BukkitHumanEntity((org.bukkit.entity.HumanEntity) entity);
+            }
+
+            if (BukkitFeature.MOB_INTERFACE.isSupported()) {
+                if (entity instanceof Mob) {
+                    return new BukkitPathfindingMob((org.bukkit.entity.LivingEntity) entity);
+                }
+            } else if (entity instanceof Slime || entity instanceof Creature) {
                 return new BukkitPathfindingMob((org.bukkit.entity.LivingEntity) entity);
             }
-        } else if (entity instanceof Slime || entity instanceof Creature) {
-            return new BukkitPathfindingMob((org.bukkit.entity.LivingEntity) entity);
-        }
 
-        if (entity instanceof org.bukkit.entity.LivingEntity) {
+            if (entity instanceof org.bukkit.entity.ArmorStand) {
+                return new BukkitArmorStand((org.bukkit.entity.ArmorStand) entity);
+            }
+
             return new BukkitLivingEntity((org.bukkit.entity.LivingEntity) entity);
         }
 
-        if (entity instanceof org.bukkit.entity.Firework) {
-            return new BukkitFirework((org.bukkit.entity.Firework) entity);
+        if (entity instanceof org.bukkit.entity.Vehicle) {
+            if (entity instanceof org.bukkit.entity.Boat) {
+                if (BukkitFeature.ENTITY_CHEST_BOAT.isSupported()) {
+                    if (entity instanceof org.bukkit.entity.ChestBoat) {
+                        return new BukkitChestBoat((org.bukkit.entity.ChestBoat) entity);
+                    }
+                }
+                return new BukkitBoat((org.bukkit.entity.Boat) entity);
+            }
+            if (entity instanceof org.bukkit.entity.Minecart) {
+                if (entity instanceof org.bukkit.entity.minecart.StorageMinecart) {
+                    return new BukkitChestMinecart((org.bukkit.entity.minecart.StorageMinecart) entity);
+                }
+                if (entity instanceof org.bukkit.entity.minecart.CommandMinecart) {
+                    return new BukkitCommandBlockMinecart((org.bukkit.entity.minecart.CommandMinecart) entity);
+                }
+                if (entity instanceof org.bukkit.entity.minecart.PoweredMinecart) {
+                    return new BukkitFurnaceMinecart((org.bukkit.entity.minecart.PoweredMinecart) entity);
+                }
+                if (entity instanceof org.bukkit.entity.minecart.HopperMinecart) {
+                    return new BukkitHopperMinecart((org.bukkit.entity.minecart.HopperMinecart) entity);
+                }
+                if (entity instanceof org.bukkit.entity.minecart.RideableMinecart) {
+                    return new BukkitRideableMinecart((org.bukkit.entity.minecart.RideableMinecart) entity);
+                }
+                if (entity instanceof org.bukkit.entity.minecart.SpawnerMinecart) {
+                    return new BukkitSpawnerMinecart((org.bukkit.entity.minecart.SpawnerMinecart) entity);
+                }
+                if (entity instanceof org.bukkit.entity.minecart.ExplosiveMinecart) {
+                    return new BukkitTntMinecart((org.bukkit.entity.minecart.ExplosiveMinecart) entity);
+                }
+
+                return new BukkitMinecart((org.bukkit.entity.Minecart) entity);
+            }
+
+            return new BukkitVehicle((org.bukkit.entity.Vehicle) entity);
+        }
+
+        if (entity instanceof org.bukkit.entity.ExperienceOrb) {
+            return new BukkitExperienceOrb((org.bukkit.entity.ExperienceOrb) entity);
         }
 
         if (entity instanceof Projectile) {
+            if (entity instanceof org.bukkit.entity.Fireball) {
+                if (BukkitFeature.ENTITY_SIZED_FIREBALL.isSupported()) {
+                    if (entity instanceof org.bukkit.entity.SizedFireball) {
+                        if (entity instanceof org.bukkit.entity.LargeFireball) {
+                            return new BukkitLargeFireball((org.bukkit.entity.LargeFireball) entity);
+                        }
+                        if (entity instanceof org.bukkit.entity.SmallFireball) {
+                            return new BukkitSmallFireball((org.bukkit.entity.SmallFireball) entity);
+                        }
+
+                        return new BukkitFireball((org.bukkit.entity.SizedFireball) entity);
+                    }
+                } else {
+                    if (entity instanceof org.bukkit.entity.LargeFireball) {
+                        return new BukkitLargeFireball((org.bukkit.entity.LargeFireball) entity);
+                    }
+                    if (entity instanceof org.bukkit.entity.SmallFireball) {
+                        return new BukkitSmallFireball((org.bukkit.entity.SmallFireball) entity);
+                    }
+                }
+
+                if (entity instanceof org.bukkit.entity.WitherSkull) {
+                    return new BukkitWitherSkull((org.bukkit.entity.WitherSkull) entity);
+                }
+
+                if (BukkitFeature.ENTITY_DRAGON_FIREBALL.isSupported()) {
+                    if (entity instanceof org.bukkit.entity.DragonFireball) {
+                        return new BukkitDragonFireball((org.bukkit.entity.DragonFireball) entity);
+                    }
+                }
+
+                return new BukkitHurtingProjectileEntity((org.bukkit.entity.Fireball) entity);
+            }
+
+            if (BukkitFeature.ENTITY_ABSTRACT_ARROW.isSupported()) {
+                if (entity instanceof org.bukkit.entity.AbstractArrow) {
+                    // does not have to check for Bukkit features here: Trident and SpectralArrow were both implemented before AbstractArrow
+                    if (entity instanceof org.bukkit.entity.Trident) {
+                        return new BukkitTrident((org.bukkit.entity.Trident) entity);
+                    }
+
+                    if (entity instanceof org.bukkit.entity.SpectralArrow) {
+                        return new BukkitSpectralArrow((org.bukkit.entity.SpectralArrow) entity);
+                    }
+
+                    if (entity instanceof org.bukkit.entity.Arrow) {
+                        return new BukkitArrow((org.bukkit.entity.Arrow) entity);
+                    }
+
+                    return new BukkitAbstractArrow((org.bukkit.entity.AbstractArrow) entity);
+                }
+            } else {
+                if (entity instanceof org.bukkit.entity.Arrow) {
+                    if (BukkitFeature.ENTITY_TIPPED_ARROW.isSupported()) {
+                        // Trident and SpectralArrow added after TippedArrow
+                        if (BukkitFeature.ENTITY_TRIDENT.isSupported()) {
+                            if (entity instanceof org.bukkit.entity.Trident) {
+                                return new BukkitTrident((org.bukkit.entity.Trident) entity);
+                            }
+                        }
+
+                        if (BukkitFeature.ENTITY_SPECTRAL_ARROW.isSupported()) {
+                            if (entity instanceof org.bukkit.entity.SpectralArrow) {
+                                return new BukkitSpectralArrow((org.bukkit.entity.SpectralArrow) entity);
+                            }
+                        }
+
+                        if (entity instanceof org.bukkit.entity.TippedArrow) {
+                            return new BukkitArrow((org.bukkit.entity.TippedArrow) entity);
+                        }
+
+                        return new BukkitAbstractArrow((org.bukkit.entity.Arrow) entity);
+                    } else {
+                        return new BukkitArrow((org.bukkit.entity.Arrow) entity);
+                    }
+                }
+            }
+
+            if (entity instanceof org.bukkit.entity.ThrowableProjectile) {
+                if (entity instanceof org.bukkit.entity.Egg) {
+                    return new BukkitEgg((org.bukkit.entity.Egg) entity);
+                }
+                if (entity instanceof org.bukkit.entity.EnderPearl) {
+                    return new BukkitEnderPearl((org.bukkit.entity.EnderPearl) entity);
+                }
+                if (entity instanceof org.bukkit.entity.ThrownExpBottle) {
+                    return new BukkitExperienceBottle((org.bukkit.entity.ThrownExpBottle) entity);
+                }
+                if (entity instanceof org.bukkit.entity.ThrownPotion) {
+                    return new BukkitThrownPotion((org.bukkit.entity.ThrownPotion) entity);
+                }
+                if (entity instanceof org.bukkit.entity.Snowball) {
+                    return new BukkitSnowball((org.bukkit.entity.Snowball) entity);
+                }
+
+                return new BukkitThrowableProjectileEntity((org.bukkit.entity.ThrowableProjectile) entity);
+            }
+
+            if (entity instanceof org.bukkit.entity.FishHook) {
+                return new BukkitFishingBobber((org.bukkit.entity.FishHook) entity);
+            }
+
+            if (BukkitFeature.ENTITY_LLAMA_SPIT.isSupported()) {
+                if (entity instanceof org.bukkit.entity.LlamaSpit) {
+                    return new BukkitLlamaSpit((org.bukkit.entity.LlamaSpit) entity);
+                }
+            }
+
+            if (entity instanceof org.bukkit.entity.Firework) {
+                return new BukkitFireworkRocket((org.bukkit.entity.Firework) entity);
+            }
+
+            if (BukkitFeature.ENTITY_SHULKER_BULLET.isSupported()) {
+                if (entity instanceof org.bukkit.entity.ShulkerBullet) {
+                    return new BukkitShulkerBullet((org.bukkit.entity.ShulkerBullet) entity);
+                }
+            }
+
             return new BukkitProjectileEntity((Projectile) entity);
         }
 
@@ -91,8 +309,75 @@ public class BukkitEntities extends Entities {
             return new BukkitLightningStrike((org.bukkit.entity.LightningStrike) entity);
         }
 
-        if (entity instanceof org.bukkit.entity.ExperienceOrb) {
-            return new BukkitExperienceOrb((org.bukkit.entity.ExperienceOrb) entity);
+        if (entity instanceof org.bukkit.entity.Hanging) {
+            if (entity instanceof org.bukkit.entity.LeashHitch) {
+                return new BukkitLeashKnot((org.bukkit.entity.LeashHitch) entity);
+            }
+            if (entity instanceof org.bukkit.entity.Painting) {
+                return new BukkitPainting((org.bukkit.entity.Painting) entity);
+            }
+            if (entity instanceof org.bukkit.entity.ItemFrame) {
+                return new BukkitItemFrame((org.bukkit.entity.ItemFrame) entity);
+            }
+
+            return new BukkitHangingEntity((org.bukkit.entity.Hanging) entity);
+        }
+
+
+        if (BukkitFeature.ENTITY_AREA_EFFECT_CLOUD.isSupported()) {
+            if (entity instanceof org.bukkit.entity.AreaEffectCloud) {
+                return new BukkitAreaEffectCloud((org.bukkit.entity.AreaEffectCloud) entity);
+            }
+        }
+
+        if (entity instanceof org.bukkit.entity.EnderCrystal) {
+            return new BukkitEndCrystal((org.bukkit.entity.EnderCrystal) entity);
+        }
+
+        if (entity instanceof org.bukkit.entity.FallingBlock) {
+            return new BukkitFallingBlock((org.bukkit.entity.FallingBlock) entity);
+        }
+
+        if (entity instanceof org.bukkit.entity.TNTPrimed) {
+            return new BukkitPrimedTnt((org.bukkit.entity.TNTPrimed) entity);
+        }
+
+        if (entity instanceof org.bukkit.entity.EnderSignal) {
+            return new BukkitEyeOfEnder((org.bukkit.entity.EnderSignal) entity);
+        }
+
+        if (BukkitFeature.ENTITY_EVOKER_FANGS.isSupported()) {
+            if (entity instanceof org.bukkit.entity.EvokerFangs) {
+                return new BukkitEvokerFangs((org.bukkit.entity.EvokerFangs) entity);
+            }
+        }
+
+        if (BukkitFeature.ENTITY_INTERACTION.isSupported()) {
+            if (entity instanceof org.bukkit.entity.Interaction) {
+                return new BukkitInteraction((org.bukkit.entity.Interaction) entity);
+            }
+        }
+
+        if (BukkitFeature.ENTITY_MARKER.isSupported()) {
+            if (entity instanceof org.bukkit.entity.Marker) {
+                return new BukkitMarker((org.bukkit.entity.Marker) entity);
+            }
+        }
+
+        if (BukkitFeature.ENTITY_DISPLAY.isSupported()) {
+            if (entity instanceof org.bukkit.entity.Display) {
+                if (entity instanceof org.bukkit.entity.TextDisplay) {
+                    return new BukkitTextDisplay((org.bukkit.entity.TextDisplay) entity);
+                }
+                if (entity instanceof org.bukkit.entity.BlockDisplay) {
+                    return new BukkitBlockDisplay((org.bukkit.entity.BlockDisplay) entity);
+                }
+                if (entity instanceof org.bukkit.entity.ItemDisplay) {
+                    return new BukkitItemDisplay((org.bukkit.entity.ItemDisplay) entity);
+                }
+
+                return new BukkitDisplay((org.bukkit.entity.Display) entity);
+            }
         }
 
         return new BukkitEntity((org.bukkit.entity.Entity) entity);
@@ -220,7 +505,7 @@ public class BukkitEntities extends Entities {
     }
 
     @Override
-    public @Nullable LightningStrike strikeLightning0(@NotNull Location locationHolder, @Nullable Consumer<? super @NotNull LightningStrike> preSpawnFunction) {
+    public @Nullable LightningBolt strikeLightning0(@NotNull Location locationHolder, @Nullable Consumer<? super @NotNull LightningBolt> preSpawnFunction) {
         var bukkitLoc = locationHolder.as(org.bukkit.Location.class);
         var lightning = bukkitLoc.getWorld().strikeLightning(bukkitLoc);
         var wrapped = new BukkitLightningStrike(lightning);

@@ -23,7 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.Firework;
+import org.screamingsandals.lib.entity.projectile.FireworkRocket;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.FireworkExplodeEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -40,10 +40,10 @@ public class BukkitFireworkExplodeEvent implements FireworkExplodeEvent, BukkitC
     private final @NotNull org.bukkit.event.entity.FireworkExplodeEvent event;
 
     // Internal cache
-    private @Nullable Firework entity;
+    private @Nullable FireworkRocket entity;
 
     @Override
-    public @NotNull Firework entity() {
+    public @NotNull FireworkRocket entity() {
         if (entity == null) {
             entity = Entities.wrapEntityFirework(event.getEntity()).orElseThrow();
         }

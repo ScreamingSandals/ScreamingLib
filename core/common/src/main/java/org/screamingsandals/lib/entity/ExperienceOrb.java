@@ -22,6 +22,9 @@ import org.screamingsandals.lib.world.Location;
 
 import java.util.function.Consumer;
 
+/**
+ * Represents an entity with identifier {@code minecraft:experience_orb}.
+ */
 public interface ExperienceOrb extends Entity {
     int getExperience();
 

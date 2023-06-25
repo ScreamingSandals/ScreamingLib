@@ -161,6 +161,20 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_PRE_SPAWN_FUNCTION = PlatformFeature.of(() -> Reflect.has("org.bukkit.util.Consumer")); // org.bukkit.util.Consumer added in the same commit as the overloaded method
     public static final @NotNull PlatformFeature ITEM_ENTITY_PRE_SPAWN_FUNCTION = ENTITY_PRE_SPAWN_FUNCTION.and(() -> Reflect.hasMethod(World.class, "dropItem", Location.class, ItemStack.class, Consumer.class));
     public static final @NotNull PlatformFeature NEW_VILLAGERS = PlatformFeature.of(() -> Reflect.hasMethod(Villager.Profession.class, "getKey"));
+    public static final @NotNull PlatformFeature ENTITY_AREA_EFFECT_CLOUD = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.AreaEffectCloud"));
+    public static final @NotNull PlatformFeature ENTITY_INTERACTION = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Interaction"));
+    public static final @NotNull PlatformFeature ENTITY_DISPLAY = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Display"));
+    public static final @NotNull PlatformFeature ENTITY_MARKER = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Marker"));
+    public static final @NotNull PlatformFeature ENTITY_EVOKER_FANGS = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.EvokerFangs"));
+    public static final @NotNull PlatformFeature ENTITY_CHEST_BOAT = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.ChestBoat"));
+    public static final @NotNull PlatformFeature ENTITY_LLAMA_SPIT = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.LlamaSpit"));
+    public static final @NotNull PlatformFeature ENTITY_SHULKER_BULLET = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.ShulkerBullet"));
+    public static final @NotNull PlatformFeature ENTITY_ABSTRACT_ARROW = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.AbstractArrow"));
+    public static final @NotNull PlatformFeature ENTITY_SPECTRAL_ARROW = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.SpectralArrow"));
+    public static final @NotNull PlatformFeature ENTITY_TRIDENT = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Trident"));
+    public static final @NotNull PlatformFeature ENTITY_TIPPED_ARROW = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.TippedArrow"));
+    public static final @NotNull PlatformFeature ENTITY_SIZED_FIREBALL = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.SizedFireball"));
+    public static final @NotNull PlatformFeature ENTITY_DRAGON_FIREBALL = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.DragonFireball"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));
@@ -202,5 +216,4 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_SHOOT_BOW_EVENT_HAND = PlatformFeature.of(() -> Reflect.hasMethod(EntityShootBowEvent.class, "getHand"));
     public static final @NotNull PlatformFeature PLAYER_SHEAR_ENTITY_EVENT_ITEM_HAND = PlatformFeature.of(() -> Reflect.hasMethod(PlayerShearEntityEvent.class, "getItem"));
     public static final @NotNull PlatformFeature FOLIA_TASKER = PlatformFeature.of(() -> Reflect.has("io.papermc.paper.threadedregions.scheduler.ScheduledTask"));
-    public static final @NotNull PlatformFeature DISPLAY_ENTITIES_AVAILABLE = PlatformFeature.of(() -> Version.isVersion(1, 19, 4));
 }

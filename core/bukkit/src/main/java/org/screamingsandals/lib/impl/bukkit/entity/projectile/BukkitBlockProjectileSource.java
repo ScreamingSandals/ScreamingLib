@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.entity;
+package org.screamingsandals.lib.impl.bukkit.entity.projectile;
 
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.BlockProjectileSource;
@@ -22,9 +22,9 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
-import org.screamingsandals.lib.entity.BlockProjectileShooter;
+import org.screamingsandals.lib.entity.projectile.BlockProjectileShooter;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.entity.ProjectileEntity;
+import org.screamingsandals.lib.entity.projectile.ProjectileEntity;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;

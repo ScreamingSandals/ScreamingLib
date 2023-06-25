@@ -21,6 +21,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.entity.projectile.FireworkRocket;
+import org.screamingsandals.lib.entity.projectile.ProjectileEntity;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.item.ItemStack;
@@ -75,10 +77,10 @@ public abstract class Entities {
     }
 
     @Contract("null -> null")
-    public static @Nullable Firework wrapEntityFirework(@Nullable Object entity) {
+    public static @Nullable FireworkRocket wrapEntityFirework(@Nullable Object entity) {
         var entityFirework = wrapEntity(entity);
-        if (entityFirework instanceof Firework) {
-            return (Firework) entityFirework;
+        if (entityFirework instanceof FireworkRocket) {
+            return (FireworkRocket) entityFirework;
         }
         return null;
     }
@@ -102,10 +104,10 @@ public abstract class Entities {
     }
 
     @Contract("null -> null")
-    public static @Nullable LightningStrike wrapEntityLightning(@Nullable Object entity) {
+    public static @Nullable LightningBolt wrapEntityLightning(@Nullable Object entity) {
         var entityLightning = wrapEntity(entity);
-        if (entityLightning instanceof LightningStrike) {
-            return (LightningStrike) entityLightning;
+        if (entityLightning instanceof LightningBolt) {
+            return (LightningBolt) entityLightning;
         }
         return null;
     }
@@ -195,14 +197,14 @@ public abstract class Entities {
         return mapper.dropExperience0(experience, locationHolder, preSpawnFunction);
     }
 
-    public static @Nullable LightningStrike strikeLightning(@NotNull Location locationHolder) {
+    public static @Nullable LightningBolt strikeLightning(@NotNull Location locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
         return mapper.strikeLightning0(locationHolder, null);
     }
 
-    public static @Nullable LightningStrike strikeLightning(@NotNull Location locationHolder, @Nullable Consumer<? super @NotNull LightningStrike> preSpawnFunction) {
+    public static @Nullable LightningBolt strikeLightning(@NotNull Location locationHolder, @Nullable Consumer<? super @NotNull LightningBolt> preSpawnFunction) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
@@ -234,7 +236,7 @@ public abstract class Entities {
 
     public abstract @Nullable ExperienceOrb dropExperience0(int experience, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull ExperienceOrb> preSpawnFunction);
 
-    public abstract @Nullable LightningStrike strikeLightning0(@NotNull Location locationHolder, @Nullable Consumer<? super @NotNull LightningStrike> preSpawnFunction);
+    public abstract @Nullable LightningBolt strikeLightning0(@NotNull Location locationHolder, @Nullable Consumer<? super @NotNull LightningBolt> preSpawnFunction);
 
     public abstract int getNewEntityId0();
 

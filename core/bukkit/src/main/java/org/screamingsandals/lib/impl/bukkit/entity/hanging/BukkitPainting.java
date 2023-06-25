@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity;
+package org.screamingsandals.lib.impl.bukkit.entity.hanging;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockPlacement;
+import org.screamingsandals.lib.entity.hanging.LeashKnot;
+import org.screamingsandals.lib.entity.hanging.Painting;
 
-public interface BlockProjectileShooter extends ProjectileShooter {
-    @NotNull BlockPlacement getBlock();
+public class BukkitPainting extends BukkitHangingEntity implements Painting {
+    public BukkitPainting(@NotNull org.bukkit.entity.Painting wrappedObject) {
+        super(wrappedObject);
+    }
 }

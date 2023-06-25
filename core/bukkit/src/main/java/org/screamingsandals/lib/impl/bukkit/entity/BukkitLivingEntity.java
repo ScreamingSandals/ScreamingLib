@@ -23,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Projectile;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.entity.projectile.ProjectileEntity;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttribute1_8;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;

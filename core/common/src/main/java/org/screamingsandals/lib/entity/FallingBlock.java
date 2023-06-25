@@ -16,10 +16,8 @@
 
 package org.screamingsandals.lib.entity;
 
-import org.jetbrains.annotations.Nullable;
-
-public interface ProjectileEntity extends Entity {
-    @Nullable ProjectileShooter getShooter();
-
-    void setShooter(@Nullable ProjectileShooter shooter);
+/**
+ * Represents an entity with identifier {@code minecraft:falling_block}.
+ */
+public interface FallingBlock extends Entity {
 }
