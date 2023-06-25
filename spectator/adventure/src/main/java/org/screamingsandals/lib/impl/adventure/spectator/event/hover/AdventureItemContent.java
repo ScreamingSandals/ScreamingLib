@@ -26,6 +26,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -44,7 +45,12 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
     @SuppressWarnings("PatternValidation")
     @Override
     public @NotNull ItemContent withId(@NotNull ResourceLocation id) {
-        return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.namespace(), id.path()), wrappedObject.count(), wrappedObject.nbt()));
+        if (AdventureFeature.SHOW_ITEM_NEW_FACTORY_METHOD.isSupported()) {
+            return new AdventureItemContent(HoverEvent.ShowItem.showItem(Key.key(id.namespace(), id.path()), wrappedObject.count(), wrappedObject.nbt()));
+        } else {
+            //noinspection UnstableApiUsage
+            return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.namespace(), id.path()), wrappedObject.count(), wrappedObject.nbt()));
+        }
     }
 
     @Override
@@ -54,7 +60,12 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
 
     @Override
     public @NotNull ItemContent withCount(int count) {
-        return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), count, wrappedObject.nbt()));
+        if (AdventureFeature.SHOW_ITEM_NEW_FACTORY_METHOD.isSupported()) {
+            return new AdventureItemContent(HoverEvent.ShowItem.showItem(wrappedObject.item(), count, wrappedObject.nbt()));
+        } else {
+            //noinspection UnstableApiUsage
+            return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), count, wrappedObject.nbt()));
+        }
     }
 
     @Override
@@ -72,7 +83,12 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
 
     @Override
     public @NotNull ItemContent withTag(@Nullable CompoundTag tag) {
-        return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), wrappedObject.count(), tag == null || tag.isEmpty() ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
+        if (AdventureFeature.SHOW_ITEM_NEW_FACTORY_METHOD.isSupported()) {
+            return new AdventureItemContent(HoverEvent.ShowItem.showItem(wrappedObject.item(), wrappedObject.count(), tag == null || tag.isEmpty() ? null : BinaryTagHolder.binaryTagHolder(AdventureBackend.getSnbtSerializer().serialize(tag))));
+        } else {
+            //noinspection UnstableApiUsage
+            return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), wrappedObject.count(), tag == null || tag.isEmpty() ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
+        }
     }
 
     @Override
@@ -103,7 +119,12 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
         @SuppressWarnings("PatternValidation")
         @Override
         public @NotNull ItemContent build() {
-            return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.namespace(), id.path()), count, tag == null ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
+            if (AdventureFeature.SHOW_ITEM_NEW_FACTORY_METHOD.isSupported()) {
+                return new AdventureItemContent(HoverEvent.ShowItem.showItem(Key.key(id.namespace(), id.path()), count, tag == null ? null : BinaryTagHolder.binaryTagHolder(AdventureBackend.getSnbtSerializer().serialize(tag))));
+            } else {
+                //noinspection UnstableApiUsage
+                return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.namespace(), id.path()), count, tag == null ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
+            }
         }
     }
 }

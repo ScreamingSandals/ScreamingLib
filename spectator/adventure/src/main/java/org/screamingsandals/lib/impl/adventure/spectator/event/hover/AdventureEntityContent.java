@@ -25,6 +25,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -45,7 +46,12 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
 
     @Override
     public @NotNull EntityContent withId(@NotNull UUID id) {
-        return new AdventureEntityContent(HoverEvent.ShowEntity.of(wrappedObject.type(), id, wrappedObject.name()));
+        if (AdventureFeature.SHOW_ENTITY_NEW_FACTORY_METHOD.isSupported()) {
+            return new AdventureEntityContent(HoverEvent.ShowEntity.showEntity(wrappedObject.type(), id, wrappedObject.name()));
+        } else {
+            //noinspection UnstableApiUsage
+            return new AdventureEntityContent(HoverEvent.ShowEntity.of(wrappedObject.type(), id, wrappedObject.name()));
+        }
     }
 
     @Override
@@ -56,7 +62,12 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
     @SuppressWarnings("PatternValidation")
     @Override
     public @NotNull EntityContent withType(@NotNull ResourceLocation type) {
-        return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.namespace(), type.path()), wrappedObject.id(), wrappedObject.name()));
+        if (AdventureFeature.SHOW_ENTITY_NEW_FACTORY_METHOD.isSupported()) {
+            return new AdventureEntityContent(HoverEvent.ShowEntity.showEntity(Key.key(type.namespace(), type.path()), wrappedObject.id(), wrappedObject.name()));
+        } else {
+            //noinspection UnstableApiUsage
+            return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.namespace(), type.path()), wrappedObject.id(), wrappedObject.name()));
+        }
     }
 
     @Override
@@ -66,7 +77,12 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
 
     @Override
     public @NotNull EntityContent withType(@Nullable Component name) {
-        return new AdventureEntityContent(HoverEvent.ShowEntity.of(wrappedObject.type(), wrappedObject.id(), name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+        if (AdventureFeature.SHOW_ENTITY_NEW_FACTORY_METHOD.isSupported()) {
+            return new AdventureEntityContent(HoverEvent.ShowEntity.showEntity(wrappedObject.type(), wrappedObject.id(), name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+        } else {
+            //noinspection UnstableApiUsage
+            return new AdventureEntityContent(HoverEvent.ShowEntity.of(wrappedObject.type(), wrappedObject.id(), name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+        }
     }
 
     @Override
@@ -102,7 +118,12 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
         @Override
         public @NotNull EntityContent build() {
             Preconditions.checkArgument(id != null, "Id of the entity is not specified!");
-            return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.namespace(), type.path()), id, name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+            if (AdventureFeature.SHOW_ENTITY_NEW_FACTORY_METHOD.isSupported()) {
+                return new AdventureEntityContent(HoverEvent.ShowEntity.showEntity(Key.key(type.namespace(), type.path()), id, name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+            } else {
+                //noinspection UnstableApiUsage
+                return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.namespace(), type.path()), id, name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+            }
         }
     }
 }

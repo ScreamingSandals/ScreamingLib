@@ -82,6 +82,10 @@ public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.s
         @Tolerate
         @Override
         public @NotNull Builder soundKey(@Nullable String key) {
+            if (key == null) {
+                this.soundKey = null;
+                return this;
+            }
             var k = ResourceLocation.of(key);
             if ("minecraft".equals(k.namespace())) {
                 this.soundKey = ResourceLocation.of("minecraft", AdventureBackend.getSoundKeyNormalizer().apply(k.path()));

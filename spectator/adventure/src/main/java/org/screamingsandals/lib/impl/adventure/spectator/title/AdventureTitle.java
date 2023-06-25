@@ -22,6 +22,7 @@ import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -73,79 +74,183 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
 
     @Override
     public org.screamingsandals.lib.spectator.title.@NotNull Title withTimes(@NotNull TimesProvider times) {
-        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(times.fadeIn(), times.stay(), times.fadeOut())));
+        Title.Times advntrTimes;
+        if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
+            advntrTimes = Title.Times.times(times.fadeIn(), times.stay(), times.fadeOut());
+        } else {
+            //noinspection UnstableApiUsage
+            advntrTimes = Title.Times.of(times.fadeIn(), times.stay(), times.fadeOut());
+        }
+
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), advntrTimes));
     }
 
     @Override
     public org.screamingsandals.lib.spectator.title.@NotNull Title withTimes(@Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut) {
-        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
-                fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
-                stay != null ? stay : Title.DEFAULT_TIMES.stay(),
-                fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
-        )));
+        Title.Times advntrTimes;
+        if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
+            advntrTimes = Title.Times.times(
+                    fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
+                    stay != null ? stay : Title.DEFAULT_TIMES.stay(),
+                    fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
+            );
+        } else {
+            //noinspection UnstableApiUsage
+            advntrTimes = Title.Times.of(
+                    fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
+                    stay != null ? stay : Title.DEFAULT_TIMES.stay(),
+                    fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
+            );
+        }
+
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), advntrTimes));
     }
 
     @Override
     public org.screamingsandals.lib.spectator.title.@NotNull Title withTimes(long fadeIn, long stay, long fadeOut) {
-        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
-                Duration.ofMillis(fadeIn * 50),
-                Duration.ofMillis(stay * 50),
-                Duration.ofMillis(fadeOut * 50)
-        )));
+        Title.Times advntrTimes;
+        if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
+            advntrTimes = Title.Times.times(
+                    Duration.ofMillis(fadeIn * 50),
+                    Duration.ofMillis(stay * 50),
+                    Duration.ofMillis(fadeOut * 50)
+            );
+        } else {
+            //noinspection UnstableApiUsage
+            advntrTimes = Title.Times.of(
+                    Duration.ofMillis(fadeIn * 50),
+                    Duration.ofMillis(stay * 50),
+                    Duration.ofMillis(fadeOut * 50)
+            );
+        }
+
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), advntrTimes));
     }
 
     @Override
     public org.screamingsandals.lib.spectator.title.@NotNull Title withFadeIn(@Nullable Duration fadeIn) {
-        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
-                fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
-                stay(),
-                fadeOut()
-        )));
+        Title.Times advntrTimes;
+        if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
+            advntrTimes = Title.Times.times(
+                    fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
+                    stay(),
+                    fadeOut()
+            );
+        } else {
+            //noinspection UnstableApiUsage
+            advntrTimes = Title.Times.of(
+                    fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
+                    stay(),
+                    fadeOut()
+            );
+        }
+
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), advntrTimes));
     }
 
     @Override
     public org.screamingsandals.lib.spectator.title.@NotNull Title withStay(@Nullable Duration stay) {
-        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
-                fadeIn(),
-                stay != null ? stay : Title.DEFAULT_TIMES.stay(),
-                fadeOut()
-        )));
+        Title.Times advntrTimes;
+        if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
+            advntrTimes = Title.Times.times(
+                    fadeIn(),
+                    stay != null ? stay : Title.DEFAULT_TIMES.stay(),
+                    fadeOut()
+            );
+        } else {
+            //noinspection UnstableApiUsage
+            advntrTimes = Title.Times.of(
+                    fadeIn(),
+                    stay != null ? stay : Title.DEFAULT_TIMES.stay(),
+                    fadeOut()
+            );
+        }
+
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), advntrTimes));
     }
 
     @Override
     public org.screamingsandals.lib.spectator.title.@NotNull Title withFadeOut(@Nullable Duration fadeOut) {
-        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
-                fadeIn(),
-                stay(),
-                fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
-        )));
+        Title.Times advntrTimes;
+        if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
+            advntrTimes = Title.Times.times(
+                    fadeIn(),
+                    stay(),
+                    fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
+            );
+        } else {
+            //noinspection UnstableApiUsage
+            advntrTimes = Title.Times.of(
+                    fadeIn(),
+                    stay(),
+                    fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
+            );
+        }
+
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), advntrTimes));
     }
 
     @Override
     public org.screamingsandals.lib.spectator.title.@NotNull Title withFadeIn(long ticks) {
-        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
-                Duration.ofMillis(ticks * 50),
-                stay(),
-                fadeOut()
-        )));
+        Title.Times advntrTimes;
+        if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
+            advntrTimes = Title.Times.times(
+                    Duration.ofMillis(ticks * 50),
+                    stay(),
+                    fadeOut()
+            );
+        } else {
+            //noinspection UnstableApiUsage
+            advntrTimes = Title.Times.of(
+                    Duration.ofMillis(ticks * 50),
+                    stay(),
+                    fadeOut()
+            );
+        }
+
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), advntrTimes));
     }
 
     @Override
     public org.screamingsandals.lib.spectator.title.@NotNull Title withStay(long ticks) {
-        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
-                fadeIn(),
-                Duration.ofMillis(ticks * 50),
-                fadeOut()
-        )));
+        Title.Times advntrTimes;
+        if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
+            advntrTimes = Title.Times.times(
+                    fadeIn(),
+                    Duration.ofMillis(ticks * 50),
+                    fadeOut()
+            );
+        } else {
+            //noinspection UnstableApiUsage
+            advntrTimes = Title.Times.of(
+                    fadeIn(),
+                    Duration.ofMillis(ticks * 50),
+                    fadeOut()
+            );
+        }
+
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), advntrTimes));
     }
 
     @Override
     public org.screamingsandals.lib.spectator.title.@NotNull Title withFadeOut(long ticks) {
-        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
-                fadeIn(),
-                stay(),
-                Duration.ofMillis(ticks * 50)
-        )));
+        Title.Times advntrTimes;
+        if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
+            advntrTimes = Title.Times.times(
+                    fadeIn(),
+                    stay(),
+                    Duration.ofMillis(ticks * 50)
+            );
+        } else {
+            //noinspection UnstableApiUsage
+            advntrTimes = Title.Times.of(
+                    fadeIn(),
+                    stay(),
+                    Duration.ofMillis(ticks * 50)
+            );
+        }
+
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), advntrTimes));
     }
 
     @Override
@@ -202,15 +307,26 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
                         )
                 );
             }
+            Title.Times times;
+            if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
+                times = Title.Times.times(
+                        fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
+                        stay != null ? stay : Title.DEFAULT_TIMES.stay(),
+                        fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
+                );
+            } else {
+                //noinspection UnstableApiUsage
+                times = Title.Times.of(
+                        fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
+                        stay != null ? stay : Title.DEFAULT_TIMES.stay(),
+                        fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
+                );
+            }
             return new AdventureTitle(
                     Title.title(
                             title.as(net.kyori.adventure.text.Component.class),
                             subtitle.as(net.kyori.adventure.text.Component.class),
-                            Title.Times.of(
-                                fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
-                                stay != null ? stay : Title.DEFAULT_TIMES.stay(),
-                                fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
-                            )
+                            times
                     )
             );
         }

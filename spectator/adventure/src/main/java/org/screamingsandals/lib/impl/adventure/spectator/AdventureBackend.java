@@ -30,6 +30,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -60,6 +61,7 @@ import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
 import org.screamingsandals.lib.spectator.title.Title;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -87,7 +89,7 @@ public class AdventureBackend implements SpectatorBackend {
             .character(LegacyComponentSerializer.SECTION_CHAR)
             .build();
     @Getter
-    private static final @NotNull GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();
+    private static final @NotNull ComponentSerializer<net.kyori.adventure.text.Component, net.kyori.adventure.text.Component, String> jsonComponentSerializer;
     @Getter
     private static final @NotNull ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainTextComponentSerializer;
     @Getter
@@ -113,6 +115,20 @@ public class AdventureBackend implements SpectatorBackend {
             plainText = PlainComponentSerializer.plain();
         }
         plainTextComponentSerializer = plainText;
+
+        ComponentSerializer<net.kyori.adventure.text.Component, net.kyori.adventure.text.Component, String> jsonComponent;
+        if (AdventureFeature.JSON_COMPONENT_SERIALIZER.isSupported()) {
+            jsonComponent = JSONComponentSerializer.json();
+            if ("net.kyori.adventure.text.serializer.json.DummyJSONComponentSerializer".equals(jsonComponent.getClass().getName()) && Reflect.has("net.kyori.adventure.text.serializer.gson.GsonComponentSerializer")) {
+                // For some reason, jsonComponent is the dummy implementation, meaning the ServiceLoader does not work correctly. Lets fallback to GsonComponentSerializer in that case if possible
+                jsonComponent = GsonComponentSerializer.gson();
+            }
+        } else {
+            // Adventure <= 4.13.1: No abstract JSON impl
+            jsonComponent = GsonComponentSerializer.gson();
+        }
+
+        jsonComponentSerializer = jsonComponent;
     }
 
     @Override
@@ -157,7 +173,7 @@ public class AdventureBackend implements SpectatorBackend {
         if (json.isEmpty()) {
             return empty;
         }
-        return new AdventureComponent(gsonComponentSerializer.deserialize(json));
+        return new AdventureComponent(jsonComponentSerializer.deserialize(json));
     }
 
     @Override
