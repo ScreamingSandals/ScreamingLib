@@ -30,6 +30,9 @@ import org.screamingsandals.lib.world.Location;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * An abstract type for all living entities.
+ */
 public interface LivingEntity extends Entity, ProjectileShooter {
 
     @Nullable Attribute getAttribute(@NotNull AttributeType attributeType);

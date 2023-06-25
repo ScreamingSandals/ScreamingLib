@@ -122,10 +122,10 @@ public abstract class Entities {
     }
 
     @Contract("null -> null")
-    public static @Nullable PathfindingMob wrapEntityPathfindingMob(@Nullable Object entity) {
+    public static @Nullable Mob wrapEntityPathfindingMob(@Nullable Object entity) {
         var entityPathfindingMob = wrapEntity(entity);
-        if (entityPathfindingMob instanceof PathfindingMob) {
-            return (PathfindingMob) entityPathfindingMob;
+        if (entityPathfindingMob instanceof Mob) {
+            return (Mob) entityPathfindingMob;
         }
         return null;
     }

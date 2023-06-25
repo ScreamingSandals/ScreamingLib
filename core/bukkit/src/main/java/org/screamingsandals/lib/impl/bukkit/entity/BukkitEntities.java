@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity;
 
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Item;
@@ -24,7 +23,6 @@ import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Slime;
 import org.bukkit.entity.Zombie;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +33,11 @@ import org.screamingsandals.lib.entity.ExperienceOrb;
 import org.screamingsandals.lib.entity.ItemEntity;
 import org.screamingsandals.lib.entity.LightningBolt;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.entity.ambient.BukkitAmbientCreature;
+import org.screamingsandals.lib.impl.bukkit.entity.ambient.BukkitBat;
+import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitFlyingMob;
+import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitGhast;
+import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitPhantom;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitHangingEntity;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitItemFrame;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitLeashKnot;
@@ -62,6 +65,8 @@ import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitThrowablePro
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitThrownPotion;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitTrident;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitWitherSkull;
+import org.screamingsandals.lib.impl.bukkit.entity.slime.BukkitMagmaCube;
+import org.screamingsandals.lib.impl.bukkit.entity.slime.BukkitSlime;
 import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitBlockDisplay;
 import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitDisplay;
 import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitInteraction;
@@ -80,6 +85,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitRideableMinecar
 import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitSpawnerMinecart;
 import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitTntMinecart;
 import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitVehicle;
+import org.screamingsandals.lib.impl.bukkit.entity.water.*;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.entity.type.InternalEntityLegacyConstants;
@@ -122,12 +128,91 @@ public class BukkitEntities extends Entities {
                 return new BukkitHumanEntity((org.bukkit.entity.HumanEntity) entity);
             }
 
+            if (entity instanceof org.bukkit.entity.Creature) {
+                if (entity instanceof org.bukkit.entity.WaterMob) {
+                    if (entity instanceof org.bukkit.entity.Squid) {
+                        if (BukkitFeature.ENTITY_GLOW_SQUID.isSupported()) {
+                            if (entity instanceof org.bukkit.entity.GlowSquid) {
+                                return new BukkitGlowSquid((org.bukkit.entity.GlowSquid) entity);
+                            }
+                        }
+
+                        return new BukkitSquid((org.bukkit.entity.Squid) entity);
+                    }
+
+                    if (BukkitFeature.ENTITY_FISH.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Fish) {
+                            if (entity instanceof org.bukkit.entity.Cod) {
+                                return new BukkitCod((org.bukkit.entity.Cod) entity);
+                            }
+                            if (entity instanceof org.bukkit.entity.PufferFish) {
+                                return new BukkitPufferFish((org.bukkit.entity.PufferFish) entity);
+                            }
+                            if (entity instanceof org.bukkit.entity.Salmon) {
+                                return new BukkitSalmon((org.bukkit.entity.Salmon) entity);
+                            }
+                            if (entity instanceof org.bukkit.entity.TropicalFish) {
+                                return new BukkitTropicalFish((org.bukkit.entity.TropicalFish) entity);
+                            }
+
+                            if (BukkitFeature.ENTITY_TADPOLE.isSupported()) {
+                                if (entity instanceof org.bukkit.entity.Tadpole) {
+                                    return new BukkitTadpole((org.bukkit.entity.Tadpole) entity);
+                                }
+                            }
+
+                            return new BukkitFish((org.bukkit.entity.Fish) entity);
+                        }
+
+                        if (entity instanceof org.bukkit.entity.Dolphin) {
+                            return new BukkitDolphin((org.bukkit.entity.Dolphin) entity);
+                        }
+
+                        return new BukkitWaterAnimal1_13((org.bukkit.entity.WaterMob) entity);
+                    }
+
+                    return new BukkitWaterAnimal((org.bukkit.entity.WaterMob) entity);
+                }
+
+                // TODO
+
+                return new BukkitPathfinderMob((org.bukkit.entity.Creature) entity);
+            }
+
+            if (entity instanceof org.bukkit.entity.Slime) {
+                if (entity instanceof org.bukkit.entity.MagmaCube) {
+                    return new BukkitMagmaCube((org.bukkit.entity.MagmaCube) entity);
+                }
+
+                return new BukkitSlime((org.bukkit.entity.Slime) entity);
+            }
+
+            if (entity instanceof org.bukkit.entity.Flying) {
+                if (entity instanceof org.bukkit.entity.Ghast) {
+                    return new BukkitGhast((org.bukkit.entity.Ghast) entity);
+                }
+
+                if (BukkitFeature.ENTITY_PHANTOM.isSupported()) {
+                    if (entity instanceof org.bukkit.entity.Phantom) {
+                        return new BukkitPhantom((org.bukkit.entity.Phantom) entity);
+                    }
+                }
+
+                return new BukkitFlyingMob((org.bukkit.entity.Flying) entity);
+            }
+
+            if (entity instanceof org.bukkit.entity.Ambient) {
+                if (entity instanceof org.bukkit.entity.Bat) {
+                    return new BukkitBat((org.bukkit.entity.Bat) entity);
+                }
+
+                return new BukkitAmbientCreature((org.bukkit.entity.Ambient) entity);
+            }
+
             if (BukkitFeature.MOB_INTERFACE.isSupported()) {
                 if (entity instanceof Mob) {
-                    return new BukkitPathfindingMob((org.bukkit.entity.LivingEntity) entity);
+                    return new BukkitMob((org.bukkit.entity.LivingEntity) entity);
                 }
-            } else if (entity instanceof Slime || entity instanceof Creature) {
-                return new BukkitPathfindingMob((org.bukkit.entity.LivingEntity) entity);
             }
 
             if (entity instanceof org.bukkit.entity.ArmorStand) {

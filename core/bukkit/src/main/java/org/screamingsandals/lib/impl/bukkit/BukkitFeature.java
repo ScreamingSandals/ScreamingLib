@@ -175,6 +175,10 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_TIPPED_ARROW = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.TippedArrow"));
     public static final @NotNull PlatformFeature ENTITY_SIZED_FIREBALL = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.SizedFireball"));
     public static final @NotNull PlatformFeature ENTITY_DRAGON_FIREBALL = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.DragonFireball"));
+    public static final @NotNull PlatformFeature ENTITY_PHANTOM = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Phantom"));
+    public static final @NotNull PlatformFeature ENTITY_FISH = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Fish"));
+    public static final @NotNull PlatformFeature ENTITY_GLOW_SQUID = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.GlowSquid"));
+    public static final @NotNull PlatformFeature ENTITY_TADPOLE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Tadpole"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));

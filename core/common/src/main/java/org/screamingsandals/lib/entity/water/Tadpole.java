@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity;
+package org.screamingsandals.lib.entity.water;
 
-import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
-public interface PathfindingMob extends LivingEntity {
-    void setCurrentTarget(@Nullable LivingEntity target);
-
-    @Nullable LivingEntity getCurrentTarget();
+/**
+ * Represents an entity with identifier {@code minecraft:tadpole}.
+ */
+@LimitedVersionSupport(">= 1.19")
+public interface Tadpole extends Fish {
 }

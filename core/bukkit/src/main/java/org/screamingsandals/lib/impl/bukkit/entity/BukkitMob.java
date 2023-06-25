@@ -16,31 +16,32 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity;
 
+import org.bukkit.entity.Ambient;
 import org.bukkit.entity.Creature;
-import org.bukkit.entity.Mob;
+import org.bukkit.entity.Flying;
 import org.bukkit.entity.Slime;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.LivingEntity;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.entity.PathfindingMob;
+import org.screamingsandals.lib.entity.Mob;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.LivingEntityAccessor;
 import org.screamingsandals.lib.nms.accessors.MobAccessor;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-public class BukkitPathfindingMob extends BukkitLivingEntity implements PathfindingMob {
-    public BukkitPathfindingMob(@NotNull org.bukkit.entity.LivingEntity wrappedObject) {
+public class BukkitMob extends BukkitLivingEntity implements Mob {
+    public BukkitMob(@NotNull org.bukkit.entity.LivingEntity wrappedObject) {
         super(wrappedObject);
 
         if (BukkitFeature.MOB_INTERFACE.isSupported()) {
-            if (!(wrappedObject instanceof Mob)) {
+            if (!(wrappedObject instanceof org.bukkit.entity.Mob)) {
                 throw new IllegalArgumentException("Wrapped object is not instance of Mob!");
             }
-        } else if (!(wrappedObject instanceof Slime || wrappedObject instanceof Creature)) {
-            throw new IllegalArgumentException("Wrapped object is not instance of Slime or Creature!");
+        } else if (!(wrappedObject instanceof Slime || wrappedObject instanceof Creature || wrappedObject instanceof Ambient || wrappedObject instanceof Flying)) {
+            throw new IllegalArgumentException("Wrapped object is not instance of Slime, Creature, Ambient, Flying or WaterMob!");
         }
     }
 
@@ -48,7 +49,7 @@ public class BukkitPathfindingMob extends BukkitLivingEntity implements Pathfind
     public void setCurrentTarget(@Nullable LivingEntity target) {
         var living = target == null ? null : target.as(org.bukkit.entity.LivingEntity.class);
         if (BukkitFeature.MOB_INTERFACE.isSupported()) {
-            ((Mob) wrappedObject).setTarget(living);
+            ((org.bukkit.entity.Mob) wrappedObject).setTarget(living);
         } else if (wrappedObject instanceof Slime) {
             if (BukkitFeature.SLIME_TARGET.isSupported()) {
                 ((Slime) wrappedObject).setTarget(living);
@@ -56,8 +57,10 @@ public class BukkitPathfindingMob extends BukkitLivingEntity implements Pathfind
                 Reflect.getMethod(ClassStorage.getHandle(wrappedObject), MobAccessor.getMethodSetTarget1().getName(), LivingEntityAccessor.getType(), EntityTargetEvent.TargetReason.class, boolean.class)
                         .invoke(target != null ? ClassStorage.getHandle(target) : null, null, false);
             }
-        } else {
+        } else if (wrappedObject instanceof Creature) {
             ((Creature) wrappedObject).setTarget(living);
+        } else {
+            // TODO: what now?
         }
     }
 
@@ -65,7 +68,7 @@ public class BukkitPathfindingMob extends BukkitLivingEntity implements Pathfind
     public @Nullable LivingEntity getCurrentTarget() {
         org.bukkit.entity.LivingEntity living;
         if (BukkitFeature.MOB_INTERFACE.isSupported()) {
-            living = ((Mob) wrappedObject).getTarget();
+            living = ((org.bukkit.entity.Mob) wrappedObject).getTarget();
         } else if (wrappedObject instanceof Slime) {
             if (BukkitFeature.SLIME_TARGET.isSupported()) {
                 living = ((Slime) wrappedObject).getTarget();
@@ -76,8 +79,10 @@ public class BukkitPathfindingMob extends BukkitLivingEntity implements Pathfind
                 }
                 return null;
             }
-        } else {
+        } else if (wrappedObject instanceof Creature) {
             living = ((Creature) wrappedObject).getTarget();
+        } else {
+            return null; // TODO: what now?
         }
         return Entities.wrapEntityLiving(living);
     }
