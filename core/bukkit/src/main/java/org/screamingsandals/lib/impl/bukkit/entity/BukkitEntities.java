@@ -35,6 +35,7 @@ import org.screamingsandals.lib.entity.LightningBolt;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.entity.ambient.BukkitAmbientCreature;
 import org.screamingsandals.lib.impl.bukkit.entity.ambient.BukkitBat;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.*;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitFlyingMob;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitGhast;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitPhantom;
@@ -128,50 +129,171 @@ public class BukkitEntities extends Entities {
                 return new BukkitHumanEntity((org.bukkit.entity.HumanEntity) entity);
             }
 
+            if (entity instanceof org.bukkit.entity.WaterMob) { // must be before Creature
+                if (entity instanceof org.bukkit.entity.Squid) {
+                    if (BukkitFeature.ENTITY_GLOW_SQUID.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.GlowSquid) {
+                            return new BukkitGlowSquid((org.bukkit.entity.GlowSquid) entity);
+                        }
+                    }
+
+                    return new BukkitSquid((org.bukkit.entity.Squid) entity);
+                }
+
+                if (BukkitFeature.ENTITY_FISH.isSupported()) {
+                    if (entity instanceof org.bukkit.entity.Fish) {
+                        if (entity instanceof org.bukkit.entity.Cod) {
+                            return new BukkitCod((org.bukkit.entity.Cod) entity);
+                        }
+                        if (entity instanceof org.bukkit.entity.PufferFish) {
+                            return new BukkitPufferFish((org.bukkit.entity.PufferFish) entity);
+                        }
+                        if (entity instanceof org.bukkit.entity.Salmon) {
+                            return new BukkitSalmon((org.bukkit.entity.Salmon) entity);
+                        }
+                        if (entity instanceof org.bukkit.entity.TropicalFish) {
+                            return new BukkitTropicalFish((org.bukkit.entity.TropicalFish) entity);
+                        }
+
+                        if (BukkitFeature.ENTITY_TADPOLE.isSupported()) {
+                            if (entity instanceof org.bukkit.entity.Tadpole) {
+                                return new BukkitTadpole((org.bukkit.entity.Tadpole) entity);
+                            }
+                        }
+
+                        return new BukkitFish((org.bukkit.entity.Fish) entity);
+                    }
+
+                    if (entity instanceof org.bukkit.entity.Dolphin) {
+                        return new BukkitDolphin((org.bukkit.entity.Dolphin) entity);
+                    }
+
+                    return new BukkitWaterAnimal1_13((org.bukkit.entity.WaterMob) entity);
+                }
+
+                return new BukkitWaterAnimal((org.bukkit.entity.WaterMob) entity);
+            }
+
             if (entity instanceof org.bukkit.entity.Creature) {
-                if (entity instanceof org.bukkit.entity.WaterMob) {
-                    if (entity instanceof org.bukkit.entity.Squid) {
-                        if (BukkitFeature.ENTITY_GLOW_SQUID.isSupported()) {
-                            if (entity instanceof org.bukkit.entity.GlowSquid) {
-                                return new BukkitGlowSquid((org.bukkit.entity.GlowSquid) entity);
-                            }
-                        }
-
-                        return new BukkitSquid((org.bukkit.entity.Squid) entity);
+                if (entity instanceof org.bukkit.entity.Animals) {
+                    if (entity instanceof org.bukkit.entity.Chicken) {
+                        return new BukkitChicken((org.bukkit.entity.Chicken) entity);
                     }
 
-                    if (BukkitFeature.ENTITY_FISH.isSupported()) {
-                        if (entity instanceof org.bukkit.entity.Fish) {
-                            if (entity instanceof org.bukkit.entity.Cod) {
-                                return new BukkitCod((org.bukkit.entity.Cod) entity);
-                            }
-                            if (entity instanceof org.bukkit.entity.PufferFish) {
-                                return new BukkitPufferFish((org.bukkit.entity.PufferFish) entity);
-                            }
-                            if (entity instanceof org.bukkit.entity.Salmon) {
-                                return new BukkitSalmon((org.bukkit.entity.Salmon) entity);
-                            }
-                            if (entity instanceof org.bukkit.entity.TropicalFish) {
-                                return new BukkitTropicalFish((org.bukkit.entity.TropicalFish) entity);
-                            }
-
-                            if (BukkitFeature.ENTITY_TADPOLE.isSupported()) {
-                                if (entity instanceof org.bukkit.entity.Tadpole) {
-                                    return new BukkitTadpole((org.bukkit.entity.Tadpole) entity);
-                                }
-                            }
-
-                            return new BukkitFish((org.bukkit.entity.Fish) entity);
+                    if (entity instanceof org.bukkit.entity.Cow) {
+                        if (entity instanceof org.bukkit.entity.MushroomCow) {
+                            return new BukkitMooshroom((org.bukkit.entity.MushroomCow) entity);
                         }
-
-                        if (entity instanceof org.bukkit.entity.Dolphin) {
-                            return new BukkitDolphin((org.bukkit.entity.Dolphin) entity);
-                        }
-
-                        return new BukkitWaterAnimal1_13((org.bukkit.entity.WaterMob) entity);
+                        return new BukkitCow((org.bukkit.entity.Cow) entity);
                     }
 
-                    return new BukkitWaterAnimal((org.bukkit.entity.WaterMob) entity);
+                    if (entity instanceof org.bukkit.entity.Pig) {
+                        return new BukkitPig((org.bukkit.entity.Pig) entity);
+                    }
+
+                    if (entity instanceof org.bukkit.entity.Tameable) {
+                        if (entity instanceof org.bukkit.entity.Wolf) {
+                            return new BukkitWolf((org.bukkit.entity.Wolf) entity);
+                        }
+                        if (BukkitFeature.ENTITY_PARROT.isSupported()) {
+                            if (entity instanceof org.bukkit.entity.Parrot) {
+                                return new BukkitParrot((org.bukkit.entity.Parrot) entity);
+                            }
+                        }
+                        if (BukkitFeature.ENTITY_CAT.isSupported()) {
+                            if (entity instanceof org.bukkit.entity.Cat) {
+                                return new BukkitCat((org.bukkit.entity.Cat) entity);
+                            }
+                        } else {
+                            if (entity instanceof org.bukkit.entity.Ocelot) {
+                                return new BukkitOcelot1_8((org.bukkit.entity.Tameable) entity);
+                            }
+                        }
+
+                        return new BukkitTamable((org.bukkit.entity.Tameable) entity);
+                    }
+
+                    if (entity instanceof org.bukkit.entity.Sheep) {
+                        return new BukkitSheep((org.bukkit.entity.Sheep) entity);
+                    }
+
+                    // TODO: Horses and camels
+
+                    if (entity instanceof org.bukkit.entity.Rabbit) {
+                        return new BukkitRabbit((org.bukkit.entity.Rabbit) entity);
+                    }
+
+                    if (BukkitFeature.ENTITY_POLAR_BEAR.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.PolarBear) {
+                            return new BukkitPolarBear((org.bukkit.entity.PolarBear) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_TURTLE.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Turtle) {
+                            return new BukkitTurtle((org.bukkit.entity.Turtle) entity);
+                        }
+                    }
+
+                    if (entity instanceof org.bukkit.entity.Ocelot) {
+                        return new BukkitOcelot1_14((org.bukkit.entity.Ocelot) entity);
+                    }
+
+                    if (BukkitFeature.ENTITY_PANDA.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Panda) {
+                            return new BukkitPanda((org.bukkit.entity.Panda) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_FOX.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Fox) {
+                            return new BukkitFox((org.bukkit.entity.Fox) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_BEE.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Bee) {
+                            return new BukkitBee((org.bukkit.entity.Bee) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_HOGLIN.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Hoglin) {
+                            return new BukkitHoglin((org.bukkit.entity.Hoglin) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_STRIDER.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Strider) {
+                            return new BukkitStrider((org.bukkit.entity.Strider) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_AXOLOTL.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Axolotl) {
+                            return new BukkitAxolotl((org.bukkit.entity.Axolotl) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_GOAT.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Goat) {
+                            return new BukkitGoat((org.bukkit.entity.Goat) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_FROG.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Frog) {
+                            return new BukkitFrog((org.bukkit.entity.Frog) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_SNIFFER.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Sniffer) {
+                            return new BukkitSniffer((org.bukkit.entity.Sniffer) entity);
+                        }
+                    }
+
+                    return new BukkitAnimal((org.bukkit.entity.Animals) entity);
                 }
 
                 // TODO
