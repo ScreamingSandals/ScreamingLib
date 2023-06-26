@@ -35,7 +35,46 @@ import org.screamingsandals.lib.entity.LightningBolt;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.entity.ambient.BukkitAmbientCreature;
 import org.screamingsandals.lib.impl.bukkit.entity.ambient.BukkitBat;
-import org.screamingsandals.lib.impl.bukkit.entity.animal.*;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitAnimal;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitAxolotl;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitBee;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitCat;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitChicken;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitCow;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitFox;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitFrog;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitGoat;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitHoglin;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitMooshroom;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitOcelot1_14;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitOcelot1_8;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitPanda;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitParrot;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitPig;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitPolarBear;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitRabbit;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitSheep;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitSniffer;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitStrider;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitTamable;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitTurtle;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitWolf;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitCamel;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitChestedHorseEntity1_11;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitDonkey1_11;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitDonkey1_8;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitHorse1_11;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitHorse1_8;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitHorseEntity1_11;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitHorseEntity1_8;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitLlama;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitMule1_11;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitMule1_8;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitSkeletonHorse1_11;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitSkeletonHorse1_8;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitTraderLlama;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitZombieHorse1_11;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitZombieHorse1_8;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitFlyingMob;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitGhast;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitPhantom;
@@ -86,7 +125,17 @@ import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitRideableMinecar
 import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitSpawnerMinecart;
 import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitTntMinecart;
 import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitVehicle;
-import org.screamingsandals.lib.impl.bukkit.entity.water.*;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitCod;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitDolphin;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitFish;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitGlowSquid;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitPufferFish;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitSalmon;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitSquid;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitTadpole;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitTropicalFish;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitWaterAnimal;
+import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitWaterAnimal1_13;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.entity.type.InternalEntityLegacyConstants;
@@ -191,6 +240,61 @@ public class BukkitEntities extends Entities {
                         return new BukkitPig((org.bukkit.entity.Pig) entity);
                     }
 
+                    if (BukkitFeature.ENTITY_ABSTRACT_HORSE.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.AbstractHorse) {
+                            if (entity instanceof org.bukkit.entity.ChestedHorse) {
+                                if (entity instanceof org.bukkit.entity.Donkey) {
+                                    return new BukkitDonkey1_11((org.bukkit.entity.Donkey) entity);
+                                }
+                                if (entity instanceof org.bukkit.entity.Mule) {
+                                    return new BukkitMule1_11((org.bukkit.entity.Mule) entity);
+                                }
+                                if (entity instanceof org.bukkit.entity.Llama) {
+                                    if (BukkitFeature.ENTITY_TRADER_LLAMA.isSupported()) {
+                                        if (entity instanceof org.bukkit.entity.TraderLlama) {
+                                            return new BukkitTraderLlama((org.bukkit.entity.TraderLlama) entity);
+                                        }
+                                    }
+                                    return new BukkitLlama((org.bukkit.entity.Llama) entity);
+                                }
+
+                                return new BukkitChestedHorseEntity1_11((org.bukkit.entity.ChestedHorse) entity);
+                            }
+                            if (entity instanceof org.bukkit.entity.Horse) {
+                                return new BukkitHorse1_11((org.bukkit.entity.Horse) entity);
+                            }
+                            if (entity instanceof org.bukkit.entity.SkeletonHorse) {
+                                return new BukkitSkeletonHorse1_11((org.bukkit.entity.SkeletonHorse) entity);
+                            }
+                            if (entity instanceof org.bukkit.entity.ZombieHorse) {
+                                return new BukkitZombieHorse1_11((org.bukkit.entity.ZombieHorse) entity);
+                            }
+                            if (BukkitFeature.ENTITY_CAMEL.isSupported()) {
+                                if (entity instanceof org.bukkit.entity.Camel) {
+                                    return new BukkitCamel((org.bukkit.entity.Camel) entity);
+                                }
+                            }
+
+                            return new BukkitHorseEntity1_11((org.bukkit.entity.AbstractHorse) entity);
+                        }
+                    } else {
+                        if (entity instanceof org.bukkit.entity.Horse) {
+                            switch (((org.bukkit.entity.Horse) entity).getVariant()) {
+                                case DONKEY:
+                                    return new BukkitDonkey1_8((org.bukkit.entity.Horse) entity);
+                                case MULE:
+                                    return new BukkitMule1_8((org.bukkit.entity.Horse) entity);
+                                case HORSE:
+                                    return new BukkitHorse1_8((org.bukkit.entity.Horse) entity);
+                                case SKELETON_HORSE:
+                                    return new BukkitSkeletonHorse1_8((org.bukkit.entity.Horse) entity);
+                                case UNDEAD_HORSE:
+                                    return new BukkitZombieHorse1_8((org.bukkit.entity.Horse) entity);
+                            }
+                            return new BukkitHorseEntity1_8((org.bukkit.entity.Horse) entity);
+                        }
+                    }
+
                     if (entity instanceof org.bukkit.entity.Tameable) {
                         if (entity instanceof org.bukkit.entity.Wolf) {
                             return new BukkitWolf((org.bukkit.entity.Wolf) entity);
@@ -216,8 +320,6 @@ public class BukkitEntities extends Entities {
                     if (entity instanceof org.bukkit.entity.Sheep) {
                         return new BukkitSheep((org.bukkit.entity.Sheep) entity);
                     }
-
-                    // TODO: Horses and camels
 
                     if (entity instanceof org.bukkit.entity.Rabbit) {
                         return new BukkitRabbit((org.bukkit.entity.Rabbit) entity);
