@@ -78,11 +78,16 @@ import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitZombieHors
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitFlyingMob;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitGhast;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitPhantom;
+import org.screamingsandals.lib.impl.bukkit.entity.golem.BukkitGolem;
+import org.screamingsandals.lib.impl.bukkit.entity.golem.BukkitIronGolem;
+import org.screamingsandals.lib.impl.bukkit.entity.golem.BukkitShulker;
+import org.screamingsandals.lib.impl.bukkit.entity.golem.BukkitSnowGolem;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitHangingEntity;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitItemFrame;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitLeashKnot;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitPainting;
 import org.screamingsandals.lib.impl.bukkit.entity.illager.BukkitEvokerFangs;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitMonster;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitAbstractArrow;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitArrow;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitDragonFireball;
@@ -125,6 +130,8 @@ import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitRideableMinecar
 import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitSpawnerMinecart;
 import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitTntMinecart;
 import org.screamingsandals.lib.impl.bukkit.entity.vehicle.BukkitVehicle;
+import org.screamingsandals.lib.impl.bukkit.entity.villager.BukkitVillager;
+import org.screamingsandals.lib.impl.bukkit.entity.villager.BukkitWanderingTrader;
 import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitCod;
 import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitDolphin;
 import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitFish;
@@ -398,7 +405,42 @@ public class BukkitEntities extends Entities {
                     return new BukkitAnimal((org.bukkit.entity.Animals) entity);
                 }
 
-                // TODO
+                if (entity instanceof org.bukkit.entity.Monster) {
+                    // TODO: Monsters
+
+                    return new BukkitMonster((org.bukkit.entity.Monster) entity);
+                }
+
+                if (entity instanceof org.bukkit.entity.Golem) {
+                    if (entity instanceof org.bukkit.entity.IronGolem) {
+                        return new BukkitIronGolem((org.bukkit.entity.IronGolem) entity);
+                    }
+                    if (entity instanceof org.bukkit.entity.Snowman) {
+                        return new BukkitSnowGolem((org.bukkit.entity.Snowman) entity);
+                    }
+                    if (BukkitFeature.ENTITY_SHULKER.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Shulker) {
+                            return new BukkitShulker((org.bukkit.entity.Shulker) entity);
+                        }
+                    }
+                    return new BukkitGolem((org.bukkit.entity.Golem) entity);
+                }
+
+                if (entity instanceof org.bukkit.entity.Villager) {
+                    return new BukkitVillager((org.bukkit.entity.Villager) entity);
+                }
+
+                if (BukkitFeature.ENTITY_WANDERING_TRADER.isSupported()) {
+                    if (entity instanceof org.bukkit.entity.WanderingTrader) {
+                        return new BukkitWanderingTrader((org.bukkit.entity.WanderingTrader) entity);
+                    }
+                }
+
+                if (BukkitFeature.ENTITY_ALLAY.isSupported()) {
+                    if (entity instanceof org.bukkit.entity.Allay) {
+                        return new BukkitAllay((org.bukkit.entity.Allay) entity);
+                    }
+                }
 
                 return new BukkitPathfinderMob((org.bukkit.entity.Creature) entity);
             }
