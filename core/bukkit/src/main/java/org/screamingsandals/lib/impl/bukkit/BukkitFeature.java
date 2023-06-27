@@ -198,6 +198,11 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_ALLAY = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Allay"));
     public static final @NotNull PlatformFeature ENTITY_WANDERING_TRADER = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.WanderingTrader"));
     public static final @NotNull PlatformFeature ENTITY_SHULKER = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Shulker"));
+    public static final @NotNull PlatformFeature ENTITY_DROWNED = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Drowned"));
+    public static final @NotNull PlatformFeature ENTITY_VEX = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Vex"));
+    public static final @NotNull PlatformFeature ILLAGERS_1_11 = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Evoker"));
+    public static final @NotNull PlatformFeature ILLAGERS_1_12 = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Illager"));
+    public static final @NotNull PlatformFeature ENTITY_PILLAGER = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Pillager"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));

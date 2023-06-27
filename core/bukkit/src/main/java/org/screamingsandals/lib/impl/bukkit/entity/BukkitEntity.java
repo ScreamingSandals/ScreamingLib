@@ -77,14 +77,14 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
                         return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_ZOMBIE);
                 }
             } else if (wrappedObject instanceof Zombie) {
-                if (((Zombie) wrappedObject).isVillager()) {
-                    return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER);
-                }
                 if (BukkitFeature.HUSK.isSupported()) {
                     var villager = Reflect.fastInvoke(ZombieAccessor.getMethodGetVillagerType1(), ClassStorage.getHandle(wrappedObject));
                     if (villager != null && villager == EnumZombieTypeAccessor.getFieldHUSK()) {
                         return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK);
                     }
+                }
+                if (((Zombie) wrappedObject).isVillager()) {
+                    return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER);
                 }
             } else if (wrappedObject instanceof Skeleton) {
                 var variant = ((Skeleton) wrappedObject).getSkeletonType();

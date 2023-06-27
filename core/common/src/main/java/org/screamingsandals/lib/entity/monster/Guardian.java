@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.entity.illager;
+package org.screamingsandals.lib.entity.monster;
 
-import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.illager.EvokerFangs;
-import org.screamingsandals.lib.impl.bukkit.entity.BukkitEntity;
-
-public class BukkitEvokerFangs extends BukkitEntity implements EvokerFangs {
-    public BukkitEvokerFangs(@NotNull org.bukkit.entity.EvokerFangs wrappedObject) {
-        super(wrappedObject);
-    }
+/**
+ * Represents an entity with identifier {@code minecraft:guardian}. It is also a parent type for {@code minecraft:elder_guardian}.
+ */
+public interface Guardian extends Monster {
 }

@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity.illager;
+package org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton;
 
-import org.screamingsandals.lib.entity.Entity;
-import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.entity.monster.skeleton.WitherSkeleton;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitMonster;
 
-/**
- * Represents an entity with identifier {@code minecraft:evoker_fangs}.
- */
-@LimitedVersionSupport(">= 1.11")
-public interface EvokerFangs extends Entity {
+// AbstractSkeleton concept in Bukkit API is too new and useless for having BukkitAbstractSkeleton class
+public class BukkitWitherSkeleton1_11 extends BukkitMonster implements WitherSkeleton {
+    public BukkitWitherSkeleton1_11(@NotNull org.bukkit.entity.WitherSkeleton wrappedObject) {
+        super(wrappedObject);
+    }
 }
