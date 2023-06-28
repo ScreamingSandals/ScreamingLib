@@ -20,9 +20,11 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.entity.villager.ProfessionRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 
 @Service
 public abstract class BukkitProfessionRegistry extends ProfessionRegistry {
+    @ServiceInitializer
     public static @NotNull BukkitProfessionRegistry init() {
         if (BukkitFeature.NEW_VILLAGERS.isSupported()) {
             return new BukkitProfessionRegistry1_14();
