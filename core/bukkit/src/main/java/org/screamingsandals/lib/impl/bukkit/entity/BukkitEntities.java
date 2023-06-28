@@ -86,7 +86,11 @@ import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitHangingEntity;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitItemFrame;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitLeashKnot;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitPainting;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitEnderDragon;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitRavager;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitVex;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitWarden;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitZoglin;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitEvoker1_11;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitEvoker1_12;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitEvokerFangs;
@@ -110,6 +114,8 @@ import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitPillage
 import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitSpellcaster;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitVindicator1_11;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitVindicator1_12;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.piglin.BukkitPiglin;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.piglin.BukkitPiglinBrute;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitSkeleton;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitStray1_10;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitStray1_11;
@@ -583,7 +589,35 @@ public class BukkitEntities extends Entities {
                         }
                     }
 
-                    // TODO: remaining monsters
+                    if (BukkitFeature.ENTITY_RAVAGER.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Ravager) {
+                            return new BukkitRavager((org.bukkit.entity.Ravager) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_PIGLIN.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Piglin) {
+                            return new BukkitPiglin((org.bukkit.entity.Piglin) entity);
+                        }
+
+                        if (BukkitFeature.ENTITY_PIGLIN_BRUTE.isSupported()) {
+                            if (entity instanceof org.bukkit.entity.PiglinBrute) {
+                                return new BukkitPiglinBrute((org.bukkit.entity.PiglinBrute) entity);
+                            }
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_ZOGLIN.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Zoglin) {
+                            return new BukkitZoglin((org.bukkit.entity.Zoglin) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_WARDEN.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Warden) {
+                            return new BukkitWarden((org.bukkit.entity.Warden) entity);
+                        }
+                    }
 
                     return new BukkitMonster((org.bukkit.entity.Monster) entity);
                 }
@@ -644,7 +678,9 @@ public class BukkitEntities extends Entities {
                 return new BukkitFlyingMob((org.bukkit.entity.Flying) entity);
             }
 
-            // TODO: Ender dragon
+            if (entity instanceof org.bukkit.entity.EnderDragon) {
+                return new BukkitEnderDragon((org.bukkit.entity.EnderDragon) entity);
+            }
 
             if (entity instanceof org.bukkit.entity.Ambient) {
                 if (entity instanceof org.bukkit.entity.Bat) {

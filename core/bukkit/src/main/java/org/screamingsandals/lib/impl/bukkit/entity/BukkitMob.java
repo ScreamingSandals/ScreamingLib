@@ -18,6 +18,7 @@ package org.screamingsandals.lib.impl.bukkit.entity;
 
 import org.bukkit.entity.Ambient;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Flying;
 import org.bukkit.entity.Slime;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -38,17 +39,17 @@ public class BukkitMob extends BukkitLivingEntity implements Mob {
 
         if (BukkitFeature.MOB_INTERFACE.isSupported()) {
             if (!(wrappedObject instanceof org.bukkit.entity.Mob)) {
-                throw new IllegalArgumentException("Wrapped object is not instance of Mob!");
+                throw new IllegalArgumentException("Wrapped object is not an instance of Mob!");
             }
-        } else if (!(wrappedObject instanceof Slime || wrappedObject instanceof Creature || wrappedObject instanceof Ambient || wrappedObject instanceof Flying)) {
-            throw new IllegalArgumentException("Wrapped object is not instance of Slime, Creature, Ambient, Flying or WaterMob!");
+        } else if (!(wrappedObject instanceof Slime || wrappedObject instanceof Creature || wrappedObject instanceof Ambient || wrappedObject instanceof Flying || wrappedObject instanceof EnderDragon)) {
+            throw new IllegalArgumentException("Wrapped object is not an instance of Slime, Creature, Ambient, Flying, WaterMob or EnderDragon!");
         }
     }
 
     @Override
     public void setCurrentTarget(@Nullable LivingEntity target) {
         var living = target == null ? null : target.as(org.bukkit.entity.LivingEntity.class);
-        if (BukkitFeature.MOB_INTERFACE.isSupported()) {
+        if (BukkitFeature.MOB_INTERFACE.isSupported() && (!(wrappedObject instanceof EnderDragon) || BukkitFeature.ENDER_DRAGON_EXTEND_MOB_INTERFACE_IN_API.isSupported())) {
             ((org.bukkit.entity.Mob) wrappedObject).setTarget(living);
         } else if (wrappedObject instanceof Slime) {
             if (BukkitFeature.SLIME_TARGET.isSupported()) {

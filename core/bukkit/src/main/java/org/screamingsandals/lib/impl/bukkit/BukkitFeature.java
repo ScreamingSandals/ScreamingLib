@@ -132,6 +132,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature HUSK = PlatformFeature.of(() -> Version.isVersion(1, 10));
     public static final @NotNull PlatformFeature STRAY = PlatformFeature.of(() -> Version.isVersion(1, 10));
     public static final @NotNull PlatformFeature MOB_INTERFACE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Mob"));
+    public static final @NotNull PlatformFeature ENDER_DRAGON_EXTEND_MOB_INTERFACE_IN_API = MOB_INTERFACE.and(() -> org.bukkit.entity.Mob.class.isAssignableFrom(org.bukkit.entity.EnderDragon.class));
     public static final @NotNull PlatformFeature ENTITY_ADD_PASSENGER = PlatformFeature.of(() -> Reflect.hasMethod(Entity.class, "addPassenger", Entity.class));
     public static final @NotNull PlatformFeature ENTITY_REMOVE_PASSENGER = PlatformFeature.of(() -> Reflect.hasMethod(Entity.class, "removePassenger", Entity.class));
     public static final @NotNull PlatformFeature ENTITY_IS_GLOWING = PlatformFeature.of(() -> Reflect.hasMethod(Entity.class, "isGlowing"));
@@ -203,6 +204,11 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ILLAGERS_1_11 = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Evoker"));
     public static final @NotNull PlatformFeature ILLAGERS_1_12 = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Illager"));
     public static final @NotNull PlatformFeature ENTITY_PILLAGER = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Pillager"));
+    public static final @NotNull PlatformFeature ENTITY_RAVAGER = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Ravager"));
+    public static final @NotNull PlatformFeature ENTITY_PIGLIN = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Piglin"));
+    public static final @NotNull PlatformFeature ENTITY_PIGLIN_BRUTE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.PiglinBrute"));
+    public static final @NotNull PlatformFeature ENTITY_ZOGLIN = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Zoglin"));
+    public static final @NotNull PlatformFeature ENTITY_WARDEN = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Warden"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));
