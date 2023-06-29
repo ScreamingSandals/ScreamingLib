@@ -52,8 +52,10 @@ registerModule('core', 'bukkit'/*, 'minestom'*/) //TODO: add others (minestom, s
 registerModule('proxy', 'bungee', 'velocity')
 
 // Extensions (Optional modules)
-include 'lang'
-include 'kotlin-extra'
+include ':lang'
+project(':lang').projectDir = file('extensions/lang')
+include ':kotlin-extra'
+project(':kotlin-extra').projectDir = file('extensions/kotlin-extra')
 registerExtension('sidebar', 'bukkit') //TODO: add others
 registerExtension('healthindicator', 'bukkit') //TODO: add others
 registerExtension('npc', 'bukkit') //TODO: add others
