@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.entity.Entity;
@@ -240,6 +241,17 @@ public class Location implements Wrapper, ThreadProperty, Vibration.Destination 
     @Contract(value = "_,_ -> new", pure = true)
     public @NotNull Location subtract(@NotNull BlockFace blockFace, int distance) {
         return subtract(blockFace.getBlockDirection().multiply(distance));
+    }
+
+    /**
+     * Resolves the supplied platform location to its {@link Location} wrapper, can be null.
+     *
+     * @param obj the platform location
+     * @return the location wrapper
+     */
+    @Contract("null -> null")
+    public static @Nullable Location fromPlatform(@Nullable Object obj) {
+        return Locations.resolve(obj);
     }
 
     /**

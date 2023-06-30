@@ -46,6 +46,14 @@ public class BungeePlugins extends Plugins {
     }
 
     @Override
+    protected @Nullable Plugin getPluginFromPlatformObject0(@NotNull Object plugin) {
+        if (plugin instanceof net.md_5.bungee.api.plugin.Plugin) {
+            return new BungeePlugin((net.md_5.bungee.api.plugin.Plugin) plugin);
+        }
+        return null;
+    }
+
+    @Override
     protected @NotNull List<@NotNull Plugin> getAllPlugins0() {
         return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(BungeePlugin::new).collect(Collectors.toList());
     }

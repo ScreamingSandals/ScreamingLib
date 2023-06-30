@@ -45,6 +45,11 @@ public class VelocityPlugins extends Plugins {
     }
 
     @Override
+    protected @Nullable Plugin getPluginFromPlatformObject0(@NotNull Object plugin) {
+        return pluginManager.fromInstance(plugin).map(VelocityPlugin::new).orElse(null);
+    }
+
+    @Override
     protected @NotNull List<@NotNull Plugin> getAllPlugins0() {
         return pluginManager.getPlugins().stream().map(VelocityPlugin::new).collect(Collectors.toList());
     }

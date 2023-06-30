@@ -48,6 +48,14 @@ public class BukkitPlugins extends Plugins {
     }
 
     @Override
+    protected @Nullable Plugin getPluginFromPlatformObject0(@NotNull Object plugin) {
+        if (plugin instanceof org.bukkit.plugin.Plugin) {
+            return new BukkitPlugin((org.bukkit.plugin.Plugin) plugin);
+        }
+        return null;
+    }
+
+    @Override
     protected @NotNull List<@NotNull Plugin> getAllPlugins0() {
         return Arrays.stream(Bukkit.getPluginManager().getPlugins()).map(BukkitPlugin::new).collect(Collectors.toList());
     }

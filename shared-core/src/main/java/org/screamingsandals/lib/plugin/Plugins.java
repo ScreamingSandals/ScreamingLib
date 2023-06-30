@@ -55,6 +55,15 @@ public abstract class Plugins {
 
     protected abstract @Nullable Plugin getPlugin0(@NotNull String pluginKey);
 
+    public static @Nullable Plugin getPluginFromPlatformObject(@NotNull Object plugin) {
+        if (pluginManager == null) {
+            throw new UnsupportedOperationException("PluginManager is not initialized yet.");
+        }
+        return pluginManager.getPluginFromPlatformObject0(plugin);
+    }
+
+    protected abstract @Nullable Plugin getPluginFromPlatformObject0(@NotNull Object plugin);
+
     public static @NotNull List<@NotNull Plugin> getAllPlugins() {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
