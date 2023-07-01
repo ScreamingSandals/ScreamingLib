@@ -159,7 +159,7 @@ public class BukkitPlayers extends Players {
             return cachedChannel;
         }
 
-        final var channel = (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(playerWrapper.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
+        final var channel = (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(bukkitPlayer), ServerPlayerAccessor.getFieldConnection())
                 .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
                 .getFieldResulted(ConnectionAccessor.getFieldChannel())
                 .raw();

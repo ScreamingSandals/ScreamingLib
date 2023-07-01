@@ -91,14 +91,16 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
         ((org.bukkit.entity.Player) wrappedObject).setAllowFlight(flying);
     }
 
+    @SuppressWarnings("RedundantCast") // the cast here is not redundant (it is on modern paper, but that's it)
     @Override
     public boolean isSneaking() {
-        return wrappedObject.isSneaking();
+        return ((org.bukkit.entity.Player) wrappedObject).isSneaking();
     }
 
+    @SuppressWarnings("RedundantCast") // the cast here is not redundant (it is on modern paper, but that's it)
     @Override
     public void setSneaking(boolean sneaking) {
-        wrappedObject.setSneaking(sneaking);
+        ((org.bukkit.entity.Player) wrappedObject).setSneaking(sneaking);
     }
 
     @Override
