@@ -5,7 +5,7 @@ name: ScreamingLib CI
 
 on:
   push:
-    branches: [ dev-2.0.0 ]
+    branches: [ ver/2.0.x ]
 
 concurrency: slib_build
 
