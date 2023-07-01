@@ -104,7 +104,7 @@ public final class ServiceInitGenerator {
         // default annotated parameters
 
         add(CheckType.ONLY_SAME, Classes.Java.NIO_PATH.canonicalName(), DataFolder.class, (statement, processedArguments, annotation, variableType) -> {
-            statement.append("$N.getDataFolder()");
+            statement.append("$N.dataFolder()");
             processedArguments.add("description");
             if (!annotation.value().isEmpty()) {
                 statement.append(".resolve($S)");
@@ -113,7 +113,7 @@ public final class ServiceInitGenerator {
             ServiceInitGenerator.this.requiredDescription = true;
         });
         add(CheckType.ONLY_SAME, Classes.Java.FILE.canonicalName(), DataFolder.class, (statement, processedArguments, annotation, variableType) -> {
-            statement.append("$N.getDataFolder()");
+            statement.append("$N.dataFolder()");
             processedArguments.add("description");
             if (!annotation.value().isEmpty()) {
                 statement.append(".resolve($S)");
@@ -123,13 +123,13 @@ public final class ServiceInitGenerator {
             ServiceInitGenerator.this.requiredDescription = true;
         });
         add(CheckType.ONLY_SAME, Classes.Java.NIO_PATH.canonicalName(), ConfigFile.class, (statement, processedArguments, annotation, variableType) -> {
-            statement.append("$N.getDataFolder().resolve($S)");
+            statement.append("$N.dataFolder().resolve($S)");
             processedArguments.add("description");
             processedArguments.add(annotation.value());
             ServiceInitGenerator.this.requiredDescription = true;
         });
         add(CheckType.ONLY_SAME, Classes.Java.FILE.canonicalName(), ConfigFile.class, (statement, processedArguments, annotation, variableType) -> {
-            statement.append("$N.getDataFolder().resolve($S).toFile()");
+            statement.append("$N.dataFolder().resolve($S).toFile()");
             processedArguments.add("description");
             processedArguments.add(annotation.value());
             ServiceInitGenerator.this.requiredDescription = true;
@@ -139,8 +139,8 @@ public final class ServiceInitGenerator {
                 var oldIndex = index++;
                 var newIndex = index++;
 
-                ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $N.getDataFolder().resolve($S)", Path.class, "indexedVariable" + oldIndex, "description", annotation.old());
-                ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $N.getDataFolder().resolve($S)", Path.class, "indexedVariable" + newIndex, "description", annotation.value());
+                ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $N.dataFolder().resolve($S)", Path.class, "indexedVariable" + oldIndex, "description", annotation.old());
+                ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $N.dataFolder().resolve($S)", Path.class, "indexedVariable" + newIndex, "description", annotation.value());
 
                 ServiceInitGenerator.this.methodSpec
                         .beginControlFlow("if ($T.exists($N) && !$T.exists($N))", Files.class, "indexedVariable" + oldIndex, Files.class, "indexedVariable" + newIndex)
@@ -152,7 +152,7 @@ public final class ServiceInitGenerator {
                         .endControlFlow();
             }
 
-            statement.append("$T.builder().path($N.getDataFolder().resolve($S))");
+            statement.append("$T.builder().path($N.dataFolder().resolve($S))");
             processedArguments.add(variableType);
             processedArguments.add("description");
             processedArguments.add(annotation.value());
@@ -370,7 +370,7 @@ public final class ServiceInitGenerator {
                 statement.append(")");
                 methodSpec.addStatement(statement.toString(), processedArguments.toArray());
             }
-            var postConstruct = processOnPostConstruct(typeElement, returnedName);
+            var postConstruct = processOnPostConstruct(typeElement, returnedName, serviceContainer.isHasLombokUtilityClassAnnotation());
             if (postConstruct.areBothPresent()) {
                 methodSpec.addStatement(postConstruct.first(), postConstruct.second().toArray());
             }
@@ -402,7 +402,7 @@ public final class ServiceInitGenerator {
     private void processControllablesOfService(@NotNull ServiceContainer serviceContainer, @Nullable String returnedName) {
         var typeElement = serviceContainer.getService();
 
-        var shouldRunControllable = processShouldRunControllable(typeElement, returnedName);
+        var shouldRunControllable = processShouldRunControllable(typeElement, returnedName, serviceContainer.isHasLombokUtilityClassAnnotation());
 
         var controllableForMethods = new AtomicReference<String>();
 
@@ -417,21 +417,22 @@ public final class ServiceInitGenerator {
                 typeElement,
                 returnedName,
                 controllableForMethods,
-                shouldRunControllable
+                shouldRunControllable,
+                serviceContainer.isHasLombokUtilityClassAnnotation()
         );
 
-        processProviders(typeElement, returnedName, shouldRunControllable);
+        processProviders(typeElement, returnedName, shouldRunControllable, serviceContainer.isHasLombokUtilityClassAnnotation());
 
-        processEventAnnotations(typeElement, returnedName, shouldRunControllable);
+        processEventAnnotations(typeElement, returnedName, shouldRunControllable, serviceContainer.isHasLombokUtilityClassAnnotation());
     }
 
-    private void processMethodAnnotation(Map<Class<? extends Annotation>, String> map, TypeElement typeElement, String returnedName, AtomicReference<String> controllableName, Pair<String, List<Object>> shouldRunControllable) {
+    private void processMethodAnnotation(Map<Class<? extends Annotation>, String> map, TypeElement typeElement, String returnedName, AtomicReference<String> controllableName, Pair<String, List<Object>> shouldRunControllable, boolean lombokUtilityClassFix) {
         map.forEach((annotationClass, controllableMethod) ->
-                processMethodAnnotation(annotationClass, controllableMethod, typeElement, returnedName, controllableName, shouldRunControllable)
+                processMethodAnnotation(annotationClass, controllableMethod, typeElement, returnedName, controllableName, shouldRunControllable, lombokUtilityClassFix)
         );
     }
 
-    private void processMethodAnnotation(Class<? extends Annotation> annotationClass, String controllableMethod, TypeElement typeElement, String returnedName, AtomicReference<String> controllableName, Pair<String, List<Object>> shouldRunControllable) {
+    private void processMethodAnnotation(Class<? extends Annotation> annotationClass, String controllableMethod, TypeElement typeElement, String returnedName, AtomicReference<String> controllableName, Pair<String, List<Object>> shouldRunControllable, boolean lombokUtilityClassFix) {
         var superClass = typeElement;
         List<Element> result1;
         do {
@@ -455,7 +456,7 @@ public final class ServiceInitGenerator {
             var processedArguments = new ArrayList<>();
             var statement = new StringBuilder();
             var arguments = method.getParameters();
-            if (method.getModifiers().contains(Modifier.STATIC)) {
+            if (method.getModifiers().contains(Modifier.STATIC) || lombokUtilityClassFix) {
                 statement.append("$T.$N(");
                 processedArguments.add(typeElement);
             } else {
@@ -524,7 +525,7 @@ public final class ServiceInitGenerator {
         }
     }
 
-    private Pair<String, List<Object>> processShouldRunControllable(TypeElement typeElement, String returnedName) {
+    private Pair<String, List<Object>> processShouldRunControllable(TypeElement typeElement, String returnedName, boolean lombokUtilityClassFix) {
         var superClass = typeElement;
         List<Element> result1;
         do {
@@ -550,7 +551,7 @@ public final class ServiceInitGenerator {
             if (method.getReturnType().getKind() != TypeKind.BOOLEAN) {
                 throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @ShouldRunControllable must return boolean");
             }
-            if (method.getModifiers().contains(Modifier.STATIC)) {
+            if (method.getModifiers().contains(Modifier.STATIC) || lombokUtilityClassFix) {
                 return Pair.of("$T.$N()", List.of(typeElement, method.getSimpleName()));
             } else {
                 if (returnedName == null) {
@@ -564,7 +565,7 @@ public final class ServiceInitGenerator {
 
         return Pair.empty();
     }
-    private Pair<String, List<Object>> processOnPostConstruct(TypeElement typeElement, String returnedName) {
+    private Pair<String, List<Object>> processOnPostConstruct(TypeElement typeElement, String returnedName, boolean lombokUtilityClassFix) {
         var superClass = typeElement;
         List<Element> result1;
         do {
@@ -588,7 +589,7 @@ public final class ServiceInitGenerator {
             var processedArguments = new ArrayList<>();
             var statement = new StringBuilder();
             var arguments = method.getParameters();
-            if (method.getModifiers().contains(Modifier.STATIC)) {
+            if (method.getModifiers().contains(Modifier.STATIC) || lombokUtilityClassFix) {
                 statement.append("$T.$N(");
                 processedArguments.add(typeElement);
             } else {
@@ -645,7 +646,7 @@ public final class ServiceInitGenerator {
         return Pair.empty();
     }
 
-    private void processProviders(TypeElement typeElement, String returnedName, Pair<String, List<Object>> shouldRunControllable) {
+    private void processProviders(TypeElement typeElement, String returnedName, Pair<String, List<Object>> shouldRunControllable, boolean lombokUtilityClassFix) {
         List<ExecutableElement> result = new ArrayList<>();
 
         var superClass = typeElement;
@@ -685,7 +686,7 @@ public final class ServiceInitGenerator {
             var processedArguments = new ArrayList<>();
             var statement = new StringBuilder();
             var arguments = method.getParameters();
-            if (method.getModifiers().contains(Modifier.STATIC)) {
+            if (method.getModifiers().contains(Modifier.STATIC) || lombokUtilityClassFix) {
                 statement.append("$T.$N(");
                 processedArguments.add(typeElement);
             } else {
@@ -787,7 +788,7 @@ public final class ServiceInitGenerator {
 
     }
 
-    private void processEventAnnotations(TypeElement typeElement, String returnedName, Pair<String, List<Object>> shouldRunControllable) {
+    private void processEventAnnotations(TypeElement typeElement, String returnedName, Pair<String, List<Object>> shouldRunControllable, boolean lombokUtilityClassFix) {
         List<ExecutableElement> result = new ArrayList<>();
 
         var superClass = typeElement;
@@ -836,7 +837,7 @@ public final class ServiceInitGenerator {
                 throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @OnEvent must have parameter that extends AbstractEvent");
             }
             var annotation = method.getAnnotation(OnEvent.class);
-            if (method.getModifiers().contains(Modifier.STATIC)) {
+            if (method.getModifiers().contains(Modifier.STATIC) || lombokUtilityClassFix) {
                 methodBuilder.addStatement(
                         "$T.getDefaultEventManager().register($T.class, $T.of(event -> $T.$N(event), $T.$N, $L))",
                         eventManagerClass,

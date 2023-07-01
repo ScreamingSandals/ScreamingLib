@@ -127,7 +127,7 @@ public class MiscUtils {
             }
 
             if (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null) {
-                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": @ProvidedService annotation cannot be mixed with @lombok.UtilityClass annotation!");
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": @ProvidedService annotation cannot be mixed with @lombok.experimental.UtilityClass annotation!");
             }
 
             var container = new ServiceContainer(
@@ -136,7 +136,8 @@ public class MiscUtils {
                     typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
                     false,
                     typeElement.getAnnotation(InternalCoreService.class) != null,
-                    true
+                    true,
+                    false
             );
 
             return platformTypes
@@ -158,7 +159,8 @@ public class MiscUtils {
                                 .allMatch(element -> element.getModifiers().contains(Modifier.PRIVATE))
                                 && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))),
                         typeElement.getAnnotation(InternalCoreService.class) != null,
-                        false
+                        false,
+                        LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null
                 );
                 checkServiceDependencies(environment, typeElement, container);
                 checkConstructorDependencies(environment, typeElement, container);
@@ -200,7 +202,8 @@ public class MiscUtils {
                                 .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
                                 .allMatch(element -> element.getModifiers().contains(Modifier.PRIVATE))
                                 && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))),
-                        false
+                        false,
+                        LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null
                 );
                 if (resolvedElementService == null) {
                     environment.getMessager().printMessage(Diagnostic.Kind.WARNING, resolvedElement.getQualifiedName() + " should have @Service annotation (ignoring that because was resolved with @AbstractService)");

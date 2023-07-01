@@ -40,10 +40,11 @@ public class ServiceContainer {
     private final boolean staticOnly;
     private final boolean coreService;
     private final boolean provided;
+    private final boolean hasLombokUtilityClassAnnotation;
     private boolean delayControllables;
 
     public static @NotNull ServiceContainer createPluginService(@NotNull Types types, @NotNull TypeElement plugin) {
-        var service = new ServiceContainer(types, plugin, false, false, false, false);
+        var service = new ServiceContainer(types, plugin, false, false, false, false, false);
         service.delayControllables = true;
         return service;
     }
