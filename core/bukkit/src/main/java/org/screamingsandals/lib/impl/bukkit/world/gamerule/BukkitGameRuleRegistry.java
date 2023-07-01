@@ -20,6 +20,7 @@ import org.bukkit.GameRule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.utils.StringUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
@@ -61,12 +62,24 @@ public class BukkitGameRuleRegistry extends GameRuleRegistry {
         }
 
         if (BukkitFeature.GAME_RULE_API.isSupported()) {
-            var g = GameRule.getByName(location.path());
+            @Nullable GameRule<?> g = null;
+            if (location.path().contains("_")) {
+                // sponge api-like name, can be easily converted to proper mojang name
+                g = GameRule.getByName(StringUtils.snakeToCamel(location.path()));
+            } else {
+                // lowercased mojang name, hell nah
+                for (var r : GameRule.values()) {
+                    if (r.getName().equalsIgnoreCase(location.path())) {
+                        g = r;
+                        break;
+                    }
+                }
+            }
             if (g != null) {
                 return new BukkitGameRuleType1_13(g);
             }
         } else {
-            var str = compat.stream().filter(s -> s.equalsIgnoreCase(location.path())).findFirst();
+            var str = compat.stream().filter(s -> s.equalsIgnoreCase(location.path().replace("_", ""))).findFirst();
             if (str.isPresent()) {
                 return new BukkitGameRuleType1_8(str.get());
             }
