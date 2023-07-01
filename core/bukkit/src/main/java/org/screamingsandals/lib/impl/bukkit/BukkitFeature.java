@@ -150,7 +150,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature SWIMMING = PlatformFeature.of(() -> Reflect.hasMethod(LivingEntity.class, "isSwimming"));
     public static final @NotNull PlatformFeature RIPTIDING = PlatformFeature.of(() -> Reflect.hasMethod(LivingEntity.class, "isRiptiding"));
     public static final @NotNull PlatformFeature SLEEPING = PlatformFeature.of(() -> Reflect.hasMethod(LivingEntity.class, "isSleeping"));
-    public static final @NotNull PlatformFeature SET_AI = PlatformFeature.of(() -> Reflect.hasMethod(LivingEntity.class, "setAI"));
+    public static final @NotNull PlatformFeature SET_AI = PlatformFeature.of(() -> Reflect.hasMethod(LivingEntity.class, "setAI", boolean.class));
     public static final @NotNull PlatformFeature ATTACK = PlatformFeature.of(() -> Reflect.hasMethod(LivingEntity.class, "attack", Entity.class));
     public static final @NotNull PlatformFeature SWING_HAND = PlatformFeature.of(() -> Reflect.hasMethod(LivingEntity.class, "swingMainHand"));
     public static final @NotNull PlatformFeature COLLIDABLE = PlatformFeature.of(() -> Reflect.hasMethod(LivingEntity.class, "isCollidable"));

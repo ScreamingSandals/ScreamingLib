@@ -27,6 +27,7 @@ import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.KnowledgeBookMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -633,6 +634,15 @@ public class BukkitItemBuilder implements ItemStackBuilder {
 
     @Override
     public @NotNull ItemStackBuilder color(@NotNull Color color)  {
+        if (item != null) {
+            var meta = item.getItemMeta();
+            if (meta instanceof LeatherArmorMeta) {
+                ((LeatherArmorMeta) meta).setColor(org.bukkit.Color.fromRGB(color.red(), color.green(), color.blue()));
+                item.setItemMeta(meta);
+                return this;
+            }
+        }
+
         if (BukkitFeature.POTION_META_COLOR.isSupported()) {
             if (item != null) {
                 var meta = item.getItemMeta();
