@@ -6,6 +6,11 @@ dependencies {
     api libs.configurate.core
     api libs.configurate.gson
 
+    compileOnly libs.configurate.yaml
+    compileOnly libs.configurate.jackson
+    compileOnly libs.configurate.hocon
+    compileOnly libs.configurate.xml
+
     testImplementation libs.junit.jupiter.api
     testRuntimeOnly libs.junit.jupiter.engine
 }
