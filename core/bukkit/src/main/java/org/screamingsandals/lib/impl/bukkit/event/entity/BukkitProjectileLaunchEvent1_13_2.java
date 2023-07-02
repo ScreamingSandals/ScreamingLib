@@ -22,8 +22,8 @@ import org.screamingsandals.lib.entity.projectile.ProjectileEntity;
 import org.screamingsandals.lib.entity.projectile.ProjectileShooter;
 import org.screamingsandals.lib.event.entity.ProjectileLaunchEvent;
 
-public class BukkitProjectileLaunchEvent extends BukkitEntitySpawnEvent implements ProjectileLaunchEvent {
-    public BukkitProjectileLaunchEvent(@NotNull org.bukkit.event.entity.ProjectileLaunchEvent event) {
+public class BukkitProjectileLaunchEvent1_13_2 extends BukkitEntitySpawnEvent implements ProjectileLaunchEvent {
+    public BukkitProjectileLaunchEvent1_13_2(@NotNull org.bukkit.event.entity.ProjectileLaunchEvent event) {
         super(event);
     }
 
