@@ -104,6 +104,12 @@ public class FoliaTasker extends AbstractBukkitTasker {
 
     @Override
     protected @NotNull Task runDelayedAndRepeatedly0(@NotNull ThreadProperty property, @NotNull Runnable runnable, long delay, @NotNull TaskerTime delayUnit, long period, @NotNull TaskerTime periodUnit) {
+        if (delay == 0) {
+            // Folia does not like 0 delay
+            delay = 1;
+            delayUnit = TaskerTime.TICKS;
+        }
+
         if (property == DefaultThreads.ASYNC_THREAD) {
             return new FoliaTask(asyncScheduler.runAtFixedRate(plugin, st -> runnable.run(), periodUnit.getTimeUnit().convert(delayUnit.getTime(delay), delayUnit.getTimeUnit()), periodUnit.getTime(period), periodUnit.getTimeUnit()));
         } else if (property instanceof Entity) {
@@ -125,6 +131,12 @@ public class FoliaTasker extends AbstractBukkitTasker {
 
     @Override
     protected @NotNull Task runDelayedAndRepeatedly0(@NotNull ThreadProperty property, @NotNull Consumer<@NotNull TaskBase> selfCancellable, long delay, @NotNull TaskerTime delayUnit, long period, @NotNull TaskerTime periodUnit) {
+        if (delay == 0) {
+            // Folia does not like 0 delay
+            delay = 1;
+            delayUnit = TaskerTime.TICKS;
+        }
+
         if (property == DefaultThreads.ASYNC_THREAD) {
             return new FoliaTask(asyncScheduler.runAtFixedRate(plugin, st -> selfCancellable.accept(st::cancel), periodUnit.getTimeUnit().convert(delayUnit.getTime(delay), delayUnit.getTimeUnit()), periodUnit.getTime(period), periodUnit.getTimeUnit()));
         } else if (property instanceof Entity) {
