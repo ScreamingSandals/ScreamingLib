@@ -4,8 +4,9 @@ dependencies {
 
     api project(':api-utils')
     api libs.configurate.core
-    api libs.configurate.gson
 
+    // people will bundle required configurate dependencies in their plugins
+    compileOnly libs.configurate.gson
     compileOnly libs.configurate.yaml
     compileOnly libs.configurate.jackson
     compileOnly libs.configurate.hocon

@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.gson.GsonConfigurationLoader;
+import org.screamingsandals.lib.utils.config.JsonConfigurationLoaderBuilderSupplier;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.net.URL;
@@ -86,7 +86,8 @@ public class NPCSkin {
 
             return CompletableFuture.supplyAsync(() -> {
                 try {
-                    var node = GsonConfigurationLoader.builder()
+                    var node = JsonConfigurationLoaderBuilderSupplier.INSTANCE
+                            .get()
                             .url(new URL("https://api.mojang.com/users/profiles/minecraft/" + playerName))
                             .build()
                             .load();
@@ -136,7 +137,8 @@ public class NPCSkin {
 
         return CompletableFuture.supplyAsync(() -> {
             try {
-                var node2 = GsonConfigurationLoader.builder()
+                var node2 = JsonConfigurationLoaderBuilderSupplier.INSTANCE
+                        .get()
                         .url(new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString() + "?unsigned=false"))
                         .build()
                         .load();
