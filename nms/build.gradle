@@ -441,7 +441,7 @@ nmsGen {
     reqClass('net.minecraft.world.entity.monster.Zombie') {
         reqMethod('spigot:setVillagerType', '@EnumZombieType')
         reqMethod('spigot:getVillagerType')
-        reqField('obfuscated:a:1.8.8') // Attributes 1.8.8 support
+        reqEnumField('obfuscated:a:1.8.8') // Attributes 1.8.8 support
     }
 
     /* 1.8.8 compat start */
@@ -460,15 +460,15 @@ nmsGen {
 
     // Attributes
     reqClass('net.minecraft.world.entity.monster.SharedMonsterAttributes') {
-        reqField('spigot:maxHealth:1.8.8')
-        reqField('spigot:FOLLOW_RANGE:1.8.8')
-        reqField('obfuscated:c:1.8.8')
-        reqField('spigot:MOVEMENT_SPEED:1.8.8')
-        reqField('spigot:ATTACK_DAMAGE:1.8.8')
+        reqEnumField('spigot:maxHealth:1.8.8')
+        reqEnumField('spigot:FOLLOW_RANGE:1.8.8')
+        reqEnumField('obfuscated:c:1.8.8')
+        reqEnumField('spigot:MOVEMENT_SPEED:1.8.8')
+        reqEnumField('spigot:ATTACK_DAMAGE:1.8.8')
     }
 
     reqClass('net.minecraft.world.entity.animal.horse.Horse') {
-        reqField('spigot:attributeJumpStrength:1.8.8')
+        reqEnumField('spigot:attributeJumpStrength:1.8.8')
     }
 
     reqClass('net.minecraft.world.entity.ai.attributes.AttributeModifier') {
