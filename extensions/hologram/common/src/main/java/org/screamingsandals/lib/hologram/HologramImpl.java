@@ -38,7 +38,6 @@ import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
-import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.Task;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.data.DataContainer;
@@ -443,8 +442,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     private void cancelRotationTask() {
-        if (rotationTask != null
-                && rotationTask.getState() != TaskState.CANCELLED) {
+        if (rotationTask != null && rotationTask.isScheduledOrRunning()) {
             rotationTask.cancel();
             rotationTask = null;
         }

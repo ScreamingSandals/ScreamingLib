@@ -16,7 +16,9 @@
 
 package org.screamingsandals.lib.impl.bukkit.tasker.task;
 
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.Task;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -37,10 +39,19 @@ public class BukkitTask extends BasicWrapper<org.bukkit.scheduler.BukkitTask> im
 
     @Override
     public @NotNull TaskState getState() {
-        if (wrappedObject.isCancelled()) {
+        if (Bukkit.getScheduler().isCurrentlyRunning(wrappedObject.getTaskId())) {
+            return TaskState.RUNNING;
+        }
+
+        if (!Bukkit.getScheduler().isQueued(wrappedObject.getTaskId())) {
+            if (BukkitFeature.BUKKIT_TASKER_IS_CANCELLED.isSupported()) {
+                if (wrappedObject.isCancelled()) {
+                    return TaskState.CANCELLED;
+                }
+            }
             return TaskState.FINISHED;
         }
 
-        return TaskState.RUNNING;
+        return TaskState.SCHEDULED;
     }
 }

@@ -26,4 +26,10 @@ public interface Task extends TaskBase, RawValueHolder {
      * @return the current state of this task
      */
     @NotNull TaskState getState();
+
+    default boolean isScheduledOrRunning() {
+        var state = getState();
+        return state == TaskState.SCHEDULED || state == TaskState.RUNNING;
+
+    }
 }

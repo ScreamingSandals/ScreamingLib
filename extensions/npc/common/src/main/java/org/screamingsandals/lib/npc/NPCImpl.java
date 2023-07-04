@@ -38,7 +38,6 @@ import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.tasker.DefaultThreads;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
-import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.Task;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.visual.TextEntry;
@@ -250,8 +249,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
     private void cancelTabHide(@NotNull Player viewer) {
         hiderTask.computeIfPresent(viewer.getUuid(), (uuid, task) -> {
-            if (task.getState() == TaskState.RUNNING
-                    || task.getState() == TaskState.SCHEDULED) {
+            if (task.isScheduledOrRunning()) {
                 task.cancel();
             }
             return null;

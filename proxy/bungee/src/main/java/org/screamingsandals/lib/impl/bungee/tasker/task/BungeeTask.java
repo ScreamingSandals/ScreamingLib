@@ -21,6 +21,9 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.Task;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.reflect.Reflect;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BungeeTask extends BasicWrapper<ScheduledTask> implements Task {
     public BungeeTask(@NotNull ScheduledTask wrappedObject) {
@@ -29,7 +32,12 @@ public class BungeeTask extends BasicWrapper<ScheduledTask> implements Task {
 
     @Override
     public @NotNull TaskState getState() {
-        //TODO: check task
+        var running = Reflect.fastInvoke(this, "getRunning");
+        if (running instanceof AtomicBoolean) {
+            if (((AtomicBoolean) running).get()) {
+                return TaskState.RUNNING;
+            }
+        }
         return TaskState.FINISHED;
     }
 

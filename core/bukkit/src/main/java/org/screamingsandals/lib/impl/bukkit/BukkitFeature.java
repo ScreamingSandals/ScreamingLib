@@ -43,6 +43,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
@@ -251,4 +252,5 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_SHOOT_BOW_EVENT_HAND = PlatformFeature.of(() -> Reflect.hasMethod(EntityShootBowEvent.class, "getHand"));
     public static final @NotNull PlatformFeature PLAYER_SHEAR_ENTITY_EVENT_ITEM_HAND = PlatformFeature.of(() -> Reflect.hasMethod(PlayerShearEntityEvent.class, "getItem"));
     public static final @NotNull PlatformFeature FOLIA_TASKER = PlatformFeature.of(() -> Reflect.has("io.papermc.paper.threadedregions.scheduler.ScheduledTask"));
+    public static final @NotNull PlatformFeature BUKKIT_TASKER_IS_CANCELLED = PlatformFeature.of(() -> Reflect.hasMethod(BukkitTask.class, "isCancelled"));
 }
