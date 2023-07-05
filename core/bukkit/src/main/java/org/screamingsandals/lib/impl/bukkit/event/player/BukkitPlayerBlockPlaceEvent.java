@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -41,16 +40,15 @@ import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.impl.utils.collections.ImmutableCollectionLinkedToCollection;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPlayerBlockPlaceEvent implements PlayerBlockPlaceEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -72,7 +70,7 @@ public class BukkitPlayerBlockPlaceEvent implements PlayerBlockPlaceEvent, Bukki
                 replacedBlockStates = new ImmutableCollectionLinkedToCollection<>(
                         ((BlockMultiPlaceEvent) event).getReplacedBlockStates(),
                         blockStateHolder -> blockStateHolder.as(BlockState.class),
-                        blockState -> BlockSnapshots.<BlockSnapshot>wrapBlockSnapshot(blockState).orElseThrow()
+                        blockState -> Objects.requireNonNull(BlockSnapshots.wrapBlockSnapshot(blockState))
                 );
             } else {
                 replacedBlockStates = List.of(replacedBlockState());
@@ -104,7 +102,7 @@ public class BukkitPlayerBlockPlaceEvent implements PlayerBlockPlaceEvent, Bukki
     @Override
     public @NotNull BlockSnapshot replacedBlockState() {
         if (replacedBlockState == null) {
-            replacedBlockState = BlockSnapshots.<BlockSnapshot>wrapBlockSnapshot(event.getBlockReplacedState()).orElseThrow();
+            replacedBlockState = Objects.requireNonNull(BlockSnapshots.wrapBlockSnapshot(event.getBlockReplacedState()));
         }
         return replacedBlockState;
     }

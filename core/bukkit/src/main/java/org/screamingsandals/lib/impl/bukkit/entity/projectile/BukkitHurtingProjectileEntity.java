@@ -23,4 +23,24 @@ public class BukkitHurtingProjectileEntity extends BukkitProjectileEntity implem
     public BukkitHurtingProjectileEntity(@NotNull org.bukkit.entity.Fireball wrappedObject) {
         super(wrappedObject);
     }
+
+    @Override
+    public float yield() {
+        return ((org.bukkit.entity.Fireball) wrappedObject).getYield();
+    }
+
+    @Override
+    public void yield(float yield) {
+        ((org.bukkit.entity.Fireball) wrappedObject).setYield(yield);
+    }
+
+    @Override
+    public boolean isIncendiary() {
+        return ((org.bukkit.entity.Fireball) wrappedObject).isIncendiary();
+    }
+
+    @Override
+    public void isIncendiary(boolean isIncendiary) {
+        ((org.bukkit.entity.Fireball) wrappedObject).setIsIncendiary(isIncendiary);
+    }
 }

@@ -17,16 +17,16 @@
 package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.Entity;
+import org.screamingsandals.lib.DyeColor;
+import org.screamingsandals.lib.entity.animal.Sheep;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.CancellableEvent;
 
 public interface SheepDyeWoolEvent extends CancellableEvent, PlatformEvent {
 
-    @NotNull Entity entity();
+    @NotNull Sheep entity();
 
-    //TODO: DyeColor holder
-    @NotNull String dyeColor();
+    @NotNull DyeColor dyeColor();
 
-    void dyeColor(@NotNull String dyeColor);
+    void dyeColor(@NotNull DyeColor dyeColor);
 }

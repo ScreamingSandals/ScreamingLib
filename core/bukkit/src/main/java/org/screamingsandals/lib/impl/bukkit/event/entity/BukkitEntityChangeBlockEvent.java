@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockPlacement;
@@ -33,13 +32,13 @@ import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityChangeBlockEvent;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitEntityChangeBlockEvent implements EntityChangeBlockEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -54,7 +53,7 @@ public class BukkitEntityChangeBlockEvent implements EntityChangeBlockEvent, Buk
     @Override
     public @NotNull Entity entity() {
         if (entity == null) {
-            entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
+            entity = Objects.requireNonNull(Entities.wrapEntity(event.getEntity()));
         }
         return entity;
     }

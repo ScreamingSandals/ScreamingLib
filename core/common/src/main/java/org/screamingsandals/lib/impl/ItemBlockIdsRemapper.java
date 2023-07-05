@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
@@ -26,7 +25,6 @@ import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.*;
 import java.util.function.Function;
@@ -35,7 +33,6 @@ import java.util.function.Predicate;
 /**
  * Class responsible for remapping item and block id's.
  */
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @ProvidedService
 @RequiredArgsConstructor
 @ApiStatus.Internal
@@ -111,17 +108,21 @@ public abstract class ItemBlockIdsRemapper {
 
     private void makeColorableBlock(@NotNull String baseName, @NotNull String notColoredName) {
         var list = new ArrayList<Block>();
-        COLORS.forEach(s -> Block.ofNullable(s + "_" + baseName).ifNotNull(materialHolder -> {
-            if (!list.contains(materialHolder)) {
-                list.add(materialHolder);
-            }
-        }));
-
-        Block.ofNullable(notColoredName).ifNotNull(materialHolder -> {
-            if (!list.contains(materialHolder)) {
-                list.add(materialHolder);
-            }
+        COLORS.forEach(s -> {
+            var block = Block.ofNullable(s + "_" + baseName);
+            if (block != null) {
+                if (!list.contains(block)) {
+                    list.add(block);
+                }
+            };
         });
+
+        var block = Block.ofNullable(notColoredName);
+        if (block != null) {
+            if (!list.contains(block)) {
+                list.add(block);
+            }
+        }
 
         if (!list.isEmpty()) { // if list is empty, we don't have this material
             colorableBlocks.put(list::contains, s -> {
@@ -135,22 +136,26 @@ public abstract class ItemBlockIdsRemapper {
 
     private void makeColorableItem(@NotNull String baseName, @NotNull String notColoredName) {
         List<ItemType> list = new ArrayList<>();
-        COLORS.forEach(s -> ItemType.ofNullable(s + "_" + baseName).ifNotNull(materialHolder -> {
-            if (!list.contains(materialHolder)) {
-                list.add(materialHolder);
-            }
-        }));
-
-        ItemType.ofNullable(notColoredName).ifNotNull(materialHolder -> {
-            if (!list.contains(materialHolder)) {
-                list.add(materialHolder);
+        COLORS.forEach(s -> {
+            var item = ItemType.ofNullable(s + "_" + baseName);
+            if (item != null) {
+                if (!list.contains(item)) {
+                    list.add(item);
+                }
             }
         });
+
+        var item = ItemType.ofNullable(notColoredName);
+        if (item != null) {
+            if (!list.contains(item)) {
+                list.add(item);
+            }
+        }
 
         if (!list.isEmpty()) { // if list is empty, we don't have this material
             colorableItems.put(list::contains, s -> {
                 if (COLORS.contains(s.toUpperCase(Locale.ROOT))) {
-                    return ItemType.ofNullable(s.toUpperCase(Locale.ROOT) + "_" + baseName).toOptional();
+                    return Optional.ofNullable(ItemType.ofNullable(s.toUpperCase(Locale.ROOT) + "_" + baseName));
                 }
                 return Optional.empty();
             });

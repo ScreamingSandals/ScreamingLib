@@ -19,19 +19,18 @@ package org.screamingsandals.lib.signs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.api.Wrapper;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.Worlds;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ConfigSerializable
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SignLocation implements Wrapper {
     private @NotNull String world;
     private double x;
@@ -49,7 +48,7 @@ public class SignLocation implements Wrapper {
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == Location.class) {
-            return (T) new Location(x, y, z, 0, 0, Worlds.getWorld(world).orElseThrow());
+            return (T) new Location(x, y, z, 0, 0, Objects.requireNonNull(Worlds.getWorld(world)));
         }
         throw new UnsupportedOperationException("Unsupported type!");
     }

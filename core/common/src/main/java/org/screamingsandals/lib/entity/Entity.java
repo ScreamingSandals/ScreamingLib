@@ -169,30 +169,4 @@ public interface Entity extends Wrapper, RawValueHolder, ContainerHolder, Thread
     int getPortalCooldown();
 
     void setPortalCooldown(int cooldown);
-
-    boolean hasMetadata(@NotNull String metadata);
-
-    Object getMetadata(@NotNull String metadata);
-
-    int getIntMetadata(@NotNull String metadata);
-
-    boolean getBooleanMetadata(@NotNull String metadata);
-
-    byte getByteMetadata(@NotNull String metadata);
-
-    long getLongMetadata(@NotNull String metadata);
-
-    String getStringMetadata(@NotNull String metadata);
-
-    Component getComponentMetadata(@NotNull String metadata);
-
-    Location getLocationMetadata(@NotNull String metadata);
-
-    Color getColorMetadata(@NotNull String metadata);
-
-    Vector3D getVectorMetadata(@NotNull String metadata);
-
-    Vector3Df getFloatVectorMetadata(@NotNull String metadata);
-
-    void setMetadata(@NotNull String metadata, Object value);
 }

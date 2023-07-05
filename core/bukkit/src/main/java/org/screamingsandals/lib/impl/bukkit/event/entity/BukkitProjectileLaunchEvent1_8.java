@@ -21,7 +21,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entities;
@@ -29,13 +28,13 @@ import org.screamingsandals.lib.entity.projectile.ProjectileEntity;
 import org.screamingsandals.lib.entity.projectile.ProjectileShooter;
 import org.screamingsandals.lib.event.entity.ProjectileLaunchEvent;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitProjectileLaunchEvent1_8 implements ProjectileLaunchEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -49,7 +48,7 @@ public class BukkitProjectileLaunchEvent1_8 implements ProjectileLaunchEvent, Bu
     @Override
     public @NotNull ProjectileEntity entity() {
         if (entity == null) {
-            entity = (ProjectileEntity) Entities.wrapEntity(event.getEntity()).orElseThrow();
+            entity = (ProjectileEntity) Objects.requireNonNull(Entities.wrapEntity(event.getEntity()));
         }
         return entity;
     }

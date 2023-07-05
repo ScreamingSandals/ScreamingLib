@@ -16,8 +16,14 @@
 
 package org.screamingsandals.lib.entity.animal;
 
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.DyeColor;
+
 /**
  * Represents an entity with identifier {@code minecraft:sheep}.
  */
 public interface Sheep extends Animal {
+    @NotNull DyeColor woolColor();
+
+    void woolColor(@NotNull DyeColor color);
 }

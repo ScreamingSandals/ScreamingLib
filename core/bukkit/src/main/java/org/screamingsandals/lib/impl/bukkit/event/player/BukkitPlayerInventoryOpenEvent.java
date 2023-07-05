@@ -19,7 +19,6 @@ package org.screamingsandals.lib.impl.bukkit.event.player;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,13 +28,13 @@ import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.event.player.PlayerInventoryOpenEvent;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPlayerInventoryOpenEvent implements PlayerInventoryOpenEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -58,7 +57,7 @@ public class BukkitPlayerInventoryOpenEvent implements PlayerInventoryOpenEvent,
     @Override
     public @NotNull Container topInventory() {
         if (topInventory == null) {
-            topInventory = ContainerFactory.<Container>wrapContainer(event.getInventory()).orElseThrow();
+            topInventory = Objects.requireNonNull(ContainerFactory.wrapContainer(event.getInventory()));
         }
         return topInventory;
     }
@@ -66,7 +65,7 @@ public class BukkitPlayerInventoryOpenEvent implements PlayerInventoryOpenEvent,
     @Override
     public @NotNull Container bottomInventory() {
         if (bottomInventory == null) {
-            bottomInventory = ContainerFactory.<Container>wrapContainer(event.getView().getBottomInventory()).orElseThrow();
+            bottomInventory = Objects.requireNonNull(ContainerFactory.wrapContainer(event.getView().getBottomInventory()));
         }
         return bottomInventory;
     }

@@ -16,15 +16,14 @@
 
 package org.screamingsandals.lib.impl.bukkit.event.entity;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityDamageByEntityEvent;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
+import java.util.Objects;
+
 public class BukkitEntityDamageByEntityEvent extends BukkitEntityDamageEvent implements EntityDamageByEntityEvent {
     public BukkitEntityDamageByEntityEvent(@NotNull org.bukkit.event.entity.EntityDamageByEntityEvent event) {
         super(event);
@@ -36,7 +35,7 @@ public class BukkitEntityDamageByEntityEvent extends BukkitEntityDamageEvent imp
     @Override
     public @NotNull Entity damager() {
         if (damager == null) {
-            damager = Entities.wrapEntity(((org.bukkit.event.entity.EntityDamageByEntityEvent) event()).getDamager()).orElseThrow();
+            damager = Objects.requireNonNull(Entities.wrapEntity(((org.bukkit.event.entity.EntityDamageByEntityEvent) event()).getDamager()));
         }
         return damager;
     }

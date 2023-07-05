@@ -16,8 +16,17 @@
 
 package org.screamingsandals.lib.entity.villager;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Represents an entity with identifier {@code minecraft:villager}.
  */
 public interface Villager extends VillagerEntity {
+    @NotNull Profession profession();
+
+    void profession(@NotNull Profession profession);
+
+    @NotNull VillagerType villagerType();
+
+    void villagerType(@NotNull VillagerType villagerType);
 }

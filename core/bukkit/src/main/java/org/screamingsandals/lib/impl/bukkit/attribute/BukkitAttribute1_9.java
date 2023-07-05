@@ -22,8 +22,8 @@ import org.screamingsandals.lib.attribute.*;
 import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.nms.accessors.AttributeInstanceAccessor;
-import org.screamingsandals.lib.nms.accessors.IAttributeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.AttributeInstanceAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.IAttributeAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 

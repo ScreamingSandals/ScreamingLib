@@ -11,11 +11,4 @@ dependencies {
     compileOnly libs.configurate.jackson
     compileOnly libs.configurate.hocon
     compileOnly libs.configurate.xml
-
-    testImplementation libs.junit.jupiter.api
-    testRuntimeOnly libs.junit.jupiter.engine
-}
-
-test {
-    useJUnitPlatform()
 }

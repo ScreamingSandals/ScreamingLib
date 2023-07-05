@@ -37,7 +37,7 @@ import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.meta.PotionEffect;
-import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.BlockPlacement;

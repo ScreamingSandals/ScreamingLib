@@ -24,4 +24,28 @@ public class BukkitWanderingTrader extends BukkitPathfinderMob implements Wander
     public BukkitWanderingTrader(@NotNull org.bukkit.entity.WanderingTrader wrappedObject) {
         super(wrappedObject);
     }
+
+    @Override
+    public boolean baby() {
+        return !((org.bukkit.entity.Villager) wrappedObject).isAdult();
+    }
+
+    @Override
+    public void baby(boolean isBaby) {
+        if (isBaby) {
+            ((org.bukkit.entity.Villager) wrappedObject).setBaby();
+        } else {
+            ((org.bukkit.entity.Villager) wrappedObject).setAdult();
+        }
+    }
+
+    @Override
+    public int age() {
+        return ((org.bukkit.entity.Villager) wrappedObject).getAge();
+    }
+
+    @Override
+    public void age(int age) {
+        ((org.bukkit.entity.Villager) wrappedObject).setAge(age);
+    }
 }

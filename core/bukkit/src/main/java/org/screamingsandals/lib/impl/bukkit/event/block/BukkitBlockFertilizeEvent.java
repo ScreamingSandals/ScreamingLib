@@ -19,7 +19,6 @@ package org.screamingsandals.lib.impl.bukkit.event.block;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,15 +31,14 @@ import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.BlockFertilizeEvent;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.impl.utils.collections.CollectionLinkedToCollection;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitBlockFertilizeEvent implements BlockFertilizeEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -75,7 +73,7 @@ public class BukkitBlockFertilizeEvent implements BlockFertilizeEvent, BukkitCan
     @Override
     public @NotNull Collection<@NotNull BlockSnapshot> changedBlockStates() {
         if (changedBlockStates == null) {
-            changedBlockStates = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockSnapshots.<BlockSnapshot>wrapBlockSnapshot(o).orElseThrow());
+            changedBlockStates = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> Objects.requireNonNull(BlockSnapshots.wrapBlockSnapshot(o)));
         }
         return changedBlockStates;
     }

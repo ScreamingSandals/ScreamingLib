@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.impl.bukkit.item.meta;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
@@ -24,12 +23,10 @@ import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.item.meta.PotionEffectType;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Arrays;
 import java.util.Locale;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPotionEffectType extends BasicWrapper<org.bukkit.potion.PotionEffectType> implements PotionEffectType {
 
     public BukkitPotionEffectType(@NotNull org.bukkit.potion.PotionEffectType type) {

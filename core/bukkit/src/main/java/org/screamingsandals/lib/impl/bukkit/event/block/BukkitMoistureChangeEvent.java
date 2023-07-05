@@ -19,7 +19,6 @@ package org.screamingsandals.lib.impl.bukkit.event.block;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockPlacement;
@@ -28,13 +27,13 @@ import org.screamingsandals.lib.impl.block.snapshot.BlockSnapshots;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.MoistureChangeEvent;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitMoistureChangeEvent implements MoistureChangeEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -56,7 +55,7 @@ public class BukkitMoistureChangeEvent implements MoistureChangeEvent, BukkitCan
     @Override
     public @NotNull BlockSnapshot newBlockState() {
         if (newBlockState == null) {
-            newBlockState = BlockSnapshots.<BlockSnapshot>wrapBlockSnapshot(event.getNewState()).orElseThrow();
+            newBlockState = Objects.requireNonNull(BlockSnapshots.wrapBlockSnapshot(event.getNewState()));
         }
         return newBlockState;
     }

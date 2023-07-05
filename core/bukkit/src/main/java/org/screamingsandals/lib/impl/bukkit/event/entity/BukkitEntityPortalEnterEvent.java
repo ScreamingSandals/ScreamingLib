@@ -22,21 +22,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityPortalEnterEvent;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.impl.world.Locations;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitEntityPortalEnterEvent implements EntityPortalEnterEvent {
     @Getter
     @EqualsAndHashCode.Include
@@ -50,7 +49,7 @@ public class BukkitEntityPortalEnterEvent implements EntityPortalEnterEvent {
     @Override
     public @NotNull Entity entity() {
         if (entity == null) {
-            entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
+            entity = Objects.requireNonNull(Entities.wrapEntity(event.getEntity()));
         }
         return entity;
     }

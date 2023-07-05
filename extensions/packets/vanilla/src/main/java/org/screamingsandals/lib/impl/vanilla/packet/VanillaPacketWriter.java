@@ -20,7 +20,7 @@ import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.item.ItemType;
-import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.packet.PacketWriter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 

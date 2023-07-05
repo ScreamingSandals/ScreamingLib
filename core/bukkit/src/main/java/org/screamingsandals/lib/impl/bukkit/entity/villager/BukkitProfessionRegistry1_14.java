@@ -31,14 +31,14 @@ import java.util.List;
 
 public class BukkitProfessionRegistry1_14 extends BukkitProfessionRegistry {
     public BukkitProfessionRegistry1_14() {
-        specialType(Villager.Profession.class, BukkitProfession1_8::new);
+        specialType(Villager.Profession.class, BukkitProfession1_14::new);
     }
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull Profession> getRegistryItemStream0() {
         return new SimpleRegistryItemStream<>(
                 () -> Arrays.stream(Villager.Profession.values()),
-                BukkitProfession1_8::new,
+                BukkitProfession1_14::new,
                 profession -> {
                     var bukkitKey = profession.getKey();
                     return ResourceLocation.of(bukkitKey.getNamespace(), bukkitKey.getKey());
@@ -53,7 +53,7 @@ public class BukkitProfessionRegistry1_14 extends BukkitProfessionRegistry {
     protected @Nullable Profession resolveMappingPlatform(@NotNull ResourceLocation location) {
         var value = Registry.VILLAGER_PROFESSION.get(new NamespacedKey(location.namespace(), location.path()));
         if (value != null) {
-            return new BukkitProfession1_8(value);
+            return new BukkitProfession1_14(value);
         }
         return null;
     }

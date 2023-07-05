@@ -29,8 +29,8 @@ import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.Mob;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.nms.accessors.LivingEntityAccessor;
-import org.screamingsandals.lib.nms.accessors.MobAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.LivingEntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.MobAccessor;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public class BukkitMob extends BukkitLivingEntity implements Mob {

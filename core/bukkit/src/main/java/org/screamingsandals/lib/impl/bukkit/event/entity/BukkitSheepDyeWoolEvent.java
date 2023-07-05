@@ -19,23 +19,20 @@ package org.screamingsandals.lib.impl.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.DyeColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.entity.animal.Sheep;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
-import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.SheepDyeWoolEvent;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
-import java.util.Locale;
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitSheepDyeWoolEvent implements SheepDyeWoolEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -43,23 +40,23 @@ public class BukkitSheepDyeWoolEvent implements SheepDyeWoolEvent, BukkitCancell
     private final @NotNull org.bukkit.event.entity.SheepDyeWoolEvent event;
 
     // Internal cache
-    private @Nullable Entity entity;
+    private @Nullable Sheep entity;
 
     @Override
-    public @NotNull Entity entity() {
+    public @NotNull Sheep entity() {
         if (entity == null) {
-            entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
+            entity = (Sheep) Objects.requireNonNull(Entities.wrapEntity(event.getEntity()));
         }
         return entity;
     }
 
     @Override
-    public @NotNull String dyeColor() {
-        return event.getColor().name();
+    public @NotNull org.screamingsandals.lib.DyeColor dyeColor() {
+        return org.screamingsandals.lib.DyeColor.of(event.getColor());
     }
 
     @Override
-    public void dyeColor(@NotNull String dyeColor) {
-        event.setColor(DyeColor.valueOf(dyeColor.toUpperCase(Locale.ROOT)));
+    public void dyeColor(@NotNull org.screamingsandals.lib.DyeColor dyeColor) {
+        event.setColor(dyeColor.as(DyeColor.class));
     }
 }

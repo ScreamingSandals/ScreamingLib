@@ -17,10 +17,65 @@
 package org.screamingsandals.lib.impl.bukkit.entity;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.entity.Entities;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.PrimedTnt;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.impl.nms.accessors.PrimedTntAccessor;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public class BukkitPrimedTnt extends BukkitEntity implements PrimedTnt {
     public BukkitPrimedTnt(@NotNull org.bukkit.entity.TNTPrimed wrappedObject) {
         super(wrappedObject);
+    }
+
+    @Override
+    public int fuseTicks() {
+        return ((org.bukkit.entity.TNTPrimed) wrappedObject).getFuseTicks();
+    }
+
+    @Override
+    public void fuseTicks(int fuseTicks) {
+        ((org.bukkit.entity.TNTPrimed) wrappedObject).setFuseTicks(fuseTicks);
+    }
+
+    @Override
+    public @Nullable Entity source() {
+        var entity = ((org.bukkit.entity.TNTPrimed) wrappedObject).getSource();
+        if (entity != null) {
+            return Entities.wrapEntity(entity);
+        }
+        return null;
+    }
+
+    @Override
+    public void source(@Nullable Entity source) {
+        if (BukkitFeature.ENTITY_PRIMED_TNT_SET_SOURCE.isSupported()) {
+            ((org.bukkit.entity.TNTPrimed) wrappedObject).setSource(source != null ? source.as(org.bukkit.entity.Entity.class) : null);
+        } else {
+            Reflect.setField(ClassStorage.getHandle(wrappedObject), PrimedTntAccessor.getFieldOwner(), source != null ? ClassStorage.getHandle(source.as(org.bukkit.entity.Entity.class)) : null);
+        }
+    }
+
+    @Override
+    public float yield() {
+        return ((org.bukkit.entity.TNTPrimed) wrappedObject).getYield();
+    }
+
+    @Override
+    public void yield(float yield) {
+        ((org.bukkit.entity.TNTPrimed) wrappedObject).setYield(yield);
+    }
+
+    @Override
+    public boolean isIncendiary() {
+        return ((org.bukkit.entity.TNTPrimed) wrappedObject).isIncendiary();
+    }
+
+    @Override
+    public void isIncendiary(boolean isIncendiary) {
+        ((org.bukkit.entity.TNTPrimed) wrappedObject).setIsIncendiary(isIncendiary);
     }
 }

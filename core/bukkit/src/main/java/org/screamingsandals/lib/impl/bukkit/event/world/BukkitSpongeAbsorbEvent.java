@@ -19,7 +19,6 @@ package org.screamingsandals.lib.impl.bukkit.event.world;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,15 +29,14 @@ import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.world.SpongeAbsorbEvent;
 import org.screamingsandals.lib.impl.utils.collections.CollectionLinkedToCollection;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitSpongeAbsorbEvent implements SpongeAbsorbEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -60,7 +58,7 @@ public class BukkitSpongeAbsorbEvent implements SpongeAbsorbEvent, BukkitCancell
     @Override
     public @NotNull Collection<@NotNull BlockSnapshot> waterBlocks() {
         if (waterBlocks == null) {
-            waterBlocks = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockSnapshots.<BlockSnapshot>wrapBlockSnapshot(o).orElseThrow());
+            waterBlocks = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> Objects.requireNonNull(BlockSnapshots.wrapBlockSnapshot(o)));
         }
         return waterBlocks;
     }

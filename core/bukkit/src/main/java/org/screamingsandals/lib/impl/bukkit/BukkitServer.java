@@ -25,7 +25,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.impl.bukkit.player.GenericCommandSender;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
-import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.player.Sender;
 import org.screamingsandals.lib.utils.ProxyType;

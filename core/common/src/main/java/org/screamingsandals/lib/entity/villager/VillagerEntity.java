@@ -16,10 +16,11 @@
 
 package org.screamingsandals.lib.entity.villager;
 
+import org.screamingsandals.lib.entity.Ageable;
 import org.screamingsandals.lib.entity.PathfinderMob;
 
 /**
  * An abstract type for villager entities.
  */
-public interface VillagerEntity extends PathfinderMob {
+public interface VillagerEntity extends PathfinderMob, Ageable {
 }

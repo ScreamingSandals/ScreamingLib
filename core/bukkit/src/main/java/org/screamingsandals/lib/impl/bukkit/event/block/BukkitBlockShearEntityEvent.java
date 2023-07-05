@@ -19,7 +19,6 @@ package org.screamingsandals.lib.impl.bukkit.event.block;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockPlacement;
@@ -30,13 +29,13 @@ import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.block.BlockShearEntityEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitBlockShearEntityEvent implements BlockShearEntityEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -59,7 +58,7 @@ public class BukkitBlockShearEntityEvent implements BlockShearEntityEvent, Bukki
     @Override
     public @NotNull Entity entity() {
         if (entity == null) {
-            entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
+            entity = Objects.requireNonNull(Entities.wrapEntity(event.getEntity()));
         }
         return entity;
     }

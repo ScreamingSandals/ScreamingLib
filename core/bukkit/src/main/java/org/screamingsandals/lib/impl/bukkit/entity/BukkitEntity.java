@@ -37,15 +37,13 @@ import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityType;
-import org.screamingsandals.lib.nms.accessors.EntityAccessor;
-import org.screamingsandals.lib.nms.accessors.EnumZombieTypeAccessor;
-import org.screamingsandals.lib.nms.accessors.ZombieAccessor;
-import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.impl.nms.accessors.EntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.EnumZombieTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ZombieAccessor;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.impl.world.Locations;
@@ -403,75 +401,6 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
         if (BukkitFeature.ENTITY_PORTAL_COOLDOWN.isSupported()) {
             wrappedObject.setPortalCooldown(cooldown);
         } // 1.8-1.10
-    }
-
-    @Override
-    public boolean hasMetadata(@NotNull String metadata) {
-        return BukkitEntityMetadataMapper.has(wrappedObject, metadata);
-    }
-
-    @Override
-    public Object getMetadata(@NotNull String metadata) {
-        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Object.class);
-    }
-
-    @Override
-    public int getIntMetadata(@NotNull String metadata) {
-        var i = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Integer.class);
-        return i == null ? 0 : i;
-    }
-
-    @Override
-    public boolean getBooleanMetadata(@NotNull String metadata) {
-        var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Boolean.class);
-        return b != null && b;
-    }
-
-    @Override
-    public byte getByteMetadata(@NotNull String metadata) {
-        var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Byte.class);
-        return b == null ? 0 : b;
-    }
-
-    @Override
-    public long getLongMetadata(@NotNull String metadata) {
-        var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Long.class);
-        return b == null ? 0 : b;
-    }
-
-    @Override
-    public String getStringMetadata(@NotNull String metadata) {
-        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, String.class);
-    }
-
-    @Override
-    public Component getComponentMetadata(@NotNull String metadata) {
-        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Component.class);
-    }
-
-    @Override
-    public Location getLocationMetadata(@NotNull String metadata) {
-        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Location.class);
-    }
-
-    @Override
-    public Color getColorMetadata(@NotNull String metadata) {
-        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Color.class);
-    }
-
-    @Override
-    public Vector3D getVectorMetadata(@NotNull String metadata) {
-        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Vector3D.class);
-    }
-
-    @Override
-    public Vector3Df getFloatVectorMetadata(@NotNull String metadata) {
-        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Vector3Df.class);
-    }
-
-    @Override
-    public void setMetadata(@NotNull String metadata, Object value) {
-        BukkitEntityMetadataMapper.set(wrappedObject, metadata, value);
     }
 
     @Override

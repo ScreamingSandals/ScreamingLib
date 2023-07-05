@@ -19,20 +19,19 @@ package org.screamingsandals.lib.impl.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
+import org.screamingsandals.lib.entity.vehicle.Vehicle;
 import org.screamingsandals.lib.event.entity.VehicleCreateEvent;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitVehicleCreateEvent implements VehicleCreateEvent {
     @Getter
     @EqualsAndHashCode.Include
@@ -40,12 +39,12 @@ public class BukkitVehicleCreateEvent implements VehicleCreateEvent {
     private final @NotNull org.bukkit.event.vehicle.VehicleCreateEvent event;
 
     // Internal cache
-    private @Nullable Entity entity;
+    private @Nullable Vehicle entity;
 
     @Override
-    public @NotNull Entity entity() {
+    public @NotNull Vehicle entity() {
         if (entity == null) {
-            entity = Entities.wrapEntity(event.getVehicle()).orElseThrow();
+            entity = (Vehicle) Objects.requireNonNull(Entities.wrapEntity(event.getVehicle()));
         }
         return entity;
     }

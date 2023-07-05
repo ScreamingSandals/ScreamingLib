@@ -19,7 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.nbt;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.nbt.*;
-import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 

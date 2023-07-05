@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.entity.monster.piglin;
 
+import org.screamingsandals.lib.entity.Ageable;
 import org.screamingsandals.lib.entity.monster.Monster;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
@@ -23,5 +24,5 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
  * An abstract type for all piglin entities.
  */
 @LimitedVersionSupport(">= 1.16")
-public interface PiglinEntity extends Monster {
+public interface PiglinEntity extends Monster, Ageable {
 }

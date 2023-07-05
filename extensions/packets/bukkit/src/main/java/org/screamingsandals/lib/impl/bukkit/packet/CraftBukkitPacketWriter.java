@@ -27,9 +27,9 @@ import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.nms.accessors.BlockAccessor;
-import org.screamingsandals.lib.nms.accessors.FriendlyByteBufAccessor;
-import org.screamingsandals.lib.nms.accessors.ItemStackAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.BlockAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.FriendlyByteBufAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ItemStackAccessor;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.impl.vanilla.packet.VanillaPacketWriter;
 

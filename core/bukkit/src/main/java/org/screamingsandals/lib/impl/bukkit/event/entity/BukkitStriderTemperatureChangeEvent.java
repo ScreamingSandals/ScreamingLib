@@ -19,19 +19,18 @@ package org.screamingsandals.lib.impl.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.LivingEntity;
 import org.screamingsandals.lib.entity.Entities;
+import org.screamingsandals.lib.entity.animal.Strider;
 import org.screamingsandals.lib.event.entity.StriderTemperatureChangeEvent;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitStriderTemperatureChangeEvent implements StriderTemperatureChangeEvent {
     @Getter
     @EqualsAndHashCode.Include
@@ -39,12 +38,12 @@ public class BukkitStriderTemperatureChangeEvent implements StriderTemperatureCh
     private final @NotNull org.bukkit.event.entity.StriderTemperatureChangeEvent event;
 
     // Internal cache
-    private @Nullable LivingEntity entity;
+    private @Nullable Strider entity;
 
     @Override
-    public @NotNull LivingEntity entity() {
+    public @NotNull Strider entity() {
         if (entity == null) {
-            entity = Entities.wrapEntityLiving(event.getEntity()).orElseThrow();
+            entity = (Strider) Objects.requireNonNull(Entities.wrapEntityLiving(event.getEntity()));
         }
         return entity;
     }

@@ -16,8 +16,18 @@
 
 package org.screamingsandals.lib.entity;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Represents an entity with identifier {@code minecraft:tnt}.
  */
-public interface PrimedTnt extends Entity {
+public interface PrimedTnt extends ExplosiveEntity {
+
+    int fuseTicks();
+
+    void fuseTicks(int fuseTicks);
+
+    @Nullable Entity source();
+
+    void source(@Nullable Entity source);
 }

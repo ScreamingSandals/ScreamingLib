@@ -18,7 +18,7 @@ package org.screamingsandals.lib.impl.bukkit.attribute;
 
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.Attribute;
-import org.screamingsandals.lib.nms.accessors.AttributeInstanceAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.AttributeInstanceAccessor;
 
 public class BukkitAttributes1_8 extends BukkitAttributes {
     @Override

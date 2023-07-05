@@ -16,8 +16,23 @@
 
 package org.screamingsandals.lib.entity.monster.zombie;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.entity.villager.Profession;
+import org.screamingsandals.lib.entity.villager.VillagerType;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
+
 /**
  * Represents an entity with identifier {@code minecraft:zombie_villager}.
  */
 public interface ZombieVillager extends Zombie {
+    @LimitedVersionSupport(">= 1.9; returns null on 1.8")
+    @Nullable Profession profession();
+
+    @LimitedVersionSupport(">= 1.9; has no effect on 1.8")
+    void profession(@Nullable Profession profession);
+
+    @NotNull VillagerType villagerType();
+
+    void villagerType(@NotNull VillagerType villagerType);
 }

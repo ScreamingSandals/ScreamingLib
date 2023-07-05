@@ -7,7 +7,7 @@ gradle-app.setting
 .gradletasknamecache
 !src/**/target/
 **/target/
-nms/src/generated/java/org/screamingsandals/lib/nms/accessors/
+nms/src/generated/java/org/screamingsandals/lib/impl/nms/accessors/
 
 # Eclipse
 /bin

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib;
 
+import org.screamingsandals.lib.impl.DyeColorRegistry;
 import org.screamingsandals.lib.impl.block.BlockRegistry;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.impl.container.type.InventoryTypeRegistry;
@@ -26,6 +27,7 @@ import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.impl.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.impl.entity.villager.ProfessionRegistry;
+import org.screamingsandals.lib.impl.entity.villager.VillagerTypeRegistry;
 import org.screamingsandals.lib.impl.firework.FireworkEffectTypeRegistry;
 import org.screamingsandals.lib.impl.gameevent.GameEventRegistry;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
@@ -99,7 +101,9 @@ import org.screamingsandals.lib.impl.world.weather.WeatherRegistry;
         GameRuleRegistry.class,
         Worlds.class,
         ContainerFactory.class,
-        GameEventRegistry.class
+        GameEventRegistry.class,
+        VillagerTypeRegistry.class,
+        DyeColorRegistry.class
 })
 @InternalCoreService
 public abstract class Core {

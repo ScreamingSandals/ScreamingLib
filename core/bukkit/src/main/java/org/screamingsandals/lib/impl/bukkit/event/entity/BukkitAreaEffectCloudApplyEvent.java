@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,15 +30,14 @@ import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.AreaEffectCloudApplyEvent;
 import org.screamingsandals.lib.impl.utils.collections.CollectionLinkedToCollection;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitAreaEffectCloudApplyEvent implements AreaEffectCloudApplyEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -53,7 +51,7 @@ public class BukkitAreaEffectCloudApplyEvent implements AreaEffectCloudApplyEven
     @Override
     public @NotNull Entity entity() {
         if (entity == null) {
-            entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
+            entity = Objects.requireNonNull(Entities.wrapEntity(event.getEntity()));
         }
         return entity;
     }
@@ -64,7 +62,7 @@ public class BukkitAreaEffectCloudApplyEvent implements AreaEffectCloudApplyEven
             affectedEntities = new CollectionLinkedToCollection<>(
                     event.getAffectedEntities(),
                     entityBasic -> entityBasic.as(LivingEntity.class),
-                    livingEntity -> Entities.wrapEntity(livingEntity).orElseThrow()
+                    livingEntity -> Objects.requireNonNull(Entities.wrapEntity(livingEntity))
             );
         }
         return affectedEntities;

@@ -16,30 +16,30 @@
 
 package org.screamingsandals.lib.impl.bukkit.event.block;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.block.BlockFormedByEntityEvent;
 
 import lombok.experimental.Accessors;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitBlockFormedByEntityEvent extends BukkitBlockFormEvent implements BlockFormedByEntityEvent {
     // Internal cache
-    private Entity producer;
+    private @Nullable Entity producer;
 
-    public BukkitBlockFormedByEntityEvent(EntityBlockFormEvent event) {
+    public BukkitBlockFormedByEntityEvent(@NotNull EntityBlockFormEvent event) {
         super(event);
     }
 
     @Override
     public @NotNull Entity producer() {
         if (producer == null) {
-            producer = Entities.wrapEntity(((EntityBlockFormEvent) event()).getEntity()).orElseThrow();
+            producer = Objects.requireNonNull(Entities.wrapEntity(((EntityBlockFormEvent) event()).getEntity()));
         }
         return producer;
     }

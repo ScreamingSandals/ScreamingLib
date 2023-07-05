@@ -16,15 +16,14 @@
 
 package org.screamingsandals.lib.impl.bukkit.event.entity;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityCombustByEntityEvent;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
+import java.util.Objects;
+
 public class BukkitEntityCombustByEntityEvent extends BukkitEntityCombustEvent implements EntityCombustByEntityEvent {
     public BukkitEntityCombustByEntityEvent(@NotNull org.bukkit.event.entity.EntityCombustByEntityEvent event) {
         super(event);
@@ -36,7 +35,7 @@ public class BukkitEntityCombustByEntityEvent extends BukkitEntityCombustEvent i
     @Override
     public @NotNull Entity combuster() {
         if (combuster == null) {
-            combuster = Entities.wrapEntity(((org.bukkit.event.entity.EntityCombustByEntityEvent) event()).getCombuster()).orElseThrow();
+            combuster = Objects.requireNonNull(Entities.wrapEntity(((org.bukkit.event.entity.EntityCombustByEntityEvent) event()).getCombuster()));
         }
         return combuster;
     }

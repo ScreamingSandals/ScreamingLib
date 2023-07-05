@@ -7,7 +7,7 @@ sourceSets.main.java.srcDirs += 'src/generated/java'
 // after any changes, please run generateNmsComponents task
 
 nmsGen {
-    basePackage = "org.screamingsandals.lib.nms.accessors"
+    basePackage = "org.screamingsandals.lib.impl.nms.accessors"
     sourceSet = "src/generated/java"
     cleanOnRebuild = true
     minMinecraftVersion = "1.8.8"
@@ -500,7 +500,16 @@ nmsGen {
         reqConstructor('@Level')
         reqField('subEntities')
     }
+
+    reqClass('spigot:PacketPlayOutChat') {
+        reqConstructor('@Component', byte)
+    }
+
     /* 1.8.8 compat end */
+
+    reqClass('net.minecraft.world.entity.item.PrimedTnt') {
+        reqField('owner')
+    }
 }
 
 tasks.getByName('compileJava').dependsOn('generateNmsComponents')

@@ -20,6 +20,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.item.ItemStack;
@@ -82,20 +83,24 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
 
     @Override
     public @Nullable ItemStack @NotNull [] getStorageContents() {
-        var oldArray = wrappedObject.getStorageContents();
-        var array = new ItemStack[oldArray.length];
+        if (BukkitFeature.GET_STORAGE_CONTENTS.isSupported()) {
+            var oldArray = wrappedObject.getStorageContents();
+            var array = new ItemStack[oldArray.length];
 
-        for (var i = 0; i < oldArray.length; i++) {
-            array[i] = oldArray[i] == null ? null : new BukkitItem(oldArray[i]);
+            for (var i = 0; i < oldArray.length; i++) {
+                array[i] = oldArray[i] == null ? null : new BukkitItem(oldArray[i]);
+            }
+
+            return array;
+        } else {
+            return getContents(); // 1.8.8: this is probably okay
         }
-
-        return array;
     }
 
     @Override
     public void setContents(@Nullable ItemStack @NotNull [] items) throws IllegalArgumentException {
-        if (items.length != getSize()) {
-            throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize());
+        if (items.length > getSize()) {
+            throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize() + " or less");
         }
         var array = new org.bukkit.inventory.ItemStack[getSize()];
         for (var i = 0; i < getSize(); i++) {
@@ -107,13 +112,18 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     @Override
     public void setStorageContents(@Nullable ItemStack @NotNull [] items) throws IllegalArgumentException {
         if (items.length > getSize()) {
-            throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize());
+            throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize() + " or less");
         }
-        var array = new org.bukkit.inventory.ItemStack[items.length];
-        for (var i = 0; i < array.length; i++) {
-            array[i] = items[i] != null ? items[i].as(org.bukkit.inventory.ItemStack.class) : null;
+
+        if (BukkitFeature.GET_STORAGE_CONTENTS.isSupported()) {
+            var array = new org.bukkit.inventory.ItemStack[items.length];
+            for (var i = 0; i < array.length; i++) {
+                array[i] = items[i] != null ? items[i].as(org.bukkit.inventory.ItemStack.class) : null;
+            }
+            wrappedObject.setStorageContents(array);
+        } else {
+            setContents(items);  // 1.8.8: this is probably okay
         }
-        wrappedObject.setStorageContents(array);
     }
 
     @Override

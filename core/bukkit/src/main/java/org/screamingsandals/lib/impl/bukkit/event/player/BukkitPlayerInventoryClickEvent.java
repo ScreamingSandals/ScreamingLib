@@ -19,7 +19,6 @@ package org.screamingsandals.lib.impl.bukkit.event.player;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
@@ -35,13 +34,13 @@ import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.ClickType;
 import org.screamingsandals.lib.utils.InventoryAction;
 import org.screamingsandals.lib.utils.SlotType;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPlayerInventoryClickEvent implements PlayerInventoryClickEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -90,7 +89,7 @@ public class BukkitPlayerInventoryClickEvent implements PlayerInventoryClickEven
     public @Nullable Container clickedInventory() {
         if (!clickedInventoryCached) {
             if (event.getClickedInventory() != null) {
-                clickedInventory = ContainerFactory.<Container>wrapContainer(event.getClickedInventory()).orElseThrow();
+                clickedInventory = Objects.requireNonNull(ContainerFactory.wrapContainer(event.getClickedInventory()));
             }
             clickedInventoryCached = true;
         }
@@ -108,7 +107,7 @@ public class BukkitPlayerInventoryClickEvent implements PlayerInventoryClickEven
     @Override
     public @NotNull Container inventory() {
         if (inventory == null) {
-            inventory = ContainerFactory.<Container>wrapContainer(event.getInventory()).orElseThrow();
+            inventory = Objects.requireNonNull(ContainerFactory.wrapContainer(event.getInventory()));
         }
         return inventory;
     }

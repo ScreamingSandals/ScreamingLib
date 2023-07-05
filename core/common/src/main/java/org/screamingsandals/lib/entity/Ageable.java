@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.metadata;
+package org.screamingsandals.lib.entity;
 
-import lombok.Data;
+/**
+ * An abstract type for all mob entities with age.
+ */
+public interface Ageable extends Mob {
+    boolean baby();
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
+    void baby(boolean isBaby);
 
-@Data
-public class MetadataConverter<T> {
-    private final Class<T> requiredClass;
-    private final Function<Object, T> mapToWrapper;
-    private final BiFunction<T, Class<?>, Object> mapToPlatform;
+    int age();
+
+    void age(int age);
 }

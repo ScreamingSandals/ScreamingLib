@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.item.builder;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -29,18 +28,15 @@ import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @ProvidedService
 @ServiceDependencies(dependsOn = ItemTypeRegistry.class)
 public abstract class ItemStackFactory {
@@ -134,7 +130,10 @@ public abstract class ItemStackFactory {
     }
 
     public static @NotNull List<@NotNull ItemStack> buildAll(@NotNull List<@Nullable Object> objects) {
-        return objects.stream().map(o -> build(o).orElse(ItemStackFactory.getAir())).filter(Objects::nonNull).collect(Collectors.toList());
+        return objects.stream().map(o -> {
+            var item = build(o);
+            return item != null ? item : ItemStackFactory.getAir();
+        }).collect(Collectors.toList());
     }
 
     private static @Nullable ItemStack cachedAir;

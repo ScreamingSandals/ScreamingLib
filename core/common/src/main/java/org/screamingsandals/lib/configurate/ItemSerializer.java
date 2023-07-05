@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.configurate;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.attribute.Attributes;
@@ -34,7 +33,6 @@ import org.screamingsandals.lib.nbt.configurate.TagSerializer;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.ConfigurateUtils;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -44,7 +42,6 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class ItemSerializer implements TypeSerializer<ItemStack> {
     public static final @NotNull ItemSerializer INSTANCE = new ItemSerializer();
 
@@ -81,7 +78,7 @@ public class ItemSerializer implements TypeSerializer<ItemStack> {
 
                 ShortStackDeserializer.deserializeShortStack(builder, node.getString());
 
-                return builder.build().orElseThrow();
+                return Objects.requireNonNull(builder.build());
             }
 
             var builder = ItemStackFactory.builder();
@@ -202,7 +199,10 @@ public class ItemSerializer implements TypeSerializer<ItemStack> {
                     }
                 } else {
                     try {
-                        Enchantment.ofNullable(enchants.get(Object.class)).ifNotNull(builder::enchantment);
+                        var enchantment = Enchantment.ofNullable(enchants.get(Object.class));
+                        if (enchantment != null) {
+                            builder.enchantment(enchantment);
+                        }
                     } catch (SerializationException e) {
                         e.printStackTrace();
                     }
@@ -211,7 +211,10 @@ public class ItemSerializer implements TypeSerializer<ItemStack> {
             var potionType = node.node(POTION_TYPE_KEY);
             if (!potionType.empty()) {
                 try {
-                    Potion.ofNullable(potionType.get(Object.class)).ifNotNull(builder::potion);
+                    var potion = Potion.ofNullable(potionType.get(Object.class));
+                    if (potion != null) {
+                        builder.potion(potion);
+                    }
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
@@ -224,7 +227,10 @@ public class ItemSerializer implements TypeSerializer<ItemStack> {
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList()));
                 } else {
-                    PotionEffect.ofNullable(potionEffects).ifNotNull(builder::effect);
+                    var potionEffect = PotionEffect.ofNullable(potionEffects);
+                    if (potionEffect != null) {
+                        builder.effect(potionEffect);
+                    }
                 }
             }
 
@@ -236,7 +242,10 @@ public class ItemSerializer implements TypeSerializer<ItemStack> {
                             .filter(Objects::nonNull)
                             .forEach(builder::attributeModifier);
                 } else {
-                    Attributes.wrapItemAttribute(attributes).ifNotNull(builder::attributeModifier);
+                    var itemAttribute = Attributes.wrapItemAttribute(attributes);
+                    if (itemAttribute != null) {
+                        builder.attributeModifier(itemAttribute);
+                    }
                 }
             }
 
@@ -282,7 +291,7 @@ public class ItemSerializer implements TypeSerializer<ItemStack> {
                 builder.power(power.getInt());
             }
 
-            return builder.build().orElseThrow();
+            return Objects.requireNonNull(builder.build());
         } catch (Throwable throwable) {
             throw new SerializationException(throwable);
         }

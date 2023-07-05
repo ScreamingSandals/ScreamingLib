@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.impl.world;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -25,15 +24,15 @@ import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.block.BlockPlacements;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.Location;
+
+import java.util.Objects;
 
 /**
  * Class responsible for converting platform locations to wrappers.
  */
 @ProvidedService
 @ApiStatus.Internal
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public abstract class Locations {
     protected final @NotNull BidirectionalConverter<Location> converter = BidirectionalConverter.<Location>build()
             .registerP2W(Location.class, e -> e)
@@ -74,7 +73,7 @@ public abstract class Locations {
      * @throws java.util.NoSuchElementException when the location could not be mapped
      */
     public static <T> @NotNull Location wrapLocation(@NotNull T input) {
-        return resolve(input).orElseThrow();
+        return Objects.requireNonNull(resolve(input));
     }
 
     /**

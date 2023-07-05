@@ -16,18 +16,15 @@
 
 package org.screamingsandals.lib.impl.bukkit.item.meta;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Arrays;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPotionEffect extends BasicWrapper<org.bukkit.potion.PotionEffect> implements PotionEffect {
 
     public BukkitPotionEffect(@NotNull PotionEffectType type) {

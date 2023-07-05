@@ -16,10 +16,11 @@
 
 package org.screamingsandals.lib.entity.animal;
 
+import org.screamingsandals.lib.entity.Ageable;
 import org.screamingsandals.lib.entity.PathfinderMob;
 
 /**
  * An abstract type for all animals
  */
-public interface Animal extends PathfinderMob {
+public interface Animal extends PathfinderMob, Ageable {
 }

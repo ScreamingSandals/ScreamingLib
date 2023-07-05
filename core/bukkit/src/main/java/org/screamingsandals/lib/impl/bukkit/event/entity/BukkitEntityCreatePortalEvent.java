@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,16 +33,15 @@ import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityCreatePortalEvent;
 import org.screamingsandals.lib.impl.utils.collections.CollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.PortalType;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitEntityCreatePortalEvent implements EntityCreatePortalEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -58,7 +56,7 @@ public class BukkitEntityCreatePortalEvent implements EntityCreatePortalEvent, B
     @Override
     public @NotNull Entity entity() {
         if (entity == null) {
-            entity = Entities.wrapEntity(event.getEntity()).orElseThrow();
+            entity = Objects.requireNonNull(Entities.wrapEntity(event.getEntity()));
         }
         return entity;
     }
@@ -69,7 +67,7 @@ public class BukkitEntityCreatePortalEvent implements EntityCreatePortalEvent, B
             blocks = new CollectionLinkedToCollection<>(
                     event.getBlocks(),
                     blockStateHolder -> blockStateHolder.as(BlockState.class),
-                    blockState -> BlockSnapshots.<BlockSnapshot>wrapBlockSnapshot(blockState).orElseThrow()
+                    blockState -> Objects.requireNonNull(BlockSnapshots.wrapBlockSnapshot(blockState))
             );
         }
         return blocks;

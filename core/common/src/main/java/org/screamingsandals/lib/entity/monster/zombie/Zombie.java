@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.entity.monster.zombie;
 
+import org.screamingsandals.lib.entity.Ageable;
 import org.screamingsandals.lib.entity.monster.Monster;
 
 /**
@@ -23,5 +24,5 @@ import org.screamingsandals.lib.entity.monster.Monster;
  * It is also a parent type for {@code minecraft:zombie_villager}, {@code minecraft:husk}, {@code minecraft:zombified_piglin}
  * and {@code minecraft:drowned}.
  */
-public interface Zombie extends Monster {
+public interface Zombie extends Monster, Ageable {
 }

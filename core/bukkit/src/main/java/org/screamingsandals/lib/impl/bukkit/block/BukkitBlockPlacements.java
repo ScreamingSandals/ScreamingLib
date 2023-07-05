@@ -16,21 +16,20 @@
 
 package org.screamingsandals.lib.impl.bukkit.block;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.block.BlockPlacements;
 import org.screamingsandals.lib.world.Location;
 
+import java.util.Objects;
+
 @Service
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitBlockPlacements extends BlockPlacements {
 
     public BukkitBlockPlacements() {
         converter.registerP2W(org.bukkit.Location.class, location -> new BukkitBlockPlacement(location.getBlock()))
-                .registerP2W(org.bukkit.block.Block.class, block -> resolve(block.getLocation()).orElseThrow());
+                .registerP2W(org.bukkit.block.Block.class, block -> Objects.requireNonNull(resolve(block.getLocation())));
     }
 
     @Override

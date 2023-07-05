@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.impl.attribute.AttributeTypeRegistry;
-import org.screamingsandals.lib.nms.accessors.IAttributeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.IAttributeAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
 

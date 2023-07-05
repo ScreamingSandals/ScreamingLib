@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.signs;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.OnEvent;
@@ -29,7 +28,6 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 import org.screamingsandals.lib.block.snapshot.SignBlockSnapshot;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -41,7 +39,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ServiceDependencies
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public abstract class AbstractSignManager {
     private final @NotNull List<@NotNull ClickableSign> signs = new LinkedList<>();
     private boolean modified;
@@ -79,7 +76,7 @@ public abstract class AbstractSignManager {
         return signs.stream()
                 .filter(sign -> sign.getLocation().equals(location))
                 .findFirst()
-                .toNullable();
+                .orElse(null);
     }
 
     public @NotNull List<@NotNull ClickableSign> getSignsForKey(@NotNull String key) {
@@ -139,9 +136,8 @@ public abstract class AbstractSignManager {
 
     @OnEvent
     public void onRightClick(@NotNull PlayerInteractEvent event) {
-        if (event.action() == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
-                && event.clickedBlock() != null) {
-            var state = event.clickedBlock().blockSnapshot().orElseThrow();
+        if (event.action() == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && event.clickedBlock() != null) {
+            var state = Objects.requireNonNull(event.clickedBlock().blockSnapshot());
             if (state instanceof SignBlockSnapshot) {
                 var location = new SignLocation(state.location());
                 var sign = getSign(location);
@@ -163,7 +159,7 @@ public abstract class AbstractSignManager {
         }
 
         var player = event.player();
-        var state = event.block().blockSnapshot().orElseThrow();
+        var state = Objects.requireNonNull(event.block().blockSnapshot());
         if (state instanceof SignBlockSnapshot) {
             var location = new SignLocation(state.location());
             if (isSignRegistered(location)) {

@@ -24,4 +24,28 @@ public class BukkitAnimal extends BukkitPathfinderMob implements Animal {
     public BukkitAnimal(@NotNull org.bukkit.entity.Animals wrappedObject) {
         super(wrappedObject);
     }
+
+    @Override
+    public boolean baby() {
+        return !((org.bukkit.entity.Animals) wrappedObject).isAdult();
+    }
+
+    @Override
+    public void baby(boolean isBaby) {
+        if (isBaby) {
+            ((org.bukkit.entity.Animals) wrappedObject).setBaby();
+        } else {
+            ((org.bukkit.entity.Animals) wrappedObject).setAdult();
+        }
+    }
+
+    @Override
+    public int age() {
+        return ((org.bukkit.entity.Animals) wrappedObject).getAge();
+    }
+
+    @Override
+    public void age(int age) {
+        ((org.bukkit.entity.Animals) wrappedObject).setAge(age);
+    }
 }

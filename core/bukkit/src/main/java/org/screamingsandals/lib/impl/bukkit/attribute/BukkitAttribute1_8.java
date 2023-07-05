@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.attribute.Attribute;
 import org.screamingsandals.lib.attribute.AttributeModifier;
 import org.screamingsandals.lib.attribute.AttributeType;
-import org.screamingsandals.lib.nms.accessors.AttributeInstanceAccessor;
-import org.screamingsandals.lib.nms.accessors.AttributeModifierAccessor;
-import org.screamingsandals.lib.nms.accessors.IAttributeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.AttributeInstanceAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.AttributeModifierAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.IAttributeAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 

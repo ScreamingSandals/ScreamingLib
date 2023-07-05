@@ -16,11 +16,12 @@
 
 package org.screamingsandals.lib.entity.monster;
 
+import org.screamingsandals.lib.entity.Ageable;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 /**
  * Represents an entity with identifier {@code minecraft:zoglin}.
  */
 @LimitedVersionSupport(">= 1.16")
-public interface Zoglin extends Monster {
+public interface Zoglin extends Monster, Ageable {
 }

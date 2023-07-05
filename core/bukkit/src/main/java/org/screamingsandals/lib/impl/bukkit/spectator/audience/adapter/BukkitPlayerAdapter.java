@@ -28,22 +28,12 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.spectator.bossbar.BukkitBossBar1_8;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.item.ItemTagKeys;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nbt.StringTag;
-import org.screamingsandals.lib.nms.accessors.ClientboundCustomPayloadPacketAccessor;
-import org.screamingsandals.lib.nms.accessors.ClientboundOpenBookPacketAccessor;
-import org.screamingsandals.lib.nms.accessors.ClientboundSetSubtitleTextPacketAccessor;
-import org.screamingsandals.lib.nms.accessors.ClientboundSetTitleTextPacketAccessor;
-import org.screamingsandals.lib.nms.accessors.ClientboundSetTitlesAnimationPacketAccessor;
-import org.screamingsandals.lib.nms.accessors.ClientboundSetTitlesPacketAccessor;
-import org.screamingsandals.lib.nms.accessors.ClientboundSetTitlesPacket_i_TypeAccessor;
-import org.screamingsandals.lib.nms.accessors.ClientboundTabListPacketAccessor;
-import org.screamingsandals.lib.nms.accessors.FriendlyByteBufAccessor;
-import org.screamingsandals.lib.nms.accessors.InteractionHandAccessor;
-import org.screamingsandals.lib.nms.accessors.ResourceLocationAccessor;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Component;
@@ -84,7 +74,16 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
     @Override
     public void sendActionBar(@NotNull ComponentLike message) {
         var comp = message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(owner()) : message.asComponent();
-        commandSender().spigot().sendMessage(ChatMessageType.ACTION_BAR, comp.as(BaseComponent.class));
+        if (BukkitFeature.BUNGEECORD_CHAT_SEND_MESSAGE_WITH_CHAT_MESSAGE_TYPE.isSupported()) {
+            commandSender().spigot().sendMessage(ChatMessageType.ACTION_BAR, comp.as(BaseComponent.class));
+        } else {
+            // 1.8.8
+            var components = new BaseComponent[] {comp.as(BaseComponent.class)};
+
+            var packet = Reflect.construct(PacketPlayOutChatAccessor.getConstructor0(), null, (byte) 2);
+            Reflect.setField(packet, "components", components); // Spigot field, no mapping
+            ClassStorage.sendNMSConstructedPacket(commandSender(), packet);
+        }
     }
 
     @Override

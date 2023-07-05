@@ -40,14 +40,20 @@ public abstract class MetadataItem {
     /**
      * Serializes the index position of this MetadataItem instance to the provided PacketWriter object.
      *
-     * Note: This method is to be overridden by subclasses to also serialize the data to the provided PacketWriter.
-     * and if the protocol version is 56 and above you should use {@link MetadataItem#writeLegacyHeader(PacketWriter, int)} instead
-     *
      * @param writer the PacketWriter instance to serialize this MetaDataItem to
      */
-    public void write(@NotNull PacketWriter writer) {
+    public abstract void write(@NotNull PacketWriter writer);
+
+    /**
+     * Serializes the index position and type for protocol > 57
+     *
+     * @param writer the PacketWriter instance to serialize this byte to
+     */
+    protected void writeModernHeader(@NotNull PacketWriter writer) {
         if (writer.protocol() > 56) {
             writer.writeByte(index);
+        } else {
+            throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is not compatible with protocol < 57!");
         }
     }
 
@@ -57,7 +63,7 @@ public abstract class MetadataItem {
      * @param writer the PacketWriter instance to serialize this byte to
      * @param type the type id of this MetaDataItem.
      */
-    public void writeLegacyHeader(@NotNull PacketWriter writer, int type) {
+    protected void writeLegacyHeader(@NotNull PacketWriter writer, int type) {
         // from protocol 57 and lower this is condensed into a single byte for index and type.
         // so we write it separately
         writer.writeByte((byte) ((type << 5 | index & 0x1F) & 0xFF));
@@ -204,10 +210,10 @@ public abstract class MetadataItem {
 
         @Override
         public void write(@NotNull PacketWriter writer) {
-            super.write(writer);
             if (writer.protocol() < 57) {
                 writeLegacyHeader(writer, 0);
             } else {
+                writeModernHeader(writer);
                 writer.writeVarInt(0);
             }
             writer.writeByte(data);
@@ -229,7 +235,6 @@ public abstract class MetadataItem {
 
         @Override
         public void write(PacketWriter writer) {
-            super.write(writer);
             if (writer.protocol() < 57) {
                 writeLegacyHeader(writer, 1);
                 writer.writeShort(data);
@@ -252,11 +257,11 @@ public abstract class MetadataItem {
 
         @Override
         public void write(@NotNull PacketWriter writer) {
-            super.write(writer);
             if (writer.protocol() < 57) {
                 writeLegacyHeader(writer, 2);
                 writer.writeInt(data);
             } else {
+                writeModernHeader(writer);
                 writer.writeVarInt(1);
                 writer.writeVarInt(data);
             }
@@ -278,10 +283,10 @@ public abstract class MetadataItem {
 
         @Override
         public void write(@NotNull PacketWriter writer) {
-            super.write(writer);
             if (writer.protocol() < 57) {
                 writeLegacyHeader(writer, 3);
             } else {
+                writeModernHeader(writer);
                 writer.writeVarInt(writer.protocol() >= 761 ? 3 : 2);
             }
             writer.writeFloat(data);
@@ -303,10 +308,10 @@ public abstract class MetadataItem {
 
         @Override
         public void write(@NotNull PacketWriter writer) {
-            super.write(writer);
-            if (writer.protocol() < 47) {
+            if (writer.protocol() < 57) {
                 writeLegacyHeader(writer, 4);
             } else {
+                writeModernHeader(writer);
                 writer.writeVarInt(writer.protocol() >= 761 ? 4 : 3);
             }
             writer.writeSizedString(text);
@@ -328,7 +333,7 @@ public abstract class MetadataItem {
 
         @Override
         public void write(@NotNull PacketWriter writer) {
-            super.write(writer);
+            writeModernHeader(writer);
             writer.writeVarInt(writer.protocol() >= 761 ? 5 : 4);
             writer.writeComponent(text);
         }
@@ -349,7 +354,7 @@ public abstract class MetadataItem {
 
         @Override
         public void write(@NotNull PacketWriter writer) {
-            super.write(writer);
+            writeModernHeader(writer);
             writer.writeVarInt(writer.protocol() >= 761 ? 6 : 5);
             var flag = val != null && !val.equals(Component.empty());
             writer.writeBoolean(flag);
@@ -374,10 +379,10 @@ public abstract class MetadataItem {
 
         @Override
         public void write(@NotNull PacketWriter writer) {
-            super.write(writer);
             if (writer.protocol() < 57) {
                 writeLegacyHeader(writer, 0);
             } else {
+                writeModernHeader(writer);
                 writer.writeVarInt(writer.protocol() < 393 ? 6 : writer.protocol() >= 761 ? 8 : 7);
             }
             writer.writeBoolean(val);
@@ -399,10 +404,10 @@ public abstract class MetadataItem {
 
         @Override
         public void write(@NotNull PacketWriter writer) {
-            super.write(writer);
             if (writer.protocol() < 57) {
                 writeLegacyHeader(writer, 7);
             } else {
+                writeModernHeader(writer);
                 writer.writeVarInt(writer.protocol() < 393 ? 7 : writer.protocol() >= 761 ? 9 : 8);
             }
             writer.writeVector(val);
@@ -424,7 +429,7 @@ public abstract class MetadataItem {
 
         @Override
         public void write(@NotNull PacketWriter writer) {
-            super.write(writer);
+            writeModernHeader(writer);
             writer.writeVarInt(writer.protocol() < 393 ? 8 : writer.protocol() >= 761 ? 10 : 9);
             writer.writeLong(blockPosToLong(val.getX(), val.getY(), val.getZ()));
         }
@@ -445,7 +450,7 @@ public abstract class MetadataItem {
 
         @Override
         public void write(@NotNull PacketWriter writer) {
-            super.write(writer);
+            writeModernHeader(writer);
             writer.writeVarInt(writer.protocol() < 393 ? 9 : writer.protocol() >= 761 ? 11 : 10);
             var present = blockPosition != null;
             writer.writeBoolean(present);

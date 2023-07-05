@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.world;
 
 import lombok.*;
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,13 +28,13 @@ import org.screamingsandals.lib.particle.Particle;
 import org.screamingsandals.lib.particle.Vibration;
 import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.utils.BlockFace;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.math.Vector3Di;
 import org.screamingsandals.lib.world.chunk.Chunk;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +46,6 @@ import java.util.stream.Collectors;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @With
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class Location implements Wrapper, ThreadProperty, Vibration.Destination {
     /**
      * The X coordinate of this location.
@@ -353,7 +351,7 @@ public class Location implements Wrapper, ThreadProperty, Vibration.Destination 
      * @return the chunk
      */
     public @NotNull Chunk getChunk() {
-        return getWorld().getChunkAt(this).orElseThrow();
+        return Objects.requireNonNull(getWorld().getChunkAt(this));
     }
 
     /**

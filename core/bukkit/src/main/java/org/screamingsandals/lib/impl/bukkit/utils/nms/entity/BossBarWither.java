@@ -20,8 +20,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Wither;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.nms.accessors.EntityAccessor;
-import org.screamingsandals.lib.nms.accessors.WitherBossAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.EntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.WitherBossAccessor;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public class BossBarWither extends FakeEntityNMS<Wither> {
@@ -36,7 +36,7 @@ public class BossBarWither extends FakeEntityNMS<Wither> {
 
     public static @NotNull Object construct(@NotNull Location location) {
         final Object nmsEntity = Reflect.construct(WitherBossAccessor.getConstructor0(), ClassStorage.getHandle(location.getWorld()));
-        Reflect.fastInvoke(nmsEntity, EntityAccessor.getMethodAbsMoveTo1(), location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
+        Reflect.fastInvoke(nmsEntity, EntityAccessor.getMethodAbsMoveTo1(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         return nmsEntity;
     }
 }

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.nms.accessors.EnumParticleAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.EnumParticleAccessor;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.particle.ParticleType;
 import org.screamingsandals.lib.utils.BasicWrapper;

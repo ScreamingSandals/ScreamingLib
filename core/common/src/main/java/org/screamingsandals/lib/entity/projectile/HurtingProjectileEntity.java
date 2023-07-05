@@ -16,8 +16,10 @@
 
 package org.screamingsandals.lib.entity.projectile;
 
+import org.screamingsandals.lib.entity.ExplosiveEntity;
+
 /**
  * An abstract type for such called hurting projectiles (fireballs, dragon fireball and wither skull).
  */
-public interface HurtingProjectileEntity extends ProjectileEntity {
+public interface HurtingProjectileEntity extends ProjectileEntity, ExplosiveEntity {
 }

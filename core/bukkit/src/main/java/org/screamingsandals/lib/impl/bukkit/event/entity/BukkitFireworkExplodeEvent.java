@@ -19,20 +19,19 @@ package org.screamingsandals.lib.impl.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.projectile.FireworkRocket;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.FireworkExplodeEvent;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
+
+import java.util.Objects;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitFireworkExplodeEvent implements FireworkExplodeEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -45,7 +44,7 @@ public class BukkitFireworkExplodeEvent implements FireworkExplodeEvent, BukkitC
     @Override
     public @NotNull FireworkRocket entity() {
         if (entity == null) {
-            entity = Entities.wrapEntityFirework(event.getEntity()).orElseThrow();
+            entity = Objects.requireNonNull(Entities.wrapEntityFirework(event.getEntity()));
         }
         return entity;
     }

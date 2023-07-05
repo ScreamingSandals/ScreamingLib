@@ -17,10 +17,23 @@
 package org.screamingsandals.lib.impl.bukkit.entity.animal;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.DyeColor;
 import org.screamingsandals.lib.entity.animal.Sheep;
+import org.screamingsandals.lib.spectator.Color;
 
 public class BukkitSheep extends BukkitAnimal implements Sheep {
     public BukkitSheep(@NotNull org.bukkit.entity.Sheep wrappedObject) {
         super(wrappedObject);
+    }
+
+    @Override
+    public @NotNull DyeColor woolColor() {
+        var color = ((org.bukkit.entity.Sheep) wrappedObject).getColor();
+        return DyeColor.of(color == null ? Color.WHITE : color);
+    }
+
+    @Override
+    public void woolColor(@NotNull DyeColor color) {
+        ((org.bukkit.entity.Sheep) wrappedObject).setColor(color.as(org.bukkit.DyeColor.class));
     }
 }

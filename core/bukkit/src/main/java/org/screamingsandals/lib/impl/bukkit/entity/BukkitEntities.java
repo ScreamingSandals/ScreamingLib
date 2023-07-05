@@ -187,9 +187,9 @@ import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.entity.type.InternalEntityLegacyConstants;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.nms.accessors.EntityAccessor;
-import org.screamingsandals.lib.nms.accessors.EnumZombieTypeAccessor;
-import org.screamingsandals.lib.nms.accessors.ZombieAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.EntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.EnumZombieTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ZombieAccessor;
 import org.screamingsandals.lib.tasker.DefaultThreads;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -824,24 +824,26 @@ public class BukkitEntities extends Entities {
                 }
             }
 
-            if (entity instanceof org.bukkit.entity.ThrowableProjectile) {
-                if (entity instanceof org.bukkit.entity.Egg) {
-                    return new BukkitEgg((org.bukkit.entity.Egg) entity);
-                }
-                if (entity instanceof org.bukkit.entity.EnderPearl) {
-                    return new BukkitEnderPearl((org.bukkit.entity.EnderPearl) entity);
-                }
-                if (entity instanceof org.bukkit.entity.ThrownExpBottle) {
-                    return new BukkitExperienceBottle((org.bukkit.entity.ThrownExpBottle) entity);
-                }
-                if (entity instanceof org.bukkit.entity.ThrownPotion) {
-                    return new BukkitThrownPotion((org.bukkit.entity.ThrownPotion) entity);
-                }
-                if (entity instanceof org.bukkit.entity.Snowball) {
-                    return new BukkitSnowball((org.bukkit.entity.Snowball) entity);
-                }
+            if (entity instanceof org.bukkit.entity.Egg) {
+                return new BukkitEgg((org.bukkit.entity.Egg) entity);
+            }
+            if (entity instanceof org.bukkit.entity.EnderPearl) {
+                return new BukkitEnderPearl((org.bukkit.entity.EnderPearl) entity);
+            }
+            if (entity instanceof org.bukkit.entity.ThrownExpBottle) {
+                return new BukkitExperienceBottle((org.bukkit.entity.ThrownExpBottle) entity);
+            }
+            if (entity instanceof org.bukkit.entity.ThrownPotion) {
+                return new BukkitThrownPotion((org.bukkit.entity.ThrownPotion) entity);
+            }
+            if (entity instanceof org.bukkit.entity.Snowball) {
+                return new BukkitSnowball((org.bukkit.entity.Snowball) entity);
+            }
 
-                return new BukkitThrowableProjectileEntity((org.bukkit.entity.ThrowableProjectile) entity);
+            if (BukkitFeature.ENTITY_THROWABLE_PROJECTILE.isSupported()) {
+                if (entity instanceof org.bukkit.entity.ThrowableProjectile) {
+                    return new BukkitThrowableProjectileEntity((org.bukkit.entity.ThrowableProjectile) entity);
+                }
             }
 
             if (entity instanceof org.bukkit.entity.FishHook) {

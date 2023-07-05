@@ -25,7 +25,7 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.packet.listener.ServerboundInteractPacketListener;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ArmorStandAccessor;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.player.Players;

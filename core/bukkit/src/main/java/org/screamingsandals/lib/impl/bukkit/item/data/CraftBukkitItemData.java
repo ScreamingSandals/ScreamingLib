@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
 import org.screamingsandals.lib.item.data.ItemData;
-import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.impl.utils.GsonUtils;
 import org.screamingsandals.lib.impl.utils.Primitives;
 import org.screamingsandals.lib.utils.ResourceLocation;

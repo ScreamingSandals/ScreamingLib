@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.impl.attribute;
 
-import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +29,6 @@ import org.screamingsandals.lib.impl.slot.EquipmentSlotRegistry;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
-import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -39,7 +37,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.util.Map;
 import java.util.function.Function;
 
-@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @ProvidedService
 @ApiStatus.Internal
 @ServiceDependencies(dependsOn = {

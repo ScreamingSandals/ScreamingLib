@@ -17,26 +17,16 @@
 package org.screamingsandals.lib.impl.bukkit;
 
 import lombok.experimental.UtilityClass;
+import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.Tag;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -211,6 +201,11 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_PIGLIN_BRUTE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.PiglinBrute"));
     public static final @NotNull PlatformFeature ENTITY_ZOGLIN = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Zoglin"));
     public static final @NotNull PlatformFeature ENTITY_WARDEN = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Warden"));
+    public static final @NotNull PlatformFeature ENTITY_PRIMED_TNT_SET_SOURCE = PlatformFeature.of(() -> Reflect.hasMethod(TNTPrimed.class, "setSource", Entity.class));
+    public static final @NotNull PlatformFeature ENTITY_ZOMBIE_VILLAGER_METHODS = PlatformFeature.of(() -> Reflect.hasMethod(Zombie.class, "getVillagerProfession"));
+    public static final @NotNull PlatformFeature ENTITY_ZOMBIE_PIGLIN_ZOGLIN_EXTENDS_AGEABLE = PlatformFeature.of(() -> org.bukkit.entity.Ageable.class.isAssignableFrom(org.bukkit.entity.Zombie.class));
+    public static final @NotNull PlatformFeature ENTITY_THROWABLE_PROJECTILE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.ThrowableProjectile"));
+    public static final @NotNull PlatformFeature ENTITY_THROWN_POTION_EXTENDS_THROWABLE_PROJECTILE = ENTITY_THROWABLE_PROJECTILE.and(() -> org.bukkit.entity.ThrowableProjectile.class.isAssignableFrom(org.bukkit.entity.ThrownPotion.class));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));
@@ -240,6 +235,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature STOP_SOUND = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "stopSound", String.class));
     public static final @NotNull PlatformFeature MODERN_OPEN_BOOK_PACKET = PlatformFeature.of(() -> Version.isVersion(1, 13, 1));
     public static final @NotNull PlatformFeature MODERN_OPEN_BOOK_PLUGIN_MESSAGE = PlatformFeature.of(() -> Version.isVersion(1, 13) && !Version.isVersion(1, 13, 1));
+    public static final @NotNull PlatformFeature BUNGEECORD_CHAT_SEND_MESSAGE_WITH_CHAT_MESSAGE_TYPE = PlatformFeature.of(() -> Reflect.hasMethod(Player.Spigot.class, "sendMessage", ChatMessageType.class, BaseComponent.class));
 
     // MISC
     public static final @NotNull PlatformFeature SOUND_KEYED = PlatformFeature.of(() -> Reflect.hasMethod(Sound.class, "getKey"));
@@ -253,4 +249,6 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature PLAYER_SHEAR_ENTITY_EVENT_ITEM_HAND = PlatformFeature.of(() -> Reflect.hasMethod(PlayerShearEntityEvent.class, "getItem"));
     public static final @NotNull PlatformFeature FOLIA_TASKER = PlatformFeature.of(() -> Reflect.has("io.papermc.paper.threadedregions.scheduler.ScheduledTask"));
     public static final @NotNull PlatformFeature BUKKIT_TASKER_IS_CANCELLED = PlatformFeature.of(() -> Reflect.hasMethod(BukkitTask.class, "isCancelled"));
+    public static final @NotNull PlatformFeature DYE_COLOR_LIGHT_GRAY_SUPPORTED = PlatformFeature.of(() -> Reflect.getField(DyeColor.class, "LIGHT_GRAY") != null);
+    public static final @NotNull PlatformFeature GET_STORAGE_CONTENTS = PlatformFeature.of(() -> Reflect.hasMethod(Inventory.class, "getStorageContents"));
 }

@@ -39,6 +39,7 @@ public @interface MinecraftType {
         DAMAGE_TYPE,
         DIFFICULTY_TYPE,
         DIMENSION_TYPE,
+        DYE_COLOR,
         ENCHANTMENT,
         ENCHANTMENT_TYPE,
         ENTITY_POSE,
@@ -63,6 +64,7 @@ public @interface MinecraftType {
         PROFESSION,
         SOUND,
         SOUND_SOURCE,
+        VILLAGER_TYPE,
         WEATHER;
     }
 }

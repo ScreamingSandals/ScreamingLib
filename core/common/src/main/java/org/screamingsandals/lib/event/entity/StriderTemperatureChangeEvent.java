@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.LivingEntity;
+import org.screamingsandals.lib.entity.animal.Strider;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
@@ -25,7 +25,7 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 @LimitedVersionSupport(">= 1.16")
 public interface StriderTemperatureChangeEvent extends Event, PlatformEvent {
 
-    @NotNull LivingEntity entity();
+    @NotNull Strider entity();
 
     boolean shivering();
 }

@@ -18,10 +18,54 @@ package org.screamingsandals.lib.impl.bukkit.entity.monster.piglin;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.monster.piglin.PiglinBrute;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitMonster;
 
 public class BukkitPiglinBrute extends BukkitMonster implements PiglinBrute {
     public BukkitPiglinBrute(@NotNull org.bukkit.entity.PiglinBrute wrappedObject) {
         super(wrappedObject);
+    }
+
+    @Override
+    public boolean baby() {
+        if (BukkitFeature.ENTITY_ZOMBIE_PIGLIN_ZOGLIN_EXTENDS_AGEABLE.isSupported()) {
+            return !((org.bukkit.entity.PiglinBrute) wrappedObject).isAdult();
+        }
+
+        //noinspection deprecation
+        return ((org.bukkit.entity.PiglinBrute) wrappedObject).isBaby();
+    }
+
+    @Override
+    public void baby(boolean isBaby) {
+        if (BukkitFeature.ENTITY_ZOMBIE_PIGLIN_ZOGLIN_EXTENDS_AGEABLE.isSupported()) {
+            if (isBaby) {
+                ((org.bukkit.entity.PiglinBrute) wrappedObject).setBaby();
+            } else {
+                ((org.bukkit.entity.PiglinBrute) wrappedObject).setAdult();
+            }
+            return;
+        }
+
+        //noinspection deprecation
+        ((org.bukkit.entity.PiglinBrute) wrappedObject).setBaby(isBaby);
+    }
+
+    @Override
+    public int age() {
+        if (BukkitFeature.ENTITY_ZOMBIE_PIGLIN_ZOGLIN_EXTENDS_AGEABLE.isSupported()) {
+            return ((org.bukkit.entity.PiglinBrute) wrappedObject).getAge();
+        }
+
+        return baby() ? -1 : 0;
+    }
+
+    @Override
+    public void age(int age) {
+        if (BukkitFeature.ENTITY_ZOMBIE_PIGLIN_ZOGLIN_EXTENDS_AGEABLE.isSupported()) {
+            ((org.bukkit.entity.PiglinBrute) wrappedObject).setAge(age);
+            return;
+        }
+        baby(age < 0);
     }
 }

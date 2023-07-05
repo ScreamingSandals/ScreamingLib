@@ -75,7 +75,19 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
     }
 
     public static @NotNull NPC npc(@NotNull Location holder) {
-        return npc(UUID.randomUUID(), holder, true);
+        var uuid = UUID.randomUUID();
+
+        // According to Grum (Mojang employee), NPCs are supposed to have UUIDs version 2 (randomUUID is supposed to generate version 4)
+        // from version 4 to version 2 we can switch easily using the following method: (the following code is from CitizensAPI repository)
+
+        if (uuid.version() == 4) { // switch to version 2
+            long msb = uuid.getMostSignificantBits();
+            msb &= ~0x0000000000004000L;
+            msb |= 0x0000000000002000L;
+            uuid = new UUID(msb, uuid.getLeastSignificantBits());
+        }
+
+        return npc(uuid, holder, true);
     }
 
     public static @NotNull NPC npc(@NotNull UUID uuid, @NotNull Location holder, boolean touchable) {
