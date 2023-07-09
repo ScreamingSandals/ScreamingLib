@@ -42,8 +42,8 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class ItemSerializer implements TypeSerializer<ItemStack> {
-    public static final @NotNull ItemSerializer INSTANCE = new ItemSerializer();
+public class ItemStackSerializer implements TypeSerializer<ItemStack> {
+    public static final @NotNull ItemStackSerializer INSTANCE = new ItemStackSerializer();
 
     private static final @NotNull SNBTSerializer internalSNBTSerializer = SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build();
     private static final @NotNull String TYPE_KEY = "type";

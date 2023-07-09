@@ -25,8 +25,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class BlockTypeSerializer implements TypeSerializer<Block> {
-    public static final @NotNull BlockTypeSerializer INSTANCE = new BlockTypeSerializer();
+public class BlockSerializer implements TypeSerializer<Block> {
+    public static final @NotNull BlockSerializer INSTANCE = new BlockSerializer();
 
     @Override
     public @NotNull Block deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {

@@ -236,6 +236,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature MODERN_OPEN_BOOK_PACKET = PlatformFeature.of(() -> Version.isVersion(1, 13, 1));
     public static final @NotNull PlatformFeature MODERN_OPEN_BOOK_PLUGIN_MESSAGE = PlatformFeature.of(() -> Version.isVersion(1, 13) && !Version.isVersion(1, 13, 1));
     public static final @NotNull PlatformFeature BUNGEECORD_CHAT_SEND_MESSAGE_WITH_CHAT_MESSAGE_TYPE = PlatformFeature.of(() -> Reflect.hasMethod(Player.Spigot.class, "sendMessage", ChatMessageType.class, BaseComponent.class));
+    public static final @NotNull PlatformFeature HEX_COLORS = PlatformFeature.of(() -> Version.isVersion(1, 16));
 
     // MISC
     public static final @NotNull PlatformFeature SOUND_KEYED = PlatformFeature.of(() -> Reflect.hasMethod(Sound.class, "getKey"));

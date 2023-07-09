@@ -44,7 +44,6 @@ import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.nbt.CompoundTag;
-import org.screamingsandals.lib.nbt.IntTag;
 import org.screamingsandals.lib.nbt.NumericTag;
 import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.impl.nms.accessors.CompoundTagAccessor;
@@ -71,7 +70,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
         if (BukkitFeature.FLATTENING.isSupported()) {
             return ItemType.of(wrappedObject.getType());
         } else {
-            return new BukkitItemType1_8(wrappedObject.getType(), wrappedObject.getType().getMaxDurability() >= 0 ? 0 : wrappedObject.getDurability()); // distinguish between durability and data value
+            return new BukkitItemType1_8(wrappedObject.getType(), wrappedObject.getType().getMaxDurability() > 0 ? 0 : wrappedObject.getDurability()); // distinguish between durability and data value
         }
     }
 

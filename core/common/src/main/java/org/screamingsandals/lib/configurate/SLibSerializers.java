@@ -18,6 +18,7 @@ package org.screamingsandals.lib.configurate;
 
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.DyeColor;
 import org.screamingsandals.lib.attribute.AttributeModifier;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.attribute.ItemAttribute;
@@ -26,6 +27,8 @@ import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.entity.damage.DamageType;
 import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.screamingsandals.lib.entity.type.EntityType;
+import org.screamingsandals.lib.entity.villager.Profession;
+import org.screamingsandals.lib.entity.villager.VillagerType;
 import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.firework.FireworkEffectType;
 import org.screamingsandals.lib.item.ItemStack;
@@ -58,6 +61,7 @@ public class SLibSerializers {
                 .register(DamageType.class, DamageTypeSerializer.INSTANCE)
                 .register(DifficultyType.class, DifficultyTypeSerializer.INSTANCE)
                 .register(DimensionType.class, DimensionTypeSerializer.INSTANCE)
+                .register(DyeColor.class, DyeColorSerializer.INSTANCE)
                 .register(EnchantmentType.class, EnchantmentTypeSerializer.INSTANCE)
                 .register(Enchantment.class, EnchantmentSerializer.INSTANCE)
                 .register(EntityPose.class, EntityPoseSerializer.INSTANCE)
@@ -66,16 +70,18 @@ public class SLibSerializers {
                 .register(GameRuleType.class, GameRuleTypeSerializer.INSTANCE)
                 .register(InventoryType.class, InventoryTypeSerializer.INSTANCE)
                 .register(ParticleType.class, ParticleTypeSerializer.INSTANCE)
+                .register(Profession.class, ProfessionSerializer.INSTANCE)
                 .register(PotionEffect.class, PotionEffectSerializer.INSTANCE)
                 .register(PotionEffectType.class, PotionEffectTypeSerializer.INSTANCE)
                 .register(Potion.class, PotionSerializer.INSTANCE)
+                .register(VillagerType.class, VillagerTypeSerializer.INSTANCE)
                 .register(WeatherType.class, WeatherTypeSerializer.INSTANCE)
                 .register(FireworkEffect.class, FireworkEffectSerializer.INSTANCE)
                 .register(FireworkEffectType.class, FireworkEffectTypeSerializer.INSTANCE)
                 .register(ItemType.class, ItemTypeSerializer.INSTANCE)
-                .register(Block.class, BlockTypeSerializer.INSTANCE)
+                .register(Block.class, BlockSerializer.INSTANCE)
                 .register(EquipmentSlot.class, EquipmentSlotSerializer.INSTANCE)
-                .register(ItemStack.class, ItemSerializer.INSTANCE)
+                .register(ItemStack.class, ItemStackSerializer.INSTANCE)
                 .register(Location.class, LocationSerializer.INSTANCE)
                 .register(ItemAttribute.class, ItemAttributeSerializer.INSTANCE);
     }

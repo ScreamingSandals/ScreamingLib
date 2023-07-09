@@ -127,7 +127,7 @@ nmsGen {
     reqClass('net.minecraft.world.level.Level') {
         reqMethod('getProfilerSupplier')
         reqMethod('getProfiler')
-        reqField('searge:field_72984_F')
+        reqField('searge:field_72984_F:1.8.8') // reused name in 1.16.1
     }
 
     reqClass('net.minecraft.world.entity.decoration.ArmorStand') {
@@ -238,6 +238,7 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundSetTitlesPacket$Type') {
         reqEnumField('TITLE')
         reqEnumField('SUBTITLE')
+        reqEnumField('ACTIONBAR')
     }
     reqClass('net.minecraft.network.protocol.game.ClientboundSetTitlesPacket') {
         reqConstructor(int, int, int)

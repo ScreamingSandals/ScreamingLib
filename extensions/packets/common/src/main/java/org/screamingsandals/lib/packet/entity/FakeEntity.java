@@ -312,6 +312,8 @@ public class FakeEntity {
 
                 if (Server.isVersion(1, 9)) {
                     register(EntityMetadata.HAND_STATES);
+                } else {
+                    SEQUENTIAL_INDEXING++; // skipped in 1.8.8
                 }
                 register(EntityMetadata.HEALTH);
                 register(EntityMetadata.POTION_EFFECT_COLOR);

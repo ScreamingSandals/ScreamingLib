@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.spectator.audience.adapter;
 import io.netty.buffer.Unpooled;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -74,11 +75,16 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
     @Override
     public void sendActionBar(@NotNull ComponentLike message) {
         var comp = message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(owner()) : message.asComponent();
-        if (BukkitFeature.BUNGEECORD_CHAT_SEND_MESSAGE_WITH_CHAT_MESSAGE_TYPE.isSupported()) {
+        if (BukkitFeature.BUNGEECORD_CHAT_SEND_MESSAGE_WITH_CHAT_MESSAGE_TYPE.isSupported() && BukkitFeature.HEX_COLORS.isSupported()) {
+            // thanks to MC-119145 amd md_5, this method didn't work correctly till 1.16
             commandSender().spigot().sendMessage(ChatMessageType.ACTION_BAR, comp.as(BaseComponent.class));
+        } else if (ClientboundSetTitlesPacket_i_TypeAccessor.getFieldACTIONBAR() != null) {
+            // 1.11-1.16.5: Use Title packet to avoid MC-119145
+            var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor1(), ClientboundSetTitlesPacket_i_TypeAccessor.getFieldACTIONBAR(), ClassStorage.asMinecraftComponent(comp));
+            ClassStorage.sendNMSConstructedPacket(commandSender(), titleP);
         } else {
-            // 1.8.8
-            var components = new BaseComponent[] {comp.as(BaseComponent.class)};
+            // 1.8.8-1.10.2
+            var components = new BaseComponent[] {new TextComponent(comp.toLegacy())}; // due to MC-119145, we have to convert it to legacy despite the packet accepts json
 
             var packet = Reflect.construct(PacketPlayOutChatAccessor.getConstructor0(), null, (byte) 2);
             Reflect.setField(packet, "components", components); // Spigot field, no mapping

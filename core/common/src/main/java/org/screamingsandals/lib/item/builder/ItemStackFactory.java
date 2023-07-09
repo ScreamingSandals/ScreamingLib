@@ -20,7 +20,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.configurate.ItemSerializer;
+import org.screamingsandals.lib.configurate.ItemStackSerializer;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.impl.item.builder.ShortStackDeserializer;
 import org.screamingsandals.lib.item.*;
@@ -43,7 +43,7 @@ public abstract class ItemStackFactory {
 
     private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable ItemStack> CONFIGURATE_RESOLVER = node -> {
         try {
-            return ItemSerializer.INSTANCE.deserialize(ItemStack.class, node);
+            return ItemStackSerializer.INSTANCE.deserialize(ItemStack.class, node);
         } catch (SerializationException e) {
             return null;
         }

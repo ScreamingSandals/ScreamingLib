@@ -162,6 +162,11 @@ public abstract class Entities {
         return mapper.spawn0(entityType, locationHolder, null);
     }
 
+    public static @Nullable Entity spawn(@Nullable Object entityType, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull Entity> preSpawnFunction) {
+        var type = EntityType.ofNullable(entityType);
+        return type != null ? spawn(type, locationHolder, preSpawnFunction) : null;
+    }
+
     public static @Nullable Entity spawn(@NotNull EntityType entityType, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull Entity> preSpawnFunction) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
