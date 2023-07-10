@@ -20,7 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.Tolerate;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
@@ -124,16 +123,19 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
         private float pitch = 1;
         private @Nullable Long seed;
 
-        @Tolerate
         @Override
-        public @NotNull Builder soundKey(@NotNull String key) {
-            var k = ResourceLocation.of(key);
-            if ("minecraft".equals(k.namespace())) {
-                this.soundKey = ResourceLocation.of("minecraft", AdventureBackend.getSoundKeyNormalizer().apply(k.path()));
+        public @NotNull Builder soundKey(@NotNull ResourceLocation key) {
+            if ("minecraft".equals(key.namespace())) {
+                this.soundKey = ResourceLocation.of("minecraft", AdventureBackend.getSoundKeyNormalizer().apply(key.path()));
             } else {
-                this.soundKey = k;
+                this.soundKey = key;
             }
             return this;
+        }
+
+        @Override
+        public @NotNull Builder soundKey(@NotNull String key) {
+            return soundKey(ResourceLocation.of(key));
         }
 
         @SuppressWarnings("PatternValidation")

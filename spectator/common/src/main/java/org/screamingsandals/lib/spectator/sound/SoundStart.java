@@ -28,7 +28,7 @@ import org.screamingsandals.lib.utils.ResourceLocation;
 
 public interface SoundStart extends Wrapper, RawValueHolder {
     @Contract(value = "_, _, _, _ -> new", pure = true)
-    static @NotNull SoundStart sound(@NotNull ResourceLocation soundKey, @NotNull SoundSource soundSource, float volume, float pitch) {
+    static @NotNull SoundStart sound(@MinecraftType(MinecraftType.Type.SOUND) @NotNull ResourceLocation soundKey, @NotNull SoundSource soundSource, float volume, float pitch) {
         return builder()
                 .soundKey(soundKey)
                 .source(soundSource)
@@ -38,7 +38,7 @@ public interface SoundStart extends Wrapper, RawValueHolder {
     }
 
     @Contract(value = "_, _, _, _ -> new", pure = true)
-    static @NotNull SoundStart minecraftSound(@MinecraftType(MinecraftType.Type.SOUND) @NotNull String soundKey, @NotNull SoundSource soundSource, float volume, float pitch) {
+    static @NotNull SoundStart sound(@MinecraftType(MinecraftType.Type.SOUND) @NotNull String soundKey, @NotNull SoundSource soundSource, float volume, float pitch) {
         return builder()
                 .soundKey(soundKey)
                 .source(soundSource)

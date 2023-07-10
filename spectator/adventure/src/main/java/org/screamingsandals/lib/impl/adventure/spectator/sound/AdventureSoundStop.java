@@ -20,7 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.Tolerate;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.SoundStop;
@@ -79,20 +78,29 @@ public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.s
 
         private @Nullable SoundSource source;
 
-        @Tolerate
+        @Override
+        public @NotNull Builder soundKey(@Nullable ResourceLocation key) {
+            if (key == null) {
+                this.soundKey = null;
+                return this;
+            }
+
+            if ("minecraft".equals(key.namespace())) {
+                this.soundKey = ResourceLocation.of("minecraft", AdventureBackend.getSoundKeyNormalizer().apply(key.path()));
+            } else {
+                this.soundKey = key;
+            }
+            return this;
+        }
+
         @Override
         public @NotNull Builder soundKey(@Nullable String key) {
             if (key == null) {
                 this.soundKey = null;
                 return this;
             }
-            var k = ResourceLocation.of(key);
-            if ("minecraft".equals(k.namespace())) {
-                this.soundKey = ResourceLocation.of("minecraft", AdventureBackend.getSoundKeyNormalizer().apply(k.path()));
-            } else {
-                this.soundKey = k;
-            }
-            return this;
+
+            return soundKey(ResourceLocation.of(key));
         }
 
         @SuppressWarnings("PatternValidation")

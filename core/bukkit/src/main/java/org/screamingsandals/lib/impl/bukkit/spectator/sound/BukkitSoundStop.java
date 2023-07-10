@@ -21,7 +21,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.Tolerate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitServer;
@@ -71,7 +70,21 @@ public class BukkitSoundStop implements SoundStop {
         private @Nullable ResourceLocation soundKey;
         private @Nullable SoundSource source;
 
-        @Tolerate
+        @Override
+        public @NotNull Builder soundKey(@Nullable ResourceLocation key) {
+            if (key == null) {
+                soundKey = null;
+                return this;
+            }
+
+            if ("minecraft".equals(key.namespace())) {
+                this.soundKey = ResourceLocation.of("minecraft", BukkitServer.UNSAFE_normalizeSoundKey0(key.path()));
+            } else {
+                this.soundKey = key;
+            }
+            return this;
+        }
+
         @Override
         public @NotNull Builder soundKey(@Nullable String key) {
             if (key == null) {
@@ -79,13 +92,7 @@ public class BukkitSoundStop implements SoundStop {
                 return this;
             }
 
-            var k = ResourceLocation.of(key);
-            if ("minecraft".equals(k.namespace())) {
-                this.soundKey = ResourceLocation.of("minecraft", BukkitServer.UNSAFE_normalizeSoundKey0(k.path()));
-            } else {
-                this.soundKey = k;
-            }
-            return this;
+            return soundKey(ResourceLocation.of(key));
         }
 
         @Override
