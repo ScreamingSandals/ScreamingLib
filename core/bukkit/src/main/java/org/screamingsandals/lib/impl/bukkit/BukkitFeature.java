@@ -98,6 +98,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature SIGN_IS_WAXED = PlatformFeature.of(() -> Reflect.hasMethod(Sign.class, "isWaxed"));
     public static final @NotNull PlatformFeature SIGN_IS_GLOWING_TEXT = PlatformFeature.of(() -> Reflect.hasMethod(Sign.class, "isGlowingText"));
     public static final @NotNull PlatformFeature SIGN_BILATERAL = PlatformFeature.of(() -> Reflect.has("org.bukkit.block.sign.SignSide") && Version.isVersion(1, 20)); // md_5 decided to introduce the API before updating to a version which supports this
+    public static final @NotNull PlatformFeature FLOWER_POT_BLOCK_STATE = PlatformFeature.of(() -> Reflect.has("org.bukkit.block.FlowerPot"));
 
     // Material API (Block & Item)
     public static final @NotNull PlatformFeature FLATTENING = PlatformFeature.of(() -> Version.isVersion(1, 13));

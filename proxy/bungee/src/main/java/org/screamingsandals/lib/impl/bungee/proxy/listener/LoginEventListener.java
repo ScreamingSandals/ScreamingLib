@@ -23,7 +23,7 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.impl.bungee.event.AbstractBungeeEventHandlerFactory;
 
 import java.util.function.Consumer;
@@ -34,7 +34,7 @@ public class LoginEventListener extends AbstractBungeeEventHandlerFactory<LoginE
     }
 
     @Override
-    protected @Nullable BungeePlayerLoginEvent wrapEvent(@NotNull LoginEvent event, @NotNull EventPriority priority) {
+    protected @Nullable BungeePlayerLoginEvent wrapEvent(@NotNull LoginEvent event, @NotNull EventExecutionOrder priority) {
         return new BungeePlayerLoginEvent(event);
     }
 
@@ -82,6 +82,16 @@ public class LoginEventListener extends AbstractBungeeEventHandlerFactory<LoginE
     protected @NotNull Listener constructHighestPriorityHandler(@NotNull Consumer<@NotNull LoginEvent> handler) {
         return new Listener() {
             @EventHandler(priority = net.md_5.bungee.event.EventPriority.HIGHEST)
+            public void onEvent(@NotNull LoginEvent event) {
+                handler.accept(event);
+            }
+        };
+    }
+
+    @Override
+    protected @NotNull Listener constructMonitorPriorityHandler(@NotNull Consumer<@NotNull LoginEvent> handler) {
+        return new Listener() {
+            @EventHandler(priority = 127)
             public void onEvent(@NotNull LoginEvent event) {
                 handler.accept(event);
             }

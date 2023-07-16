@@ -119,11 +119,11 @@ public abstract class EventManager {
         }, ignoreCancelled));
     }
 
-    public <T extends Event> @NotNull EventHandler<T> register(@NotNull Class<T> event, @NotNull ReceiverConsumer<@NotNull T> consumer, @NotNull EventPriority eventPriority) {
+    public <T extends Event> @NotNull EventHandler<T> register(@NotNull Class<T> event, @NotNull ReceiverConsumer<@NotNull T> consumer, @NotNull EventExecutionOrder eventPriority) {
         return register(event, EventHandler.of(consumer, eventPriority));
     }
 
-    public <T extends Event> @NotNull EventHandler<T> registerOneTime(@NotNull Class<T> event, @NotNull Function<@NotNull T, @NotNull Boolean> function, @NotNull EventPriority eventPriority, boolean ignoreCancelled) {
+    public <T extends Event> @NotNull EventHandler<T> registerOneTime(@NotNull Class<T> event, @NotNull Function<@NotNull T, @NotNull Boolean> function, @NotNull EventExecutionOrder eventPriority, boolean ignoreCancelled) {
         return register(event, EventHandler.ofOneTime(handler -> e -> {
             if (function.apply(e)) {
                 unregister(handler);
@@ -131,7 +131,7 @@ public abstract class EventManager {
         }, eventPriority, ignoreCancelled));
     }
 
-    public <T extends Event> @NotNull EventHandler<T> register(@NotNull Class<T> event, @NotNull ReceiverConsumer<@NotNull T> consumer, @NotNull EventPriority eventPriority,
+    public <T extends Event> @NotNull EventHandler<T> register(@NotNull Class<T> event, @NotNull ReceiverConsumer<@NotNull T> consumer, @NotNull EventExecutionOrder eventPriority,
                                                                boolean ignoreCancelled) {
         return register(event, EventHandler.of(consumer, eventPriority, ignoreCancelled));
     }
@@ -156,22 +156,22 @@ public abstract class EventManager {
     }
 
     public <K extends Event> @NotNull K fireEvent(@NotNull K event) {
-        EventPriority.VALUES.forEach(priority -> fireEvent(event, priority));
+        EventExecutionOrder.VALUES.forEach(order -> fireEvent(event, order));
         return event;
     }
 
-    public <K extends Event> @NotNull K fireEvent(@NotNull K event, @NotNull EventPriority eventPriority) {
+    public <K extends Event> @NotNull K fireEvent(@NotNull K event, @NotNull EventExecutionOrder executionOrder) {
         if (event.isAsync() && isServerThread() && executor != null) {
             throw new UnsupportedOperationException("Async event cannot be fired sync!");
         }
 
-        findEventHandlers(event, eventPriority)
+        findEventHandlers(event, executionOrder)
                 .forEach(eventHandler -> eventHandler.fire(event));
 
         if (customManager != null) {
-            customManager.fireEvent(event, eventPriority);
+            customManager.fireEvent(event, executionOrder);
         } else if (this != defaultEventManager && defaultEventManager != null) {
-            defaultEventManager.fireEvent(event, eventPriority);
+            defaultEventManager.fireEvent(event, executionOrder);
         }
 
         return event;
@@ -179,19 +179,19 @@ public abstract class EventManager {
 
     public <K extends Event> @NotNull CompletableFuture<@NotNull K> fireEventAsync(@NotNull K event) {
         final var futures = new LinkedList<CompletableFuture<K>>();
-        EventPriority.VALUES.forEach(priority -> futures.add(fireEventAsync(event, priority)));
+        EventExecutionOrder.VALUES.forEach(priority -> futures.add(fireEventAsync(event, priority)));
 
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
                 .thenApply(ignored -> event);
     }
 
-    public <K extends Event> @NotNull CompletableFuture<@NotNull K> fireEventAsync(@NotNull K event, @NotNull EventPriority eventPriority) {
+    public <K extends Event> @NotNull CompletableFuture<@NotNull K> fireEventAsync(@NotNull K event, @NotNull EventExecutionOrder executionOrder) {
         if (!event.isAsync() || executor == null) {
             //we don't want non-async events to be called async. :)
-            return CompletableFuture.completedFuture(fireEvent(event, eventPriority));
+            return CompletableFuture.completedFuture(fireEvent(event, executionOrder));
         }
 
-        final var futures = findEventHandlers(event, eventPriority)
+        final var futures = findEventHandlers(event, executionOrder)
                 .map(eventHandler -> {
                     // checks for server thread
                     if (isServerThread()) {
@@ -200,15 +200,15 @@ public abstract class EventManager {
                                     throw new RuntimeException("Exception occurred while firing event!", ex);
                                 });
                     }
-                    return CompletableFuture.completedFuture(fireEvent(event, eventPriority));
+                    return CompletableFuture.completedFuture(fireEvent(event, executionOrder));
                 })
                 .collect(Collectors.toCollection(LinkedList::new));
 
         if (customManager != null) {
-            futures.add(customManager.fireEventAsync(event, eventPriority)
+            futures.add(customManager.fireEventAsync(event, executionOrder)
                     .thenApply(ignored -> null));
         } else if (this != defaultEventManager && defaultEventManager != null) {
-            futures.add(defaultEventManager.fireEventAsync(event, eventPriority)
+            futures.add(defaultEventManager.fireEventAsync(event, executionOrder)
                     .thenApply(ignored -> null));
         }
 
@@ -252,13 +252,13 @@ public abstract class EventManager {
         }
     }
 
-    private <E extends Event> @NotNull Stream<? extends @NotNull EventHandler<? extends Event>> findEventHandlers(@NotNull E event, @NotNull EventPriority priority) {
+    private <E extends Event> @NotNull Stream<? extends @NotNull EventHandler<? extends Event>> findEventHandlers(@NotNull E event, @NotNull EventExecutionOrder executionOrder) {
         return handlers.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().isInstance(event))
                 .map(Map.Entry::getValue)
                 .flatMap(Collection::stream)
-                .filter(eventHandler -> eventHandler.getEventPriority() == priority);
+                .filter(eventHandler -> eventHandler.getExecutionOrder() == executionOrder);
     }
 
     public abstract boolean isServerThread();

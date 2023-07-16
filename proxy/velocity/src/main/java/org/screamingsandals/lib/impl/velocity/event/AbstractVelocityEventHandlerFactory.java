@@ -27,15 +27,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractVelocityEventHandlerFactory<T, SE extends Event> {
-    protected static final @NotNull Map<@NotNull EventPriority, PostOrder> EVENT_PRIORITY_POST_ORDER_MAP = Map.of(
-            EventPriority.LOWEST, PostOrder.FIRST,
-            EventPriority.LOW, PostOrder.EARLY,
-            EventPriority.NORMAL, PostOrder.NORMAL,
-            EventPriority.HIGH, PostOrder.LATE,
-            EventPriority.HIGHEST, PostOrder.LAST
+    protected static final @NotNull Map<@NotNull EventExecutionOrder, PostOrder> EVENT_PRIORITY_POST_ORDER_MAP = Map.of(
+            EventExecutionOrder.FIRST, PostOrder.FIRST,
+            EventExecutionOrder.EARLY, PostOrder.EARLY,
+            EventExecutionOrder.NORMAL, PostOrder.NORMAL,
+            EventExecutionOrder.LATE, PostOrder.LATE,
+            EventExecutionOrder.LAST, PostOrder.LAST
     );
 
-    protected final @NotNull Map<@NotNull EventPriority, EventHandler<T>> eventMap = new HashMap<>();
+    protected final @NotNull Map<@NotNull EventExecutionOrder, EventHandler<T>> eventMap = new HashMap<>();
     protected final @NotNull Class<T> platformEventClass;
     protected final @NotNull Class<SE> eventClass;
     protected final boolean fireAsync;
@@ -49,7 +49,6 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends Event> {
         this(platformEventClass, eventClass, plugin, proxyServer, false);
     }
 
-    @SuppressWarnings("unchecked")
     public AbstractVelocityEventHandlerFactory(
             @NotNull Class<T> platformEventClass,
             @NotNull Class<SE> eventClass,
@@ -74,31 +73,40 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends Event> {
                 return;
             }
 
-            final var priority = handlerRegisteredEvent.getHandler().getEventPriority();
+            var priority = handlerRegisteredEvent.getHandler().getExecutionOrder();
+            if (priority == EventExecutionOrder.MONITOR) {
+                priority = EventExecutionOrder.LAST;
+            }
             if (!eventMap.containsKey(priority)) {
+                final var finalPriority = priority;
                 final EventHandler<T> handler = event -> {
-                    final var wrapped = wrapEvent(event, priority);
+                    final var wrapped = wrapEvent(event, finalPriority);
                     if (wrapped == null) {
                         return;
                     }
 
                     if (this.fireAsync) {
                         try {
-                            EventManager.getDefaultEventManager().fireEventAsync(wrapped, priority).get();
+                            EventManager.getDefaultEventManager().fireEventAsync(wrapped, finalPriority).get();
+                            if (finalPriority == EventExecutionOrder.LAST) {
+                                EventManager.getDefaultEventManager().fireEventAsync(wrapped, EventExecutionOrder.MONITOR).get();
+                            }
                         } catch (Throwable throwable) {
                             throw new RuntimeException(throwable);
                         }
                     } else {
-                        EventManager.getDefaultEventManager().fireEvent(wrapped, priority);
+                        EventManager.getDefaultEventManager().fireEvent(wrapped, finalPriority);
+                        if (finalPriority == EventExecutionOrder.LAST) {
+                            EventManager.getDefaultEventManager().fireEvent(wrapped, EventExecutionOrder.MONITOR);
+                        }
                     }
                 };
 
-                eventMap.put(handlerRegisteredEvent.getHandler().getEventPriority(), handler);
-                proxyServer.getEventManager()
-                        .register(plugin, this.platformEventClass, EVENT_PRIORITY_POST_ORDER_MAP.get(priority), handler);
+                eventMap.put(priority, handler);
+                proxyServer.getEventManager().register(plugin, this.platformEventClass, EVENT_PRIORITY_POST_ORDER_MAP.get(priority), handler);
             }
         });
     }
 
-    protected abstract @Nullable SE wrapEvent(@NotNull T event, @NotNull EventPriority priority);
+    protected abstract @Nullable SE wrapEvent(@NotNull T event, @NotNull EventExecutionOrder priority);
 }

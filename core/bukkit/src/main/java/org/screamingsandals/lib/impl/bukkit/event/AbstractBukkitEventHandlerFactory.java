@@ -25,15 +25,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.event.HandlerRegisteredEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public abstract class AbstractBukkitEventHandlerFactory<T extends org.bukkit.event.Event, SE extends Event> implements Listener {
+    protected static final @NotNull Map<@NotNull EventExecutionOrder, org.bukkit.event.EventPriority> EVENT_PRIORITY_TRANSLATION_MAP = Map.of(
+            EventExecutionOrder.FIRST, org.bukkit.event.EventPriority.LOWEST,
+            EventExecutionOrder.EARLY, org.bukkit.event.EventPriority.LOW,
+            EventExecutionOrder.NORMAL, org.bukkit.event.EventPriority.NORMAL,
+            EventExecutionOrder.LATE, org.bukkit.event.EventPriority.HIGH,
+            EventExecutionOrder.LAST, org.bukkit.event.EventPriority.HIGHEST,
+            EventExecutionOrder.MONITOR, org.bukkit.event.EventPriority.MONITOR
+    );
 
-    protected final @NotNull Map<@NotNull EventPriority, EventExecutor> eventMap = new HashMap<>();
+    protected final @NotNull Map<@NotNull EventExecutionOrder, EventExecutor> eventMap = new HashMap<>();
     protected final boolean fireAsync;
     protected final boolean checkOnlySameNotChildren;
     protected final @NotNull Class<SE> eventClass;
@@ -54,7 +63,7 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends org.bukkit.eve
         this.fireAsync = fireAsync;
         this.checkOnlySameNotChildren = checkOnlySameNotChildren;
 
-        EventManager.getDefaultEventManager().register(HandlerRegisteredEvent.class, handlerRegisteredEvent -> {
+        Objects.requireNonNull(EventManager.getDefaultEventManager()).register(HandlerRegisteredEvent.class, handlerRegisteredEvent -> {
             if (handlerRegisteredEvent.getEventManager() != EventManager.getDefaultEventManager()) {
                 return;
             }
@@ -63,7 +72,7 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends org.bukkit.eve
                 return;
             }
 
-            final var priority = handlerRegisteredEvent.getHandler().getEventPriority();
+            final var priority = handlerRegisteredEvent.getHandler().getExecutionOrder();
             if (!eventMap.containsKey(priority)) {
                 final EventExecutor handler = (listener, event) -> {
                     if (checkOnlySameNotChildren) {
@@ -94,8 +103,8 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends org.bukkit.eve
                     }
                 };
 
-                eventMap.put(handlerRegisteredEvent.getHandler().getEventPriority(), handler);
-                Bukkit.getPluginManager().registerEvent(this.platformEventClass, this, org.bukkit.event.EventPriority.valueOf(priority.name()), handler, plugin);
+                eventMap.put(handlerRegisteredEvent.getHandler().getExecutionOrder(), handler);
+                Bukkit.getPluginManager().registerEvent(this.platformEventClass, this, EVENT_PRIORITY_TRANSLATION_MAP.get(priority), handler, plugin);
             }
         });
     }
@@ -106,5 +115,5 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends org.bukkit.eve
      * @param priority priority
      * @return wrapped event or null (if null, nothing happens)
      */
-    protected abstract @Nullable SE wrapEvent(@NotNull T event, @NotNull EventPriority priority);
+    protected abstract @Nullable SE wrapEvent(@NotNull T event, @NotNull EventExecutionOrder priority);
 }

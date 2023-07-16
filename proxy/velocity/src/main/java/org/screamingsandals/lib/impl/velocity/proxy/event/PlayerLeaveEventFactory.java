@@ -19,7 +19,7 @@ package org.screamingsandals.lib.impl.velocity.proxy.event;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.impl.velocity.event.AbstractVelocityEventHandlerFactory;
 import org.screamingsandals.lib.proxy.event.PlayerLeaveEvent;
 
@@ -30,7 +30,7 @@ public class PlayerLeaveEventFactory extends AbstractVelocityEventHandlerFactory
     }
 
     @Override
-    protected @NotNull PlayerLeaveEvent wrapEvent(@NotNull DisconnectEvent event, @NotNull EventPriority priority) {
+    protected @NotNull PlayerLeaveEvent wrapEvent(@NotNull DisconnectEvent event, @NotNull EventExecutionOrder priority) {
         return new VelocityPlayerLeaveEvent(event);
     }
 }

@@ -506,6 +506,16 @@ nmsGen {
         reqConstructor('@Component', byte)
     }
 
+    reqClass('net.minecraft.world.level.block.entity.BlockEntity') {
+        reqMethod('setChanged')
+    }
+
+    reqClass('spigot:TileEntityFlowerPot') {
+        reqMethod('searge:func_145964_a', '@Item', int)
+        reqMethod('spigot:getItem')
+        reqMethod('spigot:getData')
+    }
+
     /* 1.8.8 compat end */
 
     reqClass('net.minecraft.world.entity.item.PrimedTnt') {

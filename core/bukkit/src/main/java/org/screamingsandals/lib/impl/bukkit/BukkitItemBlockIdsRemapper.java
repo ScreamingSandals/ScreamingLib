@@ -24,6 +24,7 @@ import org.screamingsandals.lib.impl.bukkit.block.BukkitBlock1_8;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockRegistry1_8;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemTypeRegistry1_8;
+import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
@@ -136,7 +137,27 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
 
         f2l("NOTE_BLOCK");
 
-        f2lColoredToNonColoredBlock("BED", "BED_BLOCK"); // TODO: Tile entity
+        if (mappingFlags.contains(MappingFlags.NO_COLORED_BEDS)) {
+            f2lBlock("RED_BED", "BED_BLOCK");
+            f2lColoredToNonColoredBlock("BED", "BED_BLOCK");
+        } else {
+            f2lBlock("WHITE_BED", "BED_BLOCK", 0, 0);
+            f2lBlock("ORANGE_BED", "BED_BLOCK", 0, 1);
+            f2lBlock("MAGENTA_BED", "BED_BLOCK", 0, 2);
+            f2lBlock("LIGHT_BLUE_BED", "BED_BLOCK", 0, 3);
+            f2lBlock("YELLOW_BED", "BED_BLOCK", 0, 4);
+            f2lBlock("LIME_BED", "BED_BLOCK", 0, 5);
+            f2lBlock("PINK_BED", "BED_BLOCK", 0, 6);
+            f2lBlock("GRAY_BED", "BED_BLOCK", 0, 7);
+            f2lBlock("LIGHT_GRAY_BED", "BED_BLOCK", 0, 8);
+            f2lBlock("CYAN_BED", "BED_BLOCK", 0, 9);
+            f2lBlock("PURPLE_BED", "BED_BLOCK", 0, 10);
+            f2lBlock("BLUE_BED", "BED_BLOCK", 0, 11);
+            f2lBlock("BROWN_BED", "BED_BLOCK", 0, 12);
+            f2lBlock("GREEN_BED", "BED_BLOCK", 0, 13);
+            f2lBlock("RED_BED", "BED_BLOCK", 0, 14);
+            f2lBlock("BLACK_BED", "BED_BLOCK", 0, 15);
+        }
 
         f2l("POWERED_RAIL");
         f2l("DETECTOR_RAIL");
@@ -295,12 +316,49 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
         f2l("BEACON");
         f2l("COBBLESTONE_WALL", "COBBLE_WALL");
         f2l("MOSSY_COBBLESTONE_WALL", "COBBLE_WALL", 1);
-        f2lBlock("FLOWER_POT"); // TODO: flower info in tile entity
+
+        f2lBlock("FLOWER_POT");
+        f2lBlock("POTTED_POPPY", "FLOWER_POT", 0, 0x260);
+        f2lBlock("POTTED_DANDELION", "FLOWER_POT", 0, 0x250);
+        f2lBlock("POTTED_OAK_SAPLING", "FLOWER_POT", 0, 0x60);
+        f2lBlock("POTTED_SPRUCE_SAPLING", "FLOWER_POT", 0, 0x61);
+        f2lBlock("POTTED_BIRCH_SAPLING", "FLOWER_POT", 0, 0x62);
+        f2lBlock("POTTED_JUNGLE_SAPLING", "FLOWER_POT", 0, 0x63);
+        f2lBlock("POTTED_RED_MUSHROOM", "FLOWER_POT", 0, 0x280);
+        f2lBlock("POTTED_BROWN_MUSHROOM", "FLOWER_POT", 0, 0x270);
+        f2lBlock("POTTED_CACTUS", "FLOWER_POT", 0, 0x510);
+        f2lBlock("POTTED_DEAD_BUSH", "FLOWER_POT", 0, 0x200);
+        f2lBlock("POTTED_FERN", "FLOWER_POT", 0, 0x1F2);
+        f2lBlock("POTTED_ACACIA_SAPLING", "FLOWER_POT", 0, 0x64);
+        f2lBlock("POTTED_DARK_OAK_SAPLING", "FLOWER_POT", 0, 0x65);
+        f2lBlock("POTTED_BLUE_ORCHID", "FLOWER_POT", 0, 0x261);
+        f2lBlock("POTTED_ALLIUM", "FLOWER_POT", 0, 0x262);
+        f2lBlock("POTTED_AZURE_BLUET", "FLOWER_POT", 0, 0x263);
+        f2lBlock("POTTED_RED_TULIP", "FLOWER_POT", 0, 0x264);
+        f2lBlock("POTTED_ORANGE_TULIP", "FLOWER_POT", 0, 0x265);
+        f2lBlock("POTTED_WHITE_TULIP", "FLOWER_POT", 0, 0x266);
+        f2lBlock("POTTED_PINK_TULIP", "FLOWER_POT", 0, 0x267);
+        f2lBlock("POTTED_OXEYE_DAISY", "FLOWER_POT", 0, 0x268);
+
         f2lBlock("CARROTS", "CARROT");
         f2lBlock("POTATOES", "POTATO");
         f2l("OAK_BUTTON", "WOOD_BUTTON");
-        f2lBlock("SKELETON_SKULL", "SKULL", 1); // TODO: Tile entity
-        f2lBlock("SKELETON_WALL_SKULL", "SKULL", 2); // TODO: Tile entity
+        f2lBlock("SKELETON_SKULL", "SKULL", 1);
+        f2lBlock("WITHER_SKELETON_SKULL", "SKULL", 1, 1);
+        f2lBlock("ZOMBIE_HEAD", "SKULL", 1, 2);
+        f2lBlock("PLAYER_HEAD", "SKULL", 1, 3);
+        f2lBlock("CREEPER_HEAD", "SKULL", 1, 4);
+        if (Version.isVersion(1, 9)) {
+            f2lBlock("DRAGON_HEAD", "SKULL", 1, 5);
+        }
+        f2lBlock("SKELETON_WALL_SKULL", "SKULL", 2);
+        f2lBlock("WITHER_SKELETON_WALL_SKULL", "SKULL", 2, 1);
+        f2lBlock("ZOMBIE_WALL_HEAD", "SKULL", 2, 2);
+        f2lBlock("PLAYER_WALL_HEAD", "SKULL", 2, 3);
+        f2lBlock("CREEPER_WALL_HEAD", "SKULL", 2, 4);
+        if (Version.isVersion(1, 9)) {
+            f2lBlock("DRAGON_WALL_HEAD", "SKULL", 2, 5);
+        }
         f2l("ANVIL");
         f2lItem("CHIPPED_ANVIL", "ANVIL", 1);
         f2lBlock("CHIPPED_ANVIL", "ANVIL", 4);
@@ -669,7 +727,9 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
         f2lItem("ZOMBIE_HEAD", "SKULL_ITEM", 2);
         f2lItem("PLAYER_HEAD", "SKULL_ITEM", 3);
         f2lItem("CREEPER_HEAD", "SKULL_ITEM", 4);
-        f2lItem("DRAGON_HEAD", "SKULL_ITEM", 5);
+        if (Version.isVersion(1, 9)) {
+            f2lItem("DRAGON_HEAD", "SKULL_ITEM", 5);
+        }
 
         f2lItem("CARROT_ON_A_STICK", "CARROT_STICK");
         f2lItem("NETHER_STAR");
@@ -865,6 +925,10 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
     }
 
     protected void f2lBlock(@NotNull String flatteningMaterial, @NotNull String legacyBukkitMaterial, int data) {
+        f2lBlock(flatteningMaterial, legacyBukkitMaterial, data, 0);
+    }
+
+    protected void f2lBlock(@NotNull String flatteningMaterial, @NotNull String legacyBukkitMaterial, int data, int tileEntityData) {
         var flatteningMaterialNamespaced = ResourceLocation.of(flatteningMaterial);
 
         if (!(blockTypeMapper instanceof BukkitBlockRegistry1_8)) {
@@ -876,7 +940,7 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
             if (!mat.isBlock()) {
                 return; // not a block
             }
-            var holder = new BukkitBlock1_8(mat, (byte) data);
+            var holder = new BukkitBlock1_8(mat, (byte) data, tileEntityData);
 
             var mapping = ((BukkitBlockRegistry1_8) blockTypeMapper).getPorts();
             if (!mapping.containsKey(flatteningMaterialNamespaced)) {

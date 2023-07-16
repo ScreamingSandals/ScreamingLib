@@ -25,7 +25,7 @@ import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bungee.event.AbstractBungeeEventHandlerFactory;
-import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.EventExecutionOrder;
 
 import java.util.function.Consumer;
 
@@ -35,7 +35,7 @@ public class ChatEventListener extends AbstractBungeeEventHandlerFactory<ChatEve
     }
 
     @Override
-    protected @Nullable BungeePlayerChatEvent wrapEvent(@NotNull ChatEvent event, @NotNull EventPriority priority) {
+    protected @Nullable BungeePlayerChatEvent wrapEvent(@NotNull ChatEvent event, @NotNull EventExecutionOrder priority) {
         if (!(event.getSender() instanceof ProxiedPlayer)) {
             return null;
         }
@@ -87,6 +87,16 @@ public class ChatEventListener extends AbstractBungeeEventHandlerFactory<ChatEve
     protected @NotNull Listener constructHighestPriorityHandler(@NotNull Consumer<@NotNull ChatEvent> handler) {
         return new Listener() {
             @EventHandler(priority = net.md_5.bungee.event.EventPriority.HIGHEST)
+            public void onEvent(@NotNull ChatEvent event) {
+                handler.accept(event);
+            }
+        };
+    }
+
+    @Override
+    protected @NotNull Listener constructMonitorPriorityHandler(@NotNull Consumer<@NotNull ChatEvent> handler) {
+        return new Listener() {
+            @EventHandler(priority = 127)
             public void onEvent(@NotNull ChatEvent event) {
                 handler.accept(event);
             }

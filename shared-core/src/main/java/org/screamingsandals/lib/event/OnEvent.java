@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface OnEvent {
-    @NotNull EventPriority priority() default EventPriority.NORMAL;
+    @NotNull EventExecutionOrder order() default EventExecutionOrder.NORMAL;
 
     boolean ignoreCancelled() default false;
 }

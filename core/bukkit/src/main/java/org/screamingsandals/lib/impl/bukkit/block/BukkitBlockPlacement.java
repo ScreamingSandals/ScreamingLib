@@ -51,8 +51,13 @@ public final class BukkitBlockPlacement extends BasicWrapper<org.bukkit.block.Bl
         PaperLib.getChunkAtAsync(bukkitLocation)
                 .thenAccept(result -> {
                     if (!BukkitFeature.FLATTENING.isSupported()) {
-                        bukkitLocation.getBlock().setType(type.as(Material.class), !ignorePhysics);
-                        Reflect.getMethod(bukkitLocation.getBlock(), "setData", byte.class, boolean.class).invoke(type instanceof BukkitBlock1_8 ? ((BukkitBlock1_8) type).legacyData() : 0, !ignorePhysics);
+                        var bukkitBlock = bukkitLocation.getBlock();
+                        var material = type.as(Material.class);
+                        bukkitBlock.setType(material, !ignorePhysics);
+                        if (type instanceof BukkitBlock1_8) {
+                            Reflect.getMethod(bukkitBlock, "setData", byte.class, boolean.class).invoke(((BukkitBlock1_8) type).legacyData(), !ignorePhysics);
+                            BlockUtils1_8.finishSettingBlock(bukkitBlock.getState(), (BukkitBlock1_8) type, true);
+                        }
                     } else {
                         bukkitLocation.getBlock().setBlockData(type.as(BlockData.class), !ignorePhysics);
                     }
@@ -62,7 +67,7 @@ public final class BukkitBlockPlacement extends BasicWrapper<org.bukkit.block.Bl
     @Override
     public @NotNull Block block() {
         if (!BukkitFeature.FLATTENING.isSupported()) {
-            return Block.of(wrappedObject.getState().getData());
+            return BlockUtils1_8.getBlock(wrappedObject.getState());
         } else {
             return Block.of(wrappedObject.getBlockData());
         }

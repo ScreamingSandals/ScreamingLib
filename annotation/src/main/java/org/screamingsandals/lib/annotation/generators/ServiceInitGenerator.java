@@ -821,7 +821,7 @@ public final class ServiceInitGenerator {
         var abstractEventClass = elements.getTypeElement(Classes.SLib.EVENT.canonicalName());
         var eventManagerClass = Classes.SLib.EVENT_MANAGER;
         var eventHandlerClass = Classes.SLib.EVENT_HANDLER;
-        var eventPriorityClass = Classes.SLib.EVENT_PRIORITY;
+        var eventPriorityClass = Classes.SLib.EVENT_EXECUTION_ORDER;
 
         var methodBuilder = CodeBlock.builder().beginControlFlow("() -> "); // lambda block
         if (shouldRunControllable.areBothPresent()) {
@@ -846,7 +846,7 @@ public final class ServiceInitGenerator {
                         typeElement,
                         method.getSimpleName(),
                         eventPriorityClass,
-                        annotation.priority().name(),
+                        annotation.order().name(),
                         annotation.ignoreCancelled()
                 );
             } else {
@@ -863,7 +863,7 @@ public final class ServiceInitGenerator {
                         returnedName,
                         method.getSimpleName(),
                         eventPriorityClass,
-                        annotation.priority().name(),
+                        annotation.order().name(),
                         annotation.ignoreCancelled()
                 );
             }

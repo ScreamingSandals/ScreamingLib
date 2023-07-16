@@ -18,7 +18,7 @@ package org.screamingsandals.lib.impl.velocity.proxy.event;
 
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.proxy.event.PlayerChatEvent;
 import org.screamingsandals.lib.impl.velocity.event.AbstractVelocityEventHandlerFactory;
 
@@ -29,7 +29,7 @@ public class ChatEventHandlerFactory extends AbstractVelocityEventHandlerFactory
     }
 
     @Override
-    protected @NotNull PlayerChatEvent wrapEvent(@NotNull com.velocitypowered.api.event.player.PlayerChatEvent event, @NotNull EventPriority priority) {
+    protected @NotNull PlayerChatEvent wrapEvent(@NotNull com.velocitypowered.api.event.player.PlayerChatEvent event, @NotNull EventExecutionOrder priority) {
         return new VelocityPlayerChatEvent(event);
     }
 }

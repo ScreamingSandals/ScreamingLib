@@ -23,7 +23,7 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.impl.bungee.event.AbstractBungeeEventHandlerFactory;
 
 import java.util.function.Consumer;
@@ -34,7 +34,7 @@ public class PlayerDisconnectEventListener extends AbstractBungeeEventHandlerFac
     }
 
     @Override
-    protected @Nullable BungeePlayerLeaveEvent wrapEvent(@NotNull PlayerDisconnectEvent event, @NotNull EventPriority priority) {
+    protected @Nullable BungeePlayerLeaveEvent wrapEvent(@NotNull PlayerDisconnectEvent event, @NotNull EventExecutionOrder priority) {
         return new BungeePlayerLeaveEvent(event);
     }
 
@@ -82,6 +82,16 @@ public class PlayerDisconnectEventListener extends AbstractBungeeEventHandlerFac
     protected @NotNull Listener constructHighestPriorityHandler(@NotNull Consumer<@NotNull PlayerDisconnectEvent> handler) {
         return new Listener() {
             @EventHandler(priority = net.md_5.bungee.event.EventPriority.HIGHEST)
+            public void onEvent(@NotNull PlayerDisconnectEvent event) {
+                handler.accept(event);
+            }
+        };
+    }
+
+    @Override
+    protected @NotNull Listener constructMonitorPriorityHandler(@NotNull Consumer<@NotNull PlayerDisconnectEvent> handler) {
+        return new Listener() {
+            @EventHandler(priority = 127)
             public void onEvent(@NotNull PlayerDisconnectEvent event) {
                 handler.accept(event);
             }

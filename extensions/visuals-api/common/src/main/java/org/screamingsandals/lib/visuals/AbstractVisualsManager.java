@@ -17,8 +17,7 @@
 package org.screamingsandals.lib.visuals;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.packet.event.SPlayerServerboundInteractEvent;
@@ -111,7 +110,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }
     }
 
-    @OnEvent(priority = EventPriority.HIGHEST)
+    @OnEvent(order = EventExecutionOrder.MONITOR)
     public void onRespawn(@NotNull PlayerRespawnEvent event) {
         if (activeVisuals.isEmpty()) {
             return;

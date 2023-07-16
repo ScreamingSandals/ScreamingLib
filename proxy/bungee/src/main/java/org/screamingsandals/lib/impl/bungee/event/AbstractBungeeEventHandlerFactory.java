@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class AbstractBungeeEventHandlerFactory<T, SE extends Event> {
-    protected final @NotNull Map<@NotNull EventPriority, Listener> eventMap = new HashMap<>();
+    protected final @NotNull Map<@NotNull EventExecutionOrder, Listener> eventMap = new HashMap<>();
     protected final @NotNull Class<T> platformEventClass;
     protected final @NotNull Class<SE> eventClass;
     protected final boolean fireAsync;
@@ -66,7 +66,7 @@ public abstract class AbstractBungeeEventHandlerFactory<T, SE extends Event> {
                 return;
             }
 
-            final var priority = handlerRegisteredEvent.getHandler().getEventPriority();
+            final var priority = handlerRegisteredEvent.getHandler().getExecutionOrder();
             if (!eventMap.containsKey(priority)) {
                 final @NotNull Consumer<@NotNull T> handler = event -> {
                     final var wrapped = wrapEvent(event, priority);
@@ -88,21 +88,24 @@ public abstract class AbstractBungeeEventHandlerFactory<T, SE extends Event> {
                 @NotNull Listener listener;
 
                 switch (priority) {
-                    case LOWEST:
+                    case FIRST:
                         listener = constructLowestPriorityHandler(handler);
                         break;
-                    case LOW:
+                    case EARLY:
                         listener = constructLowPriorityHandler(handler);
                         break;
                     default:
                     case NORMAL:
                         listener = constructNormalPriorityHandler(handler);
                         break;
-                    case HIGH:
+                    case LATE:
                         listener = constructHighPriorityHandler(handler);
                         break;
-                    case HIGHEST:
+                    case LAST:
                         listener = constructHighestPriorityHandler(handler);
+                        break;
+                    case MONITOR:
+                        listener = constructMonitorPriorityHandler(handler);
                         break;
                 }
 
@@ -112,7 +115,7 @@ public abstract class AbstractBungeeEventHandlerFactory<T, SE extends Event> {
         });
     }
 
-    protected abstract @Nullable SE wrapEvent(@NotNull T event, @NotNull EventPriority priority);
+    protected abstract @Nullable SE wrapEvent(@NotNull T event, @NotNull EventExecutionOrder priority);
 
     // BungeeCord does not have a way to register EventHandler directly. Which is sad.
 
@@ -125,4 +128,6 @@ public abstract class AbstractBungeeEventHandlerFactory<T, SE extends Event> {
     protected abstract @NotNull Listener constructHighPriorityHandler(@NotNull Consumer<@NotNull T> handler);
 
     protected abstract @NotNull Listener constructHighestPriorityHandler(@NotNull Consumer<@NotNull T> handler);
+
+    protected abstract @NotNull Listener constructMonitorPriorityHandler(@NotNull Consumer<@NotNull T> handler);
 }

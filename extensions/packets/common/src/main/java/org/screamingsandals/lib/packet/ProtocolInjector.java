@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.event.player.PlayerJoinEvent;
 import org.screamingsandals.lib.event.player.PlayerLeaveEvent;
 import org.screamingsandals.lib.event.player.PlayerLoginEvent;
@@ -52,9 +52,9 @@ public class ProtocolInjector {
             throw new UnsupportedOperationException("Default EventManager is not initialized yet");
         }
 
-        EventManager.getDefaultEventManager().register(PlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.player(), true), EventPriority.LOWEST);
-        EventManager.getDefaultEventManager().register(PlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.player(), false), EventPriority.HIGH);
-        EventManager.getDefaultEventManager().register(PlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.player()), EventPriority.HIGHEST);
+        EventManager.getDefaultEventManager().register(PlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.player(), true), EventExecutionOrder.FIRST);
+        EventManager.getDefaultEventManager().register(PlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.player(), false), EventExecutionOrder.LATE);
+        EventManager.getDefaultEventManager().register(PlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.player()), EventExecutionOrder.LAST);
         Server.getConnectedPlayers().forEach(player -> addPlayer(player, false));
     }
 

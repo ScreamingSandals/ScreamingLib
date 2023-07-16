@@ -20,12 +20,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public enum EventPriority {
-    LOWEST,
-    LOW,
+/**
+ * Represents an event's execution order.
+ * <p>
+ * Listeners are called in the following order:
+ * {@link #FIRST} -> {@link #EARLY} -> {@link #NORMAL} -> {@link #LATE} -> {@link #LAST} -> {@link #MONITOR}
+ */
+public enum EventExecutionOrder {
+    FIRST,
+    EARLY,
     NORMAL,
-    HIGH,
-    HIGHEST;
+    LATE,
+    LAST,
+    /**
+     * Called after LAST (if possible, otherwise called at the same time), should NOT be used for changing or cancelling!
+     */
+    MONITOR;
 
-    public static final @NotNull List<@NotNull EventPriority> VALUES = List.of(values());
+    public static final @NotNull List<@NotNull EventExecutionOrder> VALUES = List.of(values());
 }

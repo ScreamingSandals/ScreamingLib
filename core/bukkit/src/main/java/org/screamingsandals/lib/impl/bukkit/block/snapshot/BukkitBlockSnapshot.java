@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.block.BlockUtils1_8;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlock1_8;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.container.BukkitContainer;
@@ -42,7 +43,7 @@ public class BukkitBlockSnapshot extends BasicWrapper<BlockState> implements Blo
     @Override
     public @NotNull Block block() {
         if (!BukkitFeature.FLATTENING.isSupported()) {
-            return Block.of(wrappedObject.getData());
+            return BlockUtils1_8.getBlock(wrappedObject);
         } else {
             return Block.of(wrappedObject.getBlockData());
         }
@@ -52,7 +53,10 @@ public class BukkitBlockSnapshot extends BasicWrapper<BlockState> implements Blo
     public void block(@NotNull Block type) {
         if (!BukkitFeature.FLATTENING.isSupported()) {
             wrappedObject.setType(type.as(Material.class));
-            wrappedObject.setRawData(type instanceof BukkitBlock1_8 ? ((BukkitBlock1_8) type).legacyData() : 0);
+            if (type instanceof BukkitBlock1_8) {
+                wrappedObject.setRawData(((BukkitBlock1_8) type).legacyData());
+                BlockUtils1_8.finishSettingBlock(wrappedObject, (BukkitBlock1_8) type, false);
+            }
         } else {
             wrappedObject.setBlockData(type.as(BlockData.class));
         }

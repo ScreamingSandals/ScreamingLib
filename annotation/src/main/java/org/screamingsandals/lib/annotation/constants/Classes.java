@@ -39,7 +39,7 @@ public class Classes {
         public static final @NotNull ClassName SPECTATOR_SERIALIZERS = ClassName.get("org.screamingsandals.lib.spectator.configurate", "SpectatorSerializers");
         public static final @NotNull ClassName EVENT_MANAGER = ClassName.get("org.screamingsandals.lib.event", "EventManager");
         public static final @NotNull ClassName EVENT_HANDLER = ClassName.get("org.screamingsandals.lib.event", "EventHandler");
-        public static final @NotNull ClassName EVENT_PRIORITY = ClassName.get("org.screamingsandals.lib.event", "EventPriority");
+        public static final @NotNull ClassName EVENT_EXECUTION_ORDER = ClassName.get("org.screamingsandals.lib.event", "EventExecutionOrder");
         public static final @NotNull ClassName EVENT = ClassName.get("org.screamingsandals.lib.event", "Event");
         public static final @NotNull ClassName SERVICE_MANAGER = ClassName.get("org.screamingsandals.lib.plugin", "ServiceManager");
         public static final @NotNull ClassName BUKKIT_PLUGIN = ClassName.get("org.screamingsandals.lib.impl.bukkit.plugin", "BukkitPlugin");

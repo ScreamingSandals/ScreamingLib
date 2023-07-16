@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlock1_8;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
@@ -62,6 +63,7 @@ public class BukkitItemType1_8 extends BasicWrapper<Pair<Material, Short>> imple
     public @Nullable Block block() {
         if (!wrappedObject.first().isBlock()) {
             String name = null;
+            int tileEntityVariant = 0;
             switch (wrappedObject.first().name()) {
                 // these are basically items directly representing blocks
                 case "BREWING_STAND_ITEM":
@@ -74,7 +76,10 @@ public class BukkitItemType1_8 extends BasicWrapper<Pair<Material, Short>> imple
                     name = "FLOWER_POT";
                     break;
                 case "SKULL_ITEM":
-                    name = "SKULL"; // TODO: Tile entity and specific type representation
+                    name = "SKULL";
+                    if (BukkitFeature.COLORED_BEDS.isSupported()) {
+                        tileEntityVariant = wrappedObject.second();
+                    }
                     break;
                 case "WOOD_DOOR":
                     name = "WOODEN_DOOR";
@@ -98,7 +103,10 @@ public class BukkitItemType1_8 extends BasicWrapper<Pair<Material, Short>> imple
                     name = "DARK_OAK_DOOR";
                     break;
                 case "BED":
-                    name = "BED_BLOCK"; // TODO: Tile entity and bed color representation
+                    name = "BED_BLOCK";
+                    if (BukkitFeature.COLORED_BEDS.isSupported()) {
+                        tileEntityVariant = wrappedObject.second();
+                    }
                     break;
                 case "SUGAR_CANE":
                     name = "SUGAR_CANE_BLOCK";
@@ -114,7 +122,7 @@ public class BukkitItemType1_8 extends BasicWrapper<Pair<Material, Short>> imple
                     break;
             }
             try {
-                return new BukkitBlock1_8(Material.valueOf(name));
+                return new BukkitBlock1_8(Material.valueOf(name), (byte) 0, tileEntityVariant);
             } catch (IllegalArgumentException ignored) {
             }
             return null;

@@ -19,7 +19,7 @@ package org.screamingsandals.lib.impl.velocity.proxy.event;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.impl.velocity.event.AbstractVelocityEventHandlerFactory;
 import org.screamingsandals.lib.proxy.event.PlayerLoginEvent;
 
@@ -30,7 +30,7 @@ public class PlayerLoginEventFactory extends AbstractVelocityEventHandlerFactory
     }
 
     @Override
-    protected @NotNull PlayerLoginEvent wrapEvent(@NotNull LoginEvent event, @NotNull EventPriority priority) {
+    protected @NotNull PlayerLoginEvent wrapEvent(@NotNull LoginEvent event, @NotNull EventExecutionOrder priority) {
         return new VelocityPlayerLoginEvent(event);
     }
 }

@@ -147,7 +147,7 @@ import org.screamingsandals.lib.impl.bukkit.world.difficulty.BukkitDifficultyReg
 import org.screamingsandals.lib.impl.bukkit.world.dimension.BukkitDimensionRegistry;
 import org.screamingsandals.lib.impl.bukkit.world.gamerule.BukkitGameRuleRegistry;
 import org.screamingsandals.lib.impl.bukkit.world.weather.BukkitWeatherRegistry;
-import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.event.block.BlockBurnEvent;
 import org.screamingsandals.lib.event.block.BlockCookEvent;
@@ -488,7 +488,7 @@ public class BukkitCore extends Core {
         /* we should register this only if someone exactly wants PlayerMoveEvent and not PlayerTeleportEvent */
         new AbstractBukkitEventHandlerFactory<>(org.bukkit.event.player.PlayerMoveEvent.class, PlayerMoveEvent.class, plugin, false, true) {
             @Override
-            protected PlayerMoveEvent wrapEvent(@NotNull org.bukkit.event.player.PlayerMoveEvent event, @NotNull EventPriority priority) {
+            protected PlayerMoveEvent wrapEvent(@NotNull org.bukkit.event.player.PlayerMoveEvent event, @NotNull EventExecutionOrder priority) {
                 return new BukkitPlayerMoveEvent(event);
             }
         };
@@ -637,7 +637,7 @@ public class BukkitCore extends Core {
     private <S extends Event, B extends org.bukkit.event.Event> void constructDefaultListener(Class<B> bukkitEvent, Class<S> screamingEvent, Function<B, ? extends S> function) {
         new AbstractBukkitEventHandlerFactory<>(bukkitEvent, screamingEvent, plugin) {
             @Override
-            protected S wrapEvent(@NotNull B event, @NotNull EventPriority priority) {
+            protected S wrapEvent(@NotNull B event, @NotNull EventExecutionOrder priority) {
                 return function.apply(event);
             }
         };
