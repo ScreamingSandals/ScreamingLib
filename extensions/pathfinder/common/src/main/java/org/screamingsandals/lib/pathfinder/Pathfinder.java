@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.pathfinder;
+package org.screamingsandals.lib.pathfinder;
 
-import org.screamingsandals.lib.Core;
-import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
-
-@Service
-@ServiceDependencies(dependsOn = Core.class)
-public class BukkitPathfinderManager {
+public interface Pathfinder {
 }

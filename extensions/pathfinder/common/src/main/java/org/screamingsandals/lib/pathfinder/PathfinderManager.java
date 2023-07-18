@@ -18,10 +18,13 @@ package org.screamingsandals.lib.pathfinder;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
 @AbstractService("org.screamingsandals.lib.impl.{platform}.pathfinder.{Platform}PathfinderManager")
+@ServiceDependencies(dependsOn = Core.class)
 public abstract class PathfinderManager {
     private static @Nullable PathfinderManager manager;
 
