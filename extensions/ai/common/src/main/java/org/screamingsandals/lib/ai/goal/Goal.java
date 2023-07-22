@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.pathfinder;
+package org.screamingsandals.lib.ai.goal;
 
-public interface Pathfinder {
+public interface Goal {
+    boolean canUse();
+
+    boolean canContinueToUse();
+
+    void start();
+
+    void stop();
+
+    void tick();
 }

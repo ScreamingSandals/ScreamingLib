@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.pathfinder;
+package org.screamingsandals.lib.ai;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Core;
+import org.screamingsandals.lib.ai.impl.goal.GoalTypeRegistry;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
-@AbstractService("org.screamingsandals.lib.impl.{platform}.pathfinder.{Platform}PathfinderManager")
-@ServiceDependencies(dependsOn = Core.class)
-public abstract class PathfinderManager {
-    private static @Nullable PathfinderManager manager;
+@AbstractService("org.screamingsandals.lib.impl.{platform}.ai.{Platform}AiManager")
+@ServiceDependencies(dependsOn = {
+        Core.class,
+        GoalTypeRegistry.class
+})
+public abstract class AiManager {
+    private static @Nullable AiManager manager;
 
     @ApiStatus.Internal
-    public PathfinderManager() {
-        Preconditions.checkArgument(manager == null, "PathfinderManager is already initialized.");
+    public AiManager() {
+        Preconditions.checkArgument(manager == null, "AiManager is already initialized.");
         manager = this;
     }
 }

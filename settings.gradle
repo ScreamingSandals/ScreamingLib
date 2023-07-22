@@ -65,6 +65,6 @@ registerExtension('signs', 'bukkit') //TODO: add others
 registerExtension('placeholders', 'bukkit') //TODO: add others
 registerExtension('economy', 'bukkit')
 registerExtension('packets', 'vanilla', 'bukkit') //TODO: add others
-registerExtension('pathfinder', 'bukkit')
+registerExtension('ai', 'bukkit')
 registerExtension('cloud', 'bukkit', /*'minestom' , 'sponge',*/ 'bungee', 'velocity', 'extras')
 

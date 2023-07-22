@@ -53,6 +53,7 @@ public @interface MinecraftType {
         GAME_EVENT,
         GAME_MODE,
         GAME_RULE_TYPE,
+        GOAL_TYPE,
         INVENTORY_TYPE,
         ITEM_TYPE,
         ITEM_TYPE_OR_TAG,

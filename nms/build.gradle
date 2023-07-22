@@ -118,7 +118,13 @@ nmsGen {
         reqMethod('getZ')
     }
 
-    reqClass('net.minecraft.world.entity.ai.goal.Goal')
+    reqClass('net.minecraft.world.entity.ai.goal.Goal') {
+        reqMethod('canUse')
+        reqMethod('canContinueToUse')
+        reqMethod('start')
+        reqMethod('stop')
+        reqMethod('tick')
+    }
 
     reqClass('net.minecraft.world.entity.ai.goal.GoalSelector') {
         reqConstructor(Supplier)

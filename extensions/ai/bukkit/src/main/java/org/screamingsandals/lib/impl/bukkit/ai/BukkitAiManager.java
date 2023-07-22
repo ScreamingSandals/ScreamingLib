@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.pathfinder;
+package org.screamingsandals.lib.impl.bukkit.ai;
 
-import org.screamingsandals.lib.pathfinder.PathfinderManager;
+import org.screamingsandals.lib.ai.AiManager;
+import org.screamingsandals.lib.impl.bukkit.ai.goal.BukkitGoalTypeRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
 @Service
-public class BukkitPathfinderManager extends PathfinderManager {
+@ServiceDependencies(dependsOn = {
+        BukkitGoalTypeRegistry.class
+})
+public class BukkitAiManager extends AiManager {
 }
