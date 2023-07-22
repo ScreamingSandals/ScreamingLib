@@ -17,13 +17,13 @@
 package org.screamingsandals.lib.impl.bukkit.ai;
 
 import org.screamingsandals.lib.ai.AiManager;
-import org.screamingsandals.lib.impl.bukkit.ai.goal.BukkitGoalTypeRegistry;
+import org.screamingsandals.lib.impl.bukkit.ai.goal.AbstractBukkitGoalTypeRegistry;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
 @Service
 @ServiceDependencies(dependsOn = {
-        BukkitGoalTypeRegistry.class
+        AbstractBukkitGoalTypeRegistry.class
 })
 public class BukkitAiManager extends AiManager {
 }
