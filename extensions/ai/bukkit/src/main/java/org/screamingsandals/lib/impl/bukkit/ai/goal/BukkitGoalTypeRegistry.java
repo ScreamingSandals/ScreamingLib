@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.ai.goal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.ai.goal.GoalType;
+import org.screamingsandals.lib.ai.impl.goal.GoalTypeRegistry;
 import org.screamingsandals.lib.impl.nms.accessors.AvoidEntityGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.BegGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.BreakDoorGoalAccessor;
@@ -86,16 +87,18 @@ import org.screamingsandals.lib.impl.nms.accessors.WaterAvoidingRandomFlyingGoal
 import org.screamingsandals.lib.impl.nms.accessors.WaterAvoidingRandomStrollGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.WrappedGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.ZombieAttackGoalAccessor;
+import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
-public class BukkitGoalTypeRegistry extends AbstractBukkitGoalTypeRegistry {
-    private final @NotNull Map<@NotNull ResourceLocation, Class<?>> LOCATION_CLASS_MAP = new HashMap<>();
+public class BukkitGoalTypeRegistry extends GoalTypeRegistry {
+    private final @NotNull Map<@NotNull ResourceLocation, BukkitGoalType> LOCATION_GOAL_MAP = new HashMap<>();
 
     public BukkitGoalTypeRegistry() {
         // TODO: finish this list or find a better way to do this
@@ -171,17 +174,25 @@ public class BukkitGoalTypeRegistry extends AbstractBukkitGoalTypeRegistry {
 
     private void putSafe(@NotNull String path, @Nullable Class<?> clazz) {
         if (clazz != null) {
-            LOCATION_CLASS_MAP.put(ResourceLocation.of("minecraft", path), clazz);
+            var loc = ResourceLocation.of("minecraft", path);
+            LOCATION_GOAL_MAP.put(loc, new BukkitGoalType(clazz, loc));
         }
     }
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull GoalType> getRegistryItemStream0() {
-        return null;
+        return new SimpleRegistryItemStream<>(
+                LOCATION_GOAL_MAP.entrySet()::stream,
+                Map.Entry::getValue,
+                Map.Entry::getKey,
+                (v, s) -> v.getKey().path().contains(s),
+                (v, s) -> v.getKey().namespace().equals(s),
+                List.of()
+        );
     }
 
     @Override
     protected @Nullable GoalType resolveMappingPlatform(@NotNull ResourceLocation location) {
-        return null;
+        return LOCATION_GOAL_MAP.get(location);
     }
 }

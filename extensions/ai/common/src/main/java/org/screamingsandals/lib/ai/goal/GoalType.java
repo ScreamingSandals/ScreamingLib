@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.ai.impl.goal.GoalTypeRegistry;
 import org.screamingsandals.lib.entity.Entity;
-import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
@@ -33,11 +32,7 @@ public interface GoalType extends RegistryItem, RawValueHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();
 
-    default boolean applicableTo(@NotNull Entity entity) {
-        return applicableTo(entity.getEntityType());
-    }
-
-    boolean applicableTo(@NotNull EntityType entityType);
+    boolean applicableTo(@NotNull Entity entity);
 
     @Nullable Goal createGoal(@NotNull Entity entity, @NotNull Object @NotNull... parameters);
 

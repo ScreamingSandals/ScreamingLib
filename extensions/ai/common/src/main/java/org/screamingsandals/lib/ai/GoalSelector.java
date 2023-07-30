@@ -29,11 +29,11 @@ import java.util.List;
 public interface GoalSelector extends Wrapper, RawValueHolder {
     void add(int priority, @NotNull Goal goal);
 
-    void has(@NotNull Goal goal);
+    boolean has(@NotNull Goal goal);
 
-    void has(@NotNull GoalType type);
+    boolean has(@NotNull GoalType type);
 
-    @Nullable Goal get(@NotNull GoalType type);
+    @Unmodifiable @NotNull List<@NotNull Goal> get(@NotNull GoalType type);
 
     @Unmodifiable @NotNull List<@NotNull Goal> all();
 

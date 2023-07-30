@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.impl.utils;
 
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,12 +26,12 @@ import java.util.Set;
 
 @UtilityClass
 public class Primitives {
-    private final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_TYPE;
-    private final Map<Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE_TYPE;
+    private final @NotNull Map<@NotNull Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_TYPE;
+    private final @NotNull Map<@NotNull Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE_TYPE;
 
     static {
-        Map<Class<?>, Class<?>> primToWrap = new HashMap<>(16);
-        Map<Class<?>, Class<?>> wrapToPrim = new HashMap<>(16);
+        @NotNull Map<@NotNull Class<?>, Class<?>> primToWrap = new HashMap<>(16);
+        @NotNull Map<@NotNull Class<?>, Class<?>> wrapToPrim = new HashMap<>(16);
 
         add(primToWrap, wrapToPrim, boolean.class, Boolean.class);
         add(primToWrap, wrapToPrim, byte.class, Byte.class);
@@ -46,35 +47,36 @@ public class Primitives {
         WRAPPER_TO_PRIMITIVE_TYPE = Collections.unmodifiableMap(wrapToPrim);
     }
 
-    private void add(
-            Map<Class<?>, Class<?>> forward,
-            Map<Class<?>, Class<?>> backward,
-            Class<?> key,
-            Class<?> value) {
+    private static void add(
+            @NotNull Map<@NotNull Class<?>, Class<?>> forward,
+            @NotNull Map<@NotNull Class<?>, Class<?>> backward,
+            @NotNull Class<?> key,
+            @NotNull Class<?> value
+    ) {
         forward.put(key, value);
         backward.put(value, key);
     }
 
-    public Set<Class<?>> allPrimitiveTypes() {
+    public @NotNull Set<@NotNull Class<?>> allPrimitiveTypes() {
         return PRIMITIVE_TO_WRAPPER_TYPE.keySet();
     }
 
-    public Set<Class<?>> allWrapperTypes() {
+    public @NotNull Set<@NotNull Class<?>> allWrapperTypes() {
         return WRAPPER_TO_PRIMITIVE_TYPE.keySet();
     }
 
-    public boolean isWrapperType(Class<?> type) {
+    public boolean isWrapperType(@NotNull Class<?> type) {
         return WRAPPER_TO_PRIMITIVE_TYPE.containsKey(type);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Class<T> wrap(Class<T> type) {
+    public <T> @NotNull Class<T> wrap(@NotNull Class<T> type) {
         final Class<T> wrapped = (Class<T>) PRIMITIVE_TO_WRAPPER_TYPE.get(type);
         return (wrapped == null) ? type : wrapped;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Class<T> unwrap(Class<T> type) {
+    public <T> @NotNull Class<T> unwrap(@NotNull Class<T> type) {
         final Class<T> unwrapped = (Class<T>) WRAPPER_TO_PRIMITIVE_TYPE.get(type);
         return (unwrapped == null) ? type : unwrapped;
     }

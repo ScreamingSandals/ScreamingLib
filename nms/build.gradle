@@ -103,6 +103,9 @@ nmsGen {
         reqMethod('spigot:hasAI') // 1.8.8
         reqMethod('setTarget', '@LivingEntity')
         reqMethod('getTarget')
+
+        reqField('goalSelector')
+        reqField('targetSelector')
     }
     // end 1.8.8 compat
 
@@ -124,10 +127,31 @@ nmsGen {
         reqMethod('start')
         reqMethod('stop')
         reqMethod('tick')
+
+        reqMethod('getFlags') // >= 1.14
+    }
+
+    reqClass('net.minecraft.world.entity.ai.goal.Goal$Flag') {
+        reqEnumField('TARGET')
     }
 
     reqClass('net.minecraft.world.entity.ai.goal.GoalSelector') {
         reqConstructor(Supplier)
+
+        reqField('availableGoals') // 1.14+
+        reqField(chain('searge:field_75782_a', 'searge:field_75782_a:1.8.8')) // 1.8.8-1.13.2 (1.9: changed from List to Set)
+
+
+        reqMethod('addGoal', int, '@Goal')
+        reqMethod('removeGoal', '@Goal')
+    }
+
+    reqClass('net.minecraft.world.entity.ai.goal.WrappedGoal') { // 1.14+
+        reqMethod('getGoal')
+    }
+
+    reqClass('spigot:PathfinderGoalSelector$PathfinderGoalSelectorItem') { // 1.8.8-1.13.2
+        reqField('searge:field_75733_a')
     }
 
     // Goals
@@ -187,10 +211,11 @@ nmsGen {
     reqClass('net.minecraft.world.entity.ai.goal.UseItemGoal')
     reqClass('net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal')
     reqClass('net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal')
-    reqClass('net.minecraft.world.entity.ai.goal.WrappedGoal')
     reqClass('net.minecraft.world.entity.ai.goal.ZombieAttackGoal')
 
     // Target goals
+    reqClass('net.minecraft.world.entity.ai.goal.target.TargetGoal')
+
     reqClass('net.minecraft.world.entity.ai.goal.target.DefendVillageTargetGoal')
     reqClass('net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal')
     reqClass('net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal')

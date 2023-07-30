@@ -16,14 +16,28 @@
 
 package org.screamingsandals.lib.impl.bukkit.ai;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.ai.AiManager;
-import org.screamingsandals.lib.impl.bukkit.ai.goal.AbstractBukkitGoalTypeRegistry;
+import org.screamingsandals.lib.ai.GoalSelector;
+import org.screamingsandals.lib.entity.Entity;
+import org.screamingsandals.lib.impl.bukkit.ai.goal.BukkitGoalTypeRegistry;
+import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.impl.nms.accessors.MobAccessor;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
 @Service
 @ServiceDependencies(dependsOn = {
-        AbstractBukkitGoalTypeRegistry.class
+        BukkitGoalTypeRegistry.class
 })
 public class BukkitAiManager extends AiManager {
+    @Override
+    protected @Nullable GoalSelector goalSelector0(@NotNull Entity entity) {
+        var handle = ClassStorage.getHandle(entity.as(org.bukkit.entity.Entity.class));
+        if (handle != null && MobAccessor.getType().isInstance(handle)) {
+            return new BukkitGoalSelector(handle);
+        }
+        return null;
+    }
 }

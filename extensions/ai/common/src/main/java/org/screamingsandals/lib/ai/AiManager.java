@@ -17,9 +17,12 @@
 package org.screamingsandals.lib.ai;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.ai.impl.goal.GoalTypeRegistry;
+import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -37,4 +40,15 @@ public abstract class AiManager {
         Preconditions.checkArgument(manager == null, "AiManager is already initialized.");
         manager = this;
     }
+
+    @Contract("null -> null")
+    public static @Nullable GoalSelector goalSelector(@Nullable Entity entity) {
+        if (entity == null) {
+            return null;
+        }
+        Preconditions.checkArgument(manager != null, "AiManager is not initialized yet.");
+        return manager.goalSelector0(entity);
+    }
+
+    protected abstract @Nullable GoalSelector goalSelector0(@NotNull Entity entity);
 }

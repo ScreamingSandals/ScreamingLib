@@ -16,7 +16,12 @@
 
 package org.screamingsandals.lib.ai.goal;
 
-public interface Goal {
+import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.utils.RawValueHolder;
+
+public interface Goal extends Wrapper, RawValueHolder {
+    boolean isTarget();
+
     boolean canUse();
 
     boolean canContinueToUse();
