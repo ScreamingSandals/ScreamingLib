@@ -23,12 +23,12 @@ nmsGen {
     reqClass('net.minecraft.world.entity.EntityType') {
         reqMethod('byString', String) // 1.14+
         reqMethod('searge:func_200713_a', String) // 1.13.X
-        reqField('searge:field_191308_b') // 1.11 - 1.12.2
+        reqField('searge:field_191308_b') // 1.11 - 1.12.2 - map from resource location to class type
         reqField('searge:field_75624_e') // <= 1.10.2
-//
-//        reqMethod('getBaseClass') // 1.17+ - entity class type - useless
-//
-//        reqMethod('searge:func_201760_c') // 1.13.X - entity class type
+
+        reqField('searge:field_75625_b') // <= 1.10.2 - map from string to class type
+        reqMethod('searge:func_201760_c') // 1.13.X - entity class type
+        reqField('factory') // 1.14+ - factory method
     }
 
     reqClass('net.minecraft.core.Registry') {
@@ -280,6 +280,10 @@ nmsGen {
         reqField('connection')
         reqField('latency')
     }
+
+    reqClass('net.minecraft.world.entity.projectile.FishingHook')
+
+    reqClass('net.minecraft.world.entity.LightningBolt')
 
     var FriendlyByteBuf = reqClass('net.minecraft.network.FriendlyByteBuf') {
         reqConstructor('io.netty.buffer.ByteBuf')
@@ -644,6 +648,10 @@ nmsGen {
 
     reqClass('net.minecraft.world.entity.item.PrimedTnt') {
         reqField('owner')
+    }
+
+    reqClass('net.minecraft.world.entity.EntityType$EntityFactory') {
+        reqMethod('create', ['@EntityType', '@Level'] as Object[])
     }
 }
 

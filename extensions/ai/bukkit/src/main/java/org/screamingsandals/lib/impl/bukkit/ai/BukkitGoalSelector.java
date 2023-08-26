@@ -24,25 +24,38 @@ import org.screamingsandals.lib.ai.goal.Goal;
 import org.screamingsandals.lib.ai.goal.GoalType;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.ai.goal.BukkitGoal;
+import org.screamingsandals.lib.impl.nms.accessors.EntityAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.EntityTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.EntityType_i_EntityFactoryAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.FishingHookAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.FloatGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.GoalSelectorAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.HurtByTargetGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.LightningBoltAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.LivingEntityAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.MeleeAttackGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.MobAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.NearestAttackableTargetGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.PathfinderGoalSelector_i_PathfinderGoalSelectorItemAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.PlayerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.RandomStrollGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.RegistryAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ResourceLocationAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.WrappedGoalAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSelector {
@@ -291,15 +304,53 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
         return null;
     }
 
+    private static final @NotNull Map<@NotNull Object, Class<?>> ENTITY_CLASS_CACHE = new HashMap<>();
+
     private @Nullable Class<?> getEntityClass(@NotNull EntityType type) {
-        // TODO
-//        if (EntityTypeAccessor.getMethodGetBaseClass1() != null) { // 1.17+
-//
-//        } else if (EntityTypeAccessor.getMethodFunc_201760_c1() != null) { // 1.13.X
-//
-//        } else if (EntityTypeAccessor.getFieldField_191308_b() != null) { // 1.11-1.12.2
-//
-//        } // else: huh
+        if (type.is("minecraft:player")) {
+            return ServerPlayerAccessor.getType();
+        }
+
+        if (EntityTypeAccessor.getFieldFactory() != null) { // 1.14+
+            var optional = Reflect.fastInvoke(EntityTypeAccessor.getMethodByString1(),  new Object[] {type.as(org.bukkit.entity.EntityType.class).getKey().toString()});
+
+            if (optional instanceof Optional && ((Optional<?>) optional).isPresent()) {
+                var entityType = ((Optional<?>) optional).get();
+
+                return ENTITY_CLASS_CACHE.computeIfAbsent(entityType, e -> {
+                    var factory = Reflect.getField(entityType, EntityTypeAccessor.getFieldFactory());
+
+                    // Here I don't know any better way to obtain the entity class, here we create a dummy entity which we don't spawn and get its class. I hope this operation does not have any consequences for specific entity types.
+                    var object = Reflect.fastInvoke(factory, EntityType_i_EntityFactoryAccessor.getMethodCreate1(), entityType, Reflect.fastInvoke(wrappedObject, EntityAccessor.getMethodGetCommandSenderWorld1()));
+                    if (object != null) {
+                        return object.getClass();
+                    }
+
+                    return null;
+                });
+            }
+        } else if (EntityTypeAccessor.getMethodFunc_201760_c1() != null) { // 1.13.X
+            var nullable = Reflect.fastInvoke(EntityTypeAccessor.getMethodFunc_200713_a1(), new Object[] {type.as(org.bukkit.entity.EntityType.class).getName()}); // use actual key instead of translated
+            return (Class<?>) Reflect.fastInvoke(nullable, EntityTypeAccessor.getMethodFunc_201760_c1());
+        } else {
+            if (type.is("minecraft:lightning_bolt")) {
+                return LightningBoltAccessor.getType();
+            }
+
+            if (type.is("minecraft:fishing_hook")) {
+                return FishingHookAccessor.getType();
+            }
+
+            if (EntityTypeAccessor.getFieldField_191308_b() != null) { // 1.11-1.12.2
+                @SuppressWarnings("unchecked")
+                var map = (Map<Object, Class<?>>) Reflect.getField(EntityTypeAccessor.getFieldField_191308_b());
+                return map.get(Reflect.construct(ResourceLocationAccessor.getConstructor0(), type.as(org.bukkit.entity.EntityType.class).getName()));
+            } else if (EntityTypeAccessor.getFieldField_75625_b() != null) { // 1.8-1.10.2
+                @SuppressWarnings("unchecked")
+                var map = (Map<String, Class<?>>) Reflect.getField(EntityTypeAccessor.getFieldField_75625_b());
+                return map.get(type.as(org.bukkit.entity.EntityType.class).getName());
+            }
+        }
 
         return null;
     }
