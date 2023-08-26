@@ -12,6 +12,10 @@ nmsGen {
     cleanOnRebuild = true
     minMinecraftVersion = "1.8.8"
 
+    reqClass('net.minecraft.resources.ResourceLocation') {
+        reqConstructor(String)
+    }
+
     reqClass('net.minecraft.network.chat.Component') {
         reqMethod('searge:func_150254_d') // get legacy string
     }
@@ -21,6 +25,10 @@ nmsGen {
         reqMethod('searge:func_200713_a', String) // 1.13.X
         reqField('searge:field_191308_b') // 1.11 - 1.12.2
         reqField('searge:field_75624_e') // <= 1.10.2
+//
+//        reqMethod('getBaseClass') // 1.17+ - entity class type - useless
+//
+//        reqMethod('searge:func_201760_c') // 1.13.X - entity class type
     }
 
     reqClass('net.minecraft.core.Registry') {
@@ -34,6 +42,8 @@ nmsGen {
 
     reqClass('net.minecraft.core.MappedRegistry') {
         reqMethod('searge:func_148757_b', Object)
+        reqMethod('get', '@ResourceLocation') // 1.13.1+
+        reqMethod('spigot:get', Object) // <= 1.13
     }
 
     reqClass('net.minecraft.world.entity.Entity') {
@@ -107,6 +117,8 @@ nmsGen {
         reqField('goalSelector')
         reqField('targetSelector')
     }
+
+    reqClass('net.minecraft.world.entity.PathfinderMob')
     // end 1.8.8 compat
 
     reqClass('net.minecraft.network.chat.Component$Serializer') {
@@ -167,7 +179,9 @@ nmsGen {
     reqClass('net.minecraft.world.entity.ai.goal.DoorInteractGoal')
     reqClass('net.minecraft.world.entity.ai.goal.EatBlockGoal')
     reqClass('net.minecraft.world.entity.ai.goal.FleeSunGoal')
-    reqClass('net.minecraft.world.entity.ai.goal.FloatGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.FloatGoal') {
+        reqConstructor('@Mob')
+    }
     reqClass('net.minecraft.world.entity.ai.goal.FollowBoatGoal')
     reqClass('net.minecraft.world.entity.ai.goal.FollowFlockLeaderGoal')
     reqClass('net.minecraft.world.entity.ai.goal.FollowMobGoal')
@@ -181,7 +195,9 @@ nmsGen {
     reqClass('net.minecraft.world.entity.ai.goal.LlamaFollowCaravanGoal')
     reqClass('net.minecraft.world.entity.ai.goal.LookAtPlayerGoal')
     reqClass('net.minecraft.world.entity.ai.goal.LookAtTradingPlayerGoal')
-    reqClass('net.minecraft.world.entity.ai.goal.MeleeAttackGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.MeleeAttackGoal') {
+        reqConstructor('@PathfinderMob', double, boolean)
+    }
     reqClass('net.minecraft.world.entity.ai.goal.MoveBackToVillageGoal')
     reqClass('net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal')
     reqClass('net.minecraft.world.entity.ai.goal.MoveToBlockGoal')
@@ -192,9 +208,13 @@ nmsGen {
     reqClass('net.minecraft.world.entity.ai.goal.OpenDoorGoal')
     reqClass('net.minecraft.world.entity.ai.goal.PanicGoal')
     reqClass('net.minecraft.world.entity.ai.goal.PathfindToRaidGoal')
-    reqClass('net.minecraft.world.entity.ai.goal.RandomLookAroundGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.RandomLookAroundGoal') {
+        reqConstructor('@Mob')
+    }
     reqClass('net.minecraft.world.entity.ai.goal.RandomStandGoal')
-    reqClass('net.minecraft.world.entity.ai.goal.RandomStrollGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.RandomStrollGoal') {
+        reqConstructor('@PathfinderMob', double)
+    }
     reqClass('net.minecraft.world.entity.ai.goal.RandomSwimmingGoal')
     reqClass('net.minecraft.world.entity.ai.goal.RangedAttackGoal')
     reqClass('net.minecraft.world.entity.ai.goal.RangedBowAttackGoal')
@@ -217,8 +237,14 @@ nmsGen {
     reqClass('net.minecraft.world.entity.ai.goal.target.TargetGoal')
 
     reqClass('net.minecraft.world.entity.ai.goal.target.DefendVillageTargetGoal')
-    reqClass('net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal')
-    reqClass('net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal') {
+        reqConstructor('@PathfinderMob', Class[]) // 1.14+
+        reqConstructor('@PathfinderMob', boolean, Class[]) // <= 1.13.2
+    }
+    reqClass('net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal') {
+        reqConstructor('@Mob', Class, boolean) // 1.14+
+        reqConstructor('@PathfinderMob', Class, boolean) // <= 1.13.2
+    }
     reqClass('net.minecraft.world.entity.ai.goal.target.NearestAttackableWitchTargetGoal')
     reqClass('net.minecraft.world.entity.ai.goal.target.NearestHealableRaiderTargetGoal')
     reqClass('net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal')
@@ -253,10 +279,6 @@ nmsGen {
     reqClass('net.minecraft.server.level.ServerPlayer') {
         reqField('connection')
         reqField('latency')
-    }
-
-    reqClass('net.minecraft.resources.ResourceLocation') {
-        reqConstructor(String)
     }
 
     var FriendlyByteBuf = reqClass('net.minecraft.network.FriendlyByteBuf') {

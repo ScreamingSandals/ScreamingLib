@@ -22,10 +22,17 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.ai.GoalSelector;
 import org.screamingsandals.lib.ai.goal.Goal;
 import org.screamingsandals.lib.ai.goal.GoalType;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.ai.goal.BukkitGoal;
+import org.screamingsandals.lib.impl.nms.accessors.EntityTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.FloatGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.GoalSelectorAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.HurtByTargetGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.MeleeAttackGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.MobAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.NearestAttackableTargetGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.PathfinderGoalSelector_i_PathfinderGoalSelectorItemAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.RandomStrollGoalAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.WrappedGoalAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -36,6 +43,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSelector {
     protected BukkitGoalSelector(@NotNull Object entity) {
@@ -228,5 +236,71 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
         } else {
             return Reflect.getField(wrappedObject, MobAccessor.getFieldGoalSelector());
         }
+    }
+
+    @Override
+    public @Nullable Goal addFloatGoal(int priority) {
+        var goal = Reflect.construct(FloatGoalAccessor.getConstructor0(), wrappedObject);
+        return addNewlyConstructedGoal(priority, goal);
+    }
+
+    @Override
+    public @Nullable Goal addMeleeAttackGoal(int priority, double speed, boolean pauseWhenMobIdle) {
+        var goal = Reflect.construct(MeleeAttackGoalAccessor.getConstructor0(), wrappedObject, speed, pauseWhenMobIdle);
+        return addNewlyConstructedGoal(priority, goal);
+    }
+
+    @Override
+    public @Nullable Goal addRandomStrollGoal(int priority, double speed) {
+        var goal = Reflect.construct(RandomStrollGoalAccessor.getConstructor0(), wrappedObject, speed);
+        return addNewlyConstructedGoal(priority, goal);
+    }
+
+    @Override
+    public @Nullable Goal addRandomLookAroundGoal(int priority) {
+        var goal = Reflect.construct(MeleeAttackGoalAccessor.getConstructor0(), wrappedObject);
+        return addNewlyConstructedGoal(priority, goal);
+    }
+
+    @Override
+    public @Nullable Goal addNearestAttackableTargetGoal(int priority, @NotNull EntityType type, boolean checkVisibility) {
+        var constructor = NearestAttackableTargetGoalAccessor.getConstructor0() != null ? NearestAttackableTargetGoalAccessor.getConstructor0() : NearestAttackableTargetGoalAccessor.getConstructor1();
+        var goal = Reflect.construct(constructor, wrappedObject, getEntityClass(type), checkVisibility);
+        return addNewlyConstructedGoal(priority, goal);
+    }
+
+    @Override
+    public @Nullable Goal addHurtByTargetGoal(int priority, @NotNull List<@NotNull EntityType> ignoredEntities) {
+        var classes = ignoredEntities.stream().map(this::getEntityClass).filter(Objects::nonNull).collect(Collectors.toList());
+
+        @Nullable Object goal;
+        if (HurtByTargetGoalAccessor.getConstructor0() != null) {
+            goal = Reflect.construct(HurtByTargetGoalAccessor.getConstructor0(), wrappedObject, classes);
+        } else {
+            goal = Reflect.construct(HurtByTargetGoalAccessor.getConstructor1(), wrappedObject, true, classes);
+        }
+        return addNewlyConstructedGoal(priority, goal);
+    }
+
+    private @Nullable Goal addNewlyConstructedGoal(int priority, @Nullable Object goal) {
+        if (goal != null) {
+            var bGoal = new BukkitGoal(goal);
+            add(priority, bGoal);
+            return bGoal;
+        }
+        return null;
+    }
+
+    private @Nullable Class<?> getEntityClass(@NotNull EntityType type) {
+        // TODO
+//        if (EntityTypeAccessor.getMethodGetBaseClass1() != null) { // 1.17+
+//
+//        } else if (EntityTypeAccessor.getMethodFunc_201760_c1() != null) { // 1.13.X
+//
+//        } else if (EntityTypeAccessor.getFieldField_191308_b() != null) { // 1.11-1.12.2
+//
+//        } // else: huh
+
+        return null;
     }
 }
