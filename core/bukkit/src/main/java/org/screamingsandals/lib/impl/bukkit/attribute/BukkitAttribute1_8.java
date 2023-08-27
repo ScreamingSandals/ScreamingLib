@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.attribute.Attribute;
 import org.screamingsandals.lib.attribute.AttributeModifier;
 import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.impl.nms.accessors.AttributeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.AttributeInstanceAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.AttributeModifierAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.IAttributeAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -53,12 +53,12 @@ public class BukkitAttribute1_8 extends BasicWrapper<Object> implements Attribut
 
     @Override
     public void setBaseValue(double baseValue) {
-        Reflect.fastInvoke(wrappedObject, AttributeInstanceAccessor.getMethodSetValue1(), baseValue);
+        Reflect.fastInvoke(wrappedObject, AttributeInstanceAccessor.getMethodSetBaseValue1(), baseValue);
     }
 
     @Override
     public double getDefaultValue() {
-        return (double) Reflect.fastInvokeResulted(wrappedObject, AttributeInstanceAccessor.getMethodGetAttribute1()).fastInvoke(IAttributeAccessor.getMethodB1());
+        return (double) Reflect.fastInvokeResulted(wrappedObject, AttributeInstanceAccessor.getMethodGetAttribute1()).fastInvoke(AttributeAccessor.getMethodB1());
     }
 
     @Override

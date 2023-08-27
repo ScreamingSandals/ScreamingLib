@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import org.bukkit.entity.ArmorStand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +27,7 @@ import org.bukkit.util.Vector;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.entity.projectile.ProjectileEntity;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttribute1_8;
+import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributeType1_8;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
@@ -47,6 +49,8 @@ import org.screamingsandals.lib.impl.world.Locations;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
@@ -58,10 +62,47 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
     public @Nullable Attribute getAttribute(@NotNull AttributeType attributeType) {
         if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
             return Attributes.wrapAttribute(((org.bukkit.entity.LivingEntity) wrappedObject).getAttribute(attributeType.as(org.bukkit.attribute.Attribute.class)));
-        } else if (attributeType instanceof BukkitAttribute1_8) {
+        } else if (attributeType instanceof BukkitAttributeType1_8) {
             return Attributes.wrapAttribute(Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.getMethodGetAttributeInstance1(), attributeType.raw()));
         }
         return null;
+    }
+
+    @Override
+    public @NotNull Attribute getOrCreateAttribute(@NotNull AttributeType attributeType, double defaultValue) {
+        var attribute = getAttribute(attributeType);
+        if (attribute == null) {
+            var handler = ClassStorage.getHandle(wrappedObject);
+            var attrMap = Reflect.getMethod(handler, LivingEntityAccessor.getMethodGetAttributes1()).invoke();
+            // Pre 1.16
+            Object attr;
+            if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
+                var toMinecraftNewMethod = Reflect.getMethod(ClassStorage.CB.CraftAttributeMap, "toMinecraft", org.bukkit.attribute.Attribute.class);
+                if (toMinecraftNewMethod.getMethod() != null && toMinecraftNewMethod.getMethod().getReturnType() != String.class) { // 1.16+
+                    attr = toMinecraftNewMethod.invokeStatic(attributeType.as(org.bukkit.attribute.Attribute.class));
+                } else { // 1.9-1.15.2
+                    attr = null; // TODO: no registry yet, we have to select the type manually here (which we already do in BukkitAttributeTypeRegistry1_8, maybe repurpose that class?)
+                }
+            } else if (attributeType instanceof BukkitAttributeType1_8) {
+                attr = attributeType.raw();
+            } else {
+                throw new UnsupportedOperationException("Cannot create a new attribute instance!");
+            }
+
+            // Pre 1.16
+            var attr0 = Reflect.fastInvoke(attrMap, AttributeMapAccessor.getMethodRegisterAttribute1(), attr);
+            if (attr0 == null || !AttributeInstanceAccessor.getType().isInstance(attr0)) {
+                // 1.16
+                Object provider = Reflect.getField(attrMap, AttributeMapAccessor.getFieldSupplier());
+                Map<Object, Object> all = Maps.newHashMap((Map<?, ?>) Reflect.getField(provider, AttributeSupplierAccessor.getFieldInstances()));
+                attr0 = Reflect.construct(AttributeInstanceAccessor.getConstructor0(), attr, (Consumer) o -> {
+                    // do nothing
+                });
+                all.put(attr, attr0);
+                Reflect.setField(provider, AttributeSupplierAccessor.getFieldInstances(), ImmutableMap.copyOf(all));
+            }
+        }
+        return attribute;
     }
 
     @Override

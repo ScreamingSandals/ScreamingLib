@@ -22,8 +22,8 @@ import org.screamingsandals.lib.attribute.*;
 import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.impl.nms.accessors.AttributeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.AttributeInstanceAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.IAttributeAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -58,7 +58,7 @@ public class BukkitAttribute1_9 extends BasicWrapper<AttributeInstance> implemen
             return wrappedObject.getDefaultValue();
         } else {
             // 1.9-1.11
-            return (double) Reflect.fastInvokeResulted(ClassStorage.getHandleOfItemStack(wrappedObject), AttributeInstanceAccessor.getMethodGetAttribute1()).fastInvoke(IAttributeAccessor.getMethodB1());
+            return (double) Reflect.fastInvokeResulted(ClassStorage.getHandleOfItemStack(wrappedObject), AttributeInstanceAccessor.getMethodGetAttribute1()).fastInvoke(AttributeAccessor.getMethodB1());
         }
     }
 

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.impl.attribute.AttributeTypeRegistry;
-import org.screamingsandals.lib.impl.nms.accessors.IAttributeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.AttributeAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
 
@@ -30,8 +30,8 @@ public class BukkitAttributeType1_8 extends BasicWrapper<Object> implements Attr
 
     public BukkitAttributeType1_8(@NotNull Object wrappedObject) {
         super(wrappedObject);
-        if (IAttributeAccessor.getType() == null || !IAttributeAccessor.getType().isInstance(wrappedObject)) {
-            throw new IllegalArgumentException("Object must be an instance of IAttribute!");
+        if (AttributeAccessor.getType() == null || !AttributeAccessor.getType().isInstance(wrappedObject)) {
+            throw new IllegalArgumentException("Object must be an instance of Attribute!");
         }
     }
 
@@ -42,7 +42,7 @@ public class BukkitAttributeType1_8 extends BasicWrapper<Object> implements Attr
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (IAttributeAccessor.getType().isInstance(object) || object instanceof AttributeType) {
+        if (AttributeAccessor.getType().isInstance(object) || object instanceof AttributeType) {
             return equals(object);
         }
         return equals(AttributeType.ofNullable(object));

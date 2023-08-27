@@ -37,6 +37,12 @@ public interface LivingEntity extends Entity, ProjectileShooter {
 
     @Nullable Attribute getAttribute(@NotNull AttributeType attributeType);
 
+    default @NotNull Attribute getOrCreateAttribute(@NotNull AttributeType attributeType) {
+        return getOrCreateAttribute(attributeType, 0);
+    }
+
+    @NotNull Attribute getOrCreateAttribute(@NotNull AttributeType attributeType, double defaultValue);
+
     double getEyeHeight();
 
     double getEyeHeight(boolean ignorePose);

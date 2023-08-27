@@ -19,8 +19,8 @@ package org.screamingsandals.lib.impl.bukkit.attribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.impl.nms.accessors.AttributeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.HorseAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.IAttributeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.SharedMonsterAttributesAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.ZombieAccessor;
 import org.screamingsandals.lib.utils.ResourceLocation;
@@ -48,7 +48,7 @@ public class BukkitAttributeTypeRegistry1_8 extends BukkitAttributeTypeRegistry 
     }
 
     private void put(@NotNull String path, @Nullable Object attribute) {
-        if (attribute != null && IAttributeAccessor.getType() != null && IAttributeAccessor.getType().isInstance(attribute)) {
+        if (attribute != null && AttributeAccessor.getType() != null && AttributeAccessor.getType().isInstance(attribute)) {
             var loc = ResourceLocation.of("minecraft", path);
             locationToAttributes.put(loc, attribute);
             attributesToLocation.put(attribute, loc);

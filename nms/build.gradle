@@ -1,3 +1,4 @@
+import java.util.function.Consumer
 import java.util.function.Supplier
 
 apply plugin: 'org.screamingsandals.nms-mapper'
@@ -93,12 +94,12 @@ nmsGen {
     }
 
     // 1.8.8 compat - Attributes (LivingEntity requires to be defined earlier)
-    reqClass('spigot:IAttribute:1.8.8') {
+    reqClass('net.minecraft.world.entity.ai.attributes.Attribute') {
         reqMethod('obfuscated:b:1.8.8')
     }
 
     reqClass('net.minecraft.world.entity.LivingEntity') { // 1.8.8 compat - BossBar
-        reqMethod('spigot:getAttributeInstance:1.8.8', '@IAttribute') // 1.8.8 compat - Attributes
+        reqMethod('spigot:getAttributeInstance:1.8.8', '@Attribute') // 1.8.8 compat - Attributes
         reqField('removeArrowTime')
         reqMethod('getArrowCount')
         reqMethod('setArrowCount', int)
@@ -106,6 +107,7 @@ nmsGen {
         reqMethod('swing', '@InteractionHand')
         reqMethod('getAbsorptionAmount')
         reqMethod('setAbsorptionAmount', float)
+        reqMethod('getAttributes')
     }
 
     reqClass('net.minecraft.world.entity.Mob') {
@@ -610,14 +612,27 @@ nmsGen {
     }
 
     reqClass('net.minecraft.world.entity.ai.attributes.AttributeInstance') {
+        reqConstructor('@Attribute', Consumer)
+        reqMethod('setBaseValue', double) // set base value
+
         reqMethod('spigot:getAttribute:1.8.8') // attribute type
         reqMethod('obfuscated:b:1.8.8') // get base value
-        reqMethod('spigot:setValue:1.8.8', double) // set base value
         reqMethod('obfuscated:c:1.8.8') // get modifiers
         reqMethod('obfuscated:b:1.8.8', '@AttributeModifier') // add modifier
         reqMethod('obfuscated:c:1.8.8', '@AttributeModifier') // remove modifier
         reqMethod('spigot:getValue:1.8.8') // get value
     }
+
+    reqClass('net.minecraft.world.entity.ai.attributes.AttributeSupplier') {
+        reqField('instances')
+    }
+
+    reqClass('net.minecraft.world.entity.ai.attributes.AttributeMap') {
+        reqMethod('registerAttribute', '@Attribute') // old
+        // new
+        reqField('supplier')
+    }
+
 
     // BossBars
 
