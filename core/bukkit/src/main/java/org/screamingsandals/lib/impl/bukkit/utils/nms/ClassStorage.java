@@ -40,7 +40,7 @@ public class ClassStorage {
 	// CraftBukkit classes
 	@UtilityClass
 	public static final class CB {
-		public static final Class<?> CraftAttributeMap = safeGetClass("{obc}.CraftAttributeMap");
+		public static final Class<?> CraftAttributeMap = safeGetClass("{obc}.attribute.CraftAttributeMap");
 		public static final Class<?> CraftItemStack = safeGetClass("{obc}.inventory.CraftItemStack");
 		public static final Class<?> CraftMagicNumbers = safeGetClass("{obc}.util.CraftMagicNumbers");
 		public static final Class<?> CraftVector = safeGetClass("{obc}.util.CraftVector");

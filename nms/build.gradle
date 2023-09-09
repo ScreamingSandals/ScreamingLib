@@ -591,11 +591,16 @@ nmsGen {
 
     // Attributes
     reqClass('net.minecraft.world.entity.monster.SharedMonsterAttributes') {
-        reqEnumField('spigot:maxHealth:1.8.8')
+        reqEnumField(chain('spigot:maxHealth:1.8.8', 'MAX_HEALTH'))
         reqEnumField('spigot:FOLLOW_RANGE:1.8.8')
         reqEnumField('obfuscated:c:1.8.8')
         reqEnumField('spigot:MOVEMENT_SPEED:1.8.8')
+        reqEnumField('FLYING_SPEED')
         reqEnumField('spigot:ATTACK_DAMAGE:1.8.8')
+        reqEnumField('ATTACK_SPEED')
+        reqEnumField('ARMOR')
+        reqEnumField('ARMOR_TOUGHNESS')
+        reqEnumField('LUCK')
     }
 
     reqClass('net.minecraft.world.entity.animal.horse.Horse') {

@@ -16,10 +16,10 @@
 
 package org.screamingsandals.lib.impl.bukkit.attribute;
 
+import lombok.Getter;
 import org.bukkit.attribute.Attribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
@@ -28,8 +28,12 @@ import java.util.Arrays;
 
 public class BukkitAttributeType1_9 extends BasicWrapper<Attribute> implements AttributeType {
 
-    public BukkitAttributeType1_9(@NotNull Attribute wrappedObject) {
+    @Getter
+    private final @Nullable Object vanillaAttribute;
+
+    public BukkitAttributeType1_9(@NotNull Attribute wrappedObject, @Nullable Object vanillaAttribute) {
         super(wrappedObject);
+        this.vanillaAttribute = vanillaAttribute;
     }
 
     @Override

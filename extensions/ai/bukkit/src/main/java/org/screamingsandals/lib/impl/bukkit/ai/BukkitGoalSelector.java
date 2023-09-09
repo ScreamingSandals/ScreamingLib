@@ -85,7 +85,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
             var goals = Reflect.getField(selector, GoalSelectorAccessor.getFieldAvailableGoals());
 
             if (goals instanceof Collection) { // therefore is not null
-                for (var g : (Collection<?>) goals) {
+                for (var g : List.copyOf((Collection<?>) goals)) {
                     if (Objects.equals(Reflect.fastInvoke(g, WrappedGoalAccessor.getMethodGetGoal1()), goal.raw())) {
                         return true;
                     }
@@ -95,7 +95,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
             var goals = Reflect.getField(selector, GoalSelectorAccessor.getFieldField_75782_a());
 
             if (goals instanceof Collection) { // therefore is not null
-                for (var g : (Collection<?>) goals) {
+                for (var g : List.copyOf((Collection<?>) goals)) {
                     if (Objects.equals(Reflect.getField(g, PathfinderGoalSelector_i_PathfinderGoalSelectorItemAccessor.getFieldField_75733_a()), goal.raw())) {
                         return true;
                     }
@@ -120,7 +120,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
             var goals = Reflect.getField(selector, GoalSelectorAccessor.getFieldAvailableGoals());
 
             if (goals instanceof Collection) { // therefore is not null
-                for (var g : (Collection<?>) goals) {
+                for (var g : List.copyOf((Collection<?>) goals)) {
                     var obj = Reflect.fastInvoke(g, WrappedGoalAccessor.getMethodGetGoal1());
                     if (obj != null && type.as(Class.class).equals(obj.getClass())) {
                         return true;
@@ -131,7 +131,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
             var goals = Reflect.getField(selector, GoalSelectorAccessor.getFieldField_75782_a());
 
             if (goals instanceof Collection) { // therefore is not null
-                for (var g : (Collection<?>) goals) {
+                for (var g : List.copyOf((Collection<?>) goals)) {
                     var obj = Reflect.getField(g, PathfinderGoalSelector_i_PathfinderGoalSelectorItemAccessor.getFieldField_75733_a());
                     if (obj != null && type.as(Class.class).equals(obj.getClass())) {
                         return true;
@@ -161,7 +161,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
             var goals = Reflect.getField(selector, GoalSelectorAccessor.getFieldAvailableGoals());
 
             if (goals instanceof Collection) { // therefore is not null
-                for (var g : (Collection<?>) goals) {
+                for (var g : List.copyOf((Collection<?>) goals)) {
                     var obj = Reflect.fastInvoke(g, WrappedGoalAccessor.getMethodGetGoal1());
                     if (obj != null && (type == null || type.as(Class.class).equals(obj.getClass()))) {
                         finalGoals.add(new BukkitGoal(obj));
@@ -172,7 +172,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
             var goals = Reflect.getField(selector, GoalSelectorAccessor.getFieldField_75782_a());
 
             if (goals instanceof Collection) { // therefore is not null
-                for (var g : (Collection<?>) goals) {
+                for (var g : List.copyOf((Collection<?>) goals)) {
                     var obj = Reflect.getField(g, PathfinderGoalSelector_i_PathfinderGoalSelectorItemAccessor.getFieldField_75733_a());
                     if (obj != null && (type == null || type.as(Class.class).equals(obj.getClass()))) {
                         finalGoals.add(new BukkitGoal(obj));
@@ -222,7 +222,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
             var goals = Reflect.getField(selector, GoalSelectorAccessor.getFieldAvailableGoals());
 
             if (goals instanceof Collection) { // therefore is not null
-                for (var g : (Collection<?>) goals) {
+                for (var g : List.copyOf((Collection<?>) goals)) {
                     var obj = Reflect.fastInvoke(g, WrappedGoalAccessor.getMethodGetGoal1());
                     if (obj != null && (type == null || type.as(Class.class).equals(obj.getClass()))) {
                         Reflect.fastInvoke(selector, GoalSelectorAccessor.getMethodRemoveGoal1(), obj);
@@ -233,7 +233,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
             var goals = Reflect.getField(selector, GoalSelectorAccessor.getFieldField_75782_a());
 
             if (goals instanceof Collection) { // therefore is not null
-                for (var g : (Collection<?>) goals) {
+                for (var g : List.copyOf((Collection<?>) goals)) {
                     var obj = Reflect.getField(g, PathfinderGoalSelector_i_PathfinderGoalSelectorItemAccessor.getFieldField_75733_a());
                     if (obj != null && (type == null || type.as(Class.class).equals(obj.getClass()))) {
                         Reflect.fastInvoke(selector, GoalSelectorAccessor.getMethodRemoveGoal1(), obj);

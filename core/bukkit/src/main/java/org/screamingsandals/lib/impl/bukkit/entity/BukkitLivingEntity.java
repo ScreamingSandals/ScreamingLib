@@ -28,6 +28,7 @@ import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.entity.projectile.ProjectileEntity;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributeType1_8;
+import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributeType1_9;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
@@ -71,38 +72,47 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
     @Override
     public @NotNull Attribute getOrCreateAttribute(@NotNull AttributeType attributeType, double defaultValue) {
         var attribute = getAttribute(attributeType);
-        if (attribute == null) {
-            var handler = ClassStorage.getHandle(wrappedObject);
-            var attrMap = Reflect.getMethod(handler, LivingEntityAccessor.getMethodGetAttributes1()).invoke();
-            // Pre 1.16
-            Object attr;
-            if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
-                var toMinecraftNewMethod = Reflect.getMethod(ClassStorage.CB.CraftAttributeMap, "toMinecraft", org.bukkit.attribute.Attribute.class);
-                if (toMinecraftNewMethod.getMethod() != null && toMinecraftNewMethod.getMethod().getReturnType() != String.class) { // 1.16+
-                    attr = toMinecraftNewMethod.invokeStatic(attributeType.as(org.bukkit.attribute.Attribute.class));
-                } else { // 1.9-1.15.2
-                    attr = null; // TODO: no registry yet, we have to select the type manually here (which we already do in BukkitAttributeTypeRegistry1_8, maybe repurpose that class?)
-                }
-            } else if (attributeType instanceof BukkitAttributeType1_8) {
-                attr = attributeType.raw();
-            } else {
-                throw new UnsupportedOperationException("Cannot create a new attribute instance!");
-            }
-
-            // Pre 1.16
-            var attr0 = Reflect.fastInvoke(attrMap, AttributeMapAccessor.getMethodRegisterAttribute1(), attr);
-            if (attr0 == null || !AttributeInstanceAccessor.getType().isInstance(attr0)) {
-                // 1.16
-                Object provider = Reflect.getField(attrMap, AttributeMapAccessor.getFieldSupplier());
-                Map<Object, Object> all = Maps.newHashMap((Map<?, ?>) Reflect.getField(provider, AttributeSupplierAccessor.getFieldInstances()));
-                attr0 = Reflect.construct(AttributeInstanceAccessor.getConstructor0(), attr, (Consumer) o -> {
-                    // do nothing
-                });
-                all.put(attr, attr0);
-                Reflect.setField(provider, AttributeSupplierAccessor.getFieldInstances(), ImmutableMap.copyOf(all));
-            }
+        if (attribute != null) {
+            return attribute;
         }
-        return attribute;
+
+        var handler = ClassStorage.getHandle(wrappedObject);
+        var attrMap = Reflect.getMethod(handler, LivingEntityAccessor.getMethodGetAttributes1()).invoke();
+        // Pre 1.16
+        Object attr = null;
+        if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
+            var toMinecraftNewMethod = Reflect.getMethod(ClassStorage.CB.CraftAttributeMap, "toMinecraft", org.bukkit.attribute.Attribute.class);
+            if (toMinecraftNewMethod.getMethod() != null && toMinecraftNewMethod.getMethod().getReturnType() != String.class) { // 1.16+
+                attr = toMinecraftNewMethod.invokeStatic(attributeType.as(org.bukkit.attribute.Attribute.class));
+            } else if (attributeType instanceof BukkitAttributeType1_9) { // 1.9-1.15.2
+                attr = ((BukkitAttributeType1_9) attributeType).getVanillaAttribute();
+            }
+        } else if (attributeType instanceof BukkitAttributeType1_8) {
+            attr = attributeType.raw();
+        }
+
+        if (attr == null) {
+            throw new UnsupportedOperationException("Cannot create a new attribute instance!");
+        }
+
+        // Pre 1.16
+        var attr0 = Reflect.fastInvoke(attrMap, AttributeMapAccessor.getMethodRegisterAttribute1(), attr);
+        if (attr0 == null || !AttributeInstanceAccessor.getType().isInstance(attr0)) {
+            // 1.16
+            Object provider = Reflect.getField(attrMap, AttributeMapAccessor.getFieldSupplier());
+            Map<Object, Object> all = Maps.newHashMap((Map<?, ?>) Reflect.getField(provider, AttributeSupplierAccessor.getFieldInstances()));
+            attr0 = Reflect.construct(AttributeInstanceAccessor.getConstructor0(), attr, (Consumer) o -> {
+                // do nothing
+            });
+            all.put(attr, attr0);
+            Reflect.setField(provider, AttributeSupplierAccessor.getFieldInstances(), ImmutableMap.copyOf(all));
+        }
+
+        var finalAttribute = getAttribute(attributeType);
+        if (finalAttribute == null) {
+            throw new UnsupportedOperationException("Could not create a new instance of type " + attributeType.location() + " for entity " + wrappedObject);
+        }
+        return finalAttribute;
     }
 
     @Override
