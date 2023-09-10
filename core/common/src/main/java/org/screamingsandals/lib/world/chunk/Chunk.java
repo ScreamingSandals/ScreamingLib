@@ -23,6 +23,7 @@ import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.block.BlockPlacement;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.world.World;
 
 /**
@@ -104,4 +105,30 @@ public interface Chunk extends Wrapper, RawValueHolder, ThreadProperty {
      * @return did this chunk unload (and save, if specified) successfully?
      */
     boolean unload(boolean save);
+
+    /**
+     * Adds a new chunk ticket to this chunk if there is no chunk ticket yet and chunk tickets are supported by the underlying platform.
+     * <p>
+     * Chunk tickets are usually bound to this plugin. This method can still successfully add a new chunk ticket if there already is one, but was created by another plugin.
+     *
+     * @return true if the chunk ticket has been successfully added, false otherwise
+     */
+    @LimitedVersionSupport(">= 1.14.3")
+    boolean addPluginChunkTicket();
+
+    /**
+     * Removes a chunk ticket from this chunk if there is a chunk ticket registered for this plugin.
+     *
+     * @return true if the chunk ticket has been successfully removed, false otherwise
+     */
+    @LimitedVersionSupport(">= 1.14.3")
+    boolean removePluginChunkTicket();
+
+    /**
+     * Checks whether this plugin has registered a chunk ticket for this chunk.
+     *
+     * @return true if there is a chunk ticket registered by this plugin, false otherwise
+     */
+    @LimitedVersionSupport(">= 1.14.3")
+    boolean hasPluginChunkTicket();
 }

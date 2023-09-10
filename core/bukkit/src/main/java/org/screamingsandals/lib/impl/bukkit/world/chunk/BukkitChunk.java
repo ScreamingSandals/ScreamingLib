@@ -19,6 +19,8 @@ package org.screamingsandals.lib.impl.bukkit.world.chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.block.BlockPlacement;
+import org.screamingsandals.lib.impl.bukkit.BukkitCore;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
@@ -86,5 +88,29 @@ public class BukkitChunk extends BasicWrapper<org.bukkit.Chunk> implements Chunk
     @Override
     public boolean unload(boolean save) {
         return wrappedObject.unload(save);
+    }
+
+    @Override
+    public boolean addPluginChunkTicket() {
+        if (BukkitFeature.CHUNK_TICKET_API.isSupported()) {
+            return wrappedObject.addPluginChunkTicket(BukkitCore.getPlugin());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removePluginChunkTicket() {
+        if (BukkitFeature.CHUNK_TICKET_API.isSupported()) {
+            return wrappedObject.removePluginChunkTicket(BukkitCore.getPlugin());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasPluginChunkTicket() {
+        if (BukkitFeature.CHUNK_TICKET_API.isSupported()) {
+            return wrappedObject.getPluginChunkTickets().contains(BukkitCore.getPlugin());
+        }
+        return false;
     }
 }

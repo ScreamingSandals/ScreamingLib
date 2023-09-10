@@ -213,6 +213,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature GAME_RULE_API = PlatformFeature.of(() -> Reflect.has("org.bukkit.GameRule"));
     public static final @NotNull PlatformFeature PARTICLES_API = PlatformFeature.of(() -> Version.isVersion(1, 9));
     public static final @NotNull PlatformFeature EXTENDED_PARTICLE_METHOD = PARTICLES_API.and(() -> Reflect.hasMethod(World.class, "spawnParticle", Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class));
+    public static final @NotNull PlatformFeature CHUNK_TICKET_API = PlatformFeature.of(() -> Reflect.hasMethod(Chunk.class, "addPluginChunkTicket", Plugin.class));
 
     // POTION & POTION EFFECT API
     public static final @NotNull PlatformFeature POTION_API = PlatformFeature.of(() -> Version.isVersion(1, 9));
