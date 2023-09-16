@@ -24,6 +24,7 @@ import org.screamingsandals.lib.utils.annotations.*;
 import org.screamingsandals.lib.utils.annotations.internal.AccessPluginClasses;
 import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
+import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 import org.screamingsandals.lib.utils.annotations.parameters.ProvidedBy;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -157,7 +158,7 @@ public class MiscUtils {
                                 || (typeElement.getKind() == ElementKind.CLASS && typeElement.getEnclosedElements().stream()
                                 .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
                                 .allMatch(element -> element.getModifiers().contains(Modifier.PRIVATE))
-                                && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))),
+                                && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && element.getAnnotation(ServiceInitializer.class) != null)),
                         typeElement.getAnnotation(InternalCoreService.class) != null,
                         false,
                         LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null
@@ -201,7 +202,7 @@ public class MiscUtils {
                                 || (typeElement.getKind() == ElementKind.CLASS && typeElement.getEnclosedElements().stream()
                                 .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
                                 .allMatch(element -> element.getModifiers().contains(Modifier.PRIVATE))
-                                && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))),
+                                && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && element.getAnnotation(ServiceInitializer.class) != null)),
                         false,
                         LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null
                 );
@@ -287,7 +288,7 @@ public class MiscUtils {
     private static void checkConstructorDependencies(ProcessingEnvironment environment, TypeElement typeElement, ServiceContainer container) {
         var initMethod = typeElement.getEnclosedElements()
                 .stream()
-                .filter(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))
+                .filter(element -> (element.getKind() == ElementKind.METHOD || element.getKind() == ElementKind.CONSTRUCTOR) && element.getAnnotation(ServiceInitializer.class) != null)
                 .findFirst();
 
         if (initMethod.isEmpty() && !container.isStaticOnly()) {

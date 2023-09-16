@@ -12,6 +12,7 @@ paperlib = "1.0.8"
 
 # annotation (implementation)
 javapoet = "1.13.0"
+guava = "32.1.2-jre"
 
 # kotlin-extra (compileOnly)
 kotlin = "1.6.10"
@@ -45,6 +46,7 @@ nms-mapper = "1.4.5"
 [libraries]
 paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
 javapoet = { group = "com.squareup", name = "javapoet", version.ref = "javapoet" }
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 configurate-core = { group = "org.spongepowered", name = "configurate-core", version.ref = "configurate" }
 configurate-yaml = { group = "org.spongepowered", name = "configurate-yaml", version.ref = "configurate" }

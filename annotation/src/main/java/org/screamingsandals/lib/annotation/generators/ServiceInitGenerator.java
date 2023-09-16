@@ -364,7 +364,7 @@ public final class ServiceInitGenerator {
                         statement.append("$N");
                         processedArguments.add(instancedServices.get(typeMirror.get()));
                     } else {
-                        throw new UnsupportedOperationException("Init method of " + typeElement.getQualifiedName() + " has wrong argument!");
+                        throw new UnsupportedOperationException("Init method of " + typeElement.getQualifiedName() + " has wrong argument: " + variableElement.getSimpleName());
                     }
                 });
                 statement.append(")");
