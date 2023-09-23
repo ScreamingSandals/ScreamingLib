@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.npc.skin;
 
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 
 import java.util.Arrays;
@@ -24,7 +25,8 @@ import java.util.Collections;
 
 @RequiredArgsConstructor
 public enum SkinLayerValues {
-    V9(12, 8),
+    V8(10, 8),
+    V9(12, 9),
     V13(13, 13),
     V14(15, 14),
     V16(16, 15),
@@ -33,12 +35,17 @@ public enum SkinLayerValues {
     private final int layerValue;
     private final int minVersion;
 
+    private static int currentLayerValue;
+
     public static int findLayerByVersion() {
-        return Arrays.stream(values())
-                .sorted(Collections.reverseOrder())
-                .filter(value -> Server.isVersion(1, value.minVersion))
-                .map(value -> value.layerValue)
-                .findAny()
-                .orElse(V9.layerValue);
+        if (currentLayerValue == 0) {
+            currentLayerValue = Arrays.stream(values())
+                    .sorted(Collections.reverseOrder())
+                    .filter(value -> Server.isVersion(1, value.minVersion))
+                    .map(value -> value.layerValue)
+                    .findAny()
+                    .orElse(V9.layerValue);
+        }
+        return currentLayerValue;
     }
 }
