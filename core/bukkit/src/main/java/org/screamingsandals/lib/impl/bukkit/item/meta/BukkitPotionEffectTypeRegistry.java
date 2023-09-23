@@ -41,15 +41,57 @@ public class BukkitPotionEffectTypeRegistry extends PotionEffectTypeRegistry {
     @Override
     protected @Nullable PotionEffectType resolveMappingPlatform(@NotNull ResourceLocation location) {
         if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY.isSupported()) {
-            var entityType = Registry.POTION_EFFECT_TYPE.get(new NamespacedKey(location.namespace(), location.path()));
-            if (entityType != null) {
-                return new BukkitPotionEffectType(entityType);
+            var potionEffectType = Registry.POTION_EFFECT_TYPE.get(new NamespacedKey(location.namespace(), location.path()));
+            if (potionEffectType != null) {
+                return new BukkitPotionEffectType(potionEffectType);
+            }
+
+            // try bukkit name (deprecated, TODO: prepare shop/config migration scripts and remove)
+            if ("minecraft".equalsIgnoreCase(location.namespace())) {
+                var path = location.path();
+                switch (path) {
+                    case "slow": path = "slowness"; break;
+                    case "fast_digging": path = "haste"; break;
+                    case "slow_digging": path = "mining_fatigue"; break;
+                    case "increase_damage": path = "strength"; break;
+                    case "heal": path = "instant_health"; break;
+                    case "harm": path = "instant_damage"; break;
+                    case "jump": path = "jump_boost"; break;
+                    case "confusion": path = "nausea"; break;
+                    case "damage_resistance": path = "resistance"; break;
+                }
+
+                potionEffectType = Registry.POTION_EFFECT_TYPE.get(new NamespacedKey("minecraft", path));
+                if (potionEffectType != null) {
+                    return new BukkitPotionEffectType(potionEffectType);
+                }
             }
         } else if (BukkitFeature.POTION_EFFECT_KEYED.isSupported()) {
             // Spigot and pre-1.18.2 Paper don't have registries for this, but have method that works the similar way
-            var entityType = org.bukkit.potion.PotionEffectType.getByKey(new NamespacedKey(location.namespace(), location.path()));
-            if (entityType != null) {
-                return new BukkitPotionEffectType(entityType);
+            var potionEffectType = org.bukkit.potion.PotionEffectType.getByKey(new NamespacedKey(location.namespace(), location.path()));
+            if (potionEffectType != null) {
+                return new BukkitPotionEffectType(potionEffectType);
+            }
+
+            // try bukkit name (deprecated, TODO: prepare shop/config migration scripts and remove)
+            if ("minecraft".equalsIgnoreCase(location.namespace())) {
+                var path = location.path();
+                switch (path) {
+                    case "slow": path = "slowness"; break;
+                    case "fast_digging": path = "haste"; break;
+                    case "slow_digging": path = "mining_fatigue"; break;
+                    case "increase_damage": path = "strength"; break;
+                    case "heal": path = "instant_health"; break;
+                    case "harm": path = "instant_damage"; break;
+                    case "jump": path = "jump_boost"; break;
+                    case "confusion": path = "nausea"; break;
+                    case "damage_resistance": path = "resistance"; break;
+                }
+
+                potionEffectType = org.bukkit.potion.PotionEffectType.getByKey(new NamespacedKey("minecraft", path));
+                if (potionEffectType != null) {
+                    return new BukkitPotionEffectType(potionEffectType);
+                }
             }
         } else {
             // hell nah

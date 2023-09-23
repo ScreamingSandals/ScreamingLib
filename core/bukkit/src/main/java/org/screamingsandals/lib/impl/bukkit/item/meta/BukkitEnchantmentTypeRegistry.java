@@ -46,11 +46,29 @@ public class BukkitEnchantmentTypeRegistry extends EnchantmentTypeRegistry {
             if (entityType != null) {
                 return new BukkitEnchantmentType(entityType);
             }
+
+
+            // try bukkit name (deprecated, TODO: prepare shop/config migration scripts and remove)
+            if ("minecraft".equals(location.namespace())) {
+                var value = org.bukkit.enchantments.Enchantment.getByName(location.path().toUpperCase(Locale.ROOT));
+                if (value != null) {
+                    return new BukkitEnchantmentType(value);
+                }
+            }
         } else if (BukkitFeature.FLATTENING.isSupported()) {
             // 1.13.x didn't have registries yet, but we got something similar to them in this case
             var entityType = org.bukkit.enchantments.Enchantment.getByKey(new NamespacedKey(location.namespace(), location.path()));
             if (entityType != null) {
                 return new BukkitEnchantmentType(entityType);
+            }
+
+
+            // try bukkit name (deprecated, TODO: prepare shop/config migration scripts and remove)
+            if ("minecraft".equals(location.namespace())) {
+                var value = org.bukkit.enchantments.Enchantment.getByName(location.path().toUpperCase(Locale.ROOT));
+                if (value != null) {
+                    return new BukkitEnchantmentType(value);
+                }
             }
         } else {
             // hell nah
