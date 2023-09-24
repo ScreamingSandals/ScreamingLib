@@ -192,7 +192,6 @@ public abstract class ItemBlockIdsRemapper {
         mapAlias("CONCRETE_POWDER", "WHITE_CONCRETE_POWDER");
         mapAlias("STAINED_GLASS", "WHITE_STAINED_GLASS");
         mapAlias("STAINED_GLASS_PANE", "WHITE_STAINED_GLASS_PANE");
-        mapAlias("SHULKER_BOX", "WHITE_SHULKER_BOX");
         mapAlias("BANNER", "WHITE_BANNER");
         mapAlias("GLAZED_TERRACOTTA", "WHITE_GLAZED_TERRACOTTA");
 

@@ -34,43 +34,21 @@ import java.util.function.Supplier;
 
 @UtilityClass
 public class ClassStorage {
-	public static final boolean NMS_BASED_SERVER = safeGetClass("org.bukkit.craftbukkit.Main") != null;
-	public static final @NotNull String NMS_VERSION = checkNMSVersion();
+	public static final @NotNull String CB_PACKAGE = Bukkit.getServer().getClass().getPackage().getName();
 
 	// CraftBukkit classes
 	@UtilityClass
 	public static final class CB {
-		public static final Class<?> CraftAttributeMap = safeGetClass("{obc}.attribute.CraftAttributeMap");
-		public static final Class<?> CraftItemStack = safeGetClass("{obc}.inventory.CraftItemStack");
-		public static final Class<?> CraftMagicNumbers = safeGetClass("{obc}.util.CraftMagicNumbers");
-		public static final Class<?> CraftVector = safeGetClass("{obc}.util.CraftVector");
-		public static final Class<?> CraftPersistentDataContainer = safeGetClass("{obc}.persistence.CraftPersistentDataContainer");
-		public static final Class<?> CraftCustomItemTagContainer = safeGetClass("{obc}.inventory.tags.CraftCustomItemTagContainer");
-		public static final Class<?> CraftMetaItem = safeGetClass("{obc}.inventory.CraftMetaItem");
-		public static final Class<?> CraftPersistentDataTypeRegistry = safeGetClass("{obc}.persistence.CraftPersistentDataTypeRegistry");
-		public static final Class<?> CraftCustomTagTypeRegistry = safeGetClass("{obc}.inventory.CraftCustomTagTypeRegistry");
-		public static final Class<?> CraftSound = safeGetClass("{obc}.CraftSound");
-	}
-	
-	private static @NotNull String checkNMSVersion() {
-		/* if NMS is not found, finding class will fail, but we still need some string */
-		String nmsVersion = "nms_not_found"; 
-		
-		if (NMS_BASED_SERVER) {
-			String packName = Bukkit.getServer().getClass().getPackage().getName();
-			nmsVersion = packName.substring(packName.lastIndexOf('.') + 1);
-		}
-		
-		return nmsVersion;
-	}
-	
-	public static Class<?> safeGetClass(String... clazz) {
-		return Reflect.getClassSafe(
-				Map.of(
-						"{obc}", "org.bukkit.craftbukkit." + NMS_VERSION
-				),
-				clazz
-		);
+		public static final Class<?> CraftAttributeMap = Reflect.getClassSafe(CB_PACKAGE + ".attribute.CraftAttributeMap");
+		public static final Class<?> CraftItemStack = Reflect.getClassSafe(CB_PACKAGE + ".inventory.CraftItemStack");
+		public static final Class<?> CraftMagicNumbers = Reflect.getClassSafe(CB_PACKAGE + ".util.CraftMagicNumbers");
+		public static final Class<?> CraftVector = Reflect.getClassSafe(CB_PACKAGE + ".util.CraftVector");
+		public static final Class<?> CraftPersistentDataContainer = Reflect.getClassSafe(CB_PACKAGE + ".persistence.CraftPersistentDataContainer");
+		public static final Class<?> CraftCustomItemTagContainer = Reflect.getClassSafe(CB_PACKAGE + ".inventory.tags.CraftCustomItemTagContainer");
+		public static final Class<?> CraftMetaItem = Reflect.getClassSafe(CB_PACKAGE + ".inventory.CraftMetaItem");
+		public static final Class<?> CraftPersistentDataTypeRegistry = Reflect.getClassSafe(CB_PACKAGE + ".persistence.CraftPersistentDataTypeRegistry");
+		public static final Class<?> CraftCustomTagTypeRegistry = Reflect.getClassSafe(CB_PACKAGE + ".inventory.CraftCustomTagTypeRegistry");
+		public static final Class<?> CraftSound = Reflect.getClassSafe(CB_PACKAGE + ".CraftSound");
 	}
 	
 	public static Object getHandle(Object obj) {

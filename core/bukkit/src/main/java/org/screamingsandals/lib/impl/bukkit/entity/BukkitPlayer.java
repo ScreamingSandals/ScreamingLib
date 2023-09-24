@@ -403,10 +403,22 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     @Override
     public int getProtocolVersion() {
         if (Reflect.has("com.viaversion.viaversion.api.Via")) {
-            return Via.getAPI().getPlayerVersion(wrappedObject);
+            int version = Via.getAPI().getPlayerVersion(wrappedObject);
+            if (version != -1) {
+                return version;
+            }
         }
         if (Reflect.has("protocolsupport.api.ProtocolSupportAPI")) {
-            return ProtocolSupportAPI.getProtocolVersion((org.bukkit.entity.Player) wrappedObject).getId();
+            int version = ProtocolSupportAPI.getProtocolVersion((org.bukkit.entity.Player) wrappedObject).getId();
+            if (version != -1) {
+                return version;
+            }
+        }
+        if (BukkitFeature.PLAYER_PROTOCOL_VERSION.isSupported()) {
+            int version = ((org.bukkit.entity.Player) wrappedObject).getProtocolVersion();
+            if (version != -1) {
+                return version;
+            }
         }
         return Server.getProtocolVersion();
     }

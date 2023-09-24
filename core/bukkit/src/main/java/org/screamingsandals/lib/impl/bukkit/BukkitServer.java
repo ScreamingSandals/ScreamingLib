@@ -588,9 +588,14 @@ public class BukkitServer extends Server {
 
     @Override
     public @NotNull Integer getProtocolVersion0() {
+        if (BukkitFeature.UNSAFE_VALUES_PROTOCOL_VERSION.isSupported()) {
+            return Bukkit.getUnsafe().getProtocolVersion();
+        }
+
         if (SharedConstantsAccessor.getMethodGetProtocolVersion1() != null) {
             return Reflect.fastInvokeResulted(SharedConstantsAccessor.getMethodGetProtocolVersion1()).as(Integer.class);
         }
+
         return Reflect.getFieldResulted(Reflect.fastInvoke(Bukkit.getServer(), "getServer"), MinecraftServerAccessor.getFieldStatus())
                 .fastInvokeResulted(ServerStatusAccessor.getMethodGetVersion1())
                 .fastInvokeResulted(ServerStatus_i_VersionAccessor.getMethodProtocol1())

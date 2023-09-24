@@ -18,6 +18,7 @@ package org.screamingsandals.lib.impl.bukkit.utils;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -31,8 +32,15 @@ public class Version {
 	public static final int PATCH_VERSION;
 	
 	static {
-		Pattern versionPattern = Pattern.compile("\\(MC: (\\d+)\\.(\\d+)\\.?(\\d+?)?");
-        Matcher matcher = versionPattern.matcher(Bukkit.getVersion());
+        Matcher matcher;
+        if (BukkitFeature.BUKKIT_GET_MINECRAFT_VERSION.isSupported()) {
+            // TODO: somehow update this to support future Paper snapshots
+            Pattern versionPattern = Pattern.compile("^(\\d+)\\.(\\d+)\\.?(\\d+?)?");
+            matcher = versionPattern.matcher(Bukkit.getMinecraftVersion());
+        } else {
+            Pattern versionPattern = Pattern.compile("\\(MC: (\\d+)\\.(\\d+)\\.?(\\d+?)?");
+            matcher = versionPattern.matcher(Bukkit.getVersion());
+        }
         int majorVersion = 1;
         int minorVersion = 0;
         int patchVersion = 0;
