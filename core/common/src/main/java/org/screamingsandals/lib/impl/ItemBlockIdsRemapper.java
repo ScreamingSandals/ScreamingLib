@@ -184,6 +184,23 @@ public abstract class ItemBlockIdsRemapper {
         mapAlias("ACACIA_WALL_SIGN", "WALL_SIGN");
         mapAlias("DIRT_PATH", "GRASS_PATH");
         mapAlias("WATER_CAULDRON", "CAULDRON");
+
+        // non-color -> white alias
+        mapAlias("WOOL", "WHITE_WOOL");
+        mapAlias("CARPET", "WHITE_CARPET");
+        mapAlias("CONCRETE", "WHITE_CONCRETE");
+        mapAlias("CONCRETE_POWDER", "WHITE_CONCRETE_POWDER");
+        mapAlias("STAINED_GLASS", "WHITE_STAINED_GLASS");
+        mapAlias("STAINED_GLASS_PANE", "WHITE_STAINED_GLASS_PANE");
+        mapAlias("SHULKER_BOX", "WHITE_SHULKER_BOX");
+        mapAlias("BANNER", "WHITE_BANNER");
+        mapAlias("GLAZED_TERRACOTTA", "WHITE_GLAZED_TERRACOTTA");
+
+        if (!mappingFlags.contains(MappingFlags.NO_COLORED_BEDS)) {
+            mapAlias("BED", "WHITE_BED");
+        } else {
+            mapAlias("BED", "RED_BED");
+        }
     }
 
     protected void mapAlias(@NotNull String mappingKey, @NotNull String alias) {
