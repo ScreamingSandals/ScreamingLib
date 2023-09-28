@@ -31,7 +31,7 @@ public class BukkitLegacyTagResolution {
         /* tags related to features released after 1.12.2 are not backported
          unless the tag contains older block and can be useful in older versions or for better compatibility (beds, *_ores, etc.) */
 
-        // this list is based on the MinecraftWiki page: https://minecraft.fandom.com/wiki/Tag
+        // this list is based on the MinecraftWiki page: https://minecraft.wiki/w/Tag
         switch (material.name()) {
             // TODO: mineable/axe
             // TODO: mineable/hoe
