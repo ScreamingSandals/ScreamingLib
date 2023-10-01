@@ -132,7 +132,7 @@ public class ClassStorage {
 		}
 		Object connection = getPlayerConnection(player);
 		if (connection != null) {
-			Reflect.fastInvoke(connection, ServerGamePacketListenerImplAccessor.getMethodSend1(), packet);
+			Reflect.fastInvoke(connection, ServerCommonPacketListenerImplAccessor.getMethodSend1() != null ? ServerCommonPacketListenerImplAccessor.getMethodSend1() /* 1.20.2+ */: ServerGamePacketListenerImplAccessor.getMethodSend1() /* <= 1.20.1 */, packet);
 			return true;
 		}
 		return false;

@@ -42,7 +42,7 @@ public class PacketIdMapping {
         putTranslateSafely(ClientboundBlockEventPacket.class, ClientboundBlockEventPacketAccessor.getType());
         putTranslateSafely(ClientboundBlockUpdatePacket.class, ClientboundBlockUpdatePacketAccessor.getType());
         putTranslateSafely(ClientboundContainerClosePacket.class, ClientboundContainerClosePacketAccessor.getType());
-        putTranslateSafely(ClientboundDisconnectPacket.class, ClientboundDisconnectPacketAccessor.getType());
+        putTranslateSafely(ClientboundDisconnectPacket.class, ClientboundDisconnectPacketAccessor.getType() /* 1.20.2+ */, ClientboundDisconnectPacketAccessor_1.getType() /* <= 1.20.1 */);
         putTranslateSafely(ClientboundEntityEventPacket.class, ClientboundEntityEventPacketAccessor.getType());
         putTranslateSafely(ClientboundExplodePacket.class, ClientboundExplodePacketAccessor.getType());
         putTranslateSafely(ClientboundForgetLevelChunkPacket.class, ClientboundForgetLevelChunkPacketAccessor.getType());
@@ -79,6 +79,15 @@ public class PacketIdMapping {
         }
     }
 
+    private static void putTranslateSafely(@NotNull Class<? extends AbstractPacket> packetClass, @Nullable Class<?> @NotNull... classes) {
+        for (var clazz : classes) {
+            if (clazz != null) {
+                PACKET_CLASS_TRANSLATE.put(packetClass, clazz);
+                return;
+            }
+        }
+    }
+
     public static Integer getPacketId(@NotNull Class<? extends AbstractPacket> packetClass) {
         Preconditions.checkNotNull(packetClass, "Cannot get packet id of null class!");
 
@@ -90,7 +99,7 @@ public class PacketIdMapping {
         var vanillaClass = PACKET_CLASS_TRANSLATE.get(packetClass);
 
         if (vanillaClass == null) {
-            return null; // sorry AddMobPacket :(
+            return null; // sorry AddMobPacket and AddPlayerPacket :(
         }
 
         // all mapped packets are just from play protocol, we don't rly need to touch handshaking, status or login protocol

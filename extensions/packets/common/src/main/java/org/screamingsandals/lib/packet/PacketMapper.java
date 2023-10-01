@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.util.Collection;
 
@@ -97,6 +98,7 @@ public abstract class PacketMapper {
         return packetMapper.getArmorStandTypeId0();
     }
 
+    @LimitedVersionSupport(">= 1.19.4")
     public static int getTextDisplayTypeId() {
         if (packetMapper == null) {
             throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
@@ -104,9 +106,19 @@ public abstract class PacketMapper {
         return packetMapper.getTextDisplayTypeId0();
     }
 
+    @LimitedVersionSupport(">= 1.20.2")
+    public static int getPlayerTypeId() {
+        if (packetMapper == null) {
+            throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
+        }
+        return packetMapper.getPlayerTypeId0();
+    }
+
     public abstract int getId0(@NotNull Class<? extends AbstractPacket> clazz);
 
     public abstract int getArmorStandTypeId0();
 
     public abstract int getTextDisplayTypeId0();
+
+    public abstract int getPlayerTypeId0();
 }

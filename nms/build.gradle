@@ -301,10 +301,15 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockEventPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket')
-    reqClass('net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket') {
+
+    // fix: NMS Mapper history, merge these together when updated to Takenaka
+    // reqClass('net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket')
+    // - clientbound custom payload packet is currently only used when sending books on versions before 1.13.2, new version of this class is not needed yet
+    reqClass('net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket') { // <= 1.20.1
         reqConstructor(String, '@FriendlyByteBuf') // pre-1.13
         reqConstructor('@ResourceLocation', '@FriendlyByteBuf') // 1.13+
     }
+
     reqClass('net.minecraft.network.protocol.game.ClientboundContainerClosePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket') {
@@ -335,8 +340,11 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundSetExperiencePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundExplodePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket')
-    reqClass('net.minecraft.network.protocol.game.ClientboundKeepAlivePacket')
-    reqClass('net.minecraft.network.protocol.game.ClientboundDisconnectPacket')
+
+    // fix: NMS Mapper history, merge these together when updated to Takenaka
+    reqClass('net.minecraft.network.protocol.common.ClientboundDisconnectPacket') // 1.20.2+
+    reqClass('net.minecraft.network.protocol.game.ClientboundDisconnectPacket') // <= 1.20.1
+
     reqClass('net.minecraft.network.protocol.game.ClientboundAddPlayerPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundOpenBookPacket') {
         reqConstructor()
@@ -460,6 +468,11 @@ nmsGen {
     }
 
     reqClass('net.minecraft.server.network.ServerGamePacketListenerImpl') {
+        reqField('connection') // 1.20.2: Moved to ServerCommonPacketListenerImpl
+        reqMethod('send', '@Packet') // 1.20.2: Moved to ServerCommonPacketListenerImpl
+    }
+
+    reqClass('net.minecraft.server.network.ServerCommonPacketListenerImpl') { // 1.20.2+
         reqField('connection')
         reqMethod('send', '@Packet')
     }
@@ -496,7 +509,10 @@ nmsGen {
         reqMethod(chain('merge', 'searge:func_179237_a:1.12.2'), '@CompoundTag') // 1.13 method returns `this` for chaining
     }
 
-    FriendlyByteBuf.reqMethod(chain('writeNbt', 'searge:func_150786_a:1.8.8'), '@CompoundTag')
+    FriendlyByteBuf.with {
+        reqMethod('writeNbt', '@Tag') // 1.20.2+
+        reqMethod(chain('writeNbt', 'searge:func_150786_a:1.8.8'), '@CompoundTag') // <= 1.20.1
+    }
 
     reqClass('net.minecraft.nbt.DoubleTag') {
         reqConstructor(double)
@@ -557,11 +573,6 @@ nmsGen {
         reqMethod('save', '@CompoundTag')
         reqMethod('getTag')
         reqMethod('setTag', '@CompoundTag')
-    }
-
-    reqClass('net.minecraft.network.protocol.handshake.ClientIntentionPacket') {
-        reqField('protocolVersion')
-        reqField('intention')
     }
 
     // 1.10.x compat

@@ -21,6 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.Location;
 
 import java.util.List;
@@ -38,6 +39,24 @@ public class ClientboundAddPlayerPacket extends AbstractPacket {
 
     @Override
     public void write(@NotNull PacketWriter writer) {
+        if (writer.protocol() >= 764) {
+            // 1.20.2: Switch to ClientboundAddEntityPacket
+            writer.setCancelled(true);
+            var packet = ClientboundAddEntityPacket
+                    .builder()
+                    .entityId(entityId)
+                    .uuid(uuid)
+                    .location(location)
+                    .velocity(Vector3D.ZERO)
+                    .typeId(PacketMapper.getPlayerTypeId())
+                    .headYaw((byte) (location.getYaw() * 256 / 360))
+                    .build();
+            writer.append(packet);
+            if (!metadata.isEmpty()) {
+                writer.append(ClientboundSetEntityDataPacket.builder().entityId(entityId).metadata(metadata).build());
+            }
+        }
+
         writer.writeVarInt(entityId);
         writer.writeUuid(uuid);
         if (writer.protocol() >= 100) {

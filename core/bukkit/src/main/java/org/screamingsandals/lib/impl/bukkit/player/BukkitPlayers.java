@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.ConnectionAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ServerCommonPacketListenerImplAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.ServerGamePacketListenerImplAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.player.*;
@@ -160,7 +161,7 @@ public class BukkitPlayers extends Players {
         }
 
         final var channel = (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(bukkitPlayer), ServerPlayerAccessor.getFieldConnection())
-                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
+                .getFieldResulted(ServerCommonPacketListenerImplAccessor.getFieldConnection() != null ? ServerCommonPacketListenerImplAccessor.getFieldConnection() /* 1.20.2+ */: ServerGamePacketListenerImplAccessor.getFieldConnection() /* <= 1.20.1 */)
                 .getFieldResulted(ConnectionAccessor.getFieldChannel())
                 .raw();
 
