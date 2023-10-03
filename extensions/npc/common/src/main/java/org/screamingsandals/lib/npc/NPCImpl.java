@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.hologram.Hologram;
+import org.screamingsandals.lib.hologram.HologramImpl;
 import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.npc.skin.NPCSkin;
 import org.screamingsandals.lib.npc.skin.SkinLayerValues;
@@ -81,7 +82,11 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
             throw new RuntimeException(e);
         }
 
-        this.hologramElevation = 1.5D;
+        if (HologramManager.isPreferDisplayEntities() && HologramImpl.DISPLAY_ENTITIES_AVAILABLE.isSupported()) {
+            this.hologramElevation = 1.7D;
+        } else {
+            this.hologramElevation = 1.5D;
+        }
         this.tabName16 = "[NPC] " + uuid.toString().replace("-", "").substring(0, 10);
         this.tabListName = Component.fromLegacy(tabName16);
         this.hologram = HologramManager.hologram(location.add(0.0D, hologramElevation, 0.0D));

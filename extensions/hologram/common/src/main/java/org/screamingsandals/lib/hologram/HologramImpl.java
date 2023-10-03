@@ -57,7 +57,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 public class HologramImpl extends AbstractLinedVisual<Hologram> implements Hologram {
-    private static final @NotNull PlatformFeature DISPLAY_ENTITIES_AVAILABLE = PlatformFeature.of(() -> Server.isVersion(1, 19, 4));
+    public static final @NotNull PlatformFeature DISPLAY_ENTITIES_AVAILABLE = PlatformFeature.of(() -> Server.isVersion(1, 19, 4));
 
     @Getter(AccessLevel.NONE)
     private final @NotNull Map<@NotNull Integer, HologramPiece> entitiesOnLines;
