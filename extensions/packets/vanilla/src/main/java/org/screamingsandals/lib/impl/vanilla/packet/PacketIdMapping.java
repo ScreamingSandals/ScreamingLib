@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.vanilla.packet;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -125,9 +126,15 @@ public class PacketIdMapping {
                     .as(Map.class)
                     .get(outgoing);
 
-            packetId =  Reflect
+            // TODO: Takenaka will map the following accessors differently, adjust for Takenaka
+            if (ConnectionProtocol_i_CodecDataAccessor.getType() != null && ConnectionProtocol_i_CodecDataAccessor.getType().isInstance(outgoingMap)) {
+                outgoingMap = Reflect.getField(outgoingMap, ConnectionProtocol_i_CodecDataAccessor.getFieldPacketSet());
+            }
+
+            packetId = Reflect
                     .fastInvokeResulted(outgoingMap, ConnectionProtocol_i_PacketSetAccessor.getMethodGetId1(), vanillaClass)
                     .as(Integer.class);
+
         }
 
         ID_CACHE.put(packetClass, packetId);

@@ -463,6 +463,10 @@ nmsGen {
         reqField('mojang:packets:1.14.4') // old
     }
 
+    reqClass('net.minecraft.network.ConnectionProtocol$CodecData') { // 1.20.2+
+        reqField('packetSet')
+    }
+
     reqClass('net.minecraft.network.ConnectionProtocol$PacketSet') {
         reqMethod(chain('getId', ':getId:1.19.3'), Class) // 1.19.4: compatible change - return type changed from boxed Integer to primitive int
     }
