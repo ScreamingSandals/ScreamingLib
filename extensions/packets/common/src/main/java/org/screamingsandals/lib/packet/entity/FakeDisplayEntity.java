@@ -18,11 +18,15 @@ package org.screamingsandals.lib.packet.entity;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.packet.MetadataItem;
 import org.screamingsandals.lib.world.Location;
 
 @Getter
 public class FakeDisplayEntity extends FakeEntity {
     public FakeDisplayEntity(@NotNull Location location, int typeId) {
         super(location, typeId);
+
+        put(MetadataItem.of((byte) (Server.isVersion(1, 20, 2) ? 15 : 14), (byte) 3)); // put to center
     }
 }
