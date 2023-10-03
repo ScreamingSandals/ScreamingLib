@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.packet.ClientboundSetEntityDataPacket;
 import org.screamingsandals.lib.packet.MetadataItem;
 import org.screamingsandals.lib.player.Player;
@@ -31,6 +32,8 @@ import java.util.List;
 
 @Getter
 public class FakeTextDisplayEntity extends FakeDisplayEntity {
+    private static byte textMetadata;
+
     @Getter
     private @Nullable Component text;
     @Getter
@@ -39,17 +42,25 @@ public class FakeTextDisplayEntity extends FakeDisplayEntity {
 
     public FakeTextDisplayEntity(@NotNull Location location, int typeId) {
         super(location, typeId);
+
+        if (textMetadata == 0) {
+            if (Server.isVersion(1, 20, 2)) {
+                textMetadata = 23;
+            } else {
+                textMetadata = 22;
+            }
+        }
     }
 
     public void setText(@NotNull Component component) {
         text = component;
-        put(MetadataItem.of((byte) 22, component));
+        put(MetadataItem.of(textMetadata, component));
     }
 
     @Override
     public @NotNull ClientboundSetEntityDataPacket getMetadataPacket(@NotNull Player viewer) {
         if (textSenderMessage != null) {
-            return getMetadataPacket(List.of(MetadataItem.of((byte) 22, textSenderMessage.asComponent(viewer))));
+            return getMetadataPacket(List.of(MetadataItem.of(textMetadata, textSenderMessage.asComponent(viewer))));
         }
         return getMetadataPacket(List.of());
     }
