@@ -78,5 +78,10 @@ public class PlaceholderAPIHook implements Hook {
         public @NotNull String getPlugin() {
             return plugin.getName();
         }
+
+        @Override
+        public boolean persist() {
+            return true;
+        }
     }
 }
