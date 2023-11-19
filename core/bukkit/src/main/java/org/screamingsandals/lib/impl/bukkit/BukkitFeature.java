@@ -34,7 +34,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.utils.feature.PlatformFeature;
@@ -152,8 +151,11 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature SLIME_TARGET = PlatformFeature.of(() -> Reflect.hasMethod(Slime.class, "getTarget"));
     public static final @NotNull PlatformFeature PLAYER_GET_LOCALE = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "getLocale"));
     public static final @NotNull PlatformFeature PLAYER_HIDE_API_PLUGIN_TICKET = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "hidePlayer", Plugin.class, Player.class));
-    public static final @NotNull PlatformFeature ENTITY_PRE_SPAWN_FUNCTION = PlatformFeature.of(() -> Reflect.has("org.bukkit.util.Consumer")); // org.bukkit.util.Consumer added in the same commit as the overloaded method
-    public static final @NotNull PlatformFeature ITEM_ENTITY_PRE_SPAWN_FUNCTION = ENTITY_PRE_SPAWN_FUNCTION.and(() -> Reflect.hasMethod(World.class, "dropItem", Location.class, ItemStack.class, Consumer.class));
+    public static final @NotNull PlatformFeature HAS_BUKKIT_CONSUMER = PlatformFeature.of(() -> Reflect.has("org.bukkit.util.Consumer"));
+    public static final @NotNull PlatformFeature ENTITY_PRE_SPAWN_FUNCTION_JAVA_CONSUMER = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "spawn", Location.class, Class.class, java.util.function.Consumer.class));
+    public static final @NotNull PlatformFeature ENTITY_PRE_SPAWN_FUNCTION = HAS_BUKKIT_CONSUMER.and(() -> Reflect.hasMethod(World.class, "spawn", Location.class, Class.class, org.bukkit.util.Consumer.class));
+    public static final @NotNull PlatformFeature ITEM_ENTITY_PRE_SPAWN_FUNCTION = HAS_BUKKIT_CONSUMER.and(() -> Reflect.hasMethod(World.class, "dropItem", Location.class, ItemStack.class, org.bukkit.util.Consumer.class));
+    public static final @NotNull PlatformFeature ITEM_ENTITY_PRE_SPAWN_FUNCTION_JAVA_CONSUMER = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "dropItem", Location.class, ItemStack.class, java.util.function.Consumer.class));
     public static final @NotNull PlatformFeature NEW_VILLAGERS = PlatformFeature.of(() -> Reflect.hasMethod(Villager.Profession.class, "getKey"));
     public static final @NotNull PlatformFeature ENTITY_AREA_EFFECT_CLOUD = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.AreaEffectCloud"));
     public static final @NotNull PlatformFeature ENTITY_INTERACTION = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Interaction"));

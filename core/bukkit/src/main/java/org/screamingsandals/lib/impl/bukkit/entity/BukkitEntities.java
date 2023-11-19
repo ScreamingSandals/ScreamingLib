@@ -968,10 +968,23 @@ public class BukkitEntities extends Entities {
         var world = bukkitLoc.getWorld();
         if (world != null) {
             // TODO: test all entity types
-            if (BukkitFeature.ENTITY_PRE_SPAWN_FUNCTION.isSupported()) {
+            if (BukkitFeature.ENTITY_PRE_SPAWN_FUNCTION_JAVA_CONSUMER.isSupported()) {
                 org.bukkit.entity.Entity entity;
                 if (preSpawnFunction != null) {
                     entity = world.spawn(bukkitLoc, entityClass, preSpawnBukkitEntity -> preSpawnFunction.accept(wrapEntity0(preSpawnBukkitEntity)));
+                } else {
+                    entity = world.spawn(bukkitLoc, entityClass);
+                }
+                return wrapEntity0(entity);
+            } else if (BukkitFeature.ENTITY_PRE_SPAWN_FUNCTION.isSupported()) {
+                org.bukkit.entity.Entity entity;
+                if (preSpawnFunction != null) {
+                    @SuppressWarnings({"deprecation", "rawtypes"})
+                    org.bukkit.util.Consumer cons = preSpawnBukkitEntity -> preSpawnFunction.accept(wrapEntity0(preSpawnBukkitEntity));
+                    // TODO: prepare independent compatibility source sets compiled against older bukkit API instead of using reflection
+                    //noinspection deprecation
+                    entity = (org.bukkit.entity.Entity) Reflect.getMethod(world, "spawn", org.bukkit.Location.class, Class.class, org.bukkit.util.Consumer.class)
+                            .invoke(bukkitLoc, entityClass, cons);
                 } else {
                     entity = world.spawn(bukkitLoc, entityClass);
                 }
@@ -1046,29 +1059,56 @@ public class BukkitEntities extends Entities {
     @Override
     public @Nullable ItemEntity dropItem0(@NotNull ItemStack item, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull ItemEntity> preSpawnFunction) {
         var bukkitLoc = locationHolder.as(org.bukkit.Location.class);
-        Item itemEntity;
-        if (preSpawnFunction != null && BukkitFeature.ITEM_ENTITY_PRE_SPAWN_FUNCTION.isSupported()) {
-            itemEntity = bukkitLoc.getWorld().dropItem(bukkitLoc, item.as(org.bukkit.inventory.ItemStack.class), item1 -> preSpawnFunction.accept(new BukkitItemEntity(item1)));
+        if (preSpawnFunction == null) {
+            return new BukkitItemEntity(bukkitLoc.getWorld().dropItem(bukkitLoc, item.as(org.bukkit.inventory.ItemStack.class)));
+        } else if (BukkitFeature.ITEM_ENTITY_PRE_SPAWN_FUNCTION_JAVA_CONSUMER.isSupported()) {
+            return new BukkitItemEntity(bukkitLoc.getWorld().dropItem(bukkitLoc, item.as(org.bukkit.inventory.ItemStack.class), item1 -> preSpawnFunction.accept(new BukkitItemEntity(item1))));
+        } else if (BukkitFeature.ITEM_ENTITY_PRE_SPAWN_FUNCTION.isSupported()) {
+            @SuppressWarnings("deprecation")
+            org.bukkit.util.Consumer<org.bukkit.entity.Item> cons = item1 -> preSpawnFunction.accept(new BukkitItemEntity(item1));
+            // TODO: prepare independent compatibility source sets compiled against older bukkit API instead of using reflection
+            @SuppressWarnings("deprecation")
+            var entity = (org.bukkit.entity.Entity) Reflect.getMethod(bukkitLoc.getWorld(), "dropItem", org.bukkit.Location.class, org.bukkit.inventory.ItemStack.class, org.bukkit.util.Consumer.class)
+                    .invoke(bukkitLoc, item.as(org.bukkit.inventory.ItemStack.class), cons);
+            return new BukkitItemEntity((org.bukkit.entity.Item) entity);
         } else {
-            itemEntity = bukkitLoc.getWorld().dropItem(bukkitLoc, item.as(org.bukkit.inventory.ItemStack.class));
+            var itemEntity = new BukkitItemEntity(bukkitLoc.getWorld().dropItem(bukkitLoc, item.as(org.bukkit.inventory.ItemStack.class)));
+            preSpawnFunction.accept(itemEntity);
+            return itemEntity;
         }
-        return new BukkitItemEntity(itemEntity);
     }
 
     @Override
     public @Nullable ExperienceOrb dropExperience0(int experience, @NotNull Location locationHolder, @Nullable Consumer<? super @NotNull ExperienceOrb> preSpawnFunction) {
         var bukkitLoc = locationHolder.as(org.bukkit.Location.class);
-        if (BukkitFeature.ENTITY_PRE_SPAWN_FUNCTION.isSupported()) {
+        if (BukkitFeature.ENTITY_PRE_SPAWN_FUNCTION_JAVA_CONSUMER.isSupported()) {
             return new BukkitExperienceOrb(bukkitLoc.getWorld().spawn(bukkitLoc, org.bukkit.entity.ExperienceOrb.class, experienceOrb -> {
                 experienceOrb.setExperience(experience);
                 if (preSpawnFunction != null) {
                     preSpawnFunction.accept(new BukkitExperienceOrb(experienceOrb));
                 }
             }));
+        } else if (BukkitFeature.ENTITY_PRE_SPAWN_FUNCTION.isSupported()) {
+            @SuppressWarnings("deprecation")
+            org.bukkit.util.Consumer<org.bukkit.entity.ExperienceOrb> cons = experienceOrb -> {
+                experienceOrb.setExperience(experience);
+                if (preSpawnFunction != null) {
+                    preSpawnFunction.accept(new BukkitExperienceOrb(experienceOrb));
+                }
+            };
+            // TODO: prepare independent compatibility source sets compiled against older bukkit API instead of using reflection
+            @SuppressWarnings("deprecation")
+            var entity = Reflect.getMethod(bukkitLoc.getWorld(), "spawn", org.bukkit.Location.class, Class.class, org.bukkit.util.Consumer.class)
+                    .invoke(bukkitLoc, org.bukkit.entity.ExperienceOrb.class, cons);
+            return new BukkitExperienceOrb((org.bukkit.entity.ExperienceOrb) entity);
         } else {
             var orb = bukkitLoc.getWorld().spawn(bukkitLoc, org.bukkit.entity.ExperienceOrb.class);
             orb.setExperience(experience);
-            return new BukkitExperienceOrb(orb);
+            var slibOrb = new BukkitExperienceOrb(orb);
+            if (preSpawnFunction != null) {
+                preSpawnFunction.accept(slibOrb);
+            }
+            return slibOrb;
         }
     }
 
