@@ -184,6 +184,7 @@ public abstract class ItemBlockIdsRemapper {
         mapAlias("ACACIA_WALL_SIGN", "WALL_SIGN");
         mapAlias("DIRT_PATH", "GRASS_PATH");
         mapAlias("WATER_CAULDRON", "CAULDRON");
+        mapAlias("SHORT_GRASS", "GRASS");
 
         // non-color -> white alias
         mapAlias("WOOL", "WHITE_WOOL");

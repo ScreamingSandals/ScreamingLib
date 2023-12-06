@@ -70,6 +70,10 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     private static final @NotNull String BLOCK_KEY = "block";
     private static final @NotNull String ENTITY_KEY = "entity";
     private static final @NotNull String STORAGE_KEY = "storage";
+    private static final @NotNull String SOURCE_KEY = "source";
+    private static final @NotNull String SOURCE_VALUE_BLOCK = "block";
+    private static final @NotNull String SOURCE_VALUE_ENTITY = "entity";
+    private static final @NotNull String SOURCE_VALUE_STORAGE = "storage";
 
     // NBT # Selector
     private static final @NotNull String SEPARATOR_KEY = "separator";
@@ -86,6 +90,15 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     private static final @NotNull String INSERTION_KEY = "insertion";
     private static final @NotNull String CLICK_EVENT_KEY = "clickEvent";
     private static final @NotNull String HOVER_EVENT_KEY = "hoverEvent";
+
+    // Types
+    private static final @NotNull String TYPE_KEY = "type";
+    private static final @NotNull String TYPE_VALUE_TEXT = "text";
+    private static final @NotNull String TYPE_VALUE_TRANSLATABLE = "translatable";
+    private static final @NotNull String TYPE_VALUE_SCORE = "score";
+    private static final @NotNull String TYPE_VALUE_SELECTOR = "selector";
+    private static final @NotNull String TYPE_VALUE_KEYBIND = "keybind";
+    private static final @NotNull String TYPE_VALUE_NBT = "nbt";
 
     private final @Nullable Function<String, Component> stringDeserializer;
 
@@ -120,10 +133,14 @@ public class ComponentSerializer implements TypeSerializer<Component> {
                 return Component.text(str);
             }
 
+            var declaredType = node.node(TYPE_KEY).getString();
+
             Component.Builder<?,?> builder = null;
-            if (node.hasChild(TEXT_KEY)) {
+            if (TYPE_VALUE_TEXT.equals(declaredType) || (declaredType == null && node.hasChild(TEXT_KEY))) {
+                Preconditions.checkArgument(!node.node(TEXT_KEY).virtual(), "A text component requires a text");
                 builder = Component.text().content(node.node(TEXT_KEY).getString());
-            } else if (node.hasChild(TRANSLATE_KEY)) {
+            } else if (TYPE_VALUE_TRANSLATABLE.equals(declaredType) || (declaredType == null && node.hasChild(TRANSLATE_KEY))) {
+                Preconditions.checkArgument(!node.node(TRANSLATE_KEY).virtual(), "A translatable component requires a translate key");
                 builder = Component.translatable().translate(node.node(TRANSLATE_KEY).getString()).fallback(node.node(FALLBACK_KEY).getString());
 
                 if (node.hasChild(WITH_KEY)) {
@@ -135,11 +152,11 @@ public class ComponentSerializer implements TypeSerializer<Component> {
                         ((TranslatableComponent.Builder) builder).args(withNode.get(Component.class));
                     }
                 }
-            } else if (node.hasChild(SCORE_KEY)) {
+            } else if (TYPE_VALUE_SCORE.equals(declaredType) || (declaredType == null && node.hasChild(SCORE_KEY))) {
                 var scoreNode = node.node(SCORE_KEY);
                 var nameNode = scoreNode.node(SCORE_NAME_KEY);
                 var objectiveNode = scoreNode.node(SCORE_OBJECTIVE_KEY);
-                Preconditions.checkArgument(!nameNode.virtual() && !objectiveNode.virtual(), "A score component requires a name and objective");
+                Preconditions.checkArgument(!scoreNode.virtual() && !nameNode.virtual() && !objectiveNode.virtual(), "A score component requires a score, a name and an objective");
                 var b = Component.score()
                         .name(nameNode.getString())
                         .objective(objectiveNode.getString());
@@ -148,24 +165,31 @@ public class ComponentSerializer implements TypeSerializer<Component> {
                     b.value(scoreNode.node(SCORE_VALUE_KEY).getString());
                 }
                 builder = b;
-            } else if (node.hasChild(SELECTOR_KEY)) {
+            } else if (TYPE_VALUE_SELECTOR.equals(declaredType) || (declaredType == null && node.hasChild(SELECTOR_KEY))) {
+                Preconditions.checkArgument(!node.node(SELECTOR_KEY).virtual(), "A selector component requires a selector");
                 builder = Component.selector().pattern(node.node(SELECTOR_KEY).getString());
-            } else if (node.hasChild(KEYBIND_KEY)) {
+            } else if (TYPE_VALUE_KEYBIND.equals(declaredType) || (declaredType == null && node.hasChild(KEYBIND_KEY))) {
+                Preconditions.checkArgument(!node.node(KEYBIND_KEY).virtual(), "A keybind component requires a keybind");
                 builder = Component.keybind().keybind(node.node(KEYBIND_KEY).getString());
-            } else if (node.hasChild(NBT_KEY)) {
+            } else if (TYPE_VALUE_NBT.equals(declaredType) || (declaredType == null && node.hasChild(NBT_KEY))) {
+                Preconditions.checkArgument(!node.node(NBT_KEY).virtual(), "A nbt component requires a nbt key");
                 var nbt = node.node(NBT_KEY).getString();
                 var interpret = node.node(INTERPRET_KEY).getBoolean();
-                if (node.hasChild(BLOCK_KEY)) {
+                var declaredSource = node.node(SOURCE_KEY).getString();
+                if ((declaredSource == null && node.hasChild(BLOCK_KEY)) || SOURCE_VALUE_BLOCK.equals(declaredSource)) {
+                    Preconditions.checkArgument(!node.node(BLOCK_KEY).virtual(), "A nbt component with a block source requires a block");
                     builder = Component.blockNBT()
                             .nbtPath(nbt)
                             .interpret(interpret)
                             .blockPosition(node.node(BLOCK_KEY).getString());
-                } else if (node.hasChild(ENTITY_KEY)) {
+                } else if ((declaredSource == null && node.hasChild(ENTITY_KEY)) || SOURCE_VALUE_ENTITY.equals(declaredSource)) {
+                    Preconditions.checkArgument(!node.node(ENTITY_KEY).virtual(), "A nbt component with an entity source requires an entity");
                     builder = Component.entityNBT()
                             .nbtPath(nbt)
                             .interpret(interpret)
                             .selector(node.node(ENTITY_KEY).getString());
-                } else if (node.hasChild(STORAGE_KEY)) {
+                } else if ((declaredSource == null && node.hasChild(STORAGE_KEY)) || SOURCE_VALUE_STORAGE.equals(declaredSource)) {
+                    Preconditions.checkArgument(!node.node(STORAGE_KEY).virtual(), "A nbt component with a storage source requires a storage");
                     builder = Component.storageNBT()
                             .nbtPath(nbt)
                             .interpret(interpret)
@@ -248,8 +272,10 @@ public class ComponentSerializer implements TypeSerializer<Component> {
         }
 
         if (obj instanceof TextComponent) {
+            node.node(TYPE_KEY).set(TYPE_VALUE_TEXT);
             node.node(TEXT_KEY).set(((TextComponent) obj).content());
         } else if (obj instanceof TranslatableComponent) {
+            node.node(TYPE_KEY).set(TYPE_VALUE_TRANSLATABLE);
             node.node(TRANSLATE_KEY).set(((TranslatableComponent) obj).translate());
             node.node(FALLBACK_KEY).set(((TranslatableComponent) obj).fallback());
             var args = ((TranslatableComponent) obj).args();
@@ -260,6 +286,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
                 }
             }
         } else if (obj instanceof ScoreComponent) {
+            node.node(TYPE_KEY).set(TYPE_VALUE_SCORE);
             var sc = (ScoreComponent) obj;
             var scoreNode = node.node(SCORE_KEY);
             scoreNode.node(SCORE_NAME_KEY).set(sc.name());
@@ -271,18 +298,24 @@ public class ComponentSerializer implements TypeSerializer<Component> {
                 scoreNode.node(SCORE_VALUE_KEY).set(value);
             }
         } else if (obj instanceof SelectorComponent) {
+            node.node(TYPE_KEY).set(TYPE_VALUE_SELECTOR);
             node.node(SELECTOR_KEY).set(((SelectorComponent) obj).pattern());
         } else if (obj instanceof KeybindComponent) {
+            node.node(TYPE_KEY).set(TYPE_VALUE_KEYBIND);
             node.node(KEYBIND_KEY).set(((KeybindComponent) obj).keybind());
         } else if (obj instanceof NBTComponent) {
+            node.node(TYPE_KEY).set(TYPE_VALUE_NBT);
             var nbt = (NBTComponent) obj;
             node.node(NBT_KEY).set(nbt.nbtPath());
             node.node(INTERPRET_KEY).set(nbt.interpret());
             if (nbt instanceof BlockNBTComponent) {
+                node.node(SOURCE_KEY).set(SOURCE_VALUE_BLOCK);
                 node.node(BLOCK_KEY).set(((BlockNBTComponent) nbt).blockPosition());
             } else if (nbt instanceof EntityNBTComponent) {
+                node.node(SOURCE_KEY).set(SOURCE_VALUE_ENTITY);
                 node.node(ENTITY_KEY).set(((EntityNBTComponent) nbt).selector());
             } else if (nbt instanceof StorageNBTComponent) {
+                node.node(SOURCE_KEY).set(SOURCE_VALUE_STORAGE);
                 node.node(STORAGE_KEY).set(((StorageNBTComponent) nbt).storageKey().asString());
             }
         } else { // who knows what this component is this

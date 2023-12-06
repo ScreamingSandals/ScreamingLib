@@ -24,6 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NBTSerializer {
+    public static final @NotNull NBTSerializer INSTANCE = new NBTSerializer();
+
+    public byte @NotNull[] serializeNetworking1_20_2(@NotNull Tag tag) throws IOException {
+        var buf = new ByteArrayOutputStream();
+        var output = new DataOutputStream(buf);
+        writeType(tag, output);
+        write(tag, output);
+        return buf.toByteArray();
+    }
+
     public byte @NotNull[] serialize(@NotNull Tag tag) throws IOException {
         var buf = new ByteArrayOutputStream();
         var output = new DataOutputStream(buf);

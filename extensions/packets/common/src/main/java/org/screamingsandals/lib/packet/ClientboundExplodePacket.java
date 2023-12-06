@@ -21,6 +21,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.particle.Particle;
+import org.screamingsandals.lib.particle.ParticleData;
+import org.screamingsandals.lib.particle.ParticleType;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.Location;
 
@@ -46,5 +51,15 @@ public class ClientboundExplodePacket extends AbstractPacket {
         writer.writeFloat(strength);
         writer.writeSizedCollection(blockLocations, locationHolder -> writer.writeByteOffset(location, locationHolder.asVectorf()));
         writer.writeVector(knockBackVelocity);
+
+        if (writer.protocol() >= 765) {
+            // TODO: make this configurable
+            writer.writeVarInt(1);
+            writer.writeVarInt(23); // "explosion"
+            writer.writeVarInt(22); // "explosion_emitter"
+            writer.writeSizedString("minecraft:entity.generic.explode");
+            writer.writeBoolean(false);
+
+        }
     }
 }

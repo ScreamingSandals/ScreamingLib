@@ -68,6 +68,7 @@ public class PacketIdMapping {
         putTranslateSafely(ClientboundSetObjectivePacket.class, ClientboundSetObjectivePacketAccessor.getType());
         putTranslateSafely(ClientboundSetPlayerTeamPacket.class, ClientboundSetPlayerTeamPacketAccessor.getType());
         putTranslateSafely(ClientboundSetScorePacket.class, ClientboundSetScorePacketAccessor.getType());
+        putTranslateSafely(ClientboundSetScorePacket.ClientboundResetScorePacket1_20_3.class, ClientboundResetScorePacketAccessor.getType()); // 1.20.3+
         putTranslateSafely(ClientboundTabListPacket.class, ClientboundTabListPacketAccessor.getType());
         putTranslateSafely(ClientboundTakeItemEntityPacket.class, ClientboundTakeItemEntityPacketAccessor.getType());
         putTranslateSafely(ClientboundTeleportEntityPacket.class, ClientboundTeleportEntityPacketAccessor.getType());

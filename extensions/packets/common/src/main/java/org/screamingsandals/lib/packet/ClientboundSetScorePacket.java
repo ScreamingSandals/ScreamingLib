@@ -19,8 +19,16 @@ package org.screamingsandals.lib.packet;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
+
+import java.util.List;
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -31,19 +39,73 @@ public class ClientboundSetScorePacket extends AbstractPacket {
     private final @NotNull ScoreboardAction action;
     private final @NotNull String objectiveKey;
     private final int score;
+    @LimitedVersionSupport(">= 1.20.3")
+    private final @Nullable Component displayName;
+    @LimitedVersionSupport(">= 1.20.3")
+    private final @Nullable NumberFormat numberFormat;
+    @LimitedVersionSupport(">= 1.20.3")
+    @ApiStatus.Experimental
+    private final @Nullable Component numberFormatComponent;
+
 
     @Override
     public void write(@NotNull PacketWriter writer) {
+        if (writer.protocol() >= 756 && action == ScoreboardAction.REMOVE) {
+            writer.setCancelled(true);
+            writer.append(new ClientboundResetScorePacket1_20_3(entityName, objectiveKey));
+            return;
+        }
+
         writer.writeSizedString(entityName);
-        writer.writeByte((byte) action.ordinal());
+        if (writer.protocol() < 756) {
+            writer.writeByte((byte) action.ordinal());
+        }
         writer.writeSizedString(objectiveKey);
         if (action == ScoreboardAction.CHANGE) {
             writer.writeVarInt(score);
+        }
+        if (writer.protocol() >= 756) {
+            writer.writeBoolean(displayName != null);
+            if (displayName != null) {
+                writer.writeComponent(displayName);
+            }
+            writer.writeBoolean(numberFormat != null);
+            if (numberFormat != null) {
+                writer.writeVarInt(numberFormat.ordinal());
+                if (numberFormat == NumberFormat.STYLED) {
+                    // TODO: implement style-only tags (would this even be accepted by the client?)
+                    writer.writeComponent(numberFormatComponent);
+                } else if (numberFormat == NumberFormat.FIXED) {
+                    writer.writeComponent(numberFormatComponent);
+                }
+            }
         }
     }
 
     public enum ScoreboardAction {
         CHANGE,
         REMOVE
+    }
+
+    @LimitedVersionSupport(">= 1.20.3")
+    public enum NumberFormat {
+        BLANK,
+        STYLED,
+        FIXED
+    }
+
+    @ApiStatus.Internal
+    @RequiredArgsConstructor
+    @LimitedVersionSupport(">= 1.20.3")
+    public static class ClientboundResetScorePacket1_20_3 extends AbstractPacket {
+        private final @NotNull String entityName;
+        private final @NotNull String objectiveKey;
+
+        @Override
+        public void write(@NotNull PacketWriter writer) {
+            writer.writeSizedString(entityName);
+            writer.writeBoolean(true);
+            writer.writeSizedString(objectiveKey);
+        }
     }
 }

@@ -39,7 +39,8 @@ public class EntityContentSerializer implements TypeSerializer<EntityContent> {
     public @NotNull EntityContent deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var entityType = ResourceLocation.of(node.node(TYPE_KEY).getString("minecraft:pig"));
-            var id = node.node(ID_KEY).get(UUID.class, UUID.randomUUID());
+            var idNode = node.node(ID_KEY);
+            var id = idNode.isList() ? deserializeUuidFromListOrRandom(idNode) : idNode.get(UUID.class, UUID.randomUUID());
             @Nullable var name = node.node(NAME_KEY).get(Component.class);
 
             return EntityContent.builder()
@@ -50,6 +51,14 @@ public class EntityContentSerializer implements TypeSerializer<EntityContent> {
         } catch (Throwable throwable) {
             throw new SerializationException(throwable);
         }
+    }
+
+    private @NotNull UUID deserializeUuidFromListOrRandom(@NotNull ConfigurationNode node) throws SerializationException {
+        var uuidList = node.getList(Integer.class);
+        if (uuidList != null && uuidList.size() == 4) {
+            return new UUID(((long) uuidList.get(0) << 32) | ((long) uuidList.get(1) & 4294967295L), ((long) uuidList.get(2) << 32) | ((long) uuidList.get(3) & 4294967295L));
+        }
+        return UUID.randomUUID();
     }
 
     @Override

@@ -41,7 +41,7 @@ junit = "5.8.2"
 
 # plugins
 screaming-plugin-builder = "1.0.81"
-nms-mapper = "1.4.6"
+nms-mapper = "1.4.8"
 
 [libraries]
 paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }

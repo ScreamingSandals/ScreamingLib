@@ -23,14 +23,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.impl.spectator.Spectator;
+import org.screamingsandals.lib.impl.spectator.SpectatorBackend;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
+import org.screamingsandals.lib.nbt.NBTSerializer;
+import org.screamingsandals.lib.nbt.SNBTSerializer;
+import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.configurate.SpectatorSerializers;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.Location;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -91,11 +98,36 @@ public abstract class PacketWriter extends OutputStream {
     private boolean cancelled;
 
     /**
-     * Serializes a component to the buffer as a sized string.
+     * Serializes a component to the buffer as a sized string or a nbt tag depending on the version..
      *
      * @param component the component to serialize
      */
     public void writeComponent(@Nullable Component component) {
+        if (protocol() >= 765) {
+            if (component == null) {
+                writeByte((byte) 0x8);
+                writeSizedString("");
+            } else {
+                try {
+                    // TODO: implement more direct conversion
+                    writeBytes(NBTSerializer.INSTANCE.serializeNetworking1_20_2(SNBTSerializer.builder().build().deserialize(component.toJavaJson())));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    writeByte((byte) 0x8);
+                    writeSizedString(component.toLegacy());
+                }
+            }
+        } else {
+            writeComponentAsString(component);
+        }
+    }
+
+    /**
+     * Serializes a component to the buffer as a sized string. This method should be called only if the packet specifically states the component is sent as json text.
+     *
+     * @param component the component to serialize
+     */
+    public void writeComponentAsString(@Nullable Component component) {
         writeSizedString(component == null ? "{\"text\":\"\"}" : component.toJavaJson());
     }
 

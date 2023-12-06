@@ -362,6 +362,7 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetObjectivePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetScorePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundResetScorePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundAddMobPacket') {
         reqConstructor('@LivingEntity') // 1.8.8 compat - bossbar
     }

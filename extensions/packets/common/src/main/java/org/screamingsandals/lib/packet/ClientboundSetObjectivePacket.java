@@ -20,10 +20,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.util.Locale;
 
@@ -36,6 +38,11 @@ public class ClientboundSetObjectivePacket extends AbstractPacket {
     private final @Nullable Component title;
     private final @Nullable Type criteriaType;
     private final @NotNull Mode mode;
+    @LimitedVersionSupport(">= 1.20.3")
+    private final @Nullable ClientboundSetScorePacket.NumberFormat numberFormat;
+    @LimitedVersionSupport(">= 1.20.3")
+    @ApiStatus.Experimental
+    private final @Nullable Component numberFormatComponent;
 
     @Override
     public void write(@NotNull PacketWriter writer) {
@@ -52,6 +59,19 @@ public class ClientboundSetObjectivePacket extends AbstractPacket {
             }
             if (writer.protocol() >= 349) {
                 writer.writeVarInt(criteriaType.ordinal());
+
+                if (writer.protocol() >= 756) {
+                    writer.writeBoolean(numberFormat != null);
+                    if (numberFormat != null) {
+                        writer.writeVarInt(numberFormat.ordinal());
+                        if (numberFormat == ClientboundSetScorePacket.NumberFormat.STYLED) {
+                            // TODO: implement style-only tags (would this even be accepted by the client?)
+                            writer.writeComponent(numberFormatComponent);
+                        } else if (numberFormat == ClientboundSetScorePacket.NumberFormat.FIXED) {
+                            writer.writeComponent(numberFormatComponent);
+                        }
+                    }
+                }
             } else {
                 writer.writeSizedString(criteriaType.name().toLowerCase(Locale.ROOT));
             }
