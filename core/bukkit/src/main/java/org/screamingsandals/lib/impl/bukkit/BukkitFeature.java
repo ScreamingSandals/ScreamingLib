@@ -209,6 +209,8 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_ZOMBIE_PIGLIN_ZOGLIN_EXTENDS_AGEABLE = PlatformFeature.of(() -> org.bukkit.entity.Ageable.class.isAssignableFrom(org.bukkit.entity.Zombie.class));
     public static final @NotNull PlatformFeature ENTITY_THROWABLE_PROJECTILE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.ThrowableProjectile"));
     public static final @NotNull PlatformFeature ENTITY_THROWN_POTION_EXTENDS_THROWABLE_PROJECTILE = ENTITY_THROWABLE_PROJECTILE.and(() -> org.bukkit.entity.ThrowableProjectile.class.isAssignableFrom(org.bukkit.entity.ThrownPotion.class));
+    public static final @NotNull PlatformFeature ENTITY_BREEZE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Breeze"));
+    public static final @NotNull PlatformFeature ENTITY_WIND_CHARGE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.WindCharge"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));
@@ -221,6 +223,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature POTION_API = PlatformFeature.of(() -> Version.isVersion(1, 9));
 
     public static final @NotNull PlatformFeature POTION_EFFECT_TYPE_REGISTRY = PlatformFeature.of(() -> Version.isVersion(1, 18, 2) && Reflect.getField("org.bukkit.Registry", "POTION_EFFECT_TYPE") != null); // exclusive to paper
+    public static final @NotNull PlatformFeature POTION_EFFECT_TYPE_REGISTRY_SPIGOT = PlatformFeature.of(() -> Reflect.getField("org.bukkit.Registry", "EFFECT") != null);
     public static final @NotNull PlatformFeature POTION_EFFECT_KEYED = PlatformFeature.of(() -> Version.isVersion(1, 18));
     public static final @NotNull PlatformFeature POTION_EFFECT_CONSTRUCTOR_WITH_ICON = PlatformFeature.of(() -> Reflect.constructor(PotionEffect.class, PotionEffectType.class, int.class, int.class, boolean.class, boolean.class, boolean.class).isPresent());
 

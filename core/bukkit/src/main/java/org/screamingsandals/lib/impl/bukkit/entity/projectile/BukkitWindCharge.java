@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity.projectile;
+package org.screamingsandals.lib.impl.bukkit.entity.projectile;
 
-import org.screamingsandals.lib.entity.ExplosiveEntity;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.entity.projectile.WindCharge;
 
-/**
- * An abstract type for such called hurting projectiles (fireballs, dragon fireball, wither skull and wind charge ).
- */
-public interface HurtingProjectileEntity extends ProjectileEntity, ExplosiveEntity {
+public class BukkitWindCharge extends BukkitHurtingProjectileEntity implements WindCharge {
+    public BukkitWindCharge(@NotNull org.bukkit.entity.WindCharge wrappedObject) {
+        super(wrappedObject);
+    }
 }

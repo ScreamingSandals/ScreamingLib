@@ -40,7 +40,33 @@ public class BukkitPotionEffectTypeRegistry extends PotionEffectTypeRegistry {
 
     @Override
     protected @Nullable PotionEffectType resolveMappingPlatform(@NotNull ResourceLocation location) {
-        if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY.isSupported()) {
+        if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY_SPIGOT.isSupported()) {
+            var potionEffectType = Registry.EFFECT.get(new NamespacedKey(location.namespace(), location.path()));
+            if (potionEffectType != null) {
+                return new BukkitPotionEffectType(potionEffectType);
+            }
+
+            // try bukkit name (deprecated, TODO: prepare shop/config migration scripts and remove)
+            if ("minecraft".equalsIgnoreCase(location.namespace())) {
+                var path = location.path();
+                switch (path) {
+                    case "slow": path = "slowness"; break;
+                    case "fast_digging": path = "haste"; break;
+                    case "slow_digging": path = "mining_fatigue"; break;
+                    case "increase_damage": path = "strength"; break;
+                    case "heal": path = "instant_health"; break;
+                    case "harm": path = "instant_damage"; break;
+                    case "jump": path = "jump_boost"; break;
+                    case "confusion": path = "nausea"; break;
+                    case "damage_resistance": path = "resistance"; break;
+                }
+
+                potionEffectType = Registry.EFFECT.get(new NamespacedKey("minecraft", path));
+                if (potionEffectType != null) {
+                    return new BukkitPotionEffectType(potionEffectType);
+                }
+            }
+        } else if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY.isSupported()) {
             var potionEffectType = Registry.POTION_EFFECT_TYPE.get(new NamespacedKey(location.namespace(), location.path()));
             if (potionEffectType != null) {
                 return new BukkitPotionEffectType(potionEffectType);

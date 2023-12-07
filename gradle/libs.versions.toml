@@ -1,6 +1,6 @@
 [versions]
 # platforms
-paper = "1.20.2-R0.1-SNAPSHOT"
+paper = "1.20.4-R0.1-SNAPSHOT"
 sponge = "8.2.0"
 minestom = "master-SNAPSHOT"
 waterfall = "1.20-R0.1-SNAPSHOT"

@@ -86,6 +86,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitHangingEntity;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitItemFrame;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitLeashKnot;
 import org.screamingsandals.lib.impl.bukkit.entity.hanging.BukkitPainting;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitBreeze;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitEnderDragon;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitRavager;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitVex;
@@ -149,6 +150,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitSpectralArro
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitThrowableProjectileEntity;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitThrownPotion;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitTrident;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitWindCharge;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitWitherSkull;
 import org.screamingsandals.lib.impl.bukkit.entity.slime.BukkitMagmaCube;
 import org.screamingsandals.lib.impl.bukkit.entity.slime.BukkitSlime;
@@ -619,6 +621,12 @@ public class BukkitEntities extends Entities {
                         }
                     }
 
+                    if (BukkitFeature.ENTITY_BREEZE.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Breeze) {
+                            return new BukkitBreeze((org.bukkit.entity.Breeze) entity);
+                        }
+                    }
+
                     return new BukkitMonster((org.bukkit.entity.Monster) entity);
                 }
 
@@ -774,6 +782,12 @@ public class BukkitEntities extends Entities {
                 if (BukkitFeature.ENTITY_DRAGON_FIREBALL.isSupported()) {
                     if (entity instanceof org.bukkit.entity.DragonFireball) {
                         return new BukkitDragonFireball((org.bukkit.entity.DragonFireball) entity);
+                    }
+                }
+
+                if (BukkitFeature.ENTITY_WIND_CHARGE.isSupported()) {
+                    if (entity instanceof org.bukkit.entity.WindCharge) {
+                        return new BukkitWindCharge((org.bukkit.entity.WindCharge) entity);
                     }
                 }
 
