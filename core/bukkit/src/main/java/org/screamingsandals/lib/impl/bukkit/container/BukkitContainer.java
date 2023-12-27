@@ -18,6 +18,7 @@ package org.screamingsandals.lib.impl.bukkit.container;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
@@ -73,7 +74,15 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     public @Nullable ItemStack @NotNull [] getContents() {
         var array = new ItemStack[getSize()];
 
-        var oldArray = wrappedObject.getContents();
+        @Nullable org.bukkit.inventory.ItemStack @NotNull [] oldArray;
+        if (!BukkitFeature.GET_STORAGE_CONTENTS.isSupported() && wrappedObject instanceof PlayerInventory) {
+            // 1.8.8: getContents has different contract, similar to post-1.8 getStorageContents, preserve current contract
+            oldArray = new org.bukkit.inventory.ItemStack[36 + 4];
+            System.arraycopy(wrappedObject.getContents(), 0, oldArray, 0, 36);
+            System.arraycopy(((PlayerInventory) wrappedObject).getArmorContents(), 0, oldArray, 36, 4);
+        } else {
+            oldArray = wrappedObject.getContents();
+        }
         for (var i = 0; i < getSize(); i++) {
             array[i] = oldArray[i] == null ? null : new BukkitItem(oldArray[i]);
         }
@@ -83,18 +92,19 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
 
     @Override
     public @Nullable ItemStack @NotNull [] getStorageContents() {
+        @Nullable org.bukkit.inventory.ItemStack @NotNull [] oldArray;
         if (BukkitFeature.GET_STORAGE_CONTENTS.isSupported()) {
-            var oldArray = wrappedObject.getStorageContents();
-            var array = new ItemStack[oldArray.length];
-
-            for (var i = 0; i < oldArray.length; i++) {
-                array[i] = oldArray[i] == null ? null : new BukkitItem(oldArray[i]);
-            }
-
-            return array;
+            oldArray = wrappedObject.getStorageContents();
         } else {
-            return getContents(); // 1.8.8: this is probably okay
+            oldArray = wrappedObject.getContents();
         }
+        var array = new ItemStack[oldArray.length];
+
+        for (var i = 0; i < oldArray.length; i++) {
+            array[i] = oldArray[i] == null ? null : new BukkitItem(oldArray[i]);
+        }
+
+        return array;
     }
 
     @Override
