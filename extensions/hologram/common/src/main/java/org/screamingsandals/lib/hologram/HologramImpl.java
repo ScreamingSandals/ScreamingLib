@@ -31,7 +31,6 @@ import org.screamingsandals.lib.impl.utils.feature.PlatformFeature;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.ClientboundRemoveEntitiesPacket;
-import org.screamingsandals.lib.packet.ClientboundSetEntityDataPacket;
 import org.screamingsandals.lib.packet.ClientboundSetEquipmentPacket;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.slot.EquipmentSlot;
@@ -432,10 +431,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                 }
 
                 itemEntity.setHeadRotation(checkAndAdd(itemEntity.getHeadRotation()));
-                final var metadataPacket = ClientboundSetEntityDataPacket.builder()
-                        .entityId(itemEntity.getId())
-                        .metadata(itemEntity.getMetadataItems())
-                        .build();
+                final var metadataPacket = itemEntity.getMetadataPacket();
                 viewers.forEach(player -> update(player, List.of(metadataPacket), false));
             }, rotationTime.getFirst(), rotationTime.getSecond());
         }
