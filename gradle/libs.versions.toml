@@ -5,7 +5,7 @@ sponge = "8.2.0"
 minestom = "master-SNAPSHOT"
 waterfall = "1.20-R0.1-SNAPSHOT"
 velocity = "3.2.0-SNAPSHOT"
-adventure = "4.14.0"
+adventure = "4.15.0"
 
 # paperlib (shaded)
 paperlib = "1.0.8"
