@@ -399,6 +399,11 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
         return ((org.bukkit.entity.Player) wrappedObject).getAddress();
     }
 
+    @Override
+    public void respawn() {
+        ((org.bukkit.entity.Player) wrappedObject).spigot().respawn();
+    }
+
     @SuppressWarnings("unchecked") // Via Version
     @Override
     public int getProtocolVersion() {

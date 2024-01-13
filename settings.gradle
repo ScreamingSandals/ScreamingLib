@@ -66,5 +66,6 @@ registerExtension('placeholders', 'bukkit') //TODO: add others
 registerExtension('economy', 'bukkit')
 registerExtension('packets', 'vanilla', 'bukkit') //TODO: add others
 registerExtension('ai', 'bukkit')
+registerExtension('fakedeath', 'bukkit')
 registerExtension('cloud', 'bukkit', /*'minestom' , 'sponge',*/ 'bungee', 'velocity', 'extras')
 

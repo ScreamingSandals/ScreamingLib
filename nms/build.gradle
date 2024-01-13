@@ -108,6 +108,7 @@ nmsGen {
         reqMethod('getAbsorptionAmount')
         reqMethod('setAbsorptionAmount', float)
         reqMethod('getAttributes')
+        reqMethod('getCombatTracker')
     }
 
     reqClass('net.minecraft.world.entity.Mob') {
@@ -122,6 +123,11 @@ nmsGen {
 
     reqClass('net.minecraft.world.entity.PathfinderMob')
     // end 1.8.8 compat
+
+    reqClass('net.minecraft.world.damagesource.CombatTracker') {
+        reqMethod('getDeathMessage')
+        reqMethod('recheckStatus')
+    }
 
     reqClass('net.minecraft.network.chat.Component$Serializer') {
         reqMethod('searge:func_150699_a', String) // up to 1.15.2
@@ -276,11 +282,14 @@ nmsGen {
 
     reqClass('net.minecraft.world.entity.player.Player') {
         reqMethod('attack', '@Entity')
+        reqMethod('removeEntitiesOnShoulder')
     }
 
     reqClass('net.minecraft.server.level.ServerPlayer') {
         reqField('connection')
         reqField('latency')
+        reqMethod('setCamera', '@Entity')
+        reqMethod('tellNeutralMobsThatIDied')
     }
 
     reqClass('net.minecraft.world.entity.projectile.FishingHook')

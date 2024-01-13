@@ -355,6 +355,11 @@ public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudien
     @Nullable InetSocketAddress getAddress();
 
     /**
+     * Respawns the player.
+     */
+    void respawn();
+
+    /**
      * Launches the player in its facing direction.
      *
      * @param multiply the velocity multiplier
