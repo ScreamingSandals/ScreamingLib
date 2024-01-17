@@ -312,7 +312,8 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public @NotNull String toJavaJson() {
+    public @NotNull String toJavaJson(boolean emitCompactComponents) {
+        /* BungeeCord Chat API does not know how to make components more compact, it always emits full jsons */
         return ComponentSerializer.toString(wrappedObject);
     }
 

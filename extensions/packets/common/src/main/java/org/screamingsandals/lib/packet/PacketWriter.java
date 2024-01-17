@@ -110,7 +110,7 @@ public abstract class PacketWriter extends OutputStream {
             } else {
                 try {
                     // TODO: implement more direct conversion
-                    writeBytes(NBTSerializer.INSTANCE.serializeNetworking1_20_2(SNBTSerializer.builder().build().deserialize(component.toJavaJson())));
+                    writeBytes(NBTSerializer.INSTANCE.serializeNetworking1_20_2(SNBTSerializer.builder().build().deserialize(component.toJavaJson(false))));
                 } catch (IOException e) {
                     e.printStackTrace();
                     writeByte((byte) 0x8);

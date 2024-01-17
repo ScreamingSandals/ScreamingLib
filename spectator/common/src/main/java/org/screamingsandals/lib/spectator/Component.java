@@ -405,7 +405,11 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     @NotNull String toPlainText();
 
-    @NotNull String toJavaJson();
+    default @NotNull String toJavaJson() {
+        return toJavaJson(true);
+    }
+
+    @NotNull String toJavaJson(boolean emitCompactComponents);
 
     boolean hasStyling();
 

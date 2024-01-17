@@ -284,8 +284,12 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @NotNull String toJavaJson() {
-        return AdventureBackend.getJsonComponentSerializer().serialize(wrappedObject);
+    public @NotNull String toJavaJson(boolean emitCompactComponents) {
+        if (emitCompactComponents) {
+            return AdventureBackend.getJsonComponentSerializer().serialize(wrappedObject);
+        } else {
+            return AdventureBackend.getJsonComponentSerializerNonCompact().serialize(wrappedObject);
+        }
     }
 
     @Override

@@ -38,6 +38,7 @@ import java.util.UUID;
 public class AdventureFeature {
     public static final @NotNull PlatformFeature PLAIN_TEXT_COMPONENT_SERIALIZER = PlatformFeature.of(() -> Reflect.has("net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer"));
     public static final @NotNull PlatformFeature JSON_COMPONENT_SERIALIZER = PlatformFeature.of(() -> Reflect.has("net.kyori.adventure.text.serializer.json.JSONComponentSerializer"));
+    public static final @NotNull PlatformFeature JSON_OPTIONS = PlatformFeature.of(() -> Reflect.has("net.kyori.adventure.text.serializer.json.JSONOptions"));
     public static final @NotNull PlatformFeature NBT_SEPARATOR = PlatformFeature.of(() -> Reflect.hasMethod(NBTComponent.class, "separator"));
     public static final @NotNull PlatformFeature SELECTOR_SEPARATOR = PlatformFeature.of(() -> Reflect.hasMethod(SelectorComponent.class, "separator"));
     public static final @NotNull PlatformFeature TRANSLATABLE_FALLBACK = PlatformFeature.of(() -> Reflect.hasMethod(TranslatableComponent.class, "fallback"));
