@@ -1,5 +1,7 @@
 dependencies {
-    api project(':nms')
+    api project(':nms'), {
+        targetConfiguration = 'shadow'
+    }
 
     api project(':paperlib'), {
         targetConfiguration = 'shadow'

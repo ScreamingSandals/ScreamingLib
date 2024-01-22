@@ -1,0 +1,703 @@
+import java.util.function.Consumer
+import java.util.function.Supplier
+
+apply plugin: 'org.screamingsandals.nms-mapper'
+
+sourceSets.main.java.srcDirs += 'src/generated/java'
+
+// after any changes, please run generateNmsComponents task
+
+nmsGen {
+    basePackage = "org.screamingsandals.lib.impl.nms.accessors"
+    sourceSet = "src/generated/java"
+    cleanOnRebuild = true
+    minMinecraftVersion = "1.8.8"
+
+    reqClass('net.minecraft.resources.ResourceLocation') {
+        reqConstructor(String)
+    }
+
+    reqClass('net.minecraft.network.chat.Component') {
+        reqMethod('searge:func_150254_d') // get legacy string
+    }
+
+    reqClass('net.minecraft.world.entity.EntityType') {
+        reqMethod('byString', String) // 1.14+
+        reqMethod('searge:func_200713_a', String) // 1.13.X
+        reqField('searge:field_191308_b') // 1.11 - 1.12.2 - map from resource location to class type
+        reqField('searge:field_75624_e') // <= 1.10.2
+
+        reqField('searge:field_75625_b') // <= 1.10.2 - map from string to class type
+        reqMethod('searge:func_201760_c') // 1.13.X - entity class type
+        reqField('factory') // 1.14+ - factory method
+    }
+
+    reqClass('net.minecraft.core.Registry') {
+        reqField('ENTITY_TYPE') // <= 1.19.2
+        reqMethod('getId', Object)
+    }
+
+    reqClass('net.minecraft.core.registries.BuiltInRegistries') {
+        reqField('ENTITY_TYPE')
+    }
+
+    reqClass('net.minecraft.core.MappedRegistry') {
+        reqMethod('searge:func_148757_b', Object)
+        reqMethod('get', '@ResourceLocation') // 1.13.1+
+        reqMethod('spigot:get', Object) // <= 1.13
+    }
+
+    reqClass('net.minecraft.world.entity.Entity') {
+        reqMethod('getEntityData') // DataWatcher
+        reqMethod('getCommandSenderWorld') // world
+        reqMethod('getX')
+        reqMethod('getY')
+        reqMethod('getZ')
+        reqMethod('getYRot')
+        reqMethod('getXRot')
+        reqMethod('getType')
+        reqMethod('getId')
+        reqMethod('setNoGravity', boolean)
+        reqMethod('isNoGravity')
+        reqMethod('setOnGround', boolean)
+        reqMethod(chain('onGround', 'isOnGround'))
+        reqMethod('getUUID')
+        reqMethod('setCustomNameVisible', boolean)
+        reqMethod('isCustomNameVisible')
+        reqMethod('setInvisible', boolean)
+        reqMethod('isInvisible')
+        reqMethod('getDeltaMovement')
+        reqMethod('searge:func_96094_a', String) // setCustomName
+        reqMethod('setCustomName', '@Component')
+        reqMethod('absMoveTo', double, double, double, float, float)
+        reqMethod('getCustomName')
+        reqMethod('startRiding', '@Entity', boolean)
+        reqMethod('stopRiding')
+        reqField('searge:field_70159_w') // velocity x
+        reqField('searge:field_70181_x') // velocity y
+        reqField('searge:field_70179_y') // velocity z
+        reqField('searge:field_70152_a')
+        reqField('onGround')
+        reqField('id')
+        reqField('ENTITY_COUNTER')
+        reqField('searge:field_70177_z') // yaw
+        reqField('searge:field_70125_A') // pitch
+        reqField('searge:field_70165_t') // locX
+        reqField('searge:field_70163_u') // locY
+        reqField('searge:field_70161_v') // locZ
+        reqField('searge:field_70170_p') // world
+    }
+
+    reqClass('net.minecraft.world.InteractionHand') {
+        reqEnumField('MAIN_HAND')
+        reqEnumField('OFF_HAND')
+    }
+
+    // 1.8.8 compat - Attributes (LivingEntity requires to be defined earlier)
+    reqClass('net.minecraft.world.entity.ai.attributes.Attribute') {
+        reqMethod('obfuscated:b:1.8.8')
+    }
+
+    reqClass('net.minecraft.world.entity.LivingEntity') { // 1.8.8 compat - BossBar
+        reqMethod('spigot:getAttributeInstance:1.8.8', '@Attribute') // 1.8.8 compat - Attributes
+        reqField('removeArrowTime')
+        reqMethod('getArrowCount')
+        reqMethod('setArrowCount', int)
+        reqMethod('doHurtTarget', '@Entity')
+        reqMethod('swing', '@InteractionHand')
+        reqMethod('getAbsorptionAmount')
+        reqMethod('setAbsorptionAmount', float)
+        reqMethod('getAttributes')
+        reqMethod('getCombatTracker')
+    }
+
+    reqClass('net.minecraft.world.entity.Mob') {
+        reqMethod('spigot:setAI', boolean) // 1.8.8
+        reqMethod('spigot:hasAI') // 1.8.8
+        reqMethod('setTarget', '@LivingEntity')
+        reqMethod('getTarget')
+
+        reqField('goalSelector')
+        reqField('targetSelector')
+    }
+
+    reqClass('net.minecraft.world.entity.PathfinderMob')
+    // end 1.8.8 compat
+
+    reqClass('net.minecraft.world.damagesource.CombatTracker') {
+        reqMethod('getDeathMessage')
+        reqMethod('recheckStatus')
+    }
+
+    reqClass('net.minecraft.network.chat.Component$Serializer') {
+        reqMethod('searge:func_150699_a', String) // up to 1.15.2
+        reqMethod('searge:m_130701_', String) // 1.16.1+
+    }
+
+    reqClass('net.minecraft.core.Rotations') {
+        reqConstructor(float, float, float)
+        reqMethod('getX')
+        reqMethod('getY')
+        reqMethod('getZ')
+    }
+
+    reqClass('net.minecraft.world.entity.ai.goal.Goal') {
+        reqMethod('canUse')
+        reqMethod('canContinueToUse')
+        reqMethod('start')
+        reqMethod('stop')
+        reqMethod('tick')
+
+        reqMethod('getFlags') // >= 1.14
+    }
+
+    reqClass('net.minecraft.world.entity.ai.goal.Goal$Flag') {
+        reqEnumField('TARGET')
+    }
+
+    reqClass('net.minecraft.world.entity.ai.goal.GoalSelector') {
+        reqConstructor(Supplier)
+
+        reqField('availableGoals') // 1.14+
+        reqField(chain('searge:field_75782_a', 'searge:field_75782_a:1.8.8')) // 1.8.8-1.13.2 (1.9: changed from List to Set)
+
+
+        reqMethod('addGoal', int, '@Goal')
+        reqMethod('removeGoal', '@Goal')
+    }
+
+    reqClass('net.minecraft.world.entity.ai.goal.WrappedGoal') { // 1.14+
+        reqMethod('getGoal')
+    }
+
+    reqClass('spigot:PathfinderGoalSelector$PathfinderGoalSelectorItem') { // 1.8.8-1.13.2
+        reqField('searge:field_75733_a')
+    }
+
+    // Goals
+    reqClass('net.minecraft.world.entity.ai.goal.AvoidEntityGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.BegGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.BreakDoorGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.BreathAirGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.BreedGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.CatLieOnBedGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.CatSitOnBlockGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.ClimbOnTopOfPowderSnowGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.DolphinJumpGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.DoorInteractGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.EatBlockGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.FleeSunGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.FloatGoal') {
+        reqConstructor('@Mob')
+    }
+    reqClass('net.minecraft.world.entity.ai.goal.FollowBoatGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.FollowFlockLeaderGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.FollowMobGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.FollowOwnerGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.FollowParentGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.GolemRandomStrollInVillageGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.InteractGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.JumpGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.LandOnOwnersShoulderGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.LeapAtTargetGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.LlamaFollowCaravanGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.LookAtPlayerGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.LookAtTradingPlayerGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.MeleeAttackGoal') {
+        reqConstructor('@PathfinderMob', double, boolean)
+    }
+    reqClass('net.minecraft.world.entity.ai.goal.MoveBackToVillageGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.MoveToBlockGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.OcelotAttackGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.OfferFlowerGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.OpenDoorGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.PanicGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.PathfindToRaidGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.RandomLookAroundGoal') {
+        reqConstructor('@Mob')
+    }
+    reqClass('net.minecraft.world.entity.ai.goal.RandomStandGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.RandomStrollGoal') {
+        reqConstructor('@PathfinderMob', double)
+    }
+    reqClass('net.minecraft.world.entity.ai.goal.RandomSwimmingGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.RangedAttackGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.RangedBowAttackGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.RangedCrossbowAttackGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.RemoveBlockGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.RestrictSunGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.RunAroundLikeCrazyGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.StrollThroughVillageGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.SwellGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.TemptGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.TradeWithPlayerGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.TryFindWaterGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.UseItemGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.ZombieAttackGoal')
+
+    // Target goals
+    reqClass('net.minecraft.world.entity.ai.goal.target.TargetGoal')
+
+    reqClass('net.minecraft.world.entity.ai.goal.target.DefendVillageTargetGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal') {
+        reqConstructor('@PathfinderMob', Class[]) // 1.14+
+        reqConstructor('@PathfinderMob', boolean, Class[]) // <= 1.13.2
+    }
+    reqClass('net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal') {
+        reqConstructor('@Mob', Class, boolean) // 1.14+
+        reqConstructor('@PathfinderMob', Class, boolean) // <= 1.13.2
+    }
+    reqClass('net.minecraft.world.entity.ai.goal.target.NearestAttackableWitchTargetGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.target.NearestHealableRaiderTargetGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal')
+    reqClass('net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal')
+
+    reqClass('net.minecraft.world.level.Level') {
+        reqMethod('getProfilerSupplier')
+        reqMethod('getProfiler')
+        reqField('searge:field_72984_F:1.8.8') // reused name in 1.16.1
+    }
+
+    reqClass('net.minecraft.world.entity.decoration.ArmorStand') {
+        reqField('DATA_CLIENT_FLAGS')
+        reqField('DATA_HEAD_POSE')
+        reqConstructor('@Level', double, double, double)
+        reqMethod('setSmall', boolean)
+        reqMethod('isSmall')
+        reqMethod('isShowArms')
+        reqMethod('setShowArms', boolean)
+        reqMethod('setNoBasePlate', boolean)
+        reqMethod('isNoBasePlate')
+        reqMethod('setMarker', boolean)
+        reqMethod('isMarker')
+    }
+
+    reqClass('net.minecraft.world.entity.player.Player') {
+        reqMethod('attack', '@Entity')
+        reqMethod('removeEntitiesOnShoulder')
+    }
+
+    reqClass('net.minecraft.server.level.ServerPlayer') {
+        reqField('connection')
+        reqField('latency')
+        reqMethod('setCamera', '@Entity')
+        reqMethod('tellNeutralMobsThatIDied')
+    }
+
+    reqClass('net.minecraft.world.entity.projectile.FishingHook')
+
+    reqClass('net.minecraft.world.entity.LightningBolt')
+
+    var FriendlyByteBuf = reqClass('net.minecraft.network.FriendlyByteBuf') {
+        reqConstructor('io.netty.buffer.ByteBuf')
+    }
+
+    reqClass('net.minecraft.network.syncher.SynchedEntityData') {
+        reqMethod('spigot:watch', int, Object) // 1.8.8 compat - bossbar - 1.8.8 ONLY method
+    }
+
+    reqClass('net.minecraft.network.protocol.Packet')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundAnimatePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundBlockEventPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket')
+
+    // fix: NMS Mapper history, merge these together when updated to Takenaka
+    // reqClass('net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket')
+    // - clientbound custom payload packet is currently only used when sending books on versions before 1.13.2, new version of this class is not needed yet
+    reqClass('net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket') { // <= 1.20.1
+        reqConstructor(String, '@FriendlyByteBuf') // pre-1.13
+        reqConstructor('@ResourceLocation', '@FriendlyByteBuf') // 1.13+
+    }
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundContainerClosePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket') {
+        reqConstructor(int[]) // 1.8.8 compat - bossbar
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetCameraPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket') {
+        reqField('entityId')
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket') {
+        reqField('entity')
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundRotateHeadPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$Rot')
+    reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$Pos')
+    reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$PosRot')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket') {
+        reqConstructor(int, '@SynchedEntityData', boolean) // 1.8.8 compat - bossbar
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundEntityEventPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket') {
+        reqConstructor('@Entity') // 1.8.8 compat - bossbar
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetExperiencePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundExplodePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket')
+
+    // fix: NMS Mapper history, merge these together when updated to Takenaka
+    reqClass('net.minecraft.network.protocol.common.ClientboundDisconnectPacket') // 1.20.2+
+    reqClass('net.minecraft.network.protocol.game.ClientboundDisconnectPacket') // <= 1.20.1
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundAddPlayerPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundOpenBookPacket') {
+        reqConstructor()
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket') // < 1.19.2
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket') // 1.19.3+
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket') // 1.19.3+
+    reqClass('net.minecraft.network.protocol.game.ClientboundTabListPacket') {
+        reqConstructor()
+        reqConstructor('@Component', '@Component')
+        reqField('header')
+        reqField('footer')
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetObjectivePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetScorePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundResetScorePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundAddMobPacket') {
+        reqConstructor('@LivingEntity') // 1.8.8 compat - bossbar
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundAddEntityPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket$Parameters')
+    reqClass('net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket')
+
+    /* SPECTATOR start - Spigot implementation (no-legacy text) */
+    // Titles <= 1.16.5
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetTitlesPacket$Type') {
+        reqEnumField('TITLE')
+        reqEnumField('SUBTITLE')
+        reqEnumField('ACTIONBAR')
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetTitlesPacket') {
+        reqConstructor(int, int, int)
+        reqConstructor('@ClientboundSetTitlesPacket$Type', '@Component')
+    }
+    // Titles >= 1.17
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket') {
+        reqConstructor('@Component')
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket') {
+        reqConstructor('@Component')
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket') {
+        reqConstructor(int, int, int)
+    }
+    /* SPECTATOR end */
+
+    reqClass('net.minecraft.network.syncher.EntityDataSerializers')
+    reqClass('net.minecraft.network.syncher.EntityDataAccessor') {
+        reqMethod('getId')
+    }
+
+    reqClass('net.minecraft.world.level.GameType')
+
+    reqClass('net.minecraft.network.protocol.game.ServerboundInteractPacket') {
+        reqField('entityId')
+        reqField('action')
+        reqField('ATTACK_ACTION')
+    }
+
+    reqClass('net.minecraft.network.protocol.game.ServerboundInteractPacket$Action') {
+        reqEnumField('ATTACK')
+    }
+
+    reqClass('net.minecraft.network.syncher.EntityDataSerializers')
+
+    reqClass('net.minecraft.world.item.Item') {
+        reqMethod('getId', '@Item')
+    }
+
+    // new way of getting protocol
+    reqClass('net.minecraft.SharedConstants') {
+        reqMethod('getProtocolVersion')
+    }
+
+    reqClass('net.minecraft.server.MinecraftServer') {
+        reqField('status')
+        reqField('connection')
+    }
+
+    reqClass('net.minecraft.server.network.ServerConnectionListener') {
+        reqField('channels')
+        reqField('connections')
+    }
+
+    // old way of getting protocol
+    reqClass('net.minecraft.network.protocol.status.ServerStatus') {
+        reqMethod('getVersion') // -1.19.3
+        reqMethod('version') // 1.19.4+ - incompatible change: the method now returns Optional instead of nullable object
+    }
+
+    reqClass('net.minecraft.network.protocol.status.ServerStatus$Version') {
+        reqMethod(chain('protocol', 'getProtocol')) // 1.19.4 - compatible change: ServerStatus$Version is now record, so the method got renamed
+    }
+
+    reqClass('net.minecraft.world.level.block.state.BlockState')
+
+    reqClass('net.minecraft.world.level.block.Block') {
+        reqMethod('getId', '@BlockState')
+        reqMethod('spigot:fromLegacyData', int)
+    }
+
+    reqClass('net.minecraft.network.protocol.PacketFlow') {
+        reqEnumField('SERVERBOUND')
+        reqEnumField('CLIENTBOUND')
+    }
+
+    reqClass('net.minecraft.network.ConnectionProtocol') {
+        reqEnumField('HANDSHAKING')
+        reqEnumField('PLAY')
+        reqEnumField('STATUS')
+        reqEnumField('LOGIN')
+        reqField('flows') // new
+        reqField('mojang:packets:1.14.4') // old
+    }
+
+    reqClass('net.minecraft.network.ConnectionProtocol$CodecData') { // 1.20.2+
+        reqField('packetSet')
+    }
+
+    reqClass('net.minecraft.network.ConnectionProtocol$PacketSet') {
+        reqMethod(chain('getId', ':getId:1.19.3'), Class) // 1.19.4: compatible change - return type changed from boxed Integer to primitive int
+    }
+
+    reqClass('net.minecraft.server.network.ServerGamePacketListenerImpl') {
+        reqField('connection') // 1.20.2: Moved to ServerCommonPacketListenerImpl
+        reqMethod('send', '@Packet') // 1.20.2: Moved to ServerCommonPacketListenerImpl
+    }
+
+    reqClass('net.minecraft.server.network.ServerCommonPacketListenerImpl') { // 1.20.2+
+        reqField('connection')
+        reqMethod('send', '@Packet')
+    }
+
+    reqClass('net.minecraft.network.Connection') {
+        reqField('channel')
+    }
+
+    reqClass('net.minecraft.core.Direction') {
+        reqMethod('fromYRot', double)
+    }
+
+    reqClass('net.minecraft.nbt.Tag') {
+        reqMethod('getAsString')
+    }
+
+    reqClass('net.minecraft.nbt.ByteArrayTag') {
+        reqConstructor(byte[])
+        reqMethod('getAsByteArray')
+    }
+
+    reqClass('net.minecraft.nbt.ByteTag') {
+        reqConstructor(byte)
+        reqMethod('getAsByte')
+        reqMethod('valueOf', byte)
+    }
+
+    reqClass('net.minecraft.nbt.CompoundTag') {
+        reqConstructor()
+        reqMethod('getAllKeys')
+        reqMethod('get', String)
+        reqMethod('remove', String)
+        reqMethod(chain('put', 'searge:func_74782_a:1.13.2'), String, '@Tag')
+        reqMethod(chain('merge', 'searge:func_179237_a:1.12.2'), '@CompoundTag') // 1.13 method returns `this` for chaining
+    }
+
+    FriendlyByteBuf.with {
+        reqMethod('writeNbt', '@Tag') // 1.20.2+
+        reqMethod(chain('writeNbt', 'searge:func_150786_a:1.8.8'), '@CompoundTag') // <= 1.20.1
+    }
+
+    reqClass('net.minecraft.nbt.DoubleTag') {
+        reqConstructor(double)
+        reqMethod('getAsDouble')
+        reqMethod('valueOf', double) // 1.15+
+    }
+
+    reqClass('net.minecraft.nbt.FloatTag') {
+        reqConstructor(float)
+        reqMethod('getAsFloat')
+        reqMethod('valueOf', float) // 1.15+
+    }
+
+    reqClass('net.minecraft.nbt.IntArrayTag') {
+        reqConstructor(int[])
+        reqMethod('getAsIntArray')
+    }
+
+    reqClass('net.minecraft.nbt.IntTag') {
+        reqConstructor(int)
+        reqMethod('getAsInt')
+        reqMethod('valueOf', int) // 1.15+
+    }
+
+    reqClass('net.minecraft.nbt.ListTag') {
+        reqConstructor()
+        reqMethod('size')
+        reqMethod(chain('get', 'searge:func_179238_g:1.12.2'), int)
+        reqMethod(chain('spigot:add:1.13.2', 'spigot:add:1.12.2'), '@Tag') // <= 1.13.2
+    }
+
+    reqClass('net.minecraft.nbt.LongArrayTag') { // 1.12+
+        reqConstructor(long[])
+        reqMethod('getAsLongArray') // 1.13+
+        reqField('searge:field_193587_b:1.12') // 1.12.x
+    }
+
+    reqClass('net.minecraft.nbt.LongTag') {
+        reqConstructor(long)
+        reqMethod('getAsLong')
+        reqMethod('valueOf', long) // 1.15+
+    }
+
+    reqClass('net.minecraft.nbt.ShortTag') {
+        reqConstructor(short)
+        reqMethod('getAsShort')
+        reqMethod('valueOf', short) // 1.15+
+    }
+
+    reqClass('net.minecraft.nbt.StringTag') {
+        reqConstructor(String)
+        reqMethod('valueOf', String) // 1.15+
+    }
+
+
+    reqClass('net.minecraft.world.item.ItemStack') {
+        reqMethod('copy')
+        reqMethod('save', '@CompoundTag')
+        reqMethod('getTag')
+        reqMethod('setTag', '@CompoundTag')
+    }
+
+    // 1.10.x compat
+    reqClass('spigot:EnumZombieType') {
+        reqEnumField('spigot:HUSK')
+    }
+
+    reqClass('net.minecraft.world.entity.monster.Zombie') {
+        reqMethod('spigot:setVillagerType', '@EnumZombieType')
+        reqMethod('spigot:getVillagerType')
+        reqEnumField('obfuscated:a:1.8.8') // Attributes 1.8.8 support
+    }
+
+    /* 1.8.8 compat start */
+    // Particles
+    reqClass('spigot:EnumParticle') {
+        reqMethod('obfuscated:a', int)
+    }
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket') {
+        reqConstructor('@EnumParticle', boolean, float, float, float, float, float, float, float, int, int[])
+    }
+
+    reqClass('net.minecraft.server.level.ServerLevel') {
+        reqMethod('obfuscated:a:1.8.8', '@EnumParticle', boolean, double, double, double, int, double, double, double, double, int[])
+    }
+
+    // Attributes
+    reqClass('net.minecraft.world.entity.monster.SharedMonsterAttributes') {
+        reqEnumField(chain('spigot:maxHealth:1.8.8', 'MAX_HEALTH'))
+        reqEnumField('spigot:FOLLOW_RANGE:1.8.8')
+        reqEnumField('obfuscated:c:1.8.8')
+        reqEnumField('spigot:MOVEMENT_SPEED:1.8.8')
+        reqEnumField('FLYING_SPEED')
+        reqEnumField('spigot:ATTACK_DAMAGE:1.8.8')
+        reqEnumField('ATTACK_SPEED')
+        reqEnumField('ARMOR')
+        reqEnumField('ARMOR_TOUGHNESS')
+        reqEnumField('LUCK')
+    }
+
+    reqClass('net.minecraft.world.entity.animal.horse.Horse') {
+        reqEnumField('spigot:attributeJumpStrength:1.8.8')
+    }
+
+    reqClass('net.minecraft.world.entity.ai.attributes.AttributeModifier') {
+        reqMethod('obfuscated:a:1.8.8') // amount
+        reqMethod('obfuscated:b:1.8.8') // operation (ordered: 0,1,2)
+        reqMethod('obfuscated:c:1.8.8') // name
+        reqMethod('obfuscated:d:1.8.8') // unique id
+
+        reqConstructor(UUID, String, double, int)
+    }
+
+    reqClass('net.minecraft.world.entity.ai.attributes.AttributeInstance') {
+        reqConstructor('@Attribute', Consumer)
+        reqMethod('setBaseValue', double) // set base value
+
+        reqMethod('spigot:getAttribute:1.8.8') // attribute type
+        reqMethod('obfuscated:b:1.8.8') // get base value
+        reqMethod('obfuscated:c:1.8.8') // get modifiers
+        reqMethod('obfuscated:b:1.8.8', '@AttributeModifier') // add modifier
+        reqMethod('obfuscated:c:1.8.8', '@AttributeModifier') // remove modifier
+        reqMethod('spigot:getValue:1.8.8') // get value
+    }
+
+    reqClass('net.minecraft.world.entity.ai.attributes.AttributeSupplier') {
+        reqField('instances')
+    }
+
+    reqClass('net.minecraft.world.entity.ai.attributes.AttributeMap') {
+        reqMethod('registerAttribute', '@Attribute') // old
+        // new
+        reqField('supplier')
+    }
+
+
+    // BossBars
+
+    reqClass('net.minecraft.world.entity.boss.wither.WitherBoss') {
+        reqConstructor('@Level')
+    }
+
+    reqClass('net.minecraft.world.entity.boss.enderdragon.EnderDragon') {
+        reqConstructor('@Level')
+        reqField('subEntities')
+    }
+
+    reqClass('spigot:PacketPlayOutChat') {
+        reqConstructor('@Component', byte)
+    }
+
+    reqClass('net.minecraft.world.level.block.entity.BlockEntity') {
+        reqMethod('setChanged')
+    }
+
+    reqClass('spigot:TileEntityFlowerPot') {
+        reqMethod('searge:func_145964_a', '@Item', int)
+        reqMethod('spigot:getItem')
+        reqMethod('spigot:getData')
+    }
+
+    /* 1.8.8 compat end */
+
+    reqClass('net.minecraft.world.entity.item.PrimedTnt') {
+        reqField('owner')
+    }
+
+    reqClass('net.minecraft.world.entity.EntityType$EntityFactory') {
+        reqMethod('create', ['@EntityType', '@Level'] as Object[])
+    }
+}
+
+tasks.getByName('compileJava').dependsOn('generateNmsComponents')

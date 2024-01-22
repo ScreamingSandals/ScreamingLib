@@ -40,8 +40,10 @@ cloud-minestom = "58e8fd76f3"
 junit = "5.8.2"
 
 # plugins
-screaming-plugin-builder = "1.0.81"
+screaming-plugin-builder = "1.0.84"
 nms-mapper = "1.4.8"
+takenaka = "1.1.1"
+mappings = "1.8.8+1.20.4"
 
 [libraries]
 paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
@@ -87,7 +89,12 @@ cloud-minestom = { group = "com.github.OpenMinigameServer", name = "cloud-minest
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit" }
 
+# takenaka
+takenaka-runtime = { group = "me.kcra.takenaka", name = "generator-accessor-runtime", version.ref = "takenaka" }
+takenaka-mappings = { group = "me.kcra.takenaka", name = "mappings", version.ref = "mappings" }
+
 [plugins]
 screaming-plugin-builder = { id = "org.screamingsandals.plugin-builder", version.ref = "screaming-plugin-builder" }
 nms-mapper = { id = "org.screamingsandals.nms-mapper", version.ref = "nms-mapper" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+takenaka = { id = "me.kcra.takenaka.accessor", version.ref = "takenaka" }
