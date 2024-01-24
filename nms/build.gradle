@@ -25,7 +25,7 @@ accessors {
 
     /*
     * TODO:
-    *  1. Replace all incompatible typed/versioned names with either inferred request or standard request with return type
+    *  1. Try to replace most non-mojang names with mojang name or spigot/yarn name
     *  2. Make sure this file works
     *  3. Validate against old configuration
     *  4. Update Slib
@@ -53,17 +53,17 @@ accessors {
     }
 
     var Component = mapClass('net.minecraft.network.chat.Component') {
-        getter(String, 'coloredString') //method String, 'searge:func_150254_d' // get legacy string
+        getter(String, 'coloredString') //method String, 'func_150254_d' // get legacy string
     }
 
     var EntityType = mapClass('net.minecraft.world.entity.EntityType') {
         method(Optional, 'byString', String) // 1.14+
-        method(it.name, 'searge:func_200713_a', String) // 1.13.X
-        field('net.minecraft.util.registry.RegistryNamespaced', 'searge:field_191308_b') // 1.11 - 1.12.2 - map from resource location to class type
-        field(Map, 'searge:field_75624_e') // <= 1.10.2
+        method(it.name, 'func_200713_a', String) // 1.13.X
+        field('net.minecraft.util.registry.RegistryNamespaced', 'field_191308_b') // 1.11 - 1.12.2 - map from resource location to class type
+        field(Map, 'field_75624_e') // <= 1.10.2
 
-        field(Map, 'searge:field_75625_b') // <= 1.10.2 - map from string to class type
-        method(Class, 'searge:func_201760_c') // 1.13.X - entity class type
+        field(Map, 'field_75625_b') // <= 1.10.2 - map from string to class type
+        method(Class, 'func_201760_c') // 1.13.X - entity class type
         field('net.minecraft.world.entity.EntityType$EntityFactory', 'factory') // 1.14+ - factory method
     }
 
@@ -77,60 +77,60 @@ accessors {
     }
 
     var MappedRegistry = mapClass('net.minecraft.core.MappedRegistry') {
-        method(int, 'searge:func_148757_b', Object)
+        method(int, 'func_148757_b', Object)
         method(Object, 'get', ResourceLocation) // 1.13.1+
-        method(Object, 'spigot:get', Object) // <= 1.13
+        method(Object, 'get', Object) // <= 1.13
     }
 
     var SynchedEntityData = mapClass('net.minecraft.network.syncher.SynchedEntityData') {
-        method(Object, 'spigot:watch', int, Object) // 1.8.8 compat - bossbar - 1.8.8 ONLY method
+        method(Object, 'watch', int, Object) // 1.8.8 compat - bossbar - 1.8.8 ONLY method
     }
 
     var Level = mapClass('net.minecraft.world.level.Level') {
         getter(Supplier, 'profilerSupplier') // 1.17 and newer
         getter('net.minecraft.util.profiling.ProfilerFiller', 'profiler') // for something between new and old versions
-        field('net.minecraft.server.VVV.MethodProfiler', 'methodProfiler') // for older versions, Spigot mapped
+        field('net.minecraft.util.profiling.ActiveProfiler', 'methodProfiler') // for older versions, Spigot mapped
     }
 
     var Entity = mapClass('net.minecraft.world.entity.Entity') {
-        method(SynchedEntityData, 'getEntityData') // DataWatcher
-        method(Level, 'getCommandSenderWorld') // world
-        method(double, 'getX')
-        method(double, 'getY')
-        method(double, 'getZ')
-        method(float, 'getYRot')
-        method(float, 'getXRot')
-        method(EntityType, 'getType')
-        method(int, 'getId')
-        method(void, 'setNoGravity', boolean)
-        method(boolean, 'isNoGravity')
-        method(void, 'setOnGround', boolean)
-        method(boolean, 'isOnGround')
-        method(UUID, 'getUUID')
-        method(void, 'setCustomNameVisible', boolean)
-        method(boolean, 'isCustomNameVisible')
-        method(void, 'setInvisible', boolean)
-        method(boolean, 'isInvisible')
-        method('net.minecraft.world.phys.Vec3', 'getDeltaMovement')
-        method(void, 'searge:func_96094_a', String) // setCustomName
-        method(void, 'setCustomName', Component)
+        getter(SynchedEntityData, 'entityData') // DataWatcher
+        getter(Level, 'commandSenderWorld') // world
+        getter(double, 'x')
+        getter(double, 'y')
+        getter(double, 'z')
+        getter(float, 'yRot')
+        getter(float, 'xRot')
+        getter(EntityType, 'type')
+        getter(int, 'id')
+        setter(boolean, 'noGravity')
+        getter(boolean, 'noGravity')
+        setter(boolean, 'onGround')
+        getter(boolean, 'onGround')
+        getter(UUID, 'UUID')
+        setter(boolean, 'customNameVisible')
+        getter(boolean, 'customNameVisible')
+        setter(boolean, 'invisible')
+        getter(boolean, 'invisible')
+        getter('net.minecraft.world.phys.Vec3', 'deltaMovement')
+        method(void, 'func_96094_a', String) // setCustomName
+        setter(Component, 'customName')
         method(void, 'absMoveTo', double, double, double, float, float)
-        method(Component, 'getCustomName')
+        getter(Component, 'customName')
         method(boolean, 'startRiding', it.name, boolean)
         method(void, 'stopRiding')
-        field(double, 'searge:field_70159_w') // velocity x
-        field(double, 'searge:field_70181_x') // velocity y
-        field(double, 'searge:field_70179_y') // velocity z
-        field(int, 'searge:field_70152_a')
+        field(double, 'field_70159_w') // velocity x
+        field(double, 'field_70181_x') // velocity y
+        field(double, 'field_70179_y') // velocity z
+        field(int, 'field_70152_a')
         field(boolean, 'onGround')
         field(int, 'id')
         field(AtomicInteger, 'ENTITY_COUNTER')
-        field(float, 'searge:field_70177_z') // yaw
-        field(float, 'searge:field_70125_A') // pitch
-        field(double, 'searge:field_70165_t') // locX
-        field(double, 'searge:field_70163_u') // locY
-        field(double, 'searge:field_70161_v') // locZ
-        field(Level, 'searge:field_70170_p') // world
+        field(float, 'field_70177_z') // yaw
+        field(float, 'field_70125_A') // pitch
+        field(double, 'field_70165_t') // locX
+        field(double, 'field_70163_u') // locY
+        field(double, 'field_70161_v') // locZ
+        field(Level, 'field_70170_p') // world
     }
 
     var InteractionHand = mapClass('net.minecraft.world.InteractionHand') {
@@ -140,32 +140,32 @@ accessors {
 
     // 1.8.8 compat - Attributes (LivingEntity requires to be defined earlier)
     var Attribute = mapClass('net.minecraft.world.entity.ai.attributes.Attribute') {
-        method(double, 'obfuscated:b:1.8.8')
+        getter(double, 'defaultValue')
     }
 
     var CombatTracker = mapClass('net.minecraft.world.damagesource.CombatTracker') {
-        method(Component, 'getDeathMessage')
+        getter(Component, 'deathMessage')
         method(void, 'recheckStatus')
     }
 
     var LivingEntity = mapClass('net.minecraft.world.entity.LivingEntity') { // 1.8.8 compat - BossBar
-        method('net.minecraft.world.entity.ai.attributes.AttributeInstance', 'spigot:getAttributeInstance:1.8.8', Attribute) // 1.8.8 compat - Attributes
+        method('net.minecraft.world.entity.ai.attributes.AttributeInstance', 'getAttributeInstance', Attribute) // 1.8.8 compat - Attributes
         field(int, 'removeArrowTime')
-        method(int, 'getArrowCount')
-        method(void, 'setArrowCount', int)
+        getter(int, 'arrowCount')
+        setter(int, 'arrowCount')
         method(boolean, 'doHurtTarget', Entity)
         method(void, 'swing', InteractionHand)
-        method(float, 'getAbsorptionAmount')
-        method(void, 'setAbsorptionAmount', float)
-        method('net.minecraft.world.entity.ai.attributes.AttributeMap', 'getAttributes')
-        method(CombatTracker, 'getCombatTracker')
+        getter(float, 'absorptionAmount')
+        setter(float, 'setAbsorptionAmount')
+        getter('net.minecraft.world.entity.ai.attributes.AttributeMap', 'attributes')
+        getter(CombatTracker, 'combatTracker')
     }
 
     var Mob = mapClass('net.minecraft.world.entity.Mob') {
-        method(void, 'spigot:setAI', boolean) // 1.8.8
-        method(boolean, 'spigot:hasAI') // 1.8.8
-        method(void, 'setTarget', LivingEntity)
-        method(LivingEntity, 'getTarget')
+        setter(boolean, 'noAI') // 1.8.8
+        getter(boolean, 'noAi') // 1.8.8
+        setter(LivingEntity, 'target')
+        getter(LivingEntity, 'target')
 
         field('net.minecraft.world.entity.ai.goal.GoalSelector', 'goalSelector')
         field('net.minecraft.world.entity.ai.goal.GoalSelector', 'targetSelector')
@@ -176,15 +176,15 @@ accessors {
 
 
     var Component$Serializer = mapClass('net.minecraft.network.chat.Component$Serializer') {
-        method(Component, 'searge:func_150699_a', String) // up to 1.15.2
-        method('net.minecraft.network.chat.MutableComponent', 'searge:m_130701_', String) // 1.16.1+
+        method(Component, 'func_150699_a', String) // up to 1.15.2
+        method('net.minecraft.network.chat.MutableComponent', 'm_130701_', String) // 1.16.1+
     }
 
     var Rotations = mapClass('net.minecraft.core.Rotations') {
         constructor(float, float, float)
-        method(float, 'getX')
-        method(float, 'getY')
-        method(float, 'getZ')
+        getter(float, 'x')
+        getter(float, 'y')
+        getter(float, 'z')
     }
 
     var Goal = mapClass('net.minecraft.world.entity.ai.goal.Goal') {
@@ -194,7 +194,7 @@ accessors {
         method(void, 'stop')
         method(void, 'tick')
 
-        method(EnumSet, 'getFlags') // >= 1.14
+        getter(EnumSet, 'flags') // >= 1.14
     }
 
     var Goal$Flag = mapClass('net.minecraft.world.entity.ai.goal.Goal$Flag') {
@@ -206,8 +206,8 @@ accessors {
 
         field(Set, 'availableGoals') // 1.14+
         fieldChain {
-            item(List, 'searge:field_75782_a')
-            item(Set, 'searge:field_75782_a:1.8.8')
+            item(List, 'field_75782_a')
+            item(Set, 'field_75782_a') // 1.8.8
         }
 
         method(void, 'addGoal', int, Goal)
@@ -218,8 +218,8 @@ accessors {
         getter(Goal, 'goal')
     }
 
-    mapClass('spigot:PathfinderGoalSelector$PathfinderGoalSelectorItem') { // 1.8.8-1.13.2
-        field(Goal, 'searge:field_75733_a')
+    mapClass('net.minecraft.server.VVV.PathfinderGoalSelector$PathfinderGoalSelectorItem') { // 1.8.8-1.13.2
+        field(Goal, 'field_75733_a')
     }
 
     // Goals
@@ -312,14 +312,14 @@ accessors {
         field('net.minecraft.network.syncher.EntityDataAccessor', 'DATA_CLIENT_FLAGS')
         field('net.minecraft.network.syncher.EntityDataAccessor', 'DATA_HEAD_POSE')
         constructor(Level, double, double, double)
-        method(void, 'setSmall', boolean)
-        method(boolean, 'isSmall')
-        method(boolean, 'isShowArms')
-        method(void, 'setShowArms', boolean)
-        method(void, 'setNoBasePlate', boolean)
-        method(boolean, 'isNoBasePlate')
-        method(void, 'setMarker', boolean)
-        method(boolean, 'isMarker')
+        setter(boolean, 'small')
+        getter(boolean, 'small')
+        getter(boolean, 'showArms')
+        setter(boolean, 'setShowArms')
+        setter(boolean, 'noBasePlate')
+        getter(boolean, 'noBasePlate')
+        setter(boolean, 'marker')
+        getter(boolean, 'marker')
     }
 
     mapClass('net.minecraft.world.entity.player.Player') {
@@ -330,7 +330,7 @@ accessors {
     mapClass('net.minecraft.server.level.ServerPlayer') {
         field('net.minecraft.server.network.ServerGamePacketListenerImpl', 'connection')
         field(int, 'latency')
-        method(void, 'setCamera', Entity)
+        setter(Entity, 'camera')
         method(void, 'tellNeutralMobsThatIDied')
     }
 
@@ -344,7 +344,7 @@ accessors {
         var frByteBuf = it.name
         methodChain {
             item(frByteBuf, 'writeNbt', 'net.minecraft.nbt.CompoundTag')
-            item(void, 'searge:func_150786_a:1.8.8', 'net.minecraft.nbt.CompoundTag')
+            item(void, 'func_150786_a', 'net.minecraft.nbt.CompoundTag')
         } // <= 1.20.1
     }
 
@@ -445,7 +445,7 @@ accessors {
 
     mapClass('net.minecraft.network.syncher.EntityDataSerializers')
     mapClass('net.minecraft.network.syncher.EntityDataAccessor') {
-        method(int, 'getId')
+        getter(int, 'id')
     }
 
     mapClass('net.minecraft.world.level.GameType')
@@ -468,16 +468,16 @@ accessors {
 
     // new way of getting protocol
     mapClass('net.minecraft.SharedConstants') {
-        method(int, 'getProtocolVersion')
+        getter(int, 'protocolVersion')
     }
 
     var ServerStatus$Version = mapClass('net.minecraft.network.protocol.status.ServerStatus$Version') {
-//        method(chain('protocol', 'getProtocol')) // 1.19.4 - compatible change: ServerStatus$Version is now record, so the method got renamed
+        getterChain(int, 'protocol') // 1.19.4 - compatible change: ServerStatus$Version is now record, so the method got renamed
     }
 
     // old way of getting protocol
     var ServerStatus = mapClass('net.minecraft.network.protocol.status.ServerStatus') {
-        method(ServerStatus$Version, 'getVersion') // -1.19.3
+        getter(ServerStatus$Version, 'version') // -1.19.3
         method(Optional, 'version') // 1.19.4+ - incompatible change: the method now returns Optional instead of nullable object
     }
 
@@ -495,7 +495,7 @@ accessors {
 
     mapClass('net.minecraft.world.level.block.Block') {
         method(int, 'getId', BlockState)
-        method(BlockState, 'spigot:fromLegacyData', int)
+        method(BlockState, 'fromLegacyData', int)
     }
 
     mapClass('net.minecraft.network.protocol.PacketFlow') {
@@ -565,15 +565,12 @@ accessors {
         var cmpTagName = it.name
         methodChain {
             item(cmpTagName, 'put', String, Tag)
-            item(void, 'searge:func_74782_a:1.13.2', String, Tag)
+            item(void, 'func_74782_a', String, Tag)
         }
         methodChain {
             item(cmpTagName, 'merge', String, Tag)
-            item(void, 'searge:func_179237_a:1.12.2', cmpTagName)
+            item(void, 'func_179237_a', cmpTagName)
         } // 1.13 method returns `this` for chaining
-    }
-
-    FriendlyByteBuf.with {
     }
 
     mapClass('net.minecraft.nbt.DoubleTag') {
@@ -601,22 +598,22 @@ accessors {
 
     mapClass('net.minecraft.nbt.ListTag') {
         constructor()
-        method('int', 'size')
+        method(int, 'size')
         methodChain {
             item(Tag, 'get', int)
-            item(Tag, 'searge:func_179238_g:1.12.2', int)
+            item(Tag, 'func_179238_g', int)
         }
         var ltTagName = it.name
         methodChain {
-            item(ltTagName, 'spigot:add:1.13.2', Tag)
-            item(void, 'spigot:add:1.12.2', Tag)
+            item(ltTagName, 'add', Tag)
+            item(void, 'add', Tag)
         } // <= 1.13.2
     }
 
     mapClass('net.minecraft.nbt.LongArrayTag') { // 1.12+
         constructor(long[])
         method(long[], 'getAsLongArray') // 1.13+
-        field(long[], 'searge:field_193587_b:1.12') // 1.12.x
+        field(long[], 'field_193587_b') // 1.12.x
     }
 
     mapClass('net.minecraft.nbt.LongTag') {
@@ -645,20 +642,20 @@ accessors {
     }
 
     // 1.10.x compat
-    var EnumZombieType = mapClass('spigot:EnumZombieType') {
-        enumConstant('spigot:HUSK')
+    var EnumZombieType = mapClass('net.minecraft.server.VVV.EnumZombieType') {
+        enumConstant('HUSK')
     }
 
     mapClass('net.minecraft.world.entity.monster.Zombie') {
-        method(void, 'spigot:setVillagerType', EnumZombieType)
-        method(EnumZombieType, 'spigot:getVillagerType')
-        enumConstant('obfuscated:a:1.8.8') // Attributes 1.8.8 support
+        setter(EnumZombieType, 'villagerType')
+        getter(EnumZombieType, 'villagerType')
+        field(Attribute, 'SPAWN_REINFORCEMENTS_CHANCE')
     }
 
     /* 1.8.8 compat start */
     // Particles
-    var EnumParticle = mapClass('spigot:EnumParticle') {
-        method(it.name, 'obfuscated:a', int)
+    var EnumParticle = mapClass('net.minecraft.server.VVV.EnumParticle') {
+        method(it.name, 'func_179342_a', int)
     }
 
     mapClass('net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket') {
@@ -666,17 +663,17 @@ accessors {
     }
 
     mapClass('net.minecraft.server.level.ServerLevel') {
-        method(void, 'obfuscated:a:1.8.8', EnumParticle, boolean, double, double, double, int, double, double, double, double, int[])
+        method(void, 'func_180505_a', EnumParticle, boolean, double, double, double, int, double, double, double, double, int[])
     }
 
     // Attributes
     mapClass('net.minecraft.world.entity.monster.SharedMonsterAttributes') {
-        enumConstantChain('spigot:maxHealth:1.8.8', 'MAX_HEALTH')
-        enumConstant('spigot:FOLLOW_RANGE:1.8.8')
-        enumConstant('obfuscated:c:1.8.8')
-        enumConstant('spigot:MOVEMENT_SPEED:1.8.8')
+        enumConstant('MAX_HEALTH')
+        enumConstant('FOLLOW_RANGE')
+        enumConstant('KNOCKBACK_RESISTANCE')
+        enumConstant('MOVEMENT_SPEED')
         enumConstant('FLYING_SPEED')
-        enumConstant('spigot:ATTACK_DAMAGE:1.8.8')
+        enumConstant('ATTACK_DAMAGE')
         enumConstant('ATTACK_SPEED')
         enumConstant('ARMOR')
         enumConstant('ARMOR_TOUGHNESS')
@@ -684,28 +681,28 @@ accessors {
     }
 
     mapClass('net.minecraft.world.entity.animal.horse.Horse') {
-        enumConstant('spigot:attributeJumpStrength:1.8.8')
+        enumConstant('attributeJumpStrength')
     }
 
     var AttributeModifier = mapClass('net.minecraft.world.entity.ai.attributes.AttributeModifier') {
-        method(double, 'obfuscated:a:1.8.8') // amount
-        method(int, 'obfuscated:b:1.8.8') // operation (ordered: 0,1,2)
-        method(String, 'obfuscated:c:1.8.8') // name
-        method(UUID, 'obfuscated:d:1.8.8') // unique id
+        getter(double, 'amount') // amount
+        method(int, 'func_111169_c') // operation (ordered: 0,1,2)
+        getter(String, 'name') // name
+        getter(UUID, 'id') // unique id
 
         constructor(UUID, String, double, int)
     }
 
     mapClass('net.minecraft.world.entity.ai.attributes.AttributeInstance') {
         constructor(Attribute, Consumer)
-        method(void, 'setBaseValue', double) // set base value
-//
-        method(Attribute, 'spigot:getAttribute:1.8.8') // attribute type
-        method(double, 'obfuscated:b:1.8.8') // get base value
-        method(List, 'obfuscated:c:1.8.8') // get modifiers
-        method(void, 'obfuscated:b:1.8.8', AttributeModifier) // add modifier
-        method(void, 'obfuscated:c:1.8.8', '@AttributeModifier') // remove modifier
-        method(double, 'spigot:getValue:1.8.8') // get value
+        setter(double, 'baseValue') // set base value
+
+        getter(Attribute, 'attribute') // attribute type
+        getter(double, 'baseValue') // get base value
+        getter(List, 'modifiers') // get modifiers
+        method(void, 'addModifier', AttributeModifier) // add modifier
+        method(void, 'removeModifier', AttributeModifier) // remove modifier
+        getter(double, 'value') // get value
     }
 
     var AttributeSupplier = mapClass('net.minecraft.world.entity.ai.attributes.AttributeSupplier') {
@@ -730,7 +727,7 @@ accessors {
         field(List, 'subEntities')
     }
 
-    mapClass('spigot:PacketPlayOutChat') {
+    mapClass('net.minecraft.network.protocol.game.ClientboundChatPacket') {
         constructor(Component, byte)
     }
 
@@ -738,10 +735,10 @@ accessors {
         method(void, 'setChanged')
     }
 
-    mapClass('spigot:TileEntityFlowerPot') {
-        method(void, 'searge:func_145964_a', Item, int)
-        method(Item, 'spigot:getItem')
-        method(byte, 'spigot:getData')
+    mapClass('net.minecraft.server.VVV.TileEntityFlowerPot') {
+        method(void, 'func_145964_a', Item, int)
+        getter(Item, 'item')
+        getter(byte, 'data')
     }
 
     /* 1.8.8 compat end */
@@ -751,6 +748,6 @@ accessors {
     }
 
     mapClass('net.minecraft.world.entity.EntityType$EntityFactory') {
-        method(Object, 'create', ['@EntityType', '@Level'] as Object[])
+        method(Object, 'create', EntityType, Level)
     }
 }
