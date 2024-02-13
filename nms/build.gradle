@@ -11,7 +11,7 @@ enableShadowPlugin()
 sourceSets.main.java.srcDirs += 'src/generated/java'
 
 dependencies {
-    mappingBundle libs.takenaka.mappings
+//    mappingBundle libs.takenaka.mappings
     implementation libs.takenaka.runtime
 }
 
@@ -25,16 +25,14 @@ accessors {
 
     /*
     * TODO:
-    *  1. Try to replace most non-mojang names with mojang name or spigot/yarn name
-    *  2. Make sure this file works
-    *  3. Validate against old configuration
-    *  4. Update Slib
+    *  1. Update Slib code
+    *  2. Start using bundle when updated
     *
     */
 
     // uncomment this and remove the mappingBundle dependency,
     // if you want to develop against custom versions
-    /*versionRange('1.8.8', '1.20.4') {
+    versionRange('1.8.8', '1.20.4') {
         // exclude 1.16 and 1.10.1, they don't have most mappings and are basically not used at all
         // exclude 1.8.9, client-only update - no Spigot mappings, no thank you
         // exclude 1.9.1 and 1.9.3 - no mappings at all
@@ -42,7 +40,7 @@ accessors {
 
         // include only releases, no snapshots
         includeTypes 'release'
-    }*/
+    }
 
     basePackage 'org.screamingsandals.lib.impl.nms.accessors'
     accessedNamespaces 'spigot'
@@ -69,7 +67,7 @@ accessors {
 
     mapClass('net.minecraft.core.IRegistry') { // TODO: should be net.minecraft.core.Registry, currently Spigot mapped
         field('net.minecraft.core.DefaultedRegistry', 'ENTITY_TYPE') // <= 1.19.2
-        method(ResourceLocation, 'getKey', Object)
+        method(int, 'getId', Object)
     }
 
     mapClass('net.minecraft.core.registries.BuiltInRegistries') {
@@ -515,7 +513,7 @@ accessors {
     var ConnectionProtocol$PacketSet = mapClass('net.minecraft.network.ConnectionProtocol$PacketSet') {
         methodChain {
             it.item(int, 'getId', Class)
-            it.itemInferred('getId', version='1.19.3', Class) // TODO: broken history in takenaka
+            it.item(Integer, 'getId', Class)
         } // 1.19.4: compatible change - return type changed from boxed Integer to primitive int
     }
 
