@@ -55,7 +55,7 @@ public class BukkitMob extends BukkitLivingEntity implements Mob {
             if (BukkitFeature.SLIME_TARGET.isSupported()) {
                 ((Slime) wrappedObject).setTarget(living);
             } else {
-                Reflect.getMethod(ClassStorage.getHandle(wrappedObject), MobAccessor.getMethodSetTarget1().getName(), LivingEntityAccessor.getType(), EntityTargetEvent.TargetReason.class, boolean.class)
+                Reflect.getMethod(ClassStorage.getHandle(wrappedObject), MobAccessor.METHOD_SET_TARGET.get().getName(), LivingEntityAccessor.TYPE.get(), EntityTargetEvent.TargetReason.class, boolean.class)
                         .invoke(target != null ? ClassStorage.getHandle(target) : null, null, false);
             }
         } else if (wrappedObject instanceof Creature) {
@@ -74,7 +74,7 @@ public class BukkitMob extends BukkitLivingEntity implements Mob {
             if (BukkitFeature.SLIME_TARGET.isSupported()) {
                 living = ((Slime) wrappedObject).getTarget();
             } else { // <= 1.12.1
-                var result = Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), MobAccessor.getMethodGetTarget1());
+                var result = Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), MobAccessor.METHOD_GET_TARGET.get());
                 if (result != null) {
                     return Entities.wrapEntityLiving(Reflect.fastInvoke(result, "getBukkitEntity"));
                 }

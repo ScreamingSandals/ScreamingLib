@@ -30,7 +30,7 @@ public class BukkitAttributeType1_8 extends BasicWrapper<Object> implements Attr
 
     public BukkitAttributeType1_8(@NotNull Object wrappedObject) {
         super(wrappedObject);
-        if (AttributeAccessor.getType() == null || !AttributeAccessor.getType().isInstance(wrappedObject)) {
+        if (AttributeAccessor.TYPE.get() == null || !AttributeAccessor.TYPE.get().isInstance(wrappedObject)) {
             throw new IllegalArgumentException("Object must be an instance of Attribute!");
         }
     }
@@ -42,7 +42,7 @@ public class BukkitAttributeType1_8 extends BasicWrapper<Object> implements Attr
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (AttributeAccessor.getType().isInstance(object) || object instanceof AttributeType) {
+        if (AttributeAccessor.TYPE.get().isInstance(object) || object instanceof AttributeType) {
             return equals(object);
         }
         return equals(AttributeType.ofNullable(object));

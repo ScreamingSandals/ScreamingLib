@@ -466,8 +466,8 @@ public class BukkitEntities extends Entities {
                             }
                         } else {
                             if (BukkitFeature.HUSK.isSupported()) {
-                                var villager = Reflect.fastInvoke(ZombieAccessor.getMethodGetVillagerType1(), ClassStorage.getHandle(entity));
-                                if (villager != null && villager == EnumZombieTypeAccessor.getFieldHUSK()) {
+                                var villager = Reflect.fastInvoke(ZombieAccessor.METHOD_GET_VILLAGER_TYPE.get(), ClassStorage.getHandle(entity));
+                                if (villager != null && villager == EnumZombieTypeAccessor.FIELD_HUSK.get()) {
                                     return new BukkitHusk1_10((org.bukkit.entity.Zombie) entity);
                                 }
                             }
@@ -1050,7 +1050,7 @@ public class BukkitEntities extends Entities {
                             case InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK:
                                 if (BukkitFeature.HUSK.isSupported()) {
                                     // we need NMS to spawn Husk on 1.10, thank you md_5 -_-
-                                    Reflect.fastInvoke(ZombieAccessor.getMethodSetVillagerType1(), ClassStorage.getHandle(entity), EnumZombieTypeAccessor.getFieldHUSK());
+                                    Reflect.fastInvoke(ZombieAccessor.METHOD_SET_VILLAGER_TYPE.get(), ClassStorage.getHandle(entity), EnumZombieTypeAccessor.FIELD_HUSK.get());
                                 }
                                 break;
                         }
@@ -1139,17 +1139,17 @@ public class BukkitEntities extends Entities {
 
     @Override
     public int getNewEntityId0() {
-        final var entityCount = Reflect.getField(EntityAccessor.getFieldField_70152_a());
+        final var entityCount = Reflect.getField(EntityAccessor.FIELD_ENTITY_COUNT.get());
         if (entityCount != null) {
             if (entityCount instanceof AtomicInteger) {
                 return ((AtomicInteger) entityCount).incrementAndGet();
             }
             final var newCount = ((int) entityCount) + 1;
-            Reflect.setField(EntityAccessor.getFieldField_70152_a(), newCount);
+            Reflect.setField(EntityAccessor.FIELD_ENTITY_COUNT.get(), newCount);
             return (int) entityCount;
         }
 
-        final var entityCounter = Reflect.getField(EntityAccessor.getFieldENTITY_COUNTER());
+        final var entityCounter = EntityAccessor.FIELD_ENTITY_COUNTER.get();
         if (entityCounter instanceof AtomicInteger) {
             return ((AtomicInteger) entityCounter).incrementAndGet();
         }

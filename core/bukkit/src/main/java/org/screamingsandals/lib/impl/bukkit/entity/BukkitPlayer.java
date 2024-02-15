@@ -106,7 +106,7 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     @Override
     public int getPing() {
         final Object handle = ClassStorage.getHandle(wrappedObject);
-        return (int) Objects.requireNonNullElse(Reflect.getField(handle, ServerPlayerAccessor.getFieldLatency()), 0);
+        return (int) Objects.requireNonNullElse(Reflect.getField(handle, ServerPlayerAccessor.FIELD_LATENCY.get()), 0);
     }
 
     @Override
@@ -318,9 +318,9 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
             );
         } else {
             // 1.8.8
-            var enumParticle = particle.particleType().as(EnumParticleAccessor.getType());
+            var enumParticle = particle.particleType().as(EnumParticleAccessor.TYPE.get());
             var packet = Reflect.construct(
-                    ClientboundLevelParticlesPacketAccessor.getConstructor0(),
+                    ClientboundLevelParticlesPacketAccessor.CONSTRUCTOR_0.get(),
                     enumParticle,
                     particle.longDistance(),
                     (float) location.getX(),

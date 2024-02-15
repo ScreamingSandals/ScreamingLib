@@ -76,8 +76,8 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
                 }
             } else if (wrappedObject instanceof Zombie) {
                 if (BukkitFeature.HUSK.isSupported()) {
-                    var villager = Reflect.fastInvoke(ZombieAccessor.getMethodGetVillagerType1(), ClassStorage.getHandle(wrappedObject));
-                    if (villager != null && villager == EnumZombieTypeAccessor.getFieldHUSK()) {
+                    var villager = Reflect.fastInvoke(ZombieAccessor.METHOD_GET_VILLAGER_TYPE.get(), ClassStorage.getHandle(wrappedObject));
+                    if (villager != null && villager == EnumZombieTypeAccessor.FIELD_HUSK.get()) {
                         return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK);
                     }
                 }
@@ -218,8 +218,8 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
         if (BukkitFeature.ENTITY_ADD_PASSENGER.isSupported()) {
             return wrappedObject.addPassenger(bukkitPassenger);
         } else {
-            if (EntityAccessor.getMethodStartRiding1() != null) { // 1.9+
-                return (boolean) Reflect.fastInvoke(ClassStorage.getHandle(bukkitPassenger), EntityAccessor.getMethodStartRiding1(), ClassStorage.getHandle(wrappedObject), true);
+            if (EntityAccessor.METHOD_START_RIDING.get() != null) { // 1.9+
+                return (boolean) Reflect.fastInvoke(ClassStorage.getHandle(bukkitPassenger), EntityAccessor.METHOD_START_RIDING.get(), ClassStorage.getHandle(wrappedObject), true);
             } else {
                 return wrappedObject.setPassenger(bukkitPassenger); // is it possible to have multiple passengers in 1.8.8?
             }
@@ -231,8 +231,8 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
         if (BukkitFeature.ENTITY_REMOVE_PASSENGER.isSupported()) {
             return wrappedObject.removePassenger(passenger.as(org.bukkit.entity.Entity.class));
         } else {
-            if (EntityAccessor.getMethodStopRiding1() != null) { // 1.9+
-                Reflect.fastInvoke(ClassStorage.getHandle(passenger.as(org.bukkit.entity.Entity.class)), EntityAccessor.getMethodStopRiding1());
+            if (EntityAccessor.METHOD_STOP_RIDING.get() != null) { // 1.9+
+                Reflect.fastInvoke(ClassStorage.getHandle(passenger.as(org.bukkit.entity.Entity.class)), EntityAccessor.METHOD_STOP_RIDING.get());
                 return true;
             } else {
                 return wrappedObject.eject(); // is it possible to have multiple passengers in 1.8.8?

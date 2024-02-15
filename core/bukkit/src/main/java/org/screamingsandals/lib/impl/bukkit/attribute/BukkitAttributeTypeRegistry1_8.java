@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.impl.nms.accessors.AttributeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.HorseAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.SharedMonsterAttributesAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.AttributesAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.ZombieAccessor;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -38,17 +38,17 @@ public class BukkitAttributeTypeRegistry1_8 extends BukkitAttributeTypeRegistry 
     public final @NotNull Map<@NotNull Object, ResourceLocation> attributesToLocation = new HashMap<>();
 
     public BukkitAttributeTypeRegistry1_8() {
-        put("generic.max_health", SharedMonsterAttributesAccessor.getFieldMaxHealth());
-        put("generic.follow_range", SharedMonsterAttributesAccessor.getFieldFOLLOW_RANGE());
-        put("generic.knockback_resistance", SharedMonsterAttributesAccessor.getFieldC());
-        put("generic.movement_speed", SharedMonsterAttributesAccessor.getFieldMOVEMENT_SPEED());
-        put("generic.attack_damage", SharedMonsterAttributesAccessor.getFieldATTACK_DAMAGE());
-        put("horse.jump_strength", HorseAccessor.getFieldAttributeJumpStrength());
-        put("zombie.spawn_reinforcements", ZombieAccessor.getFieldA());
+        put("generic.max_health", AttributesAccessor.FIELD_MAX_HEALTH.get());
+        put("generic.follow_range", AttributesAccessor.FIELD_FOLLOW_RANGE.get());
+        put("generic.knockback_resistance", AttributesAccessor.FIELD_KNOCKBACK_RESISTANCE.get());
+        put("generic.movement_speed", AttributesAccessor.FIELD_MOVEMENT_SPEED.get());
+        put("generic.attack_damage", AttributesAccessor.FIELD_ATTACK_DAMAGE.get());
+        put("horse.jump_strength", HorseAccessor.FIELD_ATTRIBUTE_JUMP_STRENGTH.get());
+        put("zombie.spawn_reinforcements", ZombieAccessor.FIELD_SPAWN_REINFORCEMENTS_CHANCE.get());
     }
 
     private void put(@NotNull String path, @Nullable Object attribute) {
-        if (attribute != null && AttributeAccessor.getType() != null && AttributeAccessor.getType().isInstance(attribute)) {
+        if (attribute != null && AttributeAccessor.TYPE.get() != null && AttributeAccessor.TYPE.get().isInstance(attribute)) {
             var loc = ResourceLocation.of("minecraft", path);
             locationToAttributes.put(loc, attribute);
             attributesToLocation.put(attribute, loc);

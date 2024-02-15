@@ -55,7 +55,7 @@ public class BukkitPrimedTnt extends BukkitEntity implements PrimedTnt {
         if (BukkitFeature.ENTITY_PRIMED_TNT_SET_SOURCE.isSupported()) {
             ((org.bukkit.entity.TNTPrimed) wrappedObject).setSource(source != null ? source.as(org.bukkit.entity.Entity.class) : null);
         } else {
-            Reflect.setField(ClassStorage.getHandle(wrappedObject), PrimedTntAccessor.getFieldOwner(), source != null ? ClassStorage.getHandle(source.as(org.bukkit.entity.Entity.class)) : null);
+            Reflect.setField(ClassStorage.getHandle(wrappedObject), PrimedTntAccessor.FIELD_OWNER.get(), source != null ? ClassStorage.getHandle(source.as(org.bukkit.entity.Entity.class)) : null);
         }
     }
 

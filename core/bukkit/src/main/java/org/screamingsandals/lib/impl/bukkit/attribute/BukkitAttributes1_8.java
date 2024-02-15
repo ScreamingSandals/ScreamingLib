@@ -23,7 +23,7 @@ import org.screamingsandals.lib.impl.nms.accessors.AttributeInstanceAccessor;
 public class BukkitAttributes1_8 extends BukkitAttributes {
     @Override
     protected @Nullable Attribute wrapAttribute0(@Nullable Object attribute) {
-        if (AttributeInstanceAccessor.getType() != null && AttributeInstanceAccessor.getType().isInstance(attribute)) {
+        if (AttributeInstanceAccessor.TYPE.get() != null && AttributeInstanceAccessor.TYPE.get().isInstance(attribute)) {
             return new BukkitAttribute1_8(attribute);
         }
         return null;

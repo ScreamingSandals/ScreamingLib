@@ -23,7 +23,7 @@ import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.nms.accessors.AttributeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.HorseAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.SharedMonsterAttributesAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.AttributesAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.ZombieAccessor;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -57,18 +57,18 @@ public class BukkitAttributeTypeRegistry1_9 extends BukkitAttributeTypeRegistry 
             }
         }
 
-        put("GENERIC_MAX_HEALTH", SharedMonsterAttributesAccessor.getFieldMaxHealth());
-        put("GENERIC_FOLLOW_RANGE", SharedMonsterAttributesAccessor.getFieldFOLLOW_RANGE());
-        put("GENERIC_KNOCKBACK_RESISTANCE", SharedMonsterAttributesAccessor.getFieldC());
-        put("GENERIC_MOVEMENT_SPEED", SharedMonsterAttributesAccessor.getFieldMOVEMENT_SPEED());
-        put("GENERIC_FLYING_SPEED", SharedMonsterAttributesAccessor.getFieldFLYING_SPEED());
-        put("GENERIC_ATTACK_DAMAGE", SharedMonsterAttributesAccessor.getFieldATTACK_DAMAGE());
-        put("GENERIC_ATTACK_SPEED", SharedMonsterAttributesAccessor.getFieldATTACK_SPEED());
-        put("GENERIC_ARMOR", SharedMonsterAttributesAccessor.getFieldARMOR());
-        put("GENERIC_ARMOR_TOUGHNESS", SharedMonsterAttributesAccessor.getFieldARMOR_TOUGHNESS(), genericArmorToughness);
-        put("GENERIC_LUCK", SharedMonsterAttributesAccessor.getFieldLUCK());
-        put("HORSE_JUMP_STRENGTH", HorseAccessor.getFieldAttributeJumpStrength());
-        put("ZOMBIE_SPAWN_REINFORCEMENTS", ZombieAccessor.getFieldA());
+        put("GENERIC_MAX_HEALTH", AttributesAccessor.FIELD_MAX_HEALTH.get());
+        put("GENERIC_FOLLOW_RANGE", AttributesAccessor.FIELD_FOLLOW_RANGE.get());
+        put("GENERIC_KNOCKBACK_RESISTANCE", AttributesAccessor.FIELD_KNOCKBACK_RESISTANCE.get());
+        put("GENERIC_MOVEMENT_SPEED", AttributesAccessor.FIELD_MOVEMENT_SPEED.get());
+        put("GENERIC_FLYING_SPEED", AttributesAccessor.FIELD_FLYING_SPEED.get());
+        put("GENERIC_ATTACK_DAMAGE", AttributesAccessor.FIELD_ATTACK_DAMAGE.get());
+        put("GENERIC_ATTACK_SPEED", AttributesAccessor.FIELD_ATTACK_SPEED.get());
+        put("GENERIC_ARMOR", AttributesAccessor.FIELD_ARMOR.get());
+        put("GENERIC_ARMOR_TOUGHNESS", AttributesAccessor.FIELD_ARMOR_TOUGHNESS.get(), genericArmorToughness);
+        put("GENERIC_LUCK", AttributesAccessor.FIELD_LUCK.get());
+        put("HORSE_JUMP_STRENGTH", HorseAccessor.FIELD_ATTRIBUTE_JUMP_STRENGTH.get());
+        put("ZOMBIE_SPAWN_REINFORCEMENTS", ZombieAccessor.FIELD_SPAWN_REINFORCEMENTS_CHANCE.get());
     }
 
     private void put(@NotNull String attributeTypeName, @Nullable Object attribute) {
@@ -77,7 +77,7 @@ public class BukkitAttributeTypeRegistry1_9 extends BukkitAttributeTypeRegistry 
 
     private void put(@NotNull String attributeTypeName, @Nullable Object attribute, @Nullable Attribute artificialInstance) {
         try {
-            if (attribute != null && AttributeAccessor.getType() != null && AttributeAccessor.getType().isInstance(attribute)) {
+            if (attribute != null && AttributeAccessor.TYPE.get() != null && AttributeAccessor.TYPE.get().isInstance(attribute)) {
                 var attributeType = artificialInstance != null ? artificialInstance : Attribute.valueOf(attributeTypeName);
                 bukkitAttributeToVanillaAttribute.put(attributeType, attribute);
             }

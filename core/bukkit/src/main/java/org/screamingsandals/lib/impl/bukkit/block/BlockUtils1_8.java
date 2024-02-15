@@ -57,9 +57,9 @@ public class BlockUtils1_8 {
                 var tile = Reflect.getMethod(state.getWorld(), "getTileEntityAt", int.class, int.class, int.class)
                         .invoke(state.getX(), state.getY(), state.getZ());
                 if (tile != null) {
-                    var id = (Integer) Reflect.fastInvoke(ItemAccessor.getMethodGetId1(), Reflect.fastInvoke(tile, TileEntityFlowerPotAccessor.getMethodGetItem1()));
+                    var id = (Integer) Reflect.fastInvoke(ItemAccessor.METHOD_GET_ID.get(), Reflect.fastInvoke(tile, TileEntityFlowerPotAccessor.METHOD_GET_ITEM.get()));
                     if (id != null) {
-                        var data = (Integer) Reflect.fastInvoke(tile, TileEntityFlowerPotAccessor.getMethodGetData1());
+                        var data = (Integer) Reflect.fastInvoke(tile, TileEntityFlowerPotAccessor.METHOD_GET_DATA.get());
                         tileEntityData = id << 4 | data;
                     }
                 }
@@ -95,9 +95,9 @@ public class BlockUtils1_8 {
                         var tile = Reflect.getMethod(state.getWorld(), "getTileEntityAt", int.class, int.class, int.class)
                                 .invoke(state.getX(), state.getY(), state.getZ());
                         if (tile != null) {
-                            Reflect.fastInvoke(tile, TileEntityFlowerPotAccessor.getMethodFunc_145964_a1(), Reflect.getMethod(ClassStorage.CB.CraftMagicNumbers, "getItem", Material.class).invokeStatic(flowerPotMaterial), data);
+                            Reflect.fastInvoke(tile, TileEntityFlowerPotAccessor.METHOD_FUNC_145964_A.get(), Reflect.getMethod(ClassStorage.CB.CraftMagicNumbers, "getItem", Material.class).invokeStatic(flowerPotMaterial), data);
                             if (updateState) {
-                                Reflect.fastInvoke(tile, BlockEntityAccessor.getMethodSetChanged1());
+                                Reflect.fastInvoke(tile, BlockEntityAccessor.METHOD_SET_CHANGED.get());
                             }
                         }
                     }

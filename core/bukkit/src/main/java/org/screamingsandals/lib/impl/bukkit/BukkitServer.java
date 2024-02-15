@@ -556,8 +556,8 @@ public class BukkitServer extends Server {
     @Override
     public List<@NotNull ChannelFuture> getConnections0() {
         return (List<ChannelFuture>) Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer")
-                .getFieldResulted(MinecraftServerAccessor.getFieldConnection())
-                .getFieldResulted(ServerConnectionListenerAccessor.getFieldChannels())
+                .getFieldResulted(MinecraftServerAccessor.FIELD_CONNECTION.get())
+                .getFieldResulted(ServerConnectionListenerAccessor.FIELD_CHANNELS.get())
                 .raw();
     }
 
@@ -592,13 +592,13 @@ public class BukkitServer extends Server {
             return Bukkit.getUnsafe().getProtocolVersion();
         }
 
-        if (SharedConstantsAccessor.getMethodGetProtocolVersion1() != null) {
-            return Reflect.fastInvokeResulted(SharedConstantsAccessor.getMethodGetProtocolVersion1()).as(Integer.class);
+        if (SharedConstantsAccessor.METHOD_GET_PROTOCOL_VERSION.get() != null) {
+            return Reflect.fastInvokeResulted(SharedConstantsAccessor.METHOD_GET_PROTOCOL_VERSION.get()).as(Integer.class);
         }
 
-        return Reflect.getFieldResulted(Reflect.fastInvoke(Bukkit.getServer(), "getServer"), MinecraftServerAccessor.getFieldStatus())
-                .fastInvokeResulted(ServerStatusAccessor.getMethodGetVersion1())
-                .fastInvokeResulted(ServerStatus_i_VersionAccessor.getMethodProtocol1())
+        return Reflect.getFieldResulted(Reflect.fastInvoke(Bukkit.getServer(), "getServer"), MinecraftServerAccessor.FIELD_STATUS.get())
+                .fastInvokeResulted(ServerStatusAccessor.METHOD_GET_VERSION.get())
+                .fastInvokeResulted(ServerStatus$VersionAccessor.METHOD_PROTOCOL.get())
                 .as(Integer.class);
     }
 
