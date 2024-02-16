@@ -36,7 +36,7 @@ public class BukkitGoalType extends BasicWrapper<Class<?>> implements GoalType {
 
     public BukkitGoalType(@NotNull Class<?> wrappedObject, @NotNull ResourceLocation location) {
         super(wrappedObject);
-        Preconditions.checkArgument(GoalAccessor.getType().isAssignableFrom(wrappedObject), "A goal type must be assignable to Goal class");
+        Preconditions.checkArgument(GoalAccessor.TYPE.get().isAssignableFrom(wrappedObject), "A goal type must be assignable to Goal class");
         this.location = location;
     }
 

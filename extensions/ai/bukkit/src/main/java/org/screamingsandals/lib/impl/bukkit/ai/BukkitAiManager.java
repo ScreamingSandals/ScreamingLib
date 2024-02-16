@@ -35,7 +35,7 @@ public class BukkitAiManager extends AiManager {
     @Override
     protected @Nullable GoalSelector goalSelector0(@NotNull Entity entity) {
         var handle = ClassStorage.getHandle(entity.as(org.bukkit.entity.Entity.class));
-        if (handle != null && MobAccessor.getType().isInstance(handle)) {
+        if (handle != null && MobAccessor.TYPE.get().isInstance(handle)) {
             return new BukkitGoalSelector(handle);
         }
         return null;

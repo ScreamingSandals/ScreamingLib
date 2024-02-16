@@ -56,19 +56,19 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
             var materialData = blockData.as(MaterialData.class);
             return Reflect.getMethod(ClassStorage.CB.CraftMagicNumbers, "getBlock", Material.class)
                     .invokeStaticResulted(materialData.getItemType())
-                    .fastInvoke(BlockAccessor.getMethodFromLegacyData1(), (int) materialData.getData());
+                    .fastInvoke(BlockAccessor.METHOD_FROM_LEGACY_DATA.get(), (int) materialData.getData());
         }
     }
 
     @Override
     public void writeNBTFromItem(@NotNull ItemStack item) {
-        final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(item.as(org.bukkit.inventory.ItemStack.class)), ItemStackAccessor.getMethodCopy1());
+        final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(item.as(org.bukkit.inventory.ItemStack.class)), ItemStackAccessor.METHOD_COPY.get());
 
         // create temporary friendly ByteBuf instance that will write the NBT for us.
-        final var friendlyByteBuf = Reflect.constructor(FriendlyByteBufAccessor.getType(), ByteBuf.class).construct(getBuffer());
+        final var friendlyByteBuf = Reflect.constructor(FriendlyByteBufAccessor.TYPE.get(), ByteBuf.class).construct(getBuffer());
 
-        final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.getMethodGetTag1());
-        Reflect.fastInvoke(friendlyByteBuf, FriendlyByteBufAccessor.getMethodWriteNbt1() != null ? FriendlyByteBufAccessor.getMethodWriteNbt1() /* 1.20.2+ */ : FriendlyByteBufAccessor.getMethodWriteNbt2() /* <= 1.20.1 */, nbtTag);
+        final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_GET_TAG.get());
+        Reflect.fastInvoke(friendlyByteBuf, FriendlyByteBufAccessor.METHOD_WRITE_NBT_1.get(), nbtTag);
     }
 
     @Override

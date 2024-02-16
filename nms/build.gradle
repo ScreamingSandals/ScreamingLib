@@ -750,4 +750,8 @@ accessors {
     mapClass('net.minecraft.world.entity.EntityType$EntityFactory') {
         method(Entity, 'create', EntityType, Level)
     }
+
+    mapClass('net.minecraft.world.entity.ExperienceOrb') {
+        method(int, 'getExperienceValue', int)
+    }
 }

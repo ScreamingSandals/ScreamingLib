@@ -31,12 +31,12 @@ public abstract class VanillaPacketWriter extends PacketWriter {
 
     @Override
     protected int getItemId(@NotNull ItemType material) {
-        return Reflect.fastInvokeResulted(ItemAccessor.getMethodGetId1(), materialHolderToItem(material)).as(Integer.class);
+        return Reflect.fastInvokeResulted(ItemAccessor.METHOD_GET_ID.get(), materialHolderToItem(material)).as(Integer.class);
     }
 
     @Override
     protected int getBlockStateId(@NotNull Block blockDataHolder) {
-        return Reflect.fastInvokeResulted(BlockAccessor.getMethodGetId1(), blockDataToBlockState(blockDataHolder)).as(Integer.class);
+        return Reflect.fastInvokeResulted(BlockAccessor.METHOD_GET_ID.get(), blockDataToBlockState(blockDataHolder)).as(Integer.class);
         // TODO: check if this works for legacy too
     }
 

@@ -77,7 +77,7 @@ public class BukkitPacketMapper extends PacketMapper {
 
     @Override
     public int getArmorStandTypeId0() {
-        return ClassStorage.getEntityTypeId("armor_stand", ArmorStandAccessor.getType());
+        return ClassStorage.getEntityTypeId("armor_stand", ArmorStandAccessor.TYPE.get());
     }
 
     @Override

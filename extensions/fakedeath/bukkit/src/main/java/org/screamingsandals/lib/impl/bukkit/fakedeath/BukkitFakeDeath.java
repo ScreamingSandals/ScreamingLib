@@ -12,6 +12,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.CombatTrackerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.ComponentAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ExperienceOrbAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.LivingEntityAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.PlayerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.ServerPlayerAccessor;
@@ -42,9 +43,9 @@ public class BukkitFakeDeath extends FakeDeath {
 
         String message = null;
         try {
-            var combatTracker = Reflect.fastInvoke(ClassStorage.getHandle(player), LivingEntityAccessor.getMethodGetCombatTracker1());
-            var component = Reflect.fastInvoke(combatTracker, CombatTrackerAccessor.getMethodGetDeathMessage1());
-            message = (String) Reflect.fastInvoke(component, ComponentAccessor.getMethodFunc_150254_d1());
+            var combatTracker = Reflect.fastInvoke(ClassStorage.getHandle(player), LivingEntityAccessor.METHOD_GET_COMBAT_TRACKER.get());
+            var component = Reflect.fastInvoke(combatTracker, CombatTrackerAccessor.METHOD_GET_DEATH_MESSAGE.get());
+            message = (String) Reflect.fastInvoke(component, ComponentAccessor.METHOD_GET_COLORED_STRING.get()); // TODO: fix death message obtaining
         } catch (Throwable ignored) {}
 
         var event = new PlayerDeathEvent(player, loot, player.getTotalExperience(), 0, message);
@@ -76,21 +77,21 @@ public class BukkitFakeDeath extends FakeDeath {
         // ignoring PacketPlayOutCombatEvent, client probably didn't know that he died
 
         try {
-            Reflect.fastInvoke(ClassStorage.getHandle(player), PlayerAccessor.getMethodRemoveEntitiesOnShoulder1());
+            Reflect.fastInvoke(ClassStorage.getHandle(player), PlayerAccessor.METHOD_REMOVE_ENTITIES_ON_SHOULDER.get());
         } catch (Throwable ignored) {}
 
         if (Server.isVersion(1, 16)) {
             try {
                 Boolean b = deathWorld.getGameRuleValue(GameRule.FORGIVE_DEAD_PLAYERS);
                 if (b != null && b) {
-                    Reflect.fastInvoke(ClassStorage.getHandle(player), ServerPlayerAccessor.getMethodTellNeutralMobsThatIDied1());
+                    Reflect.fastInvoke(ClassStorage.getHandle(player), ServerPlayerAccessor.METHOD_TELL_NEUTRAL_MOBS_THAT_I_DIED.get());
                 }
             } catch (Throwable ignored) {}
         }
 
         int i = event.getDroppedExp();
         while (i > 0) {
-            int j = getOrbValue(i);
+            int j = (int) Reflect.fastInvoke(ExperienceOrbAccessor.METHOD_GET_EXPERIENCE_VALUE.get(), i);
             i -= j;
             ((ExperienceOrb) deathWorld.spawnEntity(deathLoc, EntityType.EXPERIENCE_ORB)).setExperience(j);
         }
@@ -108,12 +109,12 @@ public class BukkitFakeDeath extends FakeDeath {
         }
 
         try {
-            Reflect.fastInvoke(ClassStorage.getHandle(player), ServerPlayerAccessor.getMethodSetCamera1(), ClassStorage.getHandle(player));
+            Reflect.fastInvoke(ClassStorage.getHandle(player), ServerPlayerAccessor.METHOD_SET_CAMERA.get(), ClassStorage.getHandle(player));
         } catch (Throwable ignored) {}
 
         try {
-            Object combatTracker = Reflect.fastInvoke(ClassStorage.getHandle(player), LivingEntityAccessor.getMethodGetCombatTracker1());
-            Reflect.fastInvoke(combatTracker, CombatTrackerAccessor.getMethodRecheckStatus1());
+            Object combatTracker = Reflect.fastInvoke(ClassStorage.getHandle(player), LivingEntityAccessor.METHOD_GET_COMBAT_TRACKER.get());
+            Reflect.fastInvoke(combatTracker, CombatTrackerAccessor.METHOD_RECHECK_STATUS.get());
         } catch (Throwable ignored) {}
 
         // respawn location will be changed by PlayerListener
@@ -121,25 +122,5 @@ public class BukkitFakeDeath extends FakeDeath {
         Bukkit.getServer().getPluginManager().callEvent(respawnEvent);
 
         slibPlayer.teleport(Location.fromPlatform(respawnEvent.getRespawnLocation()));
-    }
-
-    public int getOrbValue(int i) {
-        if (i > 162670129) return i - 100000;
-        if (i > 81335063) return 81335063;
-        if (i > 40667527) return 40667527;
-        if (i > 20333759) return 20333759;
-        if (i > 10166857) return 10166857;
-        if (i > 5083423) return 5083423;
-        if (i > 2541701) return 2541701;
-        if (i > 1270849) return 1270849;
-        if (i > 635413) return 635413;
-        if (i > 317701) return 317701;
-        if (i > 158849) return 158849;
-        if (i > 79423) return 79423;
-        if (i > 39709) return 39709;
-        if (i > 19853) return 19853;
-        if (i > 9923) return 9923;
-        if (i > 4957) return 4957;
-        return i >= 2477 ? 2477 : (i >= 1237 ? 1237 : (i >= 617 ? 617 : (i >= 307 ? 307 : (i >= 149 ? 149 : (i >= 73 ? 73 : (i >= 37 ? 37 : (i >= 17 ? 17 : (i >= 7 ? 7 : (i >= 3 ? 3 : 1)))))))));
     }
 }

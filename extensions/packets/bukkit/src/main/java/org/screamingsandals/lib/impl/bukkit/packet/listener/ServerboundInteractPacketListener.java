@@ -21,7 +21,7 @@ import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.impl.nms.accessors.ServerboundInteractPacketAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ServerboundInteractPacket_i_ActionAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ServerboundInteractPacket$ActionAccessor;
 import org.screamingsandals.lib.packet.event.SPacketEvent;
 import org.screamingsandals.lib.packet.event.SPlayerServerboundInteractEvent;
 import org.screamingsandals.lib.utils.InteractType;
@@ -36,8 +36,8 @@ public class ServerboundInteractPacketListener {
 
     public ServerboundInteractPacketListener() {
         ATTACK_ACTION_FIELD = Version.isVersion(1, 17)
-                ? Reflect.getField(ServerboundInteractPacketAccessor.getFieldATTACK_ACTION())
-                : ServerboundInteractPacket_i_ActionAccessor.getFieldATTACK();
+                ? ServerboundInteractPacketAccessor.FIELD_ATTACK_ACTION.get()
+                : ServerboundInteractPacket$ActionAccessor.FIELD_ATTACK.get();
     }
 
     @OnEvent
@@ -48,9 +48,9 @@ public class ServerboundInteractPacketListener {
 
         final var packet = event.getPacket();
         final var player = event.player();
-        if (ServerboundInteractPacketAccessor.getType().isInstance(packet)) {
-            final var actionField = Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldAction());
-            final var entityId = (int) Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldEntityId());
+        if (ServerboundInteractPacketAccessor.TYPE.get().isInstance(packet)) {
+            final var actionField = Reflect.getField(packet, ServerboundInteractPacketAccessor.FIELD_ACTION.get());
+            final var entityId = (int) Reflect.getField(packet, ServerboundInteractPacketAccessor.FIELD_ENTITY_ID.get());
             final var interactType = actionField == ATTACK_ACTION_FIELD ? InteractType.LEFT_CLICK : InteractType.RIGHT_CLICK;
             final var interactEvent = EventManager.fire(new SPlayerServerboundInteractEvent(player, entityId, interactType));
             event.cancelled(interactEvent.cancelled());

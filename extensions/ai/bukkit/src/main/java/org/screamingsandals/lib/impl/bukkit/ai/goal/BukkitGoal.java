@@ -19,7 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.ai.goal;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.ai.goal.Goal;
 import org.screamingsandals.lib.impl.nms.accessors.GoalAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.Goal_i_FlagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.Goal$FlagAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.TargetGoalAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -30,46 +30,46 @@ import java.util.Set;
 public class BukkitGoal extends BasicWrapper<Object> implements Goal {
     public BukkitGoal(@NotNull Object wrappedObject) {
         super(wrappedObject);
-        Preconditions.checkArgument(GoalAccessor.getType().isInstance(wrappedObject), "wrappedObject must be an instance of Goal");
+        Preconditions.checkArgument(GoalAccessor.TYPE.get().isInstance(wrappedObject), "wrappedObject must be an instance of Goal");
     }
 
     @Override
     public boolean isTarget() {
-        if (GoalAccessor.getMethodGetFlags1() != null) {
-            var flags = Reflect.fastInvoke(wrappedObject, GoalAccessor.getMethodGetFlags1());
+        if (GoalAccessor.METHOD_GET_FLAGS.get() != null) {
+            var flags = Reflect.fastInvoke(wrappedObject, GoalAccessor.METHOD_GET_FLAGS.get());
 
             if (flags instanceof Set) {
-                return ((Set<?>) flags).contains(Goal_i_FlagAccessor.getFieldTARGET());
+                return ((Set<?>) flags).contains(Goal$FlagAccessor.FIELD_TARGET.get());
             }
 
             return false;
         } else {
-            return TargetGoalAccessor.getType().isInstance(wrappedObject);
+            return TargetGoalAccessor.TYPE.get().isInstance(wrappedObject);
         }
     }
 
     @Override
     public boolean canUse() {
-        return (boolean) Reflect.fastInvoke(GoalAccessor.getMethodCanUse1());
+        return (boolean) Reflect.fastInvoke(wrappedObject, GoalAccessor.METHOD_CAN_USE.get());
     }
 
     @Override
     public boolean canContinueToUse() {
-        return (boolean) Reflect.fastInvoke(GoalAccessor.getMethodCanContinueToUse1());
+        return (boolean) Reflect.fastInvoke(wrappedObject, GoalAccessor.METHOD_CAN_CONTINUE_TO_USE.get());
     }
 
     @Override
     public void start() {
-        Reflect.fastInvoke(GoalAccessor.getMethodStart1());
+        Reflect.fastInvoke(wrappedObject, GoalAccessor.METHOD_START.get());
     }
 
     @Override
     public void stop() {
-        Reflect.fastInvoke(GoalAccessor.getMethodStop1());
+        Reflect.fastInvoke(wrappedObject, GoalAccessor.METHOD_STOP.get());
     }
 
     @Override
     public void tick() {
-        Reflect.fastInvoke(GoalAccessor.getMethodTick1());
+        Reflect.fastInvoke(wrappedObject, GoalAccessor.METHOD_TICK.get());
     }
 }
