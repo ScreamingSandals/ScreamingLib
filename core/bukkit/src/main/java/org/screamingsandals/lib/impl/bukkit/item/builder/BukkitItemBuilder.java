@@ -197,12 +197,12 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                         item = ClassStorage.asCBStack(item);
                     }
 
-                    var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodGetTag1());
+                    var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
 
-                    if (nbt != null && Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodGet1(), "AttributeModifiers") != null) {
-                        Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodRemove1(), "AttributeModifiers");
+                    if (nbt != null && Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_GET.get(), "AttributeModifiers") != null) {
+                        Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_REMOVE.get(), "AttributeModifiers");
 
-                        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodSetTag1(), nbt);
+                        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
                     }
                 }
             }
@@ -238,21 +238,21 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             item = ClassStorage.asCBStack(item);
         }
 
-        var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodGetTag1());
+        var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
 
-        Object attributes = nbt != null ? Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodGet1(), "AttributeModifiers") : null;
+        Object attributes = nbt != null ? Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_GET.get(), "AttributeModifiers") : null;
         if (nbt == null) {
-            nbt = Reflect.construct(CompoundTagAccessor.getConstructor0());
+            nbt = Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get());
         }
-        if (attributes == null || !ListTagAccessor.getType().isInstance(attributes)) {
-            attributes = Reflect.construct(ListTagAccessor.getConstructor0());
-            Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodPut1(), "AttributeModifiers", attributes);
+        if (attributes == null || !ListTagAccessor.TYPE.get().isInstance(attributes)) {
+            attributes = Reflect.construct(ListTagAccessor.CONSTRUCTOR_0.get());
+            Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_PUT.get(), "AttributeModifiers", attributes);
         }
         for (var modifier : modifiers) {
-            Reflect.fastInvoke(attributes, ListTagAccessor.getMethodAdd1(), modifier);
+            Reflect.fastInvoke(attributes, ListTagAccessor.METHOD_ADD_1.get(), modifier);
         }
 
-        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodSetTag1(), nbt);
+        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
     }
 
     private @NotNull CompoundTag constructPre1_13AttributeModifier(@NotNull ItemAttribute modifier) {
@@ -306,20 +306,20 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                 if (unhandled.containsKey("PublicBukkitValues")) {
                     compound = unhandled.get("PublicBukkitValues");
                 } else {
-                    compound = Reflect.construct(CompoundTagAccessor.getConstructor0());
+                    compound = Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get());
                     unhandled.put("PublicBukkitValues", compound);
                 }
                 var nmap = new HashMap<String, Object>();
-                if (CompoundTagAccessor.getType().isInstance(compound)) {
-                    var keys = (Set) Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodGetAllKeys1());
+                if (CompoundTagAccessor.TYPE.get().isInstance(compound)) {
+                    var keys = (Set) Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_GET_ALL_KEYS.get());
                     for (var key : keys) {
-                        nmap.put(key.toString(), Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodGet1(), key));
+                        nmap.put(key.toString(), Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_GET.get(), key));
                     }
                 }
                 var cbItemData = new CraftBukkitItemData(nmap);
                 dataBuilder.accept(cbItemData);
                 cbItemData.getKeyNBTMap().forEach((s, o) ->
-                        Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodPut1(), s, o)
+                        Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_PUT.get(), s, o)
                 );
                 item.setItemMeta(meta);
             }
@@ -355,11 +355,11 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                     if (unhandled.containsKey("PublicBukkitValues")) {
                         compound = unhandled.get("PublicBukkitValues");
                     } else {
-                        compound = Reflect.construct(CompoundTagAccessor.getConstructor0());
+                        compound = Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get());
                         unhandled.put("PublicBukkitValues", compound);
                     }
                     ((CraftBukkitItemData) data).getKeyNBTMap().forEach((s, o) ->
-                            Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodPut1(), s, o)
+                            Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_PUT.get(), s, o)
                     );
                     item.setItemMeta(meta);
                 }
@@ -503,7 +503,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
             item = ClassStorage.asCBStack(item);
         }
-        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodSetTag1(), NBTVanillaSerializer.serialize(tag));
+        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), NBTVanillaSerializer.serialize(tag));
         return this;
     }
 
@@ -519,15 +519,15 @@ public class BukkitItemBuilder implements ItemStackBuilder {
 
         var serialized = NBTVanillaSerializer.serialize(tag);
 
-        var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodGetTag1());
+        var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
 
         if (nbt != null) {
-            Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodMerge1(), serialized);
+            Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_MERGE.get(), serialized);
         } else {
             nbt = serialized;
         }
 
-        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodSetTag1(), nbt);
+        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
         return this;
     }
 

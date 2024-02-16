@@ -77,7 +77,7 @@ accessors {
     mapClass('net.minecraft.core.MappedRegistry') {
         method(int, 'getId', Object)
         method(Object, 'get', ResourceLocation) // 1.13.1+
-        method(Object, 'get', Object) // <= 1.13
+        methodInferred('func_148757_b', version='1.8.8', Object) // <= 1.13
     }
 
     var SynchedEntityData = mapClass('net.minecraft.network.syncher.SynchedEntityData') {

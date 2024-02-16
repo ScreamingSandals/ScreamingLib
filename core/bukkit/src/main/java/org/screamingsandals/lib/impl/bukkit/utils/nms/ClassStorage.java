@@ -26,6 +26,7 @@ import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.math.Vector3Df;
+import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Map;
@@ -63,7 +64,7 @@ public class ClassStorage {
 		return Reflect
 				.getMethod(player, "getHandle")
 				.invokeResulted()
-				.getField(ServerPlayerAccessor.getFieldConnection());
+				.getField(ServerPlayerAccessor.FIELD_CONNECTION.get());
 	}
 
 	public static Object getMethodProfiler(World world) {
@@ -71,26 +72,26 @@ public class ClassStorage {
 	}
 
 	public static Object getMethodProfiler(Object handler) {
-		Object methodProfiler = Reflect.fastInvoke(handler, LevelAccessor.getMethodGetProfiler1());
+		Object methodProfiler = Reflect.fastInvoke(handler, LevelAccessor.METHOD_GET_PROFILER.get());
 		if (methodProfiler == null) {
-			methodProfiler = Reflect.getField(handler, LevelAccessor.getFieldField_72984_F());
+			methodProfiler = Reflect.getField(handler, LevelAccessor.FIELD_METHOD_PROFILER.get());
 		}
 		return methodProfiler;
 	}
 
 	public static Object obtainNewPathfinderSelector(Object handler) {
 		try {
-			Object world = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetCommandSenderWorld1());
+			Object world = Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_COMMAND_SENDER_WORLD.get());
 			try {
 				// 1.17
-				return GoalSelectorAccessor.getConstructor0().newInstance(Reflect.fastInvoke(world, LevelAccessor.getMethodGetProfilerSupplier1()));
+				return GoalSelectorAccessor.CONSTRUCTOR_0.get().newInstance(Reflect.fastInvoke(world, LevelAccessor.METHOD_GET_PROFILER_SUPPLIER.get()));
 			} catch (Throwable ignored) {
 				try {
 					// 1.16
-					return GoalSelectorAccessor.getConstructor0().newInstance((Supplier<?>) () -> getMethodProfiler(world));
+					return GoalSelectorAccessor.CONSTRUCTOR_0.get().newInstance((Supplier<?>) () -> getMethodProfiler(world));
 				} catch (Throwable ignore) {
 					// Pre 1.16
-					return GoalSelectorAccessor.getType().getConstructors()[0].newInstance(getMethodProfiler(world));
+					return GoalSelectorAccessor.TYPE.get().getConstructors()[0].newInstance(getMethodProfiler(world));
 				}
 			}
 		} catch (Throwable t) {
@@ -102,7 +103,7 @@ public class ClassStorage {
 
 	public static Object getVectorToNMS(Vector3Df vector3f) {
 		try {
-			return RotationsAccessor.getConstructor0().newInstance(vector3f.getX(), vector3f.getY(), vector3f.getZ());
+			return RotationsAccessor.CONSTRUCTOR_0.get().newInstance(vector3f.getX(), vector3f.getY(), vector3f.getZ());
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return null;
@@ -113,9 +114,9 @@ public class ClassStorage {
 		Preconditions.checkNotNull(vector3f, "Vector is null!");
 		try {
 			return new Vector3Df(
-					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.getMethodGetX1()),
-					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.getMethodGetY1()),
-					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.getMethodGetZ1())
+					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.METHOD_GET_X.get()),
+					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.METHOD_GET_Y.get()),
+					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.METHOD_GET_Z.get())
 			);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -127,12 +128,12 @@ public class ClassStorage {
 	 * Unlike packets module, this method just send packet created by NMS itself (used by Spectator so packets module is not required by core)
 	 */
 	public static boolean sendNMSConstructedPacket(Player player, Object packet) {
-		if (!PacketAccessor.getType().isInstance(packet)) {
+		if (!PacketAccessor.TYPE.get().isInstance(packet)) {
 			return false;
 		}
 		Object connection = getPlayerConnection(player);
 		if (connection != null) {
-			Reflect.fastInvoke(connection, ServerCommonPacketListenerImplAccessor.getMethodSend1() != null ? ServerCommonPacketListenerImplAccessor.getMethodSend1() /* 1.20.2+ */: ServerGamePacketListenerImplAccessor.getMethodSend1() /* <= 1.20.1 */, packet);
+			Reflect.fastInvoke(connection, ServerCommonPacketListenerImplAccessor.METHOD_SEND.get() != null ? ServerCommonPacketListenerImplAccessor.METHOD_SEND.get() /* 1.20.2+ */: ServerGamePacketListenerImplAccessor.METHOD_SEND.get() /* <= 1.20.1 */, packet);
 			return true;
 		}
 		return false;
@@ -143,11 +144,7 @@ public class ClassStorage {
 	}
 
 	public static @NotNull Object asMinecraftComponent(@NotNull String javaJson) {
-		if (Component_i_SerializerAccessor.getMethodM_130701_1() != null) { // 1.16.1+
-			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) javaJson);
-		} else {
-			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodFunc_150699_a1(), (Object) javaJson);
-		}
+		return Reflect.fastInvoke(Component$SerializerAccessor.METHOD_FROM_JSON_1.get(), (Object) javaJson);
 	}
 
 	public static Object stackAsNMS(ItemStack item) {
@@ -162,39 +159,39 @@ public class ClassStorage {
 
 	public static Object getDataWatcher(Object handler) {
 		Preconditions.checkNotNull(handler, "Handler is null!");
-		return Reflect.fastInvoke(handler, EntityAccessor.getMethodGetEntityData1());
+		return Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_ENTITY_DATA.get());
 	}
 
 	public static int getEntityTypeId(String key, Class<?> clazz) {
-		var registry1_19_3 = Reflect.getFieldResulted(BuiltInRegistriesAccessor.getFieldENTITY_TYPE());
-		if (registry1_19_3.isPresent()) {
+		var registry1_19_3 = BuiltInRegistriesAccessor.FIELD_ENTITY_TYPE.get();
+		if (registry1_19_3 != null) {
 			// 1.19.3+
-			var optional = Reflect.fastInvoke(EntityTypeAccessor.getMethodByString1(), (Object) key);
+			var optional = Reflect.fastInvoke(EntityTypeAccessor.METHOD_BY_STRING.get(), (Object) key);
 
-			return registry1_19_3.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
+			return Reflect.fastInvokeResulted(registry1_19_3, IRegistryAccessor.METHOD_GET_ID.get(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
 		} else {
 			// <= 1.19.2
-			var registry = Reflect.getFieldResulted(RegistryAccessor.getFieldENTITY_TYPE());
+			var registry = IRegistryAccessor.FIELD_ENTITY_TYPE.get();
 
-			if (registry.isPresent()) {
+			if (registry != null) {
 				// 1.14+
-				var optional = Reflect.fastInvoke(EntityTypeAccessor.getMethodByString1(), (Object) key);
+				var optional = Reflect.fastInvoke(EntityTypeAccessor.METHOD_BY_STRING.get(), (Object) key);
 
 				if (optional instanceof Optional) {
-					return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
+					return Reflect.fastInvokeResulted(registry, IRegistryAccessor.METHOD_GET_ID.get(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
 				}
 
 				// 1.13.X
-				var nullable = Reflect.fastInvoke(EntityTypeAccessor.getMethodFunc_200713_a1(), (Object) key);
-				return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), nullable).asOptional(Integer.class).orElse(0);
+				var nullable = Reflect.fastInvoke(EntityTypeAccessor.METHOD_FUNC_200713_A.get(), (Object) key);
+				return Reflect.fastInvokeResulted(registry, IRegistryAccessor.METHOD_GET_ID.get(), nullable).asOptional(Integer.class).orElse(0);
 			} else {
 				// 1.11 - 1.12.2
-				if (EntityTypeAccessor.getFieldField_191308_b() != null) {
-					return Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_191308_b()).fastInvokeResulted(MappedRegistryAccessor.getMethodFunc_148757_b1(), clazz).asOptional(Integer.class).orElse(0);
+				if (EntityTypeAccessor.FIELD_FIELD_191308_B.get() != null) {
+					return Reflect.fastInvokeResulted(EntityTypeAccessor.FIELD_FIELD_191308_B.get(), MappedRegistryAccessor.METHOD_FUNC_148757_B.get(), clazz).asOptional(Integer.class).orElse(0);
 				}
 
 				// 1.8.8 - 1.10.2
-				return (int) Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_75624_e()).as(Map.class).get(clazz);
+				return (int) InvocationResult.wrap(EntityTypeAccessor.FIELD_FIELD_75624_E.get()).as(Map.class).get(clazz);
 			}
 		}
 	}

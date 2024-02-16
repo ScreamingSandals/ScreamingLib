@@ -76,17 +76,17 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
     public void sendActionBar(@NotNull ComponentLike message) {
         var comp = message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(owner()) : message.asComponent();
         if (BukkitFeature.BUNGEECORD_CHAT_SEND_MESSAGE_WITH_CHAT_MESSAGE_TYPE.isSupported() && BukkitFeature.HEX_COLORS.isSupported()) {
-            // thanks to MC-119145 amd md_5, this method didn't work correctly till 1.16
+            // thanks to MC-119145 and md_5, this method didn't work correctly till 1.16
             commandSender().spigot().sendMessage(ChatMessageType.ACTION_BAR, comp.as(BaseComponent.class));
-        } else if (ClientboundSetTitlesPacket_i_TypeAccessor.getFieldACTIONBAR() != null) {
+        } else if (ClientboundSetTitlesPacket$TypeAccessor.FIELD_ACTIONBAR.get() != null) {
             // 1.11-1.16.5: Use Title packet to avoid MC-119145
-            var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor1(), ClientboundSetTitlesPacket_i_TypeAccessor.getFieldACTIONBAR(), ClassStorage.asMinecraftComponent(comp));
+            var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_1.get(), ClientboundSetTitlesPacket$TypeAccessor.FIELD_ACTIONBAR.get(), ClassStorage.asMinecraftComponent(comp));
             ClassStorage.sendNMSConstructedPacket(commandSender(), titleP);
         } else {
             // 1.8.8-1.10.2
             var components = new BaseComponent[] {new TextComponent(comp.toLegacy())}; // due to MC-119145, we have to convert it to legacy despite the packet accepts json
 
-            var packet = Reflect.construct(PacketPlayOutChatAccessor.getConstructor0(), null, (byte) 2);
+            var packet = Reflect.construct(ClientboundChatPacketAccessor.CONSTRUCTOR_0.get(), null, (byte) 2);
             Reflect.setField(packet, "components", components); // Spigot field, no mapping
             ClassStorage.sendNMSConstructedPacket(commandSender(), packet);
         }
@@ -126,12 +126,12 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
                 }
 
                 Object packet;
-                if (ClientboundTabListPacketAccessor.getConstructor1() != null) {
-                    packet = Reflect.construct(ClientboundTabListPacketAccessor.getConstructor1(), headerComponent, footerComponent);
+                if (ClientboundTabListPacketAccessor.CONSTRUCTOR_1.get() != null) {
+                    packet = Reflect.construct(ClientboundTabListPacketAccessor.CONSTRUCTOR_1.get(), headerComponent, footerComponent);
                 } else {
-                    packet = Reflect.construct(ClientboundTabListPacketAccessor.getConstructor0());
-                    Reflect.setField(packet, ClientboundTabListPacketAccessor.getFieldHeader(), headerComponent);
-                    Reflect.setField(packet, ClientboundTabListPacketAccessor.getFieldFooter(), footerComponent);
+                    packet = Reflect.construct(ClientboundTabListPacketAccessor.CONSTRUCTOR_0.get());
+                    Reflect.setField(packet, ClientboundTabListPacketAccessor.FIELD_HEADER.get(), headerComponent);
+                    Reflect.setField(packet, ClientboundTabListPacketAccessor.FIELD_FOOTER.get(), footerComponent);
                 }
                 ClassStorage.sendNMSConstructedPacket(commandSender(), packet);
             } catch (Throwable ignored) {  // will it ever crash? our reflect library is kinda safe
@@ -159,26 +159,26 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
         try {
             var t = ClassStorage.asMinecraftComponent(title.title());
             var s = ClassStorage.asMinecraftComponent(title.subtitle());
-            if (ClientboundSetTitlesAnimationPacketAccessor.getType() != null) {
+            if (ClientboundSetTitlesAnimationPacketAccessor.TYPE.get() != null) {
                 // 1.17+
-                var times = Reflect.construct(ClientboundSetTitlesAnimationPacketAccessor.getConstructor0(), (int) title.fadeIn().toMillis() / 50, (int) title.stay().toMillis() / 50, (int) title.fadeOut().toMillis() / 50);
+                var times = Reflect.construct(ClientboundSetTitlesAnimationPacketAccessor.CONSTRUCTOR_0.get(), (int) title.fadeIn().toMillis() / 50, (int) title.stay().toMillis() / 50, (int) title.fadeOut().toMillis() / 50);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), times);
 
-                var titleP = Reflect.construct(ClientboundSetTitleTextPacketAccessor.getConstructor0(), t);
+                var titleP = Reflect.construct(ClientboundSetTitleTextPacketAccessor.CONSTRUCTOR_0.get(), t);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), titleP);
 
-                var subtitleP = Reflect.construct(ClientboundSetSubtitleTextPacketAccessor.getConstructor0(), s);
+                var subtitleP = Reflect.construct(ClientboundSetSubtitleTextPacketAccessor.CONSTRUCTOR_0.get(), s);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), subtitleP);
                 return;
-            } else if (ClientboundSetTitlesPacketAccessor.getType() != null) {
+            } else if (ClientboundSetTitlesPacketAccessor.TYPE.get() != null) {
                 // 1.8.8 - 1.16.5
-                var times = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor0(), (int) title.fadeIn().toMillis() / 50, (int) title.stay().toMillis() / 50, (int) title.fadeOut().toMillis() / 50);
+                var times = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_0.get(), (int) title.fadeIn().toMillis() / 50, (int) title.stay().toMillis() / 50, (int) title.fadeOut().toMillis() / 50);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), times);
 
-                var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor1(), ClientboundSetTitlesPacket_i_TypeAccessor.getFieldTITLE(), t);
+                var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_1.get(), ClientboundSetTitlesPacket$TypeAccessor.FIELD_TITLE.get(), t);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), titleP);
 
-                var subtitleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor1(), ClientboundSetTitlesPacket_i_TypeAccessor.getFieldSUBTITLE(), s);
+                var subtitleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_1.get(), ClientboundSetTitlesPacket$TypeAccessor.FIELD_SUBTITLE.get(), s);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), subtitleP);
                 return;
             }
@@ -320,16 +320,16 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
 
         try {
             if (BukkitFeature.MODERN_OPEN_BOOK_PACKET.isSupported()) {
-                var packet = Reflect.construct(ClientboundOpenBookPacketAccessor.getConstructor0(), InteractionHandAccessor.getFieldMAIN_HAND());
+                var packet = Reflect.construct(ClientboundOpenBookPacketAccessor.CONSTRUCTOR_0.get(), InteractionHandAccessor.FIELD_MAIN_HAND.get());
                 ClassStorage.sendNMSConstructedPacket(player, packet);
             } else if (BukkitFeature.MODERN_OPEN_BOOK_PLUGIN_MESSAGE.isSupported()) {
-                var bytebuf = Reflect.construct(FriendlyByteBufAccessor.getConstructor0(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));
-                var location = Reflect.construct(ResourceLocationAccessor.getConstructor0(), "minecraft:book_open");
-                var packet = Reflect.construct(ClientboundCustomPayloadPacketAccessor.getConstructor1(), location, bytebuf);
+                var bytebuf = Reflect.construct(FriendlyByteBufAccessor.CONSTRUCTOR_0.get(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));
+                var location = Reflect.construct(ResourceLocationAccessor.CONSTRUCTOR_0.get(), "minecraft:book_open");
+                var packet = Reflect.construct(ClientboundCustomPayloadPacketAccessor.CONSTRUCTOR_1.get(), location, bytebuf);
                 ClassStorage.sendNMSConstructedPacket(player, packet);
             } else {
-                var bytebuf = Reflect.construct(FriendlyByteBufAccessor.getConstructor0(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));
-                var packet = Reflect.construct(ClientboundCustomPayloadPacketAccessor.getConstructor0(), "MC|BOpen", bytebuf);
+                var bytebuf = Reflect.construct(FriendlyByteBufAccessor.CONSTRUCTOR_0.get(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));
+                var packet = Reflect.construct(ClientboundCustomPayloadPacketAccessor.CONSTRUCTOR_0.get(), "MC|BOpen", bytebuf);
                 ClassStorage.sendNMSConstructedPacket(player, packet);
             }
         } catch (Throwable ignored) {

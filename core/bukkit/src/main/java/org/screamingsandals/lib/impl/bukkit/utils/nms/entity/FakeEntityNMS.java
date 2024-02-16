@@ -162,21 +162,21 @@ public class FakeEntityNMS<E extends Entity> extends EntityNMS implements Listen
 
     public Object createSpawnPacket() {
         if (this.entity instanceof LivingEntity) {
-            return Reflect.construct(ClientboundAddMobPacketAccessor.getConstructor0(), handler);
+            return Reflect.construct(ClientboundAddMobPacketAccessor.CONSTRUCTOR_0.get(), handler);
         }
         return null;
     }
 
     public Object createDespawnPacket() {
-        return Reflect.construct(ClientboundRemoveEntitiesPacketAccessor.getConstructor0(), (Object) new int[] {this.entity.getEntityId()});
+        return Reflect.construct(ClientboundRemoveEntitiesPacketAccessor.CONSTRUCTOR_0.get(), (Object) new int[] {this.entity.getEntityId()});
     }
 
     public Object createLocationPacket() {
-        return Reflect.construct(ClientboundTeleportEntityPacketAccessor.getConstructor0(), handler);
+        return Reflect.construct(ClientboundTeleportEntityPacketAccessor.CONSTRUCTOR_0.get(), handler);
     }
 
     public void teleport(Player viewer, Location location) {
-        Reflect.fastInvoke(handler, EntityAccessor.getMethodAbsMoveTo1(), location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
+        Reflect.fastInvoke(handler, EntityAccessor.METHOD_ABS_MOVE_TO.get(), location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
         ClassStorage.sendNMSConstructedPacket(viewer, createLocationPacket());
     }
 
@@ -191,7 +191,7 @@ public class FakeEntityNMS<E extends Entity> extends EntityNMS implements Listen
         final Object dataWatcher = getDataWatcher();
         if (dataWatcher != null) {
             // 1.8.8 ONLY
-            Reflect.fastInvoke(dataWatcher, SynchedEntityDataAccessor.getMethodWatch1(), position, data);
+            Reflect.fastInvoke(dataWatcher, SynchedEntityDataAccessor.METHOD_WATCH.get(), position, data);
             Object metadataPacket = createMetadataPacket();
             viewers.forEach(viewer -> ClassStorage.sendNMSConstructedPacket(viewer, metadataPacket));
         }
@@ -199,7 +199,7 @@ public class FakeEntityNMS<E extends Entity> extends EntityNMS implements Listen
 
     public Object createMetadataPacket() {
         final Object dataWatcher = getDataWatcher();
-        return Reflect.construct(ClientboundSetEntityDataPacketAccessor.getConstructor0(), entity.getEntityId(), dataWatcher, false);
+        return Reflect.construct(ClientboundSetEntityDataPacketAccessor.CONSTRUCTOR_0.get(), entity.getEntityId(), dataWatcher, false);
     }
 
     public void destroy() {

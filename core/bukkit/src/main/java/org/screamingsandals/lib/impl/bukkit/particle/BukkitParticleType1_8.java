@@ -69,9 +69,9 @@ public class BukkitParticleType1_8 extends BasicWrapper<Integer> implements Part
 
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
-        if (type == EnumParticleAccessor.getType()) {
+        if (type == EnumParticleAccessor.TYPE.get()) {
             //noinspection unchecked
-            return (T) Reflect.fastInvoke(EnumParticleAccessor.getMethodA1(), wrappedObject);
+            return (T) Reflect.fastInvoke(EnumParticleAccessor.METHOD_FUNC_179342_A.get(), wrappedObject);
         }
         return super.as(type);
     }

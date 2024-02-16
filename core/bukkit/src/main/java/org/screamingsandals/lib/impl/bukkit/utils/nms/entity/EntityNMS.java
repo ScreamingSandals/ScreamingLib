@@ -45,29 +45,29 @@ public class EntityNMS {
 
 	public Location getLocation() {
 		if (Version.isVersion(1, 16)) {
-			double locX = (double) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetX1());
-			double locY = (double) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetY1());
-			double locZ = (double) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetZ1());
+			double locX = (double) Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_X.get());
+			double locY = (double) Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_Y.get());
+			double locZ = (double) Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_Z.get());
 			float yaw, pitch;
 			if (Version.isVersion(1,17)) {
-				yaw = (float) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetXRot1());
-				pitch = (float) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetYRot1());
+				yaw = (float) Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_Y_ROT.get());
+				pitch = (float) Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_X_ROT.get());
 			} else {
-				yaw = (float) Reflect.getField(handler, EntityAccessor.getFieldField_70177_z());
-				pitch = (float) Reflect.getField(handler, EntityAccessor.getFieldField_70125_A());
+				yaw = (float) Reflect.getField(handler, EntityAccessor.FIELD_Y_ROT.get());
+				pitch = (float) Reflect.getField(handler, EntityAccessor.FIELD_X_ROT.get());
 			}
 
-			Object world = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetCommandSenderWorld1());
+			Object world = Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_COMMAND_SENDER_WORLD.get());
 			World craftWorld = (World) Reflect.getMethod(world, "getWorld").invoke();
 
 			return new Location(craftWorld, locX, locY, locZ, yaw, pitch);
 		} else {
-			double locX = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70165_t());
-			double locY = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70163_u());
-			double locZ = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70161_v());
-			float yaw = (float) Reflect.getField(handler, EntityAccessor.getFieldField_70177_z());
-			float pitch = (float) Reflect.getField(handler, EntityAccessor.getFieldField_70125_A());
-			Object world = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetCommandSenderWorld1());
+			double locX = (double) Reflect.getField(handler, EntityAccessor.FIELD_X.get());
+			double locY = (double) Reflect.getField(handler, EntityAccessor.FIELD_Y.get());
+			double locZ = (double) Reflect.getField(handler, EntityAccessor.FIELD_Z.get());
+			float yaw = (float) Reflect.getField(handler, EntityAccessor.FIELD_Y_ROT.get());
+			float pitch = (float) Reflect.getField(handler, EntityAccessor.FIELD_X_ROT.get());
+			Object world = Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_COMMAND_SENDER_WORLD.get());
 			World craftWorld = (World) Reflect.getMethod(world, "getWorld").invoke();
 
 			return new Location(craftWorld, locX, locY, locZ, yaw, pitch);
@@ -75,15 +75,15 @@ public class EntityNMS {
 	}
 
 	public Object getEntityType() {
-		return Reflect.fastInvoke(handler, EntityAccessor.getMethodGetType1());
+		return Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_TYPE.get());
 	}
 
 	public void setLocation(Location location) {
-		final var craftWorld = (World) Reflect.fastInvokeResulted(handler, EntityAccessor.getMethodGetCommandSenderWorld1()).fastInvoke("getWorld");
+		final var craftWorld = (World) Reflect.fastInvokeResulted(handler, EntityAccessor.METHOD_GET_COMMAND_SENDER_WORLD.get()).fastInvoke("getWorld");
 		if (!location.getWorld().equals(craftWorld)) {
-			Reflect.setField(handler, EntityAccessor.getFieldField_70170_p(), ClassStorage.getHandle(location.getWorld()));
+			Reflect.setField(handler, EntityAccessor.FIELD_LEVEL.get(), ClassStorage.getHandle(location.getWorld()));
 		}
-		Reflect.fastInvoke(handler, EntityAccessor.getMethodAbsMoveTo1(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		Reflect.fastInvoke(handler, EntityAccessor.METHOD_ABS_MOVE_TO.get(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 	}
 
 	public Object getHandler() {
@@ -91,36 +91,37 @@ public class EntityNMS {
 	}
 
 	public int getId() {
-		return (int) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetId1());
+		return (int) Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_ID.get());
 	}
 
 	public void setId(int id) {
-		Reflect.setField(handler, EntityAccessor.getFieldId(), id);
+		Reflect.setField(handler, EntityAccessor.FIELD_ID.get(), id);
 	}
 
 	public Object getDataWatcher() {
-		return Reflect.fastInvoke(handler, EntityAccessor.getMethodGetEntityData1());
+		return Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_ENTITY_DATA.get());
 	}
 
 	public void setCustomName(Component name) {
-		final var method = EntityAccessor.getMethodSetCustomName1();
+		final var method = EntityAccessor.METHOD_SET_CUSTOM_NAME_1.get();
 		if (method != null) {
 			Reflect.fastInvoke(method, ClassStorage.asMinecraftComponent(name));
 		} else {
-			Reflect.fastInvoke(handler, EntityAccessor.getMethodFunc_96094_a1(), name.toLegacy());
+			Reflect.fastInvoke(handler, EntityAccessor.METHOD_SET_CUSTOM_NAME.get(), name.toLegacy());
 		}
 	}
 
 	public Component getCustomName() {
-		final var textComponent = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetCustomName1());
-		final var stored = ComponentAccessor.getType();
+		final var textComponent = Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_CUSTOM_NAME.get());
+		final var stored = ComponentAccessor.TYPE.get();
 		if (stored == null) {
 			return Component.empty();
 		}
 
 		if (stored.isInstance(textComponent)) {
 			try {
-				return Component.fromLegacy((String) Reflect.fastInvoke(textComponent, ComponentAccessor.getMethodFunc_150254_d1()));
+				// TODO: Works only on 1.13-1.15.2, seems to be unused, fix or remove
+				return Component.fromLegacy((String) Reflect.fastInvoke(textComponent, ComponentAccessor.METHOD_GET_COLORED_STRING.get()));
 			} catch (Throwable t) {
 				throw new UnsupportedOperationException("Cannot deserialize " + textComponent, t);
 			}
@@ -130,53 +131,53 @@ public class EntityNMS {
 	}
 
 	public void setCustomNameVisible(boolean visible) {
-		Reflect.fastInvoke(handler, EntityAccessor.getMethodSetCustomNameVisible1(), visible);
+		Reflect.fastInvoke(handler, EntityAccessor.METHOD_SET_CUSTOM_NAME_VISIBLE.get(), visible);
 	}
 
 	public boolean isCustomNameVisible() {
-		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.getMethodIsCustomNameVisible1());
+		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.METHOD_IS_CUSTOM_NAME_VISIBLE.get());
 	}
 
 	public void setInvisible(boolean invisible) {
-		Reflect.fastInvoke(handler, EntityAccessor.getMethodSetInvisible1(), invisible);
+		Reflect.fastInvoke(handler, EntityAccessor.METHOD_SET_INVISIBLE.get(), invisible);
 	}
 
 	public boolean isInvisible() {
-		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.getMethodIsInvisible1());
+		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.METHOD_IS_INVISIBLE.get());
 	}
 
 	public void setGravity(boolean gravity) {
-		Reflect.fastInvoke(handler, EntityAccessor.getMethodSetNoGravity1(), !gravity);
+		Reflect.fastInvoke(handler, EntityAccessor.METHOD_SET_NO_GRAVITY.get(), !gravity);
 	}
 
 	public boolean isGravity() {
-		return !((boolean) Reflect.fastInvoke(handler, EntityAccessor.getMethodIsNoGravity1()));
+		return !((boolean) Reflect.fastInvoke(handler, EntityAccessor.METHOD_IS_NO_GRAVITY.get()));
 	}
 
 	public boolean isOnGround() {
-		final var onGround_field = Reflect.getField(handler, EntityAccessor.getFieldOnGround());
+		final var onGround_field = Reflect.getField(handler, EntityAccessor.FIELD_ON_GROUND.get());
 		if (onGround_field != null) {
 			return (boolean) onGround_field;
 		}
-		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.getMethodOnGround1());
+		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.METHOD_ON_GROUND.get());
 	}
 
 	public UUID getUniqueId() {
-		return (UUID) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetUUID1());
+		return (UUID) Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_U_U_I_D.get());
 	}
 
 	public Vector3D getVelocity() {
-		if (Reflect.getField(handler, EntityAccessor.getFieldField_70159_w()) != null) {
-			double motX = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70159_w());
-			double motY = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70181_x());
-			double motZ = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70179_y());
+		if (Reflect.getField(handler, EntityAccessor.FIELD_MOT_X.get()) != null) {
+			double motX = (double) Reflect.getField(handler, EntityAccessor.FIELD_MOT_X.get());
+			double motY = (double) Reflect.getField(handler, EntityAccessor.FIELD_MOT_Y.get());
+			double motZ = (double) Reflect.getField(handler, EntityAccessor.FIELD_MOT_Z.get());
 			return new Vector3D(
 					motX,
 					motY,
 					motZ
 			);
 		} else {
-			final var mot = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetDeltaMovement1());
+			final var mot = Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_DELTA_MOVEMENT.get());
 			final var bukkitVector = (Vector) Reflect.getMethod(ClassStorage.CB.CraftVector, "toBukkit").invokeStatic(mot);
 			if (bukkitVector == null) {
 				return new Vector3D(0, 0, 0);

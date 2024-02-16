@@ -160,9 +160,9 @@ public class BukkitPlayers extends Players {
             return cachedChannel;
         }
 
-        final var channel = (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(bukkitPlayer), ServerPlayerAccessor.getFieldConnection())
-                .getFieldResulted(ServerCommonPacketListenerImplAccessor.getFieldConnection() != null ? ServerCommonPacketListenerImplAccessor.getFieldConnection() /* 1.20.2+ */: ServerGamePacketListenerImplAccessor.getFieldConnection() /* <= 1.20.1 */)
-                .getFieldResulted(ConnectionAccessor.getFieldChannel())
+        final var channel = (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(bukkitPlayer), ServerPlayerAccessor.FIELD_CONNECTION.get())
+                .getFieldResulted(ServerCommonPacketListenerImplAccessor.FIELD_CONNECTION.get() != null ? ServerCommonPacketListenerImplAccessor.FIELD_CONNECTION.get() /* 1.20.2+ */: ServerGamePacketListenerImplAccessor.FIELD_CONNECTION.get() /* <= 1.20.1 */)
+                .getFieldResulted(ConnectionAccessor.FIELD_CHANNEL.get())
                 .raw();
 
         channelCache.put(bukkitPlayer, channel);

@@ -179,10 +179,10 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
             );
         } else {
             // 1.8.8
-            var enumParticle = particle.particleType().as(EnumParticleAccessor.getType());
+            var enumParticle = particle.particleType().as(EnumParticleAccessor.TYPE.get());
             Reflect.fastInvoke(
                     ClassStorage.getHandle(wrappedObject),
-                    ServerLevelAccessor.getMethodA1(),
+                    ServerLevelAccessor.METHOD_FUNC_180505_A.get(),
                     enumParticle,
                     particle.longDistance(),
                     (float) location.getX(),

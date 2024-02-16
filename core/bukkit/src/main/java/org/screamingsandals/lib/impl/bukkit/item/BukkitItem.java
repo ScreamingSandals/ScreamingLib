@@ -138,15 +138,15 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
                     }
                     tag = unhandled.get("AttributeModifiers");
                 } else {
-                    var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(wrappedObject), ItemStackAccessor.getMethodGetTag1());
-                    tag = Reflect.fastInvoke(nbt, CompoundTagAccessor.getMethodGet1(), "AttributeModifiers");
+                    var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(wrappedObject), ItemStackAccessor.METHOD_GET_TAG.get());
+                    tag = Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_GET.get(), "AttributeModifiers");
                 }
                 if (tag != null) {
-                    var size = Reflect.fastInvoke(tag, ListTagAccessor.getMethodSize1());
+                    var size = Reflect.fastInvoke(tag, ListTagAccessor.METHOD_SIZE.get());
                     if (size instanceof Integer) {
                         var list = new ArrayList<ItemAttribute>((int) size);
                         for (var i = 0; i < (int) size; i++) {
-                            var t = (CompoundTag) NBTVanillaSerializer.deserialize(Reflect.fastInvoke(tag, ListTagAccessor.getMethodGet1(), i));
+                            var t = (CompoundTag) NBTVanillaSerializer.deserialize(Reflect.fastInvoke(tag, ListTagAccessor.METHOD_GET.get(), i));
                             list.add(new ItemAttribute(
                                     AttributeType.of(StringUtils.camelToSnake(((StringTag) t.tag("AttributeName")).value())),
                                     new UUID(((NumericTag) t.tag("UUIDMost")).longValue(), ((NumericTag) t.tag("UUIDLeast")).longValue()),
@@ -203,10 +203,10 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
                     // TODO: check if this rly copies the tags and not just reference
                     var compound = unhandled.get("PublicBukkitValues");
                     var nmap = new HashMap<String, Object>();
-                    if (CompoundTagAccessor.getType().isInstance(compound)) {
-                        var keys = (Set) Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodGetAllKeys1());
+                    if (CompoundTagAccessor.TYPE.get().isInstance(compound)) {
+                        var keys = (Set) Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_GET_ALL_KEYS.get());
                         for (var key : keys) {
-                            nmap.put(key.toString(), Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodGet1(), key));
+                            nmap.put(key.toString(), Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_GET.get(), key));
                         }
                     }
                     return new CraftBukkitItemData(nmap);
@@ -299,7 +299,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
         }
 
         final var nmsStack = ClassStorage.stackAsNMS(wrappedObject);
-        final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.getMethodGetTag1());
+        final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_GET_TAG.get());
 
         if (nbtTag == null) {
             return CompoundTag.EMPTY;
@@ -322,8 +322,8 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
             return CompoundTag.EMPTY;
         }
 
-        final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(wrappedObject), ItemStackAccessor.getMethodCopy1());
-        final var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.getMethodSave1(), Reflect.construct(CompoundTagAccessor.getConstructor0()));
+        final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(wrappedObject), ItemStackAccessor.METHOD_COPY.get());
+        final var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE.get(), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
 
         var tag = NBTVanillaSerializer.deserialize(compound);
         if (tag instanceof CompoundTag) {
