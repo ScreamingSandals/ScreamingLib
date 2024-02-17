@@ -18,20 +18,25 @@ package org.screamingsandals.lib.impl.bukkit.utils.nms;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.impl.nms.accessors.*;
+import org.screamingsandals.lib.impl.nms.accessors.BuiltInRegistriesAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.Component$SerializerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.EntityTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.IRegistryAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.MappedRegistryAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.PacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ServerCommonPacketListenerImplAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ServerGamePacketListenerImplAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @UtilityClass
 public class ClassStorage {
@@ -43,12 +48,6 @@ public class ClassStorage {
 		public static final Class<?> CraftAttributeMap = Reflect.getClassSafe(CB_PACKAGE + ".attribute.CraftAttributeMap");
 		public static final Class<?> CraftItemStack = Reflect.getClassSafe(CB_PACKAGE + ".inventory.CraftItemStack");
 		public static final Class<?> CraftMagicNumbers = Reflect.getClassSafe(CB_PACKAGE + ".util.CraftMagicNumbers");
-		public static final Class<?> CraftVector = Reflect.getClassSafe(CB_PACKAGE + ".util.CraftVector");
-		public static final Class<?> CraftPersistentDataContainer = Reflect.getClassSafe(CB_PACKAGE + ".persistence.CraftPersistentDataContainer");
-		public static final Class<?> CraftCustomItemTagContainer = Reflect.getClassSafe(CB_PACKAGE + ".inventory.tags.CraftCustomItemTagContainer");
-		public static final Class<?> CraftMetaItem = Reflect.getClassSafe(CB_PACKAGE + ".inventory.CraftMetaItem");
-		public static final Class<?> CraftPersistentDataTypeRegistry = Reflect.getClassSafe(CB_PACKAGE + ".persistence.CraftPersistentDataTypeRegistry");
-		public static final Class<?> CraftCustomTagTypeRegistry = Reflect.getClassSafe(CB_PACKAGE + ".inventory.CraftCustomTagTypeRegistry");
 		public static final Class<?> CraftSound = Reflect.getClassSafe(CB_PACKAGE + ".CraftSound");
 	}
 	
@@ -65,63 +64,6 @@ public class ClassStorage {
 				.getMethod(player, "getHandle")
 				.invokeResulted()
 				.getField(ServerPlayerAccessor.FIELD_CONNECTION.get());
-	}
-
-	public static Object getMethodProfiler(World world) {
-		return getMethodProfiler(getHandle(world));
-	}
-
-	public static Object getMethodProfiler(Object handler) {
-		Object methodProfiler = Reflect.fastInvoke(handler, LevelAccessor.METHOD_GET_PROFILER.get());
-		if (methodProfiler == null) {
-			methodProfiler = Reflect.getField(handler, LevelAccessor.FIELD_METHOD_PROFILER.get());
-		}
-		return methodProfiler;
-	}
-
-	public static Object obtainNewPathfinderSelector(Object handler) {
-		try {
-			Object world = Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_COMMAND_SENDER_WORLD.get());
-			try {
-				// 1.17
-				return GoalSelectorAccessor.CONSTRUCTOR_0.get().newInstance(Reflect.fastInvoke(world, LevelAccessor.METHOD_GET_PROFILER_SUPPLIER.get()));
-			} catch (Throwable ignored) {
-				try {
-					// 1.16
-					return GoalSelectorAccessor.CONSTRUCTOR_0.get().newInstance((Supplier<?>) () -> getMethodProfiler(world));
-				} catch (Throwable ignore) {
-					// Pre 1.16
-					return GoalSelectorAccessor.TYPE.get().getConstructors()[0].newInstance(getMethodProfiler(world));
-				}
-			}
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-		return null;
-	}
-
-
-	public static Object getVectorToNMS(Vector3Df vector3f) {
-		try {
-			return RotationsAccessor.CONSTRUCTOR_0.get().newInstance(vector3f.getX(), vector3f.getY(), vector3f.getZ());
-		} catch (Throwable t) {
-			t.printStackTrace();
-			return null;
-		}
-	}
-
-	public static Vector3Df getVectorFromNMS(Object vector3f) {
-		Preconditions.checkNotNull(vector3f, "Vector is null!");
-		try {
-			return new Vector3Df(
-					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.METHOD_GET_X.get()),
-					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.METHOD_GET_Y.get()),
-					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.METHOD_GET_Z.get())
-			);
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-		return null;
 	}
 
 	/**
@@ -155,11 +97,6 @@ public class ClassStorage {
 	public static ItemStack asCBStack(ItemStack item) {
 		Preconditions.checkNotNull(item, "Item is null!");
 		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftCopy", ItemStack.class).invokeStatic(item);
-	}
-
-	public static Object getDataWatcher(Object handler) {
-		Preconditions.checkNotNull(handler, "Handler is null!");
-		return Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_ENTITY_DATA.get());
 	}
 
 	public static int getEntityTypeId(String key, Class<?> clazz) {

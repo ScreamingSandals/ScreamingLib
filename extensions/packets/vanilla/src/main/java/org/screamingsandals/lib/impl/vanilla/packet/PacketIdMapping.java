@@ -112,7 +112,7 @@ public class PacketIdMapping {
 
         if (ConnectionProtocolAccessor.FIELD_FLOWS.get() == null) {
             // up to 1.14.4
-            var outgoingMap = Reflect.getFieldResulted(playProtocol, ConnectionProtocolAccessor.FIELD_FLOWS.get())
+            var outgoingMap = Reflect.getFieldResulted(playProtocol, ConnectionProtocolAccessor.FIELD_PACKETS.get())
                     .as(Map.class)
                     .get(outgoing);
 

@@ -201,11 +201,4 @@ public class FakeEntityNMS<E extends Entity> extends EntityNMS implements Listen
         final Object dataWatcher = getDataWatcher();
         return Reflect.construct(ClientboundSetEntityDataPacketAccessor.CONSTRUCTOR_0.get(), entity.getEntityId(), dataWatcher, false);
     }
-
-    public void destroy() {
-        HandlerList.unregisterAll(this);
-        for (final Player viewer : new ArrayList<>(viewers)) {
-            teleport(viewer, null);
-        }
-    }
 }
