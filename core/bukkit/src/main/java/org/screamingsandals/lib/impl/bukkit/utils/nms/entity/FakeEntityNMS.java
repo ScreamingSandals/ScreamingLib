@@ -44,9 +44,10 @@ import java.util.List;
 // TODO: maybe try to use less Bukkit API for manipulating with the entity?
 // TODO: De-listener this class in favor of more global lazy-initialized listener
 @Getter
-public class FakeEntityNMS<E extends Entity> extends EntityNMS implements Listener {
+public class FakeEntityNMS<E extends Entity> implements Listener {
     @Getter
     protected final @NotNull List<@NotNull Player> viewers = new ArrayList<>();
+    protected Object handler;
     private E entity;
     private boolean visible;
 
@@ -58,6 +59,14 @@ public class FakeEntityNMS<E extends Entity> extends EntityNMS implements Listen
         } catch (Throwable t) {
             t.printStackTrace();
         }
+    }
+
+    public Object getDataWatcher() {
+        return Reflect.fastInvoke(handler, EntityAccessor.METHOD_GET_ENTITY_DATA.get());
+    }
+
+    public void setInvisible(boolean invisible) {
+        Reflect.fastInvoke(handler, EntityAccessor.METHOD_SET_INVISIBLE.get(), invisible);
     }
 
     public void setVisible(boolean visible) {
@@ -180,9 +189,14 @@ public class FakeEntityNMS<E extends Entity> extends EntityNMS implements Listen
         ClassStorage.sendNMSConstructedPacket(viewer, createLocationPacket());
     }
 
-    @Override
     public void setCustomName(Component name) {
-        super.setCustomName(name);
+        final var method = EntityAccessor.METHOD_SET_CUSTOM_NAME_1.get();
+        if (method != null) {
+            Reflect.fastInvoke(method, ClassStorage.asMinecraftComponent(name));
+        } else {
+            Reflect.fastInvoke(handler, EntityAccessor.METHOD_SET_CUSTOM_NAME.get(), name.toLegacy());
+        }
+
         Object metadataPacket = createMetadataPacket();
         viewers.forEach(viewer -> ClassStorage.sendNMSConstructedPacket(viewer, metadataPacket));
     }
