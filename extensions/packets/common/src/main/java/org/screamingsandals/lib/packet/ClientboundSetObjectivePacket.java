@@ -60,7 +60,7 @@ public class ClientboundSetObjectivePacket extends AbstractPacket {
             if (writer.protocol() >= 349) {
                 writer.writeVarInt(criteriaType.ordinal());
 
-                if (writer.protocol() >= 756) {
+                if (writer.protocol() >= 765) {
                     writer.writeBoolean(numberFormat != null);
                     if (numberFormat != null) {
                         writer.writeVarInt(numberFormat.ordinal());
