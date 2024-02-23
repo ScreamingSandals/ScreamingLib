@@ -50,21 +50,21 @@ public class ClientboundSetScorePacket extends AbstractPacket {
 
     @Override
     public void write(@NotNull PacketWriter writer) {
-        if (writer.protocol() >= 756 && action == ScoreboardAction.REMOVE) {
+        if (writer.protocol() >= 765 && action == ScoreboardAction.REMOVE) {
             writer.setCancelled(true);
             writer.append(new ClientboundResetScorePacket1_20_3(entityName, objectiveKey));
             return;
         }
 
         writer.writeSizedString(entityName);
-        if (writer.protocol() < 756) {
+        if (writer.protocol() < 765) {
             writer.writeByte((byte) action.ordinal());
         }
         writer.writeSizedString(objectiveKey);
         if (action == ScoreboardAction.CHANGE) {
             writer.writeVarInt(score);
         }
-        if (writer.protocol() >= 756) {
+        if (writer.protocol() >= 765) {
             writer.writeBoolean(displayName != null);
             if (displayName != null) {
                 writer.writeComponent(displayName);
