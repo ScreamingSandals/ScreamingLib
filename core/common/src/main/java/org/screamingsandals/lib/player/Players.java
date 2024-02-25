@@ -21,6 +21,8 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.CommandSenderHolder;
+import org.screamingsandals.lib.api.types.PlayerHolder;
 import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
@@ -30,6 +32,11 @@ import java.util.*;
 
 @ProvidedService
 public abstract class Players {
+    static {
+        CommandSenderHolder.Provider.registerProvider(Players::wrapSender);
+        PlayerHolder.Provider.registerProvider(Players::wrapPlayer);
+    }
+
     protected final @NotNull BidirectionalConverter<OfflinePlayer> offlinePlayerConverter = BidirectionalConverter.build();
     protected final @NotNull BidirectionalConverter<Player> specialPlayerConverter = BidirectionalConverter.build();
     private static @Nullable Players players;

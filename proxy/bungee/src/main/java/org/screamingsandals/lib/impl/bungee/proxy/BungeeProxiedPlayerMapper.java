@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.impl.bungee.proxy;
 
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -28,6 +29,7 @@ import org.screamingsandals.lib.impl.bungee.spectator.BungeeBackend;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.impl.proxy.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.ProxiedSender;
 import org.screamingsandals.lib.proxy.Server;
 import org.screamingsandals.lib.impl.spectator.Spectator;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -102,5 +104,27 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
                 .stream()
                 .map(BungeeProxiedPlayer::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    protected @NotNull ProxiedSender senderFromPlatform(@NotNull Object platformObject) {
+        if (platformObject instanceof ProxiedSender) {
+            return (ProxiedSender) platformObject;
+        } else if (platformObject instanceof net.md_5.bungee.api.connection.ProxiedPlayer) {
+            return new BungeeProxiedPlayer((net.md_5.bungee.api.connection.ProxiedPlayer) platformObject);
+        } else if (platformObject instanceof CommandSender) {
+            return new BungeeProxiedSender((CommandSender) platformObject);
+        }
+        throw new IllegalArgumentException("Not possible to convert unknown object type to ProxiedSender: " + platformObject);
+    }
+
+    @Override
+    protected @NotNull ProxiedPlayer playerFromPlatform(@NotNull Object platformObject) {
+        if (platformObject instanceof ProxiedPlayer) {
+            return (ProxiedPlayer) platformObject;
+        } else if (platformObject instanceof net.md_5.bungee.api.connection.ProxiedPlayer) {
+            return new BungeeProxiedPlayer((net.md_5.bungee.api.connection.ProxiedPlayer) platformObject);
+        }
+        throw new IllegalArgumentException("Not possible to convert unknown object type to ProxiedPlayer: " + platformObject);
     }
 }

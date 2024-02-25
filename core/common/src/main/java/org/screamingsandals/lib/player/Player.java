@@ -18,6 +18,7 @@ package org.screamingsandals.lib.player;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.PlayerHolder;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
@@ -39,7 +40,7 @@ import java.net.InetSocketAddress;
 /**
  * A player representation.
  */
-public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudience.ForwardingToAdapter {
+public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudience.ForwardingToAdapter, PlayerHolder {
 
     /**
      * Checks if the player is sprinting.

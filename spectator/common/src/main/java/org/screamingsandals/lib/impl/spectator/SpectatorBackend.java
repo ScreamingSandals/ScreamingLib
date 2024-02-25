@@ -97,4 +97,6 @@ public interface SpectatorBackend {
     EntityContent.@NotNull Builder entityContent();
 
     ItemContent.@NotNull Builder itemContent();
+
+    @Nullable Component fromPlatform(@NotNull Object platformObject);
 }

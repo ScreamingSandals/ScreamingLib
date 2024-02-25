@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.item;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.ItemTypeHolder;
 import org.screamingsandals.lib.impl.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -26,10 +27,17 @@ import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistry;
 
 import java.util.Map;
+import java.util.Objects;
 
 @ProvidedService
 @ApiStatus.Internal
 public abstract class ItemTypeRegistry extends SimpleRegistry<ItemType> {
+    static {
+        ItemTypeHolder.Provider.registerProvider(o ->
+                Objects.requireNonNull(getInstance().resolveMapping(o), "Could not wrap " + o + " to ItemType")
+        );
+    }
+
     private static @Nullable ItemTypeRegistry registry;
     private static @Nullable ItemType cachedAir;
 

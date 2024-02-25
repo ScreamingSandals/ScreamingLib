@@ -17,11 +17,12 @@
 package org.screamingsandals.lib.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.api.types.PlayerHolder;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 
 import java.util.UUID;
 
-public interface ProxiedPlayer extends ProxiedSender, PlayerAudience.ForwardingToAdapter {
+public interface ProxiedPlayer extends ProxiedSender, PlayerAudience.ForwardingToAdapter, PlayerHolder {
     @NotNull UUID getUuid();
 
     void switchServer(@NotNull Server server);

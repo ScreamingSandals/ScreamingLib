@@ -302,6 +302,7 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         try {
             return super.as(type);
         } catch (Throwable ignored) {
+            // TODO: conversion to shaded and relocated Adventure?
             return AdventureBackend.getAdditionalComponentConverter().convert(this, type);
         }
     }

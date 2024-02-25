@@ -325,6 +325,17 @@ public class AdventureBackend implements SpectatorBackend {
         return new AdventureItemContent.AdventureItemContentBuilder();
     }
 
+    @Override
+    public @Nullable Component fromPlatform(@NotNull Object platformObject) {
+        if (platformObject instanceof Component) {
+            return (Component) platformObject;
+        } else if (platformObject instanceof net.kyori.adventure.text.Component) {
+            return wrapComponent((net.kyori.adventure.text.Component) platformObject);
+        }
+        // TODO: conversion from shaded and relocated Adventure
+        throw new IllegalArgumentException("Not possible to convert unknown object type to Component: " + platformObject);
+    }
+
     @Contract("null -> null; !null -> !null")
     public static @Nullable Component wrapComponent(net.kyori.adventure.text.@Nullable Component component) {
         if (component == null) {

@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.TaggableHolder;
+import org.screamingsandals.lib.api.types.server.ItemTypeHolder;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.particle.ParticleData;
@@ -31,7 +32,7 @@ import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 @Accessors(fluent = true)
-public interface ItemType extends RegistryItem, ParticleData, TaggableHolder {
+public interface ItemType extends RegistryItem, ParticleData, TaggableHolder, ItemTypeHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();
 

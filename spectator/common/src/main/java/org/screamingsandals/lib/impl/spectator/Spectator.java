@@ -21,10 +21,15 @@ import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.UnknownNullability;
+import org.screamingsandals.lib.api.types.ComponentHolder;
 
 @ApiStatus.Internal
 @UtilityClass
 public class Spectator {
+    static {
+        ComponentHolder.Provider.registerProvider(o -> Spectator.backend.fromPlatform(o));
+    }
+
     @Getter
     @Setter(onMethod_=@ApiStatus.Internal)
     @UnknownNullability("Should not be null when needed, but it's not set to non-null value immediately.")

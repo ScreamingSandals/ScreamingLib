@@ -97,6 +97,16 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     }
 
     @Override
+    public @Nullable Component fromPlatform(@NotNull Object platformObject) {
+        if (platformObject instanceof Component) {
+            return (Component) platformObject;
+        } else if (platformObject instanceof BaseComponent) {
+            return wrapComponent((BaseComponent) platformObject);
+        }
+        throw new IllegalArgumentException("Not possible to convert unknown object type to Component: " + platformObject);
+    }
+
+    @Override
     public BlockNBTComponent.@NotNull Builder blockNBT() {
         if (COMPONENTS_PORTED_SUCCESSFULLY) {
             return new PortedBungeeBlockNBTComponent.BungeeBlockNBTBuilder(new BlockNBTPortedComponent());
