@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.block;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.BlockHolder;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.impl.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -32,6 +33,12 @@ import java.util.*;
 @ProvidedService
 @ApiStatus.Internal
 public abstract class BlockRegistry extends Registry<Block> {
+    static {
+        BlockHolder.Provider.registerProvider(o ->
+                Objects.requireNonNull(getInstance().resolveMapping(o), "Could not wrap " + o + " to Block")
+        );
+    }
+
     private final @NotNull Map<@NotNull ResourceLocation, ResourceLocation> aliasMap = new HashMap<>();
 
     private static @Nullable BlockRegistry registry;

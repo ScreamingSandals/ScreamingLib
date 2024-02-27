@@ -19,15 +19,24 @@ package org.screamingsandals.lib.impl.entity.type;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistry;
 
+import java.util.Objects;
+
 @ProvidedService
 @ApiStatus.Internal
 public abstract class EntityTypeRegistry extends SimpleRegistry<EntityType> {
+    static {
+        EntityTypeHolder.Provider.registerProvider(o ->
+                Objects.requireNonNull(getInstance().resolveMapping(o), "Could not wrap " + o + " to EntityType")
+        );
+    }
+
     private static @Nullable EntityTypeRegistry registry;
 
     public EntityTypeRegistry() {

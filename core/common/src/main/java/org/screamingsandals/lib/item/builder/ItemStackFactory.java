@@ -20,6 +20,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.ItemStackHolder;
 import org.screamingsandals.lib.configurate.ItemStackSerializer;
 import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.impl.item.builder.ShortStackDeserializer;
@@ -34,12 +35,16 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @ProvidedService
 @ServiceDependencies(dependsOn = ItemTypeRegistry.class)
 public abstract class ItemStackFactory {
+    static {
+        ItemStackHolder.Provider.registerProvider(stack -> Objects.requireNonNull(build(stack), "Cannot convert " + stack + " to ItemStack"));
+    }
 
     private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable ItemStack> CONFIGURATE_RESOLVER = node -> {
         try {

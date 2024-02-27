@@ -101,6 +101,9 @@ public final class BukkitBlockPlacement extends BasicWrapper<org.bukkit.block.Bl
                 return (T) wrappedObject.getBlockData();
             }
         }
+        if (type == org.bukkit.Location.class) {
+            return (T) wrappedObject.getLocation();
+        }
         return super.as(type);
     }
 }

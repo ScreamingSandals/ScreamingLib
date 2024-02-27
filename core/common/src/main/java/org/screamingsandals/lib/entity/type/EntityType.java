@@ -18,6 +18,7 @@ package org.screamingsandals.lib.entity.type;
 
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.TaggableHolder;
+import org.screamingsandals.lib.api.types.server.EntityTypeHolder;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
@@ -30,7 +31,7 @@ import org.screamingsandals.lib.world.Location;
 
 import java.util.function.Consumer;
 
-public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder {
+public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder, EntityTypeHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();
 

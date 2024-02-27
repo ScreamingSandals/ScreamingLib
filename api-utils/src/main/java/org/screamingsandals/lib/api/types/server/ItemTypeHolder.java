@@ -57,7 +57,7 @@ import java.util.function.Function;
  * </ul>
  * <p>
  * NOTE: The type should be directly used only when interacting with an API of a ScreamingLib-based plugin.
- * The ScreamingLib-base plugin itself should use the actual Component type provided by the library.
+ * The ScreamingLib-based plugin itself should use the actual Component type provided by the library.
  * <p>
  * The holder itself lacks identity and should not be compared using {@code ==}, use {@link Object#equals(Object)} instead.
  *

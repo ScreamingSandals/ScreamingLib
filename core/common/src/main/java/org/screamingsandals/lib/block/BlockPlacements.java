@@ -20,6 +20,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.BlockPlacementHolder;
 import org.screamingsandals.lib.impl.block.BlockRegistry;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -28,12 +29,20 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.impl.world.Locations;
 
+import java.util.Objects;
+
 @ProvidedService
 @ServiceDependencies(dependsOn = {
         Locations.class,
         BlockRegistry.class
 })
 public abstract class BlockPlacements {
+    static {
+        BlockPlacementHolder.Provider.registerProvider(
+                o -> Objects.requireNonNull(resolve(o), "Cannot convert " + o + " to BlockPlacement")
+        );
+    }
+
     protected final @NotNull BidirectionalConverter<BlockPlacement> converter = BidirectionalConverter.<BlockPlacement>build()
             .registerP2W(BlockPlacement.class, e -> e)
             .registerP2W(Location.class, this::getBlockAt0);

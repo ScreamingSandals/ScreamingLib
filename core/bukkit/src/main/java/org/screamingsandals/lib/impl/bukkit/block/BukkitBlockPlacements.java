@@ -22,14 +22,12 @@ import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.block.BlockPlacements;
 import org.screamingsandals.lib.world.Location;
 
-import java.util.Objects;
-
 @Service
 public class BukkitBlockPlacements extends BlockPlacements {
 
     public BukkitBlockPlacements() {
         converter.registerP2W(org.bukkit.Location.class, location -> new BukkitBlockPlacement(location.getBlock()))
-                .registerP2W(org.bukkit.block.Block.class, block -> Objects.requireNonNull(resolve(block.getLocation())));
+                .registerP2W(org.bukkit.block.Block.class, BukkitBlockPlacement::new);
     }
 
     @Override

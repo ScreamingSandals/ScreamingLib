@@ -18,6 +18,7 @@ package org.screamingsandals.lib.block;
 
 import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.TaggableHolder;
+import org.screamingsandals.lib.api.types.server.BlockHolder;
 import org.screamingsandals.lib.impl.block.BlockRegistry;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.particle.ParticleData;
@@ -33,7 +34,7 @@ import java.util.*;
  * <p>
  * Use {@link ItemType} for item materials.
  */
-public interface Block extends RegistryItem, ParticleData, TaggableHolder {
+public interface Block extends RegistryItem, ParticleData, TaggableHolder, BlockHolder {
 
     @ApiStatus.Experimental
     @NotNull String platformName();

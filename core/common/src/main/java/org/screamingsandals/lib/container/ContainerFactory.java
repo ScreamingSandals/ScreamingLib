@@ -19,12 +19,24 @@ package org.screamingsandals.lib.container;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.ContainerHolder;
 import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 
+import java.util.Objects;
+
 @ProvidedService
 public abstract class ContainerFactory {
+    static {
+        ContainerHolder.Provider.registerProvider(o ->
+                Objects.requireNonNull(
+                    Objects.requireNonNull(ContainerFactory.factory, "ContainerFactory is not initialized yet.").wrapContainer0(o),
+                    "Cannot wrap " + o + " to Container"
+                )
+        );
+    }
+
 
     private static @Nullable ContainerFactory factory;
 
