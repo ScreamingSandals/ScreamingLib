@@ -19,11 +19,20 @@ package org.screamingsandals.lib.impl.block.snapshot;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.BlockSnapshotHolder;
 import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 
+import java.util.Objects;
+
 @ProvidedService
 public abstract class BlockSnapshots {
+
+    static {
+        BlockSnapshotHolder.Provider.registerProvider(o ->
+                Objects.requireNonNull(wrapBlockSnapshot(o), "Cannot wrap " + o + " to BlockSnapshot")
+        );
+    }
 
     private static @Nullable BlockSnapshots blockSnapshots;
 
