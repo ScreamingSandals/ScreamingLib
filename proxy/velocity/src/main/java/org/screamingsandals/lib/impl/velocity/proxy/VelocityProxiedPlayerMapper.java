@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.impl.velocity.proxy;
 
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +27,7 @@ import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.impl.velocity.proxy.event.ChatEventHandlerFactory;
 import org.screamingsandals.lib.impl.proxy.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.ProxiedSender;
 import org.screamingsandals.lib.proxy.Server;
 import org.screamingsandals.lib.impl.spectator.Spectator;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -79,5 +82,27 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     @Override
     public @NotNull List<@NotNull ProxiedPlayer> getPlayers0(@NotNull Server serverWrapper) {
         return serverWrapper.as(RegisteredServer.class).getPlayersConnected().stream().map(VelocityProxiedPlayer::new).collect(Collectors.toList());
+    }
+
+    @Override
+    protected @NotNull ProxiedSender senderFromPlatform(@NotNull Object platformObject) {
+        if (platformObject instanceof ProxiedSender) {
+            return (ProxiedSender) platformObject;
+        } else if (platformObject instanceof Player) {
+            return new VelocityProxiedPlayer((Player) platformObject);
+        } else if (platformObject instanceof CommandSource) {
+            return new VelocityProxiedSender((CommandSource) platformObject);
+        }
+        throw new IllegalArgumentException("Not possible to convert unknown object type to ProxiedSender: " + platformObject);
+    }
+
+    @Override
+    protected @NotNull ProxiedPlayer playerFromPlatform(@NotNull Object platformObject) {
+        if (platformObject instanceof ProxiedPlayer) {
+            return (ProxiedPlayer) platformObject;
+        } else if (platformObject instanceof Player) {
+            return new VelocityProxiedPlayer((Player) platformObject);
+        }
+        throw new IllegalArgumentException("Not possible to convert unknown object type to ProxiedPlayer: " + platformObject);
     }
 }

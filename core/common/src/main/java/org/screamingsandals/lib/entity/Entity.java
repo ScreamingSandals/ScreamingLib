@@ -18,24 +18,23 @@ package org.screamingsandals.lib.entity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.EntityHolder;
 import org.screamingsandals.lib.container.ContainerHolder;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.particle.Vibration;
-import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.Location;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public interface Entity extends Wrapper, RawValueHolder, ContainerHolder, ThreadProperty, Vibration.Destination {
+public interface Entity extends Wrapper, RawValueHolder, ContainerHolder, ThreadProperty, Vibration.Destination, EntityHolder {
     @NotNull EntityType getEntityType();
 
     @NotNull Location getLocation();

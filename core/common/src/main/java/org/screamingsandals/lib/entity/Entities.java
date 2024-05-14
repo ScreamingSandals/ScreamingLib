@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.api.types.server.EntityHolder;
 import org.screamingsandals.lib.entity.projectile.FireworkRocket;
 import org.screamingsandals.lib.entity.projectile.ProjectileEntity;
 import org.screamingsandals.lib.entity.type.EntityType;
@@ -32,6 +33,7 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.impl.world.Locations;
 
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -42,6 +44,9 @@ import java.util.function.Consumer;
         PotionEffectRegistry.class
 })
 public abstract class Entities {
+    static {
+        EntityHolder.Provider.registerProvider(o -> Objects.requireNonNull(wrapEntity(o), "Cannot wrap " + o + " to Entity"));
+    }
 
     private static @Nullable Entities mapper;
 

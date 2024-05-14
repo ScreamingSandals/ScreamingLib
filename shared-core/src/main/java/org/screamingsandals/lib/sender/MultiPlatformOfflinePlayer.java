@@ -19,10 +19,11 @@ package org.screamingsandals.lib.sender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.api.types.OfflinePlayerHolder;
 
 import java.util.UUID;
 
-public interface MultiPlatformOfflinePlayer extends Operator, Wrapper {
+public interface MultiPlatformOfflinePlayer extends Operator, Wrapper, OfflinePlayerHolder {
     @NotNull UUID getUuid();
 
     /**

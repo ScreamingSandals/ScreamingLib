@@ -19,6 +19,7 @@ package org.screamingsandals.lib.item;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.ItemStackHolder;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
 /**
  * Represents an immutable Item.
  */
-public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, CompoundTagLike, CompoundTagTreeInspector, ItemContentLike {
+public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, CompoundTagLike, CompoundTagTreeInspector, ItemContentLike, ItemStackHolder {
     @NotNull ItemType getType();
 
     default @NotNull ItemType getMaterial() { // alternative getter (old name)

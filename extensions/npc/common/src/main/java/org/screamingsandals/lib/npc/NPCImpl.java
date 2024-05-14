@@ -89,7 +89,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         }
         this.tabName16 = "[NPC] " + uuid.toString().replace("-", "").substring(0, 10);
         this.tabListName = Component.fromLegacy(tabName16);
-        this.hologram = HologramManager.hologram(location.add(0.0D, hologramElevation, 0.0D));
+        this.hologram = Hologram.of(location.add(0.0D, hologramElevation, 0.0D));
         this.metadata = new ArrayList<>();
         this.properties = new ArrayList<>();
         this.hiderTask = new ConcurrentHashMap<>();
@@ -130,7 +130,6 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     @Override
     public void onViewerAdded(@NotNull Player viewer, boolean checkDistance) {
         if (shown() && viewer.isOnline()) {
-            hologram.addViewer(viewer);
             createSpawnPackets().forEach(packet -> packet.sendPacket(viewer));
             if (!Server.isVersion(1, 19, 3) || viewer.getProtocolVersion() < 761) {
                 scheduleTabHide(viewer);
@@ -141,7 +140,6 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     @Override
     public void onViewerRemoved(@NotNull Player viewer, boolean checkDistance) {
         if (viewer.isOnline()) {
-            hologram.removeViewer(viewer);
             createPlayerTeamPacket(ClientboundSetPlayerTeamPacket.Mode.REMOVE).sendPacket(viewer);
             createPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER).sendPacket(viewer);
             removeEntityPacket().sendPacket(viewer);
@@ -201,6 +199,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 case ALL:
                     viewers.forEach(this::onViewerRemoved);
                     viewers.forEach(this::onViewerAdded);
+                    hologram.update(UpdateStrategy.ALL);
             }
         }
         return this;
@@ -227,6 +226,20 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         visible = false;
         hologram.hide();
         viewers.forEach(this::onViewerRemoved);
+        return this;
+    }
+
+    @Override
+    public @NotNull NPC addViewer(@NotNull Player viewer) {
+        super.addViewer(viewer);
+        hologram.addViewer(viewer);
+        return this;
+    }
+
+    @Override
+    public @NotNull NPC removeViewer(@NotNull Player viewer) {
+        super.removeViewer(viewer);
+        hologram.removeViewer(viewer);
         return this;
     }
 

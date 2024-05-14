@@ -18,6 +18,7 @@ package org.screamingsandals.lib.world;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.WorldHolder;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.particle.Particle;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * An interface representing a world.
  */
-public interface World extends Wrapper, RawValueHolder, PlayerAudience.ForwardingToMulti {
+public interface World extends Wrapper, RawValueHolder, PlayerAudience.ForwardingToMulti, WorldHolder {
     /**
      * Gets the world's {@link UUID}.
      *

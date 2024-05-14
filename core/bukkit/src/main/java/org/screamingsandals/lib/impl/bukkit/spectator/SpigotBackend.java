@@ -121,6 +121,19 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
+    public @Nullable Component fromPlatform(@NotNull Object platformObject) {
+        if (adventureBackend != null) {
+            try {
+                return adventureBackend.fromPlatform(platformObject);
+            } catch (IllegalArgumentException ignored) {
+                // Adventure-Backend cannot provide a Component for the specified platformObject, let's try Bungee-Backend
+            }
+        }
+
+        return super.fromPlatform(platformObject);
+    }
+
+    @Override
     public Title.@NotNull Builder title() {
         if (adventureBackend != null) {
             return adventureBackend.title();

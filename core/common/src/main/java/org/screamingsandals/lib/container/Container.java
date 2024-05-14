@@ -18,6 +18,7 @@ package org.screamingsandals.lib.container;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.ContainerHolder;
 import org.screamingsandals.lib.container.type.InventoryType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
@@ -29,7 +30,7 @@ import java.util.List;
 /**
  * An interface representing an inventory.
  */
-public interface Container extends Openable, Wrapper, RawValueHolder {
+public interface Container extends Openable, Wrapper, RawValueHolder, ContainerHolder {
     /**
      * Gets the item at the specified slot in this inventory.
      *

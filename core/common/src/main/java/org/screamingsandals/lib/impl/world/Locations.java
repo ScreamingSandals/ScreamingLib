@@ -20,6 +20,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.LocationHolder;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.block.BlockPlacements;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
@@ -34,6 +35,10 @@ import java.util.Objects;
 @ProvidedService
 @ApiStatus.Internal
 public abstract class Locations {
+    static {
+        LocationHolder.Provider.registerProvider(Locations::wrapLocation);
+    }
+
     protected final @NotNull BidirectionalConverter<Location> converter = BidirectionalConverter.<Location>build()
             .registerP2W(Location.class, e -> e)
             .registerW2P(BlockPlacement.class, BlockPlacements::resolve);

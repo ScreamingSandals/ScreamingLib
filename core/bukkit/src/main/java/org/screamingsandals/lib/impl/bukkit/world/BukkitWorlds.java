@@ -57,4 +57,12 @@ public class BukkitWorlds extends Worlds {
                 .map(BukkitWorld::new)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    protected @Nullable World fromPlatform(@NotNull Object world) {
+        if (world instanceof org.bukkit.World) {
+            return new BukkitWorld((org.bukkit.World) world);
+        }
+        return null;
+    }
 }

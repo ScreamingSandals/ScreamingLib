@@ -20,9 +20,11 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.WorldHolder;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -30,6 +32,15 @@ import java.util.UUID;
  */
 @ProvidedService
 public abstract class Worlds {
+    static {
+        WorldHolder.Provider.registerProvider(
+                o -> Objects.requireNonNull(
+                        Objects.requireNonNull(Worlds.worlds, "Worlds is not initialized yet.").fromPlatform(o),
+                        "Cannot convert " + o + " to World"
+                )
+        );
+    }
+
     private static @Nullable Worlds worlds;
 
     /**
@@ -96,4 +107,6 @@ public abstract class Worlds {
     protected abstract @Nullable World getWorld0(@NotNull String name);
 
     protected abstract @NotNull List<@NotNull World> getWorlds0();
+
+    protected abstract @Nullable World fromPlatform(@NotNull Object world);
 }

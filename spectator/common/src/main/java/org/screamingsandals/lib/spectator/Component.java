@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.screamingsandals.lib.api.types.ComponentHolder;
 import org.screamingsandals.lib.impl.spectator.Spectator;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
@@ -42,7 +43,7 @@ import java.util.function.Function;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
-public interface Component extends ComponentLike, Wrapper, Content, RawValueHolder {
+public interface Component extends ComponentLike, Wrapper, Content, RawValueHolder, ComponentHolder {
 
     static @NotNull Component empty() {
         return Spectator.getBackend().empty();

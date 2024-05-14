@@ -19,12 +19,20 @@ package org.screamingsandals.lib.impl.world.chunk;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.server.ChunkHolder;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.world.chunk.Chunk;
+
+import java.util.Objects;
 
 @ProvidedService
 @ApiStatus.Internal
 public abstract class Chunks {
+    static {
+        ChunkHolder.Provider.registerProvider(o ->
+                Objects.requireNonNull(wrapChunk(o), "Cannot wrap " + o + " to Chunk")
+        );
+    }
 
     private static @Nullable Chunks chunks;
 

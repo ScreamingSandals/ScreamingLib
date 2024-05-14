@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.api.types.server.LocationHolder;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.impl.world.Locations;
@@ -46,7 +47,7 @@ import java.util.stream.Collectors;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @With
-public class Location implements Wrapper, ThreadProperty, Vibration.Destination {
+public class Location implements Wrapper, ThreadProperty, Vibration.Destination, LocationHolder {
     /**
      * The X coordinate of this location.
      */

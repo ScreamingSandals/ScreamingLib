@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.sender;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.api.types.CommandSenderHolder;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.sender.permissions.SimplePermission;
 import org.screamingsandals.lib.spectator.audience.Audience;
@@ -24,7 +25,7 @@ import org.screamingsandals.lib.api.Wrapper;
 
 import java.util.Locale;
 
-public interface CommandSender extends Wrapper, Operator, Audience.ForwardingToAdapter {
+public interface CommandSender extends Wrapper, Operator, Audience.ForwardingToAdapter, CommandSenderHolder {
 
     @NotNull Type getType();
     default boolean hasPermission(@NotNull String permission) {

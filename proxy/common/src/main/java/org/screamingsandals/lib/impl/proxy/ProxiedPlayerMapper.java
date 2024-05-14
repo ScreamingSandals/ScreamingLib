@@ -19,7 +19,10 @@ package org.screamingsandals.lib.impl.proxy;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.types.CommandSenderHolder;
+import org.screamingsandals.lib.api.types.PlayerHolder;
 import org.screamingsandals.lib.proxy.ProxiedPlayer;
+import org.screamingsandals.lib.proxy.ProxiedSender;
 import org.screamingsandals.lib.proxy.Server;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 
@@ -28,6 +31,10 @@ import java.util.UUID;
 
 @ProvidedService
 public abstract class ProxiedPlayerMapper {
+    static {
+        CommandSenderHolder.Provider.registerProvider(o -> ProxiedPlayerMapper.proxiedPlayerMapper.senderFromPlatform(o));
+        PlayerHolder.Provider.registerProvider(o -> ProxiedPlayerMapper.proxiedPlayerMapper.playerFromPlatform(o));
+    }
 
     private static @Nullable ProxiedPlayerMapper proxiedPlayerMapper;
 
@@ -93,4 +100,8 @@ public abstract class ProxiedPlayerMapper {
     }
 
     public abstract @NotNull List<@NotNull ProxiedPlayer> getPlayers0(@NotNull Server serverWrapper);
+
+    protected abstract @NotNull ProxiedSender senderFromPlatform(@NotNull Object platformObject);
+
+    protected abstract @NotNull ProxiedPlayer playerFromPlatform(@NotNull Object platformObject);
 }
