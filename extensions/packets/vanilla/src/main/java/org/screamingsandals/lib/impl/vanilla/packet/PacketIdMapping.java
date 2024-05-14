@@ -19,7 +19,48 @@ package org.screamingsandals.lib.impl.vanilla.packet;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.impl.nms.accessors.*;
+import org.screamingsandals.lib.impl.nms.accessors.network.ConnectionProtocol$CodecDataAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.ConnectionProtocol$PacketSetAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.ConnectionProtocolAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.PacketFlowAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.common.ClientboundDisconnectPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundAddEntityPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundAddMobPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundAddPlayerPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundAnimatePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundBlockDestructionPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundBlockEventPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundBlockUpdatePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundContainerClosePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundEntityEventPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundExplodePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundForgetLevelChunkPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundHurtAnimationPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundMoveEntityPacket$PosAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundMoveEntityPacket$PosRotAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundMoveEntityPacket$RotAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundPlayerAbilitiesPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundPlayerInfoRemovePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundPlayerInfoUpdatePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundRemoveEntitiesPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundRemoveMobEffectPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundResetScorePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundRotateHeadPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetCameraPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetCarriedItemPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetDisplayObjectivePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetEntityDataPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetEntityLinkPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetEntityMotionPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetEquipmentPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetExperiencePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetObjectivePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetPlayerTeamPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetScorePacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundTabListPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundTakeItemEntityPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundTeleportEntityPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundUpdateMobEffectPacketAccessor;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -103,10 +144,10 @@ public class PacketIdMapping {
         }
 
         // all mapped packets are just from play protocol, we don't rly need to touch handshaking, status or login protocol
-        var playProtocol = ConnectionProtocolAccessor.FIELD_PLAY.get();
+        var playProtocol = ConnectionProtocolAccessor.CONST_PLAY.get();
 
         // all our mapped packets are just client bound. server bound listener is not implemented yet
-        var outgoing = PacketFlowAccessor.FIELD_CLIENTBOUND.get();
+        var outgoing = PacketFlowAccessor.CONST_CLIENTBOUND.get();
 
         Integer packetId;
 

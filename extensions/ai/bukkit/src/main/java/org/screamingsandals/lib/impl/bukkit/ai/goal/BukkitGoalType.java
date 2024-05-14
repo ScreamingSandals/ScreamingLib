@@ -22,7 +22,7 @@ import org.screamingsandals.lib.ai.goal.Goal;
 import org.screamingsandals.lib.ai.goal.GoalType;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.impl.nms.accessors.GoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.GoalAccessor;
 import org.screamingsandals.lib.impl.utils.Primitives;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;

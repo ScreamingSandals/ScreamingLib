@@ -21,15 +21,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.impl.nms.accessors.BuiltInRegistriesAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.Component$SerializerAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.EntityTypeAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.IRegistryAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.MappedRegistryAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.PacketAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ServerCommonPacketListenerImplAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ServerGamePacketListenerImplAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ServerPlayerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.core.IRegistryAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.core.MappedRegistryAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.core.registries.BuiltInRegistriesAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.chat.Component$SerializerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.PacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerPlayerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerCommonPacketListenerImplAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerGamePacketListenerImplAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityTypeAccessor;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
@@ -100,7 +100,7 @@ public class ClassStorage {
 	}
 
 	public static int getEntityTypeId(String key, Class<?> clazz) {
-		var registry1_19_3 = BuiltInRegistriesAccessor.FIELD_ENTITY_TYPE.get();
+		var registry1_19_3 = BuiltInRegistriesAccessor.CONST_ENTITY_TYPE.get();
 		if (registry1_19_3 != null) {
 			// 1.19.3+
 			var optional = Reflect.fastInvoke(EntityTypeAccessor.METHOD_BY_STRING.get(), (Object) key);
@@ -108,7 +108,7 @@ public class ClassStorage {
 			return Reflect.fastInvokeResulted(registry1_19_3, IRegistryAccessor.METHOD_GET_ID.get(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
 		} else {
 			// <= 1.19.2
-			var registry = IRegistryAccessor.FIELD_ENTITY_TYPE.get();
+			var registry = IRegistryAccessor.CONST_ENTITY_TYPE.get();
 
 			if (registry != null) {
 				// 1.14+
@@ -123,12 +123,12 @@ public class ClassStorage {
 				return Reflect.fastInvokeResulted(registry, IRegistryAccessor.METHOD_GET_ID.get(), nullable).asOptional(Integer.class).orElse(0);
 			} else {
 				// 1.11 - 1.12.2
-				if (EntityTypeAccessor.FIELD_FIELD_191308_B.get() != null) {
-					return Reflect.fastInvokeResulted(EntityTypeAccessor.FIELD_FIELD_191308_B.get(), MappedRegistryAccessor.METHOD_FUNC_148757_B.get(), clazz).asOptional(Integer.class).orElse(0);
+				if (EntityTypeAccessor.CONST_FIELD_191308_B.get() != null) {
+					return Reflect.fastInvokeResulted(EntityTypeAccessor.CONST_FIELD_191308_B.get(), MappedRegistryAccessor.METHOD_FUNC_148757_B.get(), clazz).asOptional(Integer.class).orElse(0);
 				}
 
 				// 1.8.8 - 1.10.2
-				return (int) InvocationResult.wrap(EntityTypeAccessor.FIELD_FIELD_75624_E.get()).as(Map.class).get(clazz);
+				return (int) InvocationResult.wrap(EntityTypeAccessor.CONST_FIELD_75624_E.get()).as(Map.class).get(clazz);
 			}
 		}
 	}

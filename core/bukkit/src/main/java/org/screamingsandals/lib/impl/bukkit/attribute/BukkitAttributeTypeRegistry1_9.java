@@ -21,10 +21,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.impl.nms.accessors.AttributeAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.HorseAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.AttributesAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ZombieAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributesAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.animal.horse.HorseAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.ZombieAccessor;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -57,18 +57,18 @@ public class BukkitAttributeTypeRegistry1_9 extends BukkitAttributeTypeRegistry 
             }
         }
 
-        put("GENERIC_MAX_HEALTH", AttributesAccessor.FIELD_MAX_HEALTH.get());
-        put("GENERIC_FOLLOW_RANGE", AttributesAccessor.FIELD_FOLLOW_RANGE.get());
-        put("GENERIC_KNOCKBACK_RESISTANCE", AttributesAccessor.FIELD_KNOCKBACK_RESISTANCE.get());
-        put("GENERIC_MOVEMENT_SPEED", AttributesAccessor.FIELD_MOVEMENT_SPEED.get());
-        put("GENERIC_FLYING_SPEED", AttributesAccessor.FIELD_FLYING_SPEED.get());
-        put("GENERIC_ATTACK_DAMAGE", AttributesAccessor.FIELD_ATTACK_DAMAGE.get());
-        put("GENERIC_ATTACK_SPEED", AttributesAccessor.FIELD_ATTACK_SPEED.get());
-        put("GENERIC_ARMOR", AttributesAccessor.FIELD_ARMOR.get());
-        put("GENERIC_ARMOR_TOUGHNESS", AttributesAccessor.FIELD_ARMOR_TOUGHNESS.get(), genericArmorToughness);
-        put("GENERIC_LUCK", AttributesAccessor.FIELD_LUCK.get());
-        put("HORSE_JUMP_STRENGTH", HorseAccessor.FIELD_ATTRIBUTE_JUMP_STRENGTH.get());
-        put("ZOMBIE_SPAWN_REINFORCEMENTS", ZombieAccessor.FIELD_SPAWN_REINFORCEMENTS_CHANCE.get());
+        put("GENERIC_MAX_HEALTH", AttributesAccessor.CONST_MAX_HEALTH.get());
+        put("GENERIC_FOLLOW_RANGE", AttributesAccessor.CONST_FOLLOW_RANGE.get());
+        put("GENERIC_KNOCKBACK_RESISTANCE", AttributesAccessor.CONST_KNOCKBACK_RESISTANCE.get());
+        put("GENERIC_MOVEMENT_SPEED", AttributesAccessor.CONST_MOVEMENT_SPEED.get());
+        put("GENERIC_FLYING_SPEED", AttributesAccessor.CONST_FLYING_SPEED.get());
+        put("GENERIC_ATTACK_DAMAGE", AttributesAccessor.CONST_ATTACK_DAMAGE.get());
+        put("GENERIC_ATTACK_SPEED", AttributesAccessor.CONST_ATTACK_SPEED.get());
+        put("GENERIC_ARMOR", AttributesAccessor.CONST_ARMOR.get());
+        put("GENERIC_ARMOR_TOUGHNESS", AttributesAccessor.CONST_ARMOR_TOUGHNESS.get(), genericArmorToughness);
+        put("GENERIC_LUCK", AttributesAccessor.CONST_LUCK.get());
+        put("HORSE_JUMP_STRENGTH", HorseAccessor.CONST_ATTRIBUTE_JUMP_STRENGTH.get());
+        put("ZOMBIE_SPAWN_REINFORCEMENTS", ZombieAccessor.CONST_SPAWN_REINFORCEMENTS_CHANCE.get());
     }
 
     private void put(@NotNull String attributeTypeName, @Nullable Object attribute) {

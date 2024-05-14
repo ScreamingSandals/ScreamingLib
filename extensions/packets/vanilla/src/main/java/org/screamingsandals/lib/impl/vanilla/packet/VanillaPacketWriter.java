@@ -19,8 +19,9 @@ package org.screamingsandals.lib.impl.vanilla.packet;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.level.block.BlockAccessor;
 import org.screamingsandals.lib.item.ItemType;
-import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.packet.PacketWriter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 

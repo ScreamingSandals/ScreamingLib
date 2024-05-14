@@ -19,10 +19,10 @@ package org.screamingsandals.lib.impl.bukkit.attribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
-import org.screamingsandals.lib.impl.nms.accessors.AttributeAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.HorseAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.AttributesAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ZombieAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributesAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.animal.horse.HorseAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.ZombieAccessor;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
@@ -38,13 +38,13 @@ public class BukkitAttributeTypeRegistry1_8 extends BukkitAttributeTypeRegistry 
     public final @NotNull Map<@NotNull Object, ResourceLocation> attributesToLocation = new HashMap<>();
 
     public BukkitAttributeTypeRegistry1_8() {
-        put("generic.max_health", AttributesAccessor.FIELD_MAX_HEALTH.get());
-        put("generic.follow_range", AttributesAccessor.FIELD_FOLLOW_RANGE.get());
-        put("generic.knockback_resistance", AttributesAccessor.FIELD_KNOCKBACK_RESISTANCE.get());
-        put("generic.movement_speed", AttributesAccessor.FIELD_MOVEMENT_SPEED.get());
-        put("generic.attack_damage", AttributesAccessor.FIELD_ATTACK_DAMAGE.get());
-        put("horse.jump_strength", HorseAccessor.FIELD_ATTRIBUTE_JUMP_STRENGTH.get());
-        put("zombie.spawn_reinforcements", ZombieAccessor.FIELD_SPAWN_REINFORCEMENTS_CHANCE.get());
+        put("generic.max_health", AttributesAccessor.CONST_MAX_HEALTH.get());
+        put("generic.follow_range", AttributesAccessor.CONST_FOLLOW_RANGE.get());
+        put("generic.knockback_resistance", AttributesAccessor.CONST_KNOCKBACK_RESISTANCE.get());
+        put("generic.movement_speed", AttributesAccessor.CONST_MOVEMENT_SPEED.get());
+        put("generic.attack_damage", AttributesAccessor.CONST_ATTACK_DAMAGE.get());
+        put("horse.jump_strength", HorseAccessor.CONST_ATTRIBUTE_JUMP_STRENGTH.get());
+        put("zombie.spawn_reinforcements", ZombieAccessor.CONST_SPAWN_REINFORCEMENTS_CHANCE.get());
     }
 
     private void put(@NotNull String path, @Nullable Object attribute) {

@@ -29,7 +29,18 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.spectator.bossbar.BukkitBossBar1_8;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.impl.nms.accessors.*;
+import org.screamingsandals.lib.impl.nms.accessors.network.FriendlyByteBufAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.common.ClientboundCustomPayloadPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundChatPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundOpenBookPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetSubtitleTextPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetTitleTextPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetTitlesAnimationPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetTitlesPacket$TypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetTitlesPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundTabListPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.resources.ResourceLocationAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.InteractionHandAccessor;
 import org.screamingsandals.lib.item.ItemTagKeys;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
@@ -78,9 +89,9 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
         if (BukkitFeature.BUNGEECORD_CHAT_SEND_MESSAGE_WITH_CHAT_MESSAGE_TYPE.isSupported() && BukkitFeature.HEX_COLORS.isSupported()) {
             // thanks to MC-119145 and md_5, this method didn't work correctly till 1.16
             commandSender().spigot().sendMessage(ChatMessageType.ACTION_BAR, comp.as(BaseComponent.class));
-        } else if (ClientboundSetTitlesPacket$TypeAccessor.FIELD_ACTIONBAR.get() != null) {
+        } else if (ClientboundSetTitlesPacket$TypeAccessor.CONST_ACTIONBAR.get() != null) {
             // 1.11-1.16.5: Use Title packet to avoid MC-119145
-            var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_1.get(), ClientboundSetTitlesPacket$TypeAccessor.FIELD_ACTIONBAR.get(), ClassStorage.asMinecraftComponent(comp));
+            var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_1.get(), ClientboundSetTitlesPacket$TypeAccessor.CONST_ACTIONBAR.get(), ClassStorage.asMinecraftComponent(comp));
             ClassStorage.sendNMSConstructedPacket(commandSender(), titleP);
         } else {
             // 1.8.8-1.10.2
@@ -175,10 +186,10 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
                 var times = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_0.get(), (int) title.fadeIn().toMillis() / 50, (int) title.stay().toMillis() / 50, (int) title.fadeOut().toMillis() / 50);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), times);
 
-                var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_1.get(), ClientboundSetTitlesPacket$TypeAccessor.FIELD_TITLE.get(), t);
+                var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_1.get(), ClientboundSetTitlesPacket$TypeAccessor.CONST_TITLE.get(), t);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), titleP);
 
-                var subtitleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_1.get(), ClientboundSetTitlesPacket$TypeAccessor.FIELD_SUBTITLE.get(), s);
+                var subtitleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.CONSTRUCTOR_1.get(), ClientboundSetTitlesPacket$TypeAccessor.CONST_SUBTITLE.get(), s);
                 ClassStorage.sendNMSConstructedPacket(commandSender(), subtitleP);
                 return;
             }
@@ -320,7 +331,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
 
         try {
             if (BukkitFeature.MODERN_OPEN_BOOK_PACKET.isSupported()) {
-                var packet = Reflect.construct(ClientboundOpenBookPacketAccessor.CONSTRUCTOR_0.get(), InteractionHandAccessor.FIELD_MAIN_HAND.get());
+                var packet = Reflect.construct(ClientboundOpenBookPacketAccessor.CONSTRUCTOR_0.get(), InteractionHandAccessor.CONST_MAIN_HAND.get());
                 ClassStorage.sendNMSConstructedPacket(player, packet);
             } else if (BukkitFeature.MODERN_OPEN_BOOK_PLUGIN_MESSAGE.isSupported()) {
                 var bytebuf = Reflect.construct(FriendlyByteBufAccessor.CONSTRUCTOR_0.get(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));

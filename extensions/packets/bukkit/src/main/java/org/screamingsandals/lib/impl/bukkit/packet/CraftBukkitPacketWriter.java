@@ -24,12 +24,12 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.impl.nms.accessors.network.FriendlyByteBufAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemStackAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.level.block.BlockAccessor;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.impl.nms.accessors.BlockAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.FriendlyByteBufAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ItemStackAccessor;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.impl.vanilla.packet.VanillaPacketWriter;
 

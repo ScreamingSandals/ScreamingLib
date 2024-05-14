@@ -188,10 +188,10 @@ import org.screamingsandals.lib.impl.bukkit.entity.water.BukkitWaterAnimal1_13;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.entity.type.InternalEntityLegacyConstants;
+import org.screamingsandals.lib.impl.nms.accessors.server.VVV.EnumZombieTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.ZombieAccessor;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.impl.nms.accessors.EntityAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.EnumZombieTypeAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ZombieAccessor;
 import org.screamingsandals.lib.tasker.DefaultThreads;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -467,7 +467,7 @@ public class BukkitEntities extends Entities {
                         } else {
                             if (BukkitFeature.HUSK.isSupported()) {
                                 var villager = Reflect.fastInvoke(ZombieAccessor.METHOD_GET_VILLAGER_TYPE.get(), ClassStorage.getHandle(entity));
-                                if (villager != null && villager == EnumZombieTypeAccessor.FIELD_HUSK.get()) {
+                                if (villager != null && villager == EnumZombieTypeAccessor.CONST_HUSK.get()) {
                                     return new BukkitHusk1_10((org.bukkit.entity.Zombie) entity);
                                 }
                             }
@@ -1050,7 +1050,7 @@ public class BukkitEntities extends Entities {
                             case InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK:
                                 if (BukkitFeature.HUSK.isSupported()) {
                                     // we need NMS to spawn Husk on 1.10, thank you md_5 -_-
-                                    Reflect.fastInvoke(ZombieAccessor.METHOD_SET_VILLAGER_TYPE.get(), ClassStorage.getHandle(entity), EnumZombieTypeAccessor.FIELD_HUSK.get());
+                                    Reflect.fastInvoke(ZombieAccessor.METHOD_SET_VILLAGER_TYPE.get(), ClassStorage.getHandle(entity), EnumZombieTypeAccessor.CONST_HUSK.get());
                                 }
                                 break;
                         }
@@ -1149,7 +1149,7 @@ public class BukkitEntities extends Entities {
             return (int) entityCount;
         }
 
-        final var entityCounter = EntityAccessor.FIELD_ENTITY_COUNTER.get();
+        final var entityCounter = EntityAccessor.CONST_ENTITY_COUNTER.get();
         if (entityCounter instanceof AtomicInteger) {
             return ((AtomicInteger) entityCounter).incrementAndGet();
         }

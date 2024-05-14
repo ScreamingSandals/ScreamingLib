@@ -37,10 +37,17 @@ import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.attribute.Attribute;
 import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.impl.nms.accessors.world.InteractionHandAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.LivingEntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.MobAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributeInstanceAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributeMapAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributeSupplierAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.player.PlayerAccessor;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.meta.PotionEffect;
-import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.BlockPlacement;
@@ -412,7 +419,7 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
             ((org.bukkit.entity.LivingEntity) wrappedObject).swingMainHand();
         } else {
             if (LivingEntityAccessor.METHOD_SWING.get() != null) {
-                Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.METHOD_SWING.get(), InteractionHandAccessor.FIELD_MAIN_HAND.get());
+                Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.METHOD_SWING.get(), InteractionHandAccessor.CONST_MAIN_HAND.get());
             } else {
                 // TODO: 1.8.8?
             }
@@ -425,7 +432,7 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
             ((org.bukkit.entity.LivingEntity) wrappedObject).swingOffHand();
         } else {
             if (LivingEntityAccessor.METHOD_SWING.get() != null) {
-                Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.METHOD_SWING.get(), InteractionHandAccessor.FIELD_OFF_HAND.get());
+                Reflect.fastInvoke(ClassStorage.getHandle(wrappedObject), LivingEntityAccessor.METHOD_SWING.get(), InteractionHandAccessor.CONST_OFF_HAND.get());
             } // 1.8.8: No off-hand
         }
     }

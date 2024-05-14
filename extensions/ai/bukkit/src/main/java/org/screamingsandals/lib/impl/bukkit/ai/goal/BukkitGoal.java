@@ -18,9 +18,9 @@ package org.screamingsandals.lib.impl.bukkit.ai.goal;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.ai.goal.Goal;
-import org.screamingsandals.lib.impl.nms.accessors.GoalAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.Goal$FlagAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.TargetGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.Goal$FlagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.GoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.target.TargetGoalAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -39,7 +39,7 @@ public class BukkitGoal extends BasicWrapper<Object> implements Goal {
             var flags = Reflect.fastInvoke(wrappedObject, GoalAccessor.METHOD_GET_FLAGS.get());
 
             if (flags instanceof Set) {
-                return ((Set<?>) flags).contains(Goal$FlagAccessor.FIELD_TARGET.get());
+                return ((Set<?>) flags).contains(Goal$FlagAccessor.CONST_TARGET.get());
             }
 
             return false;

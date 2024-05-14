@@ -24,22 +24,23 @@ import org.screamingsandals.lib.ai.goal.Goal;
 import org.screamingsandals.lib.ai.goal.GoalType;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.ai.goal.BukkitGoal;
-import org.screamingsandals.lib.impl.nms.accessors.EntityAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.EntityTypeAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.EntityType$EntityFactoryAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.FishingHookAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.FloatGoalAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.GoalSelectorAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.HurtByTargetGoalAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.LightningBoltAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.MeleeAttackGoalAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.MobAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.NearestAttackableTargetGoalAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.PathfinderGoalSelector$PathfinderGoalSelectorItemAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.RandomStrollGoalAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ResourceLocationAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ServerPlayerAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.WrappedGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.resources.ResourceLocationAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.VVV.PathfinderGoalSelector$PathfinderGoalSelectorItemAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerPlayerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityType$EntityFactoryAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.LightningBoltAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.MobAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.FloatGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.GoalSelectorAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.MeleeAttackGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.RandomLookAroundGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.RandomStrollGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.WrappedGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.target.HurtByTargetGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.goal.target.NearestAttackableTargetGoalAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.projectile.FishingHookAccessor;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -267,7 +268,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
 
     @Override
     public @Nullable Goal addRandomLookAroundGoal(int priority) {
-        var goal = Reflect.construct(MeleeAttackGoalAccessor.CONSTRUCTOR_0.get(), wrappedObject);
+        var goal = Reflect.construct(RandomLookAroundGoalAccessor.CONSTRUCTOR_0.get(), wrappedObject);
         return addNewlyConstructedGoal(priority, goal);
     }
 
@@ -337,13 +338,13 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
                 return FishingHookAccessor.TYPE.get();
             }
 
-            if (EntityTypeAccessor.FIELD_FIELD_191308_B.get() != null) { // 1.11-1.12.2
+            if (EntityTypeAccessor.CONST_FIELD_191308_B.get() != null) { // 1.11-1.12.2
                 @SuppressWarnings("unchecked")
-                var map = (Map<Object, Class<?>>) EntityTypeAccessor.FIELD_FIELD_191308_B.get();
+                var map = (Map<Object, Class<?>>) EntityTypeAccessor.CONST_FIELD_191308_B.get();
                 return map.get(Reflect.construct(ResourceLocationAccessor.CONSTRUCTOR_0.get(), type.as(org.bukkit.entity.EntityType.class).getName()));
-            } else if (EntityTypeAccessor.FIELD_FIELD_75625_B.get() != null) { // 1.8-1.10.2
+            } else if (EntityTypeAccessor.CONST_FIELD_75625_B.get() != null) { // 1.8-1.10.2
                 @SuppressWarnings("unchecked")
-                var map = (Map<String, Class<?>>) EntityTypeAccessor.FIELD_FIELD_75625_B.get();
+                var map = (Map<String, Class<?>>) EntityTypeAccessor.CONST_FIELD_75625_B.get();
                 return map.get(type.as(org.bukkit.entity.EntityType.class).getName());
             }
         }

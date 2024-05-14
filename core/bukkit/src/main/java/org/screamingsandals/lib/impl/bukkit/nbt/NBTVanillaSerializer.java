@@ -18,8 +18,20 @@ package org.screamingsandals.lib.impl.bukkit.nbt;
 
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.ByteArrayTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.ByteTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.CompoundTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.DoubleTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.FloatTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.IntArrayTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.IntTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.ListTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.LongArrayTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.LongTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.ShortTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.StringTagAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.TagAccessor;
 import org.screamingsandals.lib.nbt.*;
-import org.screamingsandals.lib.impl.nms.accessors.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 

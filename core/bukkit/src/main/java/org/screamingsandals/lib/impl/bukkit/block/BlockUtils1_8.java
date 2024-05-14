@@ -28,9 +28,9 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.impl.nms.accessors.BlockEntityAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ItemAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.TileEntityFlowerPotAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.VVV.TileEntityFlowerPotAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.level.block.entity.BlockEntityAccessor;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 

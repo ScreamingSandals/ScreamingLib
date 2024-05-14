@@ -37,9 +37,9 @@ import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityType;
-import org.screamingsandals.lib.impl.nms.accessors.EntityAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.EnumZombieTypeAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ZombieAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.VVV.EnumZombieTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.ZombieAccessor;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -77,7 +77,7 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
             } else if (wrappedObject instanceof Zombie) {
                 if (BukkitFeature.HUSK.isSupported()) {
                     var villager = Reflect.fastInvoke(ZombieAccessor.METHOD_GET_VILLAGER_TYPE.get(), ClassStorage.getHandle(wrappedObject));
-                    if (villager != null && villager == EnumZombieTypeAccessor.FIELD_HUSK.get()) {
+                    if (villager != null && villager == EnumZombieTypeAccessor.CONST_HUSK.get()) {
                         return new BukkitEntityType1_8(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK);
                     }
                 }

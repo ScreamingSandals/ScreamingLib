@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
-import org.screamingsandals.lib.impl.nms.accessors.ServerboundInteractPacketAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ServerboundInteractPacket$ActionAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ServerboundInteractPacket$ActionAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ServerboundInteractPacketAccessor;
 import org.screamingsandals.lib.packet.event.SPacketEvent;
 import org.screamingsandals.lib.packet.event.SPlayerServerboundInteractEvent;
 import org.screamingsandals.lib.utils.InteractType;
@@ -36,8 +36,8 @@ public class ServerboundInteractPacketListener {
 
     public ServerboundInteractPacketListener() {
         ATTACK_ACTION_FIELD = Version.isVersion(1, 17)
-                ? ServerboundInteractPacketAccessor.FIELD_ATTACK_ACTION.get()
-                : ServerboundInteractPacket$ActionAccessor.FIELD_ATTACK.get();
+                ? ServerboundInteractPacketAccessor.CONST_ATTACK_ACTION.get()
+                : ServerboundInteractPacket$ActionAccessor.CONST_ATTACK.get();
     }
 
     @OnEvent

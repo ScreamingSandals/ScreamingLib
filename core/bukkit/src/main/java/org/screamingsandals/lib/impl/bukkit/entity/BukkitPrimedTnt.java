@@ -23,7 +23,7 @@ import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.PrimedTnt;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.impl.nms.accessors.PrimedTntAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.item.PrimedTntAccessor;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public class BukkitPrimedTnt extends BukkitEntity implements PrimedTnt {

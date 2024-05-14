@@ -26,12 +26,12 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.impl.nms.accessors.CombatTrackerAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ComponentAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ExperienceOrbAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.LivingEntityAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.PlayerAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.ServerPlayerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.chat.ComponentAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerPlayerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.damagesource.CombatTrackerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.ExperienceOrbAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.LivingEntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.player.PlayerAccessor;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
@@ -100,7 +100,7 @@ public class BukkitFakeDeath extends FakeDeath {
             try {
                 Boolean b = deathWorld.getGameRuleValue(GameRule.FORGIVE_DEAD_PLAYERS);
                 if (b != null && b) {
-                    Reflect.fastInvoke(ClassStorage.getHandle(player), ServerPlayerAccessor.METHOD_TELL_NEUTRAL_MOBS_THAT_I_DIED.get());
+                    Reflect.fastInvoke(ClassStorage.getHandle(player), ServerPlayerAccessor.METHOD_TELL_NEUTRAL_MOBS_THAT_IDIED.get());
                 }
             } catch (Throwable ignored) {}
         }

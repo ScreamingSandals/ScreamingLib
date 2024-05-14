@@ -23,7 +23,7 @@ import org.screamingsandals.lib.ai.GoalSelector;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.impl.bukkit.ai.goal.BukkitGoalTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.impl.nms.accessors.MobAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.MobAccessor;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 

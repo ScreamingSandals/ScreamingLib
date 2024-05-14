@@ -20,8 +20,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Wither;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.impl.nms.accessors.EntityAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.WitherBossAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.boss.wither.WitherBossAccessor;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public class BossBarWither extends FakeEntityNMS<Wither> {
