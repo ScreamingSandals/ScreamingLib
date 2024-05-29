@@ -89,7 +89,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
                 }
             }
         } else {
-            var goals = Reflect.getField(selector, GoalSelectorAccessor.FIELD_FIELD_75782_A_1.get());
+            var goals = Reflect.getField(selector, GoalSelectorAccessor.FIELD_FIELD_75782_A.get());
 
             if (goals instanceof Collection) { // therefore is not null
                 for (var g : List.copyOf((Collection<?>) goals)) {
@@ -125,7 +125,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
                 }
             }
         } else {
-            var goals = Reflect.getField(selector, GoalSelectorAccessor.FIELD_FIELD_75782_A_1.get());
+            var goals = Reflect.getField(selector, GoalSelectorAccessor.FIELD_FIELD_75782_A.get());
 
             if (goals instanceof Collection) { // therefore is not null
                 for (var g : List.copyOf((Collection<?>) goals)) {
@@ -166,7 +166,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
                 }
             }
         } else {
-            var goals = Reflect.getField(selector, GoalSelectorAccessor.FIELD_FIELD_75782_A_1.get());
+            var goals = Reflect.getField(selector, GoalSelectorAccessor.FIELD_FIELD_75782_A.get());
 
             if (goals instanceof Collection) { // therefore is not null
                 for (var g : List.copyOf((Collection<?>) goals)) {
@@ -227,7 +227,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
                 }
             }
         } else {
-            var goals = Reflect.getField(selector, GoalSelectorAccessor.FIELD_FIELD_75782_A_1.get());
+            var goals = Reflect.getField(selector, GoalSelectorAccessor.FIELD_FIELD_75782_A.get());
 
             if (goals instanceof Collection) { // therefore is not null
                 for (var g : List.copyOf((Collection<?>) goals)) {

@@ -42,10 +42,7 @@ class SlibNamingStrategy extends ForwardingNamingStrategy {
 accessors {
 
     /*
-    * TODO:
-    *  1. Update Slib code
-    *  2. Start using bundle when updated
-    *
+    * TODO: Start using bundle after update to 1.20.6 (the 1.20.4 bundle if fucked)
     */
 
     // uncomment this and remove the mappingBundle dependency,

@@ -68,7 +68,7 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
         final var friendlyByteBuf = Reflect.constructor(FriendlyByteBufAccessor.TYPE.get(), ByteBuf.class).construct(getBuffer());
 
         final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_GET_TAG.get());
-        Reflect.fastInvoke(friendlyByteBuf, FriendlyByteBufAccessor.METHOD_WRITE_NBT_1.get(), nbtTag);
+        Reflect.fastInvoke(friendlyByteBuf, FriendlyByteBufAccessor.METHOD_WRITE_NBT.get(), nbtTag);
     }
 
     @Override

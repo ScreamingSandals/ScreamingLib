@@ -68,7 +68,7 @@ public class BukkitAttribute1_8 extends BasicWrapper<Object> implements Attribut
 
     @Override
     public @NotNull List<@NotNull AttributeModifier> getModifiers() {
-        var collection = (Collection<?>) Reflect.fastInvoke(wrappedObject, AttributeInstanceAccessor.METHOD_GET_MODIFIERS_1.get());
+        var collection = (Collection<?>) Reflect.fastInvoke(wrappedObject, AttributeInstanceAccessor.METHOD_GET_MODIFIERS.get());
         return collection.stream()
                 .map(BukkitAttribute1_8::convert)
                 .collect(Collectors.toList());

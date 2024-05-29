@@ -171,7 +171,7 @@ public class PacketIdMapping {
             }
 
             packetId = Reflect
-                    .fastInvokeResulted(outgoingMap, ConnectionProtocol$PacketSetAccessor.METHOD_GET_ID_1.get(), vanillaClass)
+                    .fastInvokeResulted(outgoingMap, ConnectionProtocol$PacketSetAccessor.METHOD_GET_ID.get(), vanillaClass)
                     .as(Integer.class);
 
         }

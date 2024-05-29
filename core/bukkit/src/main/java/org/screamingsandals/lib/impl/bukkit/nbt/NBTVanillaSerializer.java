@@ -123,7 +123,7 @@ public class NBTVanillaSerializer {
                     //noinspection unchecked,rawtypes
                     ((List) list).add(serialize(entry));
                 } else {
-                    Reflect.fastInvoke(list, ListTagAccessor.METHOD_ADD_1.get(), serialize(entry));
+                    Reflect.fastInvoke(list, ListTagAccessor.METHOD_ADD.get(), serialize(entry));
                 }
             }
             return list;
@@ -142,7 +142,7 @@ public class NBTVanillaSerializer {
                         //noinspection unchecked,rawtypes
                         ((List) list).add(Reflect.construct(LongTagAccessor.CONSTRUCTOR_0.get(), entry));
                     } else {
-                        Reflect.fastInvoke(list, ListTagAccessor.METHOD_ADD_1.get(), Reflect.construct(LongTagAccessor.CONSTRUCTOR_0.get(), entry));
+                        Reflect.fastInvoke(list, ListTagAccessor.METHOD_ADD.get(), Reflect.construct(LongTagAccessor.CONSTRUCTOR_0.get(), entry));
                     }
                 }
                 return list;

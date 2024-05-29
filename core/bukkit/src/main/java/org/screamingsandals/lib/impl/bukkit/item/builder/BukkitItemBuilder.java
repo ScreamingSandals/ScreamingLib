@@ -249,7 +249,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_PUT.get(), "AttributeModifiers", attributes);
         }
         for (var modifier : modifiers) {
-            Reflect.fastInvoke(attributes, ListTagAccessor.METHOD_ADD_1.get(), modifier);
+            Reflect.fastInvoke(attributes, ListTagAccessor.METHOD_ADD.get(), modifier);
         }
 
         Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);

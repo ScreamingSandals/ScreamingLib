@@ -41,7 +41,6 @@ junit = "5.8.2"
 
 # plugins
 screaming-plugin-builder = "1.0.84"
-nms-mapper = "1.4.8"
 takenaka = "1.2.0-SNAPSHOT"
 mappings = "1.8.8+1.20.4"
 
@@ -95,6 +94,5 @@ takenaka-mappings = { group = "me.kcra.takenaka", name = "mappings", version.ref
 
 [plugins]
 screaming-plugin-builder = { id = "org.screamingsandals.plugin-builder", version.ref = "screaming-plugin-builder" }
-nms-mapper = { id = "org.screamingsandals.nms-mapper", version.ref = "nms-mapper" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 takenaka = { id = "me.kcra.takenaka.accessor", version.ref = "takenaka" }
