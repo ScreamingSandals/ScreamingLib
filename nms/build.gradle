@@ -693,3 +693,9 @@ accessors {
         method(int, 'getExperienceValue', int)
     }
 }
+
+if (tasks.findByName("sourceJar")) {
+    tasks.named("sourceJar") {
+        dependsOn('generateAccessors')
+    }
+}
