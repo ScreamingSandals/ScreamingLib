@@ -1,3 +1,21 @@
+def supportVersions = [
+    '1_20_1': libs.paper.support.one.twenty.one
+]
+
+sourceSets {
+    for (def ver : supportVersions.keySet()) {
+        "support_${ver}" {
+            java {
+            }
+        }
+
+        main {
+            compileClasspath += sourceSets."support_${ver}".output
+            output.dir(sourceSets."support_${ver}".output.classesDirs, builtBy: "compileSupport_${ver}Java")
+        }
+    }
+}
+
 dependencies {
     api project(':nms'), {
         targetConfiguration = 'shadow'
@@ -10,6 +28,10 @@ dependencies {
     api project(':spectator-bungee')
 
     compileOnly libs.paper
+    for (def ver : supportVersions) {
+        "support_${ver.key}CompileOnly" ver.value
+    }
+
     compileOnly libs.netty
     compileOnly libs.viaversion
     compileOnly libs.protocolsupport

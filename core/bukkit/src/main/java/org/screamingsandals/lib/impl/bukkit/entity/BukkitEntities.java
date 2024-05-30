@@ -33,6 +33,7 @@ import org.screamingsandals.lib.entity.ExperienceOrb;
 import org.screamingsandals.lib.entity.ItemEntity;
 import org.screamingsandals.lib.entity.LightningBolt;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.compat.v1_20_1.EntitySpawnCompat;
 import org.screamingsandals.lib.impl.bukkit.entity.ambient.BukkitAmbientCreature;
 import org.screamingsandals.lib.impl.bukkit.entity.ambient.BukkitBat;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitAnimal;
@@ -993,12 +994,8 @@ public class BukkitEntities extends Entities {
             } else if (BukkitFeature.ENTITY_PRE_SPAWN_FUNCTION.isSupported()) {
                 org.bukkit.entity.Entity entity;
                 if (preSpawnFunction != null) {
-                    @SuppressWarnings({"deprecation", "rawtypes"})
-                    org.bukkit.util.Consumer cons = preSpawnBukkitEntity -> preSpawnFunction.accept(wrapEntity0(preSpawnBukkitEntity));
-                    // TODO: prepare independent compatibility source sets compiled against older bukkit API instead of using reflection
-                    //noinspection deprecation
-                    entity = (org.bukkit.entity.Entity) Reflect.getMethod(world, "spawn", org.bukkit.Location.class, Class.class, org.bukkit.util.Consumer.class)
-                            .invoke(bukkitLoc, entityClass, cons);
+                    // symbol is no longer in the API, see javadoc
+                    entity = EntitySpawnCompat.spawn(bukkitLoc, entityClass, preSpawnBukkitEntity -> preSpawnFunction.accept(wrapEntity0(preSpawnBukkitEntity)));
                 } else {
                     entity = world.spawn(bukkitLoc, entityClass);
                 }
@@ -1078,13 +1075,9 @@ public class BukkitEntities extends Entities {
         } else if (BukkitFeature.ITEM_ENTITY_PRE_SPAWN_FUNCTION_JAVA_CONSUMER.isSupported()) {
             return new BukkitItemEntity(bukkitLoc.getWorld().dropItem(bukkitLoc, item.as(org.bukkit.inventory.ItemStack.class), item1 -> preSpawnFunction.accept(new BukkitItemEntity(item1))));
         } else if (BukkitFeature.ITEM_ENTITY_PRE_SPAWN_FUNCTION.isSupported()) {
-            @SuppressWarnings("deprecation")
-            org.bukkit.util.Consumer<org.bukkit.entity.Item> cons = item1 -> preSpawnFunction.accept(new BukkitItemEntity(item1));
-            // TODO: prepare independent compatibility source sets compiled against older bukkit API instead of using reflection
-            @SuppressWarnings("deprecation")
-            var entity = (org.bukkit.entity.Entity) Reflect.getMethod(bukkitLoc.getWorld(), "dropItem", org.bukkit.Location.class, org.bukkit.inventory.ItemStack.class, org.bukkit.util.Consumer.class)
-                    .invoke(bukkitLoc, item.as(org.bukkit.inventory.ItemStack.class), cons);
-            return new BukkitItemEntity((org.bukkit.entity.Item) entity);
+            // symbol is no longer in the API, see javadoc
+            var entity = EntitySpawnCompat.dropItem(bukkitLoc, item.as(org.bukkit.inventory.ItemStack.class), item1 -> preSpawnFunction.accept(new BukkitItemEntity(item1)));
+            return new BukkitItemEntity(entity);
         } else {
             var itemEntity = new BukkitItemEntity(bukkitLoc.getWorld().dropItem(bukkitLoc, item.as(org.bukkit.inventory.ItemStack.class)));
             preSpawnFunction.accept(itemEntity);
@@ -1103,18 +1096,14 @@ public class BukkitEntities extends Entities {
                 }
             }));
         } else if (BukkitFeature.ENTITY_PRE_SPAWN_FUNCTION.isSupported()) {
-            @SuppressWarnings("deprecation")
-            org.bukkit.util.Consumer<org.bukkit.entity.ExperienceOrb> cons = experienceOrb -> {
+            // symbol is no longer in the API, see javadoc
+            var entity = EntitySpawnCompat.spawn(bukkitLoc, org.bukkit.entity.ExperienceOrb.class, experienceOrb -> {
                 experienceOrb.setExperience(experience);
                 if (preSpawnFunction != null) {
                     preSpawnFunction.accept(new BukkitExperienceOrb(experienceOrb));
                 }
-            };
-            // TODO: prepare independent compatibility source sets compiled against older bukkit API instead of using reflection
-            @SuppressWarnings("deprecation")
-            var entity = Reflect.getMethod(bukkitLoc.getWorld(), "spawn", org.bukkit.Location.class, Class.class, org.bukkit.util.Consumer.class)
-                    .invoke(bukkitLoc, org.bukkit.entity.ExperienceOrb.class, cons);
-            return new BukkitExperienceOrb((org.bukkit.entity.ExperienceOrb) entity);
+            });
+            return new BukkitExperienceOrb(entity);
         } else {
             var orb = bukkitLoc.getWorld().spawn(bukkitLoc, org.bukkit.entity.ExperienceOrb.class);
             orb.setExperience(experience);
