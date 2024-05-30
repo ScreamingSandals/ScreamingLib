@@ -15,7 +15,7 @@ enableShadowPlugin()
 sourceSets.main.java.srcDirs += 'src/generated/java'
 
 dependencies {
-//    mappingBundle libs.takenaka.mappings
+    mappingBundle libs.takenaka.mappings
     implementation libs.takenaka.runtime
 }
 
@@ -40,14 +40,9 @@ class SlibNamingStrategy extends ForwardingNamingStrategy {
 }
 
 accessors {
-
-    /*
-    * TODO: Start using bundle after update to 1.20.6 (the 1.20.4 bundle if fucked)
-    */
-
     // uncomment this and remove the mappingBundle dependency,
     // if you want to develop against custom versions
-    versionRange('1.8.8', '1.20.4') {
+    /*versionRange('1.8.8', '1.20.6') {
         // exclude 1.20 and 1.20.5 - hotfixed versions
         // exclude 1.16 and 1.10.1, they don't have most mappings and are basically not used at all
         // exclude 1.8.9, client-only update - no Spigot mappings, no thank you
@@ -56,7 +51,7 @@ accessors {
 
         // include only releases, no snapshots
         includeTypes 'release'
-    }
+    }*/
 
     namespaces 'mojang', 'spigot'
     accessorType 'reflection'

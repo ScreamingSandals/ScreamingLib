@@ -122,7 +122,7 @@ inline operator fun Container.plusAssign(items: Collection<ItemStack>) {
 }
 
 inline operator fun Container.plusAssign(container: Container) {
-    container.contents?.forEach {
+    container.contents.forEach {
         if (it != null) {
             this.addItem(it)
         }
