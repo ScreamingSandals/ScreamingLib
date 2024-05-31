@@ -17,8 +17,8 @@
 package org.screamingsandals.lib.utils.config;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.utils.config.HoconSupplier;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.loader.AbstractConfigurationLoader;
 
 public class HoconConfigurationLoaderBuilderSupplier implements ConfigurationLoaderBuilderSupplier {
@@ -28,7 +28,7 @@ public class HoconConfigurationLoaderBuilderSupplier implements ConfigurationLoa
     public AbstractConfigurationLoader.@NotNull Builder<?,?> get() throws UnsupportedOperationException {
         // good relocation plugins should be able to handle these class strings
         if (Reflect.has("org.spongepowered.configurate.hocon.HoconConfigurationLoader")) {
-            return HoconConfigurationLoader.builder();
+            return HoconSupplier.obtainBuilder();
         } else {
             throw new UnsupportedOperationException("There is no Configurate Loader capable of loading xml files!");
         }
