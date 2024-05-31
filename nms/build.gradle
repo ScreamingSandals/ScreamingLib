@@ -19,6 +19,9 @@ dependencies {
 
 shadowJar {
     relocate 'me.kcra.takenaka.accessor', 'org.screamingsandals.lib.impl.ext.takenaka'
+
+    exclude 'org/intellij/lang/annotations/**'
+    exclude 'org/jetbrains/annotations/**'
 }
 
 // after any changes in this file, please run the generateAccessors task to see changes in your ide
