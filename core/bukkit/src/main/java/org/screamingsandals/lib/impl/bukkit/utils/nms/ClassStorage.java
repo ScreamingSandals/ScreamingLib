@@ -45,6 +45,7 @@ public class ClassStorage {
 	// CraftBukkit classes
 	@UtilityClass
 	public static final class CB {
+		public static final Class<?> CraftAttribute = Reflect.getClassSafe(CB_PACKAGE + ".attribute.CraftAttribute");
 		public static final Class<?> CraftAttributeMap = Reflect.getClassSafe(CB_PACKAGE + ".attribute.CraftAttributeMap");
 		public static final Class<?> CraftItemStack = Reflect.getClassSafe(CB_PACKAGE + ".inventory.CraftItemStack");
 		public static final Class<?> CraftMagicNumbers = Reflect.getClassSafe(CB_PACKAGE + ".util.CraftMagicNumbers");
@@ -86,7 +87,11 @@ public class ClassStorage {
 	}
 
 	public static @NotNull Object asMinecraftComponent(@NotNull String javaJson) {
-		return Reflect.fastInvoke(Component$SerializerAccessor.METHOD_FROM_JSON.get(), (Object) javaJson);
+		if (Component$SerializerAccessor.METHOD_FROM_JSON.get() != null) {
+			return Reflect.fastInvoke(Component$SerializerAccessor.METHOD_FROM_JSON.get(), (Object) javaJson);
+		} else {
+			return Reflect.fastInvoke(Component$SerializerAccessor.METHOD_FROM_JSON_LENIENT.get(), (Object) javaJson);
+		}
 	}
 
 	public static Object stackAsNMS(ItemStack item) {

@@ -84,11 +84,17 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         }
 
         var handler = ClassStorage.getHandle(wrappedObject);
-        var attrMap = Reflect.getMethod(handler, LivingEntityAccessor.METHOD_GET_ATTRIBUTES.get()).invoke();
+        var attrMap = Reflect.fastInvoke(handler, LivingEntityAccessor.METHOD_GET_ATTRIBUTES.get());
         // Pre 1.16
         Object attr = null;
         if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
-            var toMinecraftNewMethod = Reflect.getMethod(ClassStorage.CB.CraftAttributeMap, "toMinecraft", org.bukkit.attribute.Attribute.class);
+            var toMinecraftNewMethod = Reflect.getMethod(ClassStorage.CB.CraftAttribute, "bukkitToMinecraftHolder",  org.bukkit.attribute.Attribute.class); // 1.20.5+
+            if (toMinecraftNewMethod.getMethod() == null) {
+                toMinecraftNewMethod = Reflect.getMethod(ClassStorage.CB.CraftAttribute, "bukkitToMinecraft", org.bukkit.attribute.Attribute.class); // late 1.20.4
+                if (toMinecraftNewMethod.getMethod() == null) {
+                    toMinecraftNewMethod = Reflect.getMethod(ClassStorage.CB.CraftAttributeMap, "toMinecraft", org.bukkit.attribute.Attribute.class); // until 1.20.4
+                }
+            }
             if (toMinecraftNewMethod.getMethod() != null && toMinecraftNewMethod.getMethod().getReturnType() != String.class) { // 1.16+
                 attr = toMinecraftNewMethod.invokeStatic(attributeType.as(org.bukkit.attribute.Attribute.class));
             } else if (attributeType instanceof BukkitAttributeType1_9) { // 1.9-1.15.2
@@ -108,9 +114,15 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
             // 1.16
             Object provider = Reflect.getField(attrMap, AttributeMapAccessor.FIELD_SUPPLIER.get());
             Map<Object, Object> all = Maps.newHashMap((Map<?, ?>) Reflect.getField(provider, AttributeSupplierAccessor.FIELD_INSTANCES.get()));
-            attr0 = Reflect.construct(AttributeInstanceAccessor.CONSTRUCTOR_0.get(), attr, (Consumer) o -> {
-                // do nothing
-            });
+            if (AttributeInstanceAccessor.CONSTRUCTOR_0.get() != null) {
+                attr0 = Reflect.construct(AttributeInstanceAccessor.CONSTRUCTOR_0.get(), attr, (Consumer) o -> {
+                    // do nothing
+                });
+            } else {
+                attr0 =  Reflect.construct(AttributeInstanceAccessor.CONSTRUCTOR_1.get(), attr, (Consumer) o -> {
+                    // do nothing
+                });
+            }
             all.put(attr, attr0);
             Reflect.setField(provider, AttributeSupplierAccessor.FIELD_INSTANCES.get(), ImmutableMap.copyOf(all));
         }

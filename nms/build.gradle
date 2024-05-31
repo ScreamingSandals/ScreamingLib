@@ -148,13 +148,17 @@ accessors {
     }
     // end 1.8.8 compat
 
+    mapClass('net.minecraft.core.RegistryAccess') {
+        field('net.minecraft.core.RegistryAccess$Frozen', 'EMPTY')
+    }
 
     mapClass('net.minecraft.network.chat.Component$Serializer') {
         // We do not really care whether it's MutableComponent or not, it implements Component anyways and we do not use anything extra from MutableComponent class
         methodChain {
-            it.item('net.minecraft.network.chat.MutableComponent', 'fromJson', String) // 1.16.1+
+            it.item('net.minecraft.network.chat.MutableComponent', 'fromJson', String) // 1.16.1 - 1.20.5
             it.item(Component, 'fromJson', String) // up to 1.15.2
         }
+        method('net.minecraft.network.chat.MutableComponent', 'fromJsonLenient', String, 'net.minecraft.core.HolderLookup$Provider') // 1.20.5+
     }
 
     var Goal = mapClass('net.minecraft.world.entity.ai.goal.Goal') {
@@ -600,6 +604,7 @@ accessors {
 
     // Attributes
     mapClass('net.minecraft.world.entity.ai.attributes.Attributes') {
+        // 1.8.8-1.15.2
         field(Attribute, 'MAX_HEALTH')
         field(Attribute, 'FOLLOW_RANGE')
         field(Attribute, 'KNOCKBACK_RESISTANCE')
@@ -626,7 +631,8 @@ accessors {
     }
 
     mapClass('net.minecraft.world.entity.ai.attributes.AttributeInstance') {
-        constructor(Attribute, Consumer)
+        constructor(Attribute, Consumer) // <= 1.20.5
+        constructor('net.minecraft.core.Holder', Consumer) // 1.20.5+
         setter(double, 'baseValue') // set base value
 
         getter(Attribute, 'attribute') // attribute type
