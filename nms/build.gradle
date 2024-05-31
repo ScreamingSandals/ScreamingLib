@@ -12,8 +12,6 @@ plugins {
 
 enableShadowPlugin()
 
-sourceSets.main.java.srcDirs += 'src/generated/java'
-
 dependencies {
     mappingBundle libs.takenaka.mappings
     implementation libs.takenaka.runtime

@@ -42,7 +42,7 @@ junit = "5.10.2"
 junit-platform = "1.10.2"
 
 # plugins
-screaming-plugin-builder = "1.0.85"
+screaming-plugin-builder = "1.0.86"
 takenaka = "1.2.0-SNAPSHOT"
 mappings = "1.8.8+1.20.6"
 
