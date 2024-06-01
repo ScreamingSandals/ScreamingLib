@@ -23,9 +23,12 @@ import io.netty.buffer.Unpooled;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.packet.listener.ServerboundInteractPacketListener;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.impl.nms.accessors.network.ProtocolInfoAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.decoration.ArmorStandAccessor;
+import org.screamingsandals.lib.impl.vanilla.packet.PacketIdMapping1_20_5;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.player.Players;
@@ -71,7 +74,12 @@ public class BukkitPacketMapper extends PacketMapper {
 
     @Override
     public int getId0(Class<? extends AbstractPacket> clazz) {
-        var id = PacketIdMapping.getPacketId(clazz);
+        @Nullable Integer id;
+        if (ProtocolInfoAccessor.TYPE.get() != null) {
+            id = PacketIdMapping1_20_5.getPacketId(clazz);
+        } else {
+            id = PacketIdMapping.getPacketId(clazz);
+        }
         return id == null ? -1 : id; // peacefully return some number, it will be ignored later
     }
 

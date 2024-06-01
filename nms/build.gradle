@@ -6,6 +6,8 @@ import me.kcra.takenaka.generator.accessor.naming.ForwardingNamingStrategy
 import me.kcra.takenaka.generator.accessor.naming.StandardNamingStrategiesKt
 import org.jetbrains.annotations.NotNull
 
+import java.util.function.Function
+
 plugins {
     alias libs.plugins.takenaka
 }
@@ -449,19 +451,37 @@ accessors {
 
     mapClass('net.minecraft.network.ConnectionProtocol') {
         enumConstant('PLAY')
-        field(Map, 'flows') // new
+        field(Map, 'flows') // new, <= 1.20.4
         field(Map, 'packets') // old
     }
 
-    var ConnectionProtocol$PacketSet = mapClass('net.minecraft.network.ConnectionProtocol$PacketSet') {
+    var ConnectionProtocol$PacketSet = mapClass('net.minecraft.network.ConnectionProtocol$PacketSet') { // <= 1.20.4
         methodChain {
             it.item(int, 'getId', Class)
             it.item(Integer, 'getId', Class)
         } // 1.19.4: compatible change - return type changed from boxed Integer to primitive int
     }
 
-    mapClass('net.minecraft.network.ConnectionProtocol$CodecData') { // 1.20.2+
+    mapClass('net.minecraft.network.ConnectionProtocol$CodecData') { // 1.20.2-1.20.4
         field(ConnectionProtocol$PacketSet, 'packetSet')
+    }
+
+    // 1.20.5+ - Registry-backed protocol info
+    mapClass('net.minecraft.network.protocol.game.GameProtocols') {
+        field('net.minecraft.network.ProtocolInfo$Unbound', 'CLIENTBOUND')
+    }
+    mapClass('net.minecraft.network.ProtocolInfo') {
+        method('net.minecraft.network.codec.StreamCodec', 'codec')
+    }
+    mapClass('net.minecraft.network.ProtocolInfo$Unbound') {
+        method('net.minecraft.network.ProtocolInfo', 'bind', Function)
+    }
+    mapClass('net.minecraft.network.codec.IdDispatchCodec') {
+        field('it.unimi.dsi.fastutil.objects.Object2IntMap', 'toId')
+    }
+    mapClass('net.minecraft.network.protocol.PacketType') {
+        method('net.minecraft.network.protocol.PacketFlow', 'flow')
+        method('net.minecraft.resources.ResourceLocation', 'id')
     }
 
     var Connection = mapClass('net.minecraft.network.Connection') {
