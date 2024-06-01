@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.math.Vector3Di;
 
@@ -225,6 +226,7 @@ public abstract class MetadataItem {
      */
     @Getter
     @ToString(callSuper = true)
+    @LimitedVersionSupport("Packet version lower than 57")
     public static class ShortMetadataItem extends MetadataItem {
         private final short data;
 

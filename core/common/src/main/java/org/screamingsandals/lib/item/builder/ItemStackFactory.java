@@ -55,8 +55,8 @@ public abstract class ItemStackFactory {
     };
 
     protected final @NotNull BidirectionalConverter<ItemStack> itemConverter = BidirectionalConverter.<ItemStack>build()
-            .registerW2P(String.class, item -> item.getMaterial().platformName())
-            .registerW2P(ItemType.class, ItemStack::getMaterial)
+            .registerW2P(String.class, item -> item.getType().platformName())
+            .registerW2P(ItemType.class, ItemStack::getType)
             .registerP2W(ConfigurationNode.class, CONFIGURATE_RESOLVER)
             .registerP2W(Map.class, map -> {
                 try {

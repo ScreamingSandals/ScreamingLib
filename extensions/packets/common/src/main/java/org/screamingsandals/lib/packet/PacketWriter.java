@@ -23,16 +23,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.impl.spectator.Spectator;
-import org.screamingsandals.lib.impl.spectator.SpectatorBackend;
+import org.screamingsandals.lib.impl.packet.ProtocolVersions;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.nbt.NBTSerializer;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
-import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.spectator.configurate.SpectatorSerializers;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.Location;
@@ -504,7 +501,19 @@ public abstract class PacketWriter extends OutputStream {
      * @param item the item to write
      */
     public void writeItem(@NotNull ItemStack item) {
-        if (item.getMaterial().isAir()) {
+        if (protocol() >= ProtocolVersions.V1_20_5) {
+            if (item.getType().isAir()) {
+                writeVarInt(0);
+            }
+
+            writeVarInt(item.getAmount());
+            writeVarInt(getItemId(item.getType()));
+            writeItemComponents(item);
+
+            return;
+        }
+
+        if (item.getType().isAir()) {
             if (protocol() >= 402) {
                 writeBoolean(false);
             } else {
@@ -514,16 +523,16 @@ public abstract class PacketWriter extends OutputStream {
             if (protocol() >= 402) {
                 writeBoolean(true);
 
-                writeVarInt(getItemId(item.getMaterial()));
+                writeVarInt(getItemId(item.getType()));
             } else {
-                writeShort(getItemId(item.getMaterial()));
+                writeShort(getItemId(item.getType()));
             }
 
             write(item.getAmount());
             if (protocol() < 351) {
-                writeShort(getForcedDurability(item.getMaterial())); // TODO: I think this should be durability in general and not just data value
+                writeShort(getForcedDurability(item.getType())); // TODO: I think this should be durability in general and not just data value
             }
-            writeNBTFromItem(item);
+            writeItemComponents(item);
         }
     }
 
@@ -561,7 +570,7 @@ public abstract class PacketWriter extends OutputStream {
     }
 
     // Platform classes must override this method
-    public void writeNBTFromItem(@NotNull ItemStack item) {
+    public void writeItemComponents(@NotNull ItemStack item) {
         write(0);
     }
 

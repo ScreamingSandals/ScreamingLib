@@ -36,7 +36,7 @@ public abstract class ClientboundMoveEntityPacket extends AbstractPacket {
         } else if (this instanceof Rot) {
             writer.writeByteRotation(((Rot) this).yaw, ((Rot) this).pitch);
         } else if (this instanceof PosRot) {
-            writer.writeMove(((Pos) this).delta);
+            writer.writeMove(((PosRot) this).delta);
             writer.writeByteRotation(((PosRot) this).yaw, ((PosRot) this).pitch);
         }
         writer.writeBoolean(onGround);

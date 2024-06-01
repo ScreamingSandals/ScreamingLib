@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.item;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,6 +44,7 @@ import java.util.stream.Collectors;
 public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, CompoundTagLike, CompoundTagTreeInspector, ItemContentLike, ItemStackHolder {
     @NotNull ItemType getType();
 
+    @ApiStatus.Obsolete
     default @NotNull ItemType getMaterial() { // alternative getter (old name)
         return getType();
     }
@@ -184,7 +186,7 @@ public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleDa
     default @NotNull ItemContent asItemContent() {
         var tag = getTag();
         return ItemContent.builder()
-                .id(ResourceLocation.of(getMaterial().platformName())) // TODO: implement namespaced holders and get the actual namespaced key
+                .id(ResourceLocation.of(getType().platformName())) // TODO: implement namespaced holders and get the actual namespaced key
                 .count(getAmount())
                 .tag(tag.isEmpty() ? null : tag)
                 .build();

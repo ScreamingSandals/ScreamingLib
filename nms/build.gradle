@@ -438,6 +438,7 @@ accessors {
     mapClass('net.minecraft.server.MinecraftServer') {
         field(ServerStatus, 'status')
         field(ServerConnectionListener, 'connection')
+        method('net.minecraft.core.RegistryAccess$Frozen', 'registryAccess')
     }
 
     mapClass('net.minecraft.world.level.block.Block') {
@@ -482,6 +483,18 @@ accessors {
     mapClass('net.minecraft.network.protocol.PacketType') {
         method('net.minecraft.network.protocol.PacketFlow', 'flow')
         method('net.minecraft.resources.ResourceLocation', 'id')
+    }
+    mapClass('net.minecraft.network.codec.StreamEncoder') {
+        method(void, 'encode', Object, Object)
+    }
+    mapClass('net.minecraft.network.codec.StreamDecoder') {
+        method(Object, 'decode', Object)
+    }
+    mapClass('net.minecraft.core.component.DataComponentPatch') {
+        field('net.minecraft.network.codec.StreamCodec', 'STREAM_CODEC')
+    }
+    mapClass('net.minecraft.network.RegistryFriendlyByteBuf') {
+        constructor('io.netty.buffer.ByteBuf', 'net.minecraft.core.RegistryAccess')
     }
 
     var Connection = mapClass('net.minecraft.network.Connection') {
@@ -595,6 +608,7 @@ accessors {
         method(CompoundTag, 'save', CompoundTag)
         method(CompoundTag, 'getTag')
         method(void, 'setTag', CompoundTag)
+        method('net.minecraft.core.component.DataComponentPatch', 'getComponentsPatch')
     }
 
     // 1.10.x compat

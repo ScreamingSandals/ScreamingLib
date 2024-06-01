@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.impl.bukkit.packet;
 
 import io.netty.buffer.ByteBuf;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
@@ -24,10 +25,15 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.impl.nms.accessors.core.component.DataComponentPatchAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.FriendlyByteBufAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.RegistryFriendlyByteBufAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.codec.StreamEncoderAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemStackAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.level.block.BlockAccessor;
 import org.screamingsandals.lib.item.ItemType;
+import org.screamingsandals.lib.impl.packet.ProtocolVersions;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -61,14 +67,26 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
     }
 
     @Override
-    public void writeNBTFromItem(@NotNull ItemStack item) {
+    public void writeItemComponents(@NotNull ItemStack item) {
         final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(item.as(org.bukkit.inventory.ItemStack.class)), ItemStackAccessor.METHOD_COPY.get());
 
-        // create temporary friendly ByteBuf instance that will write the NBT for us.
-        final var friendlyByteBuf = Reflect.constructor(FriendlyByteBufAccessor.TYPE.get(), ByteBuf.class).construct(getBuffer());
+        if (protocol() >= ProtocolVersions.V1_20_5) {
+            final var registryByteBuf = Reflect.construct(
+                    RegistryFriendlyByteBufAccessor.CONSTRUCTOR_0.get(),
+                    getBuffer(),
+                    Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer")
+                            .fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get())
+            );
 
-        final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_GET_TAG.get());
-        Reflect.fastInvoke(friendlyByteBuf, FriendlyByteBufAccessor.METHOD_WRITE_NBT.get(), nbtTag);
+            final var dataComponents = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_GET_COMPONENTS_PATCH.get());
+            Reflect.fastInvoke(DataComponentPatchAccessor.CONST_STREAM_CODEC.get(), StreamEncoderAccessor.METHOD_ENCODE.get(), registryByteBuf, dataComponents);
+        } else {
+            // create temporary friendly ByteBuf instance that will write the NBT for us.
+            final var friendlyByteBuf = Reflect.construct(FriendlyByteBufAccessor.CONSTRUCTOR_0.get(), getBuffer());
+
+            final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_GET_TAG.get());
+            Reflect.fastInvoke(friendlyByteBuf, FriendlyByteBufAccessor.METHOD_WRITE_NBT.get(), nbtTag);
+        }
     }
 
     @Override

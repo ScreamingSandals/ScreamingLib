@@ -27,9 +27,6 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
-import java.util.List;
-import java.util.UUID;
-
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true, fluent = true)
