@@ -23,6 +23,7 @@ import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistry;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 
 @ProvidedService
 @ApiStatus.Internal
@@ -37,5 +38,10 @@ public abstract class AttributeTypeRegistry extends SimpleRegistry<AttributeType
 
     public static @NotNull AttributeTypeRegistry getInstance() {
         return Preconditions.checkNotNull(registry, "AttributeTypeRegistry is not initialized yet!");
+    }
+
+    @OnPostConstruct
+    public void mapAliases() {
+        mapAlias("generic.jump_strength", "horse.jump_strength");
     }
 }

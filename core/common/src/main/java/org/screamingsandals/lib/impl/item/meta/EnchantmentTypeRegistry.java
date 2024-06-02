@@ -23,6 +23,7 @@ import org.screamingsandals.lib.impl.utils.registry.SimpleRegistry;
 import org.screamingsandals.lib.item.meta.EnchantmentType;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 
 @ProvidedService
 @ApiStatus.Internal
@@ -38,5 +39,10 @@ public abstract class EnchantmentTypeRegistry extends SimpleRegistry<Enchantment
 
     public static @NotNull EnchantmentTypeRegistry getInstance() {
         return Preconditions.checkNotNull(registry, "EnchantmentTypeRegistry is not initialized yet!");
+    }
+
+    @OnPostConstruct
+    public void mapAliases() {
+        mapAlias("sweeping", "sweeping_edge");
     }
 }

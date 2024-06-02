@@ -66,6 +66,8 @@ public class BukkitParticleConverter {
                             : new org.bukkit.Vibration.Destination.BlockDestination(dest.as(Location.class)),
                     ((Vibration) data).arrivalTime()
             );
+        } else if (data instanceof ParticleColor) {
+            return getBukkitColor(((ParticleColor) data).color());
         }
         return null;
     }

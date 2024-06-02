@@ -20,8 +20,16 @@ import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.particle.*;
+import org.screamingsandals.lib.particle.DustOptions;
+import org.screamingsandals.lib.particle.DustTransition;
+import org.screamingsandals.lib.particle.FloatData;
+import org.screamingsandals.lib.particle.IntegerData;
+import org.screamingsandals.lib.particle.ParticleColor;
+import org.screamingsandals.lib.particle.ParticleData;
+import org.screamingsandals.lib.particle.ParticleType;
+import org.screamingsandals.lib.particle.Vibration;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
 
@@ -59,6 +67,8 @@ public class BukkitParticleType1_9 extends BasicWrapper<Particle> implements Par
                     return FloatData.class;
                 case "Vibration":
                     return Vibration.class;
+                case "Color":
+                    return ParticleColor.class;
             }
         }
         return null;
@@ -79,7 +89,12 @@ public class BukkitParticleType1_9 extends BasicWrapper<Particle> implements Par
 
     @Override
     public @NotNull ResourceLocation location() {
-        return ResourceLocation.of(convertPath(wrappedObject));
+        if (BukkitFeature.PARTICLE_REGISTRY.isSupported()) {
+            var key = wrappedObject.getKey();
+            return ResourceLocation.of(key.getNamespace(), key.getKey());
+        } else {
+            return ResourceLocation.of(convertPath(wrappedObject));
+        }
     }
 
     public static @NotNull String convertPath(@NotNull Particle particle) {

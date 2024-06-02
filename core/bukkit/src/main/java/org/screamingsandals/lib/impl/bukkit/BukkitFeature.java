@@ -114,6 +114,7 @@ public class BukkitFeature {
     // Registry API
     public static final @NotNull PlatformFeature REGISTRY = PlatformFeature.of(() -> Version.isVersion(1, 14));
     public static final @NotNull PlatformFeature TAGS = PlatformFeature.of(() -> Version.isVersion(1, 13));
+    public static final @NotNull PlatformFeature REGISTRY_STREAM_METHOD = REGISTRY.and(() -> Reflect.hasMethod("org.bukkit.Registry", "stream"));
 
     // Entity API
     public static final @NotNull PlatformFeature REGISTRY_ENTITY_TYPES = TAGS.and(() -> Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null);
@@ -217,6 +218,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature GAME_RULE_API = PlatformFeature.of(() -> Reflect.has("org.bukkit.GameRule"));
     public static final @NotNull PlatformFeature PARTICLES_API = PlatformFeature.of(() -> Version.isVersion(1, 9));
     public static final @NotNull PlatformFeature EXTENDED_PARTICLE_METHOD = PARTICLES_API.and(() -> Reflect.hasMethod(World.class, "spawnParticle", Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class));
+    public static final @NotNull PlatformFeature PARTICLE_REGISTRY = REGISTRY.and(() ->  Reflect.getField("org.bukkit.Registry", "PARTICLE_TYPE") != null);
     public static final @NotNull PlatformFeature CHUNK_TICKET_API = PlatformFeature.of(() -> Reflect.hasMethod(Chunk.class, "addPluginChunkTicket", Plugin.class));
 
     // POTION & POTION EFFECT API

@@ -21,6 +21,7 @@ import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.impl.item.meta.EnchantmentTypeRegistry;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 import org.screamingsandals.lib.item.meta.EnchantmentType;
@@ -125,7 +126,16 @@ public class BukkitEnchantmentTypeRegistry extends EnchantmentTypeRegistry {
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull EnchantmentType> getRegistryItemStream0() {
-        if (BukkitFeature.FLATTENING.isSupported()) {
+        if (BukkitFeature.REGISTRY.isSupported()) {
+            return new SimpleRegistryItemStream<>(
+                    () -> BukkitRegistry.stream(Registry.ENCHANTMENT),
+                    BukkitEnchantmentType::new,
+                    BukkitRegistry::resourceLocation,
+                    (enchantment, literal) -> enchantment.getKey().getKey().contains(literal),
+                    (enchantment, namespace) -> enchantment.getKey().getNamespace().equals(namespace),
+                    List.of()
+            );
+        } else if (BukkitFeature.FLATTENING.isSupported()) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(org.bukkit.enchantments.Enchantment.values()),
                     BukkitEnchantmentType::new,

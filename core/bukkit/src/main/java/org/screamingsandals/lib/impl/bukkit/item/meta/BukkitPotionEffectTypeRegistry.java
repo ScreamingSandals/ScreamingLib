@@ -21,6 +21,7 @@ import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.impl.item.meta.PotionEffectTypeRegistry;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 import org.screamingsandals.lib.utils.ResourceLocation;
@@ -176,7 +177,25 @@ public class BukkitPotionEffectTypeRegistry extends PotionEffectTypeRegistry {
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull PotionEffectType> getRegistryItemStream0() {
-        if (BukkitFeature.POTION_EFFECT_KEYED.isSupported()) {
+        if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY_SPIGOT.isSupported()) {
+            return new SimpleRegistryItemStream<>(
+                    () -> BukkitRegistry.stream(Registry.EFFECT),
+                    BukkitPotionEffectType::new,
+                    BukkitRegistry::resourceLocation,
+                    (potionEffect, literal) -> potionEffect.getKey().getKey().contains(literal),
+                    (potionEffect, namespace) -> potionEffect.getKey().getNamespace().equals(namespace),
+                    List.of()
+            );
+        } else if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY.isSupported()) {
+            return new SimpleRegistryItemStream<>(
+                    () -> BukkitRegistry.stream(Registry.POTION_EFFECT_TYPE),
+                    BukkitPotionEffectType::new,
+                    BukkitRegistry::resourceLocation,
+                    (potionEffect, literal) -> potionEffect.getKey().getKey().contains(literal),
+                    (potionEffect, namespace) -> potionEffect.getKey().getNamespace().equals(namespace),
+                    List.of()
+            );
+        } else if (BukkitFeature.POTION_EFFECT_KEYED.isSupported()) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(org.bukkit.potion.PotionEffectType.values()),
                     BukkitPotionEffectType::new,

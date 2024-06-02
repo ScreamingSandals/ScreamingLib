@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.entity.type.EntityType;
+import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.impl.entity.type.EntityTypeTagBackPorts;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -84,12 +85,9 @@ public class BukkitEntityTypeRegistry1_14 extends BukkitEntityTypeRegistry {
     @Override
     protected @NotNull RegistryItemStream<@NotNull EntityType> getRegistryItemStream0() {
         return new SimpleRegistryItemStream<>(
-                () -> Arrays.stream(org.bukkit.entity.EntityType.values()).filter(e -> e != org.bukkit.entity.EntityType.UNKNOWN),
+                () -> BukkitRegistry.stream(Registry.ENTITY_TYPE).filter(e -> e != org.bukkit.entity.EntityType.UNKNOWN),
                 BukkitEntityType1_11::new,
-                entityType -> {
-                    var namespaced = entityType.getKey();
-                    return ResourceLocation.of(namespaced.getNamespace(), namespaced.getKey());
-                },
+                BukkitRegistry::resourceLocation,
                 (entityType, literal) -> entityType.getKey().getKey().contains(literal),
                 (entityType, namespace) -> entityType.getKey().getNamespace().equals(namespace),
                 List.of()

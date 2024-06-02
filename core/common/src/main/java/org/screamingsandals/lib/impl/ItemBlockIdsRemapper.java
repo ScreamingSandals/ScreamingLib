@@ -164,42 +164,43 @@ public abstract class ItemBlockIdsRemapper {
 
     private void flatteningMapping() {
         // Flattening remapping
-        mapAliasItem("ZOMBIFIED_PIGLIN_SPAWN_EGG", "ZOMBIE_PIGMAN_SPAWN_EGG");
-        mapAlias("SMOOTH_STONE_SLAB", "STONE_SLAB");
-        mapAliasItem("GREEN_DYE", "CACTUS_GREEN");
-        mapAliasItem("YELLOW_DYE", "DANDELION_YELLOW");
-        mapAliasItem("RED_DYE", "ROSE_RED");
-        mapAlias("OAK_SIGN", "SIGN");
-        mapAlias("BIRCH_SIGN", "SIGN");
-        mapAlias("DARK_OAK_SIGN", "SIGN");
-        mapAlias("JUNGLE_SIGN", "SIGN");
-        mapAlias("SPRUCE_SIGN", "SIGN");
-        mapAlias("ACACIA_SIGN", "SIGN");
-        mapAlias("OAK_WALL_SIGN", "WALL_SIGN");
-        mapAlias("BIRCH_WALL_SIGN", "WALL_SIGN");
-        mapAlias("BIRCH_WALL_SIGN", "WALL_SIGN");
-        mapAlias("DARK_OAK_WALL_SIGN", "WALL_SIGN");
-        mapAlias("JUNGLE_WALL_SIGN", "WALL_SIGN");
-        mapAlias("SPRUCE_WALL_SIGN", "WALL_SIGN");
-        mapAlias("ACACIA_WALL_SIGN", "WALL_SIGN");
-        mapAlias("DIRT_PATH", "GRASS_PATH");
-        mapAlias("WATER_CAULDRON", "CAULDRON");
-        mapAlias("SHORT_GRASS", "GRASS");
+        mapAliasItem("zombified_piglin_spawn_egg", "zombie_pigman_spawn_egg");
+        mapAlias("smooth_stone_slab", "stone_slab");
+        mapAliasItem("green_dye", "cactus_green");
+        mapAliasItem("yellow_dye", "dandelion_yellow");
+        mapAliasItem("red_dye", "rose_red");
+        mapAliasItem("turtle_scute", "scute");
+        mapAlias("oak_sign", "sign");
+        mapAlias("birch_sign", "sign");
+        mapAlias("dark_oak_sign", "sign");
+        mapAlias("jungle_sign", "sign");
+        mapAlias("spruce_sign", "sign");
+        mapAlias("acacia_sign", "sign");
+        mapAlias("oak_wall_sign", "wall_sign");
+        mapAlias("birch_wall_sign", "wall_sign");
+        mapAlias("birch_wall_sign", "wall_sign");
+        mapAlias("dark_oak_wall_sign", "wall_sign");
+        mapAlias("jungle_wall_sign", "wall_sign");
+        mapAlias("spruce_wall_sign", "wall_sign");
+        mapAlias("acacia_wall_sign", "wall_sign");
+        mapAlias("dirt_path", "grass_path");
+        mapAlias("water_cauldron", "cauldron");
+        mapAlias("short_grass", "grass");
 
         // non-color -> white alias
-        mapAlias("WOOL", "WHITE_WOOL");
-        mapAlias("CARPET", "WHITE_CARPET");
-        mapAlias("CONCRETE", "WHITE_CONCRETE");
-        mapAlias("CONCRETE_POWDER", "WHITE_CONCRETE_POWDER");
-        mapAlias("STAINED_GLASS", "WHITE_STAINED_GLASS");
-        mapAlias("STAINED_GLASS_PANE", "WHITE_STAINED_GLASS_PANE");
-        mapAlias("BANNER", "WHITE_BANNER");
-        mapAlias("GLAZED_TERRACOTTA", "WHITE_GLAZED_TERRACOTTA");
+        mapAlias("wool", "white_wool");
+        mapAlias("carpet", "white_carpet");
+        mapAlias("concrete", "white_concrete");
+        mapAlias("concrete_powder", "white_concrete_powder");
+        mapAlias("stained_glass", "white_stained_glass");
+        mapAlias("stained_glass_pane", "white_stained_glass_pane");
+        mapAlias("banner", "white_banner");
+        mapAlias("glazed_terracotta", "white_glazed_terracotta");
 
         if (!mappingFlags.contains(MappingFlags.NO_COLORED_BEDS)) {
-            mapAlias("BED", "WHITE_BED");
+            mapAlias("bed", "white_bed");
         } else {
-            mapAlias("BED", "RED_BED");
+            mapAlias("bed", "red_bed");
         }
     }
 

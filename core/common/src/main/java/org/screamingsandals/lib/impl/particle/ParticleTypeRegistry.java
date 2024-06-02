@@ -23,6 +23,7 @@ import org.screamingsandals.lib.particle.ParticleType;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistry;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 
 @ProvidedService
 @ApiStatus.Internal
@@ -37,5 +38,13 @@ public abstract class ParticleTypeRegistry extends SimpleRegistry<ParticleType> 
 
     public static @NotNull ParticleTypeRegistry getInstance() {
         return Preconditions.checkNotNull(registry, "ParticleTypeRegistry is not initialized yet!");
+    }
+
+    @OnPostConstruct
+    public void mapAliases() {
+        mapAlias("small_gust", "gust_emitter");
+        mapAlias("gust_emitter_large", "gust_dust");
+        mapAlias("gust_emitter_small", "gust_dust");
+        mapAlias("ambient_entity_effect", "entity_effect");
     }
 }

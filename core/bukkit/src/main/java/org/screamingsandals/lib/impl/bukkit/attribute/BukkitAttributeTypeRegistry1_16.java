@@ -22,12 +22,12 @@ import org.bukkit.attribute.Attribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -39,12 +39,9 @@ public class BukkitAttributeTypeRegistry1_16 extends BukkitAttributeTypeRegistry
     @Override
     protected @NotNull RegistryItemStream<@NotNull AttributeType> getRegistryItemStream0() {
         return new SimpleRegistryItemStream<>(
-                () -> Arrays.stream(Attribute.values()),
+                () -> BukkitRegistry.stream(Registry.ATTRIBUTE),
                 BukkitAttributeType1_16::new,
-                attributeType -> {
-                    var key = attributeType.getKey();
-                    return ResourceLocation.of(key.getNamespace(), key.getKey());
-                },
+                BukkitRegistry::resourceLocation,
                 (attributeType, literal) -> attributeType.getKey().getKey().contains(literal),
                 (attributeType, namespace) -> attributeType.getKey().getNamespace().equals(namespace),
                 List.of()

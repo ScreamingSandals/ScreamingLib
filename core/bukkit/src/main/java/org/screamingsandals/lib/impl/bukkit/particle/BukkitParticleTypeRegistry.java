@@ -26,7 +26,9 @@ import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 public abstract class BukkitParticleTypeRegistry extends ParticleTypeRegistry {
     @ServiceInitializer
     public static @NotNull BukkitParticleTypeRegistry init() {
-        if (BukkitFeature.PARTICLES_API.isSupported()) {
+        if (BukkitFeature.PARTICLE_REGISTRY.isSupported()) {
+            return new BukkitParticleTypeRegistry1_20_2();
+        } else if (BukkitFeature.PARTICLES_API.isSupported()) {
             return new BukkitParticleTypeRegistry1_9();
         } else {
             return new BukkitParticleTypeRegistry1_8();

@@ -36,7 +36,6 @@ public class BukkitParticleTypeRegistry1_9 extends BukkitParticleTypeRegistry {
         specialType(Particle.class, BukkitParticleType1_9::new);
     }
 
-    // TODO: is there any bukkit-like server supporting custom values for this registry?
     @Override
     protected @Nullable ParticleType resolveMappingPlatform(@NotNull ResourceLocation location) {
         if (!"minecraft".equals(location.namespace())) {

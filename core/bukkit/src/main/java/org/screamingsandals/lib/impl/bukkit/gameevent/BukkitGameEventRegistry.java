@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.gameevent.GameEvent;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.impl.gameevent.GameEventRegistry;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 import org.screamingsandals.lib.utils.ResourceLocation;
@@ -42,12 +43,9 @@ public class BukkitGameEventRegistry extends GameEventRegistry {
     protected @NotNull RegistryItemStream<@NotNull GameEvent> getRegistryItemStream0() {
         if (BukkitFeature.GAME_EVENT.isSupported()) {
             return new SimpleRegistryItemStream<>(
-                    org.bukkit.GameEvent.values()::stream,
+                    () -> BukkitRegistry.stream(Registry.GAME_EVENT),
                     BukkitGameEvent::new,
-                    gameEvent -> {
-                        var namespaced = gameEvent.getKey();
-                        return ResourceLocation.of(namespaced.getNamespace(), namespaced.getKey());
-                    },
+                    BukkitRegistry::resourceLocation,
                     (gameEvent, literal) -> gameEvent.getKey().getKey().contains(literal),
                     (gameEvent, namespace) -> gameEvent.getKey().getNamespace().equals(namespace),
                     List.of()

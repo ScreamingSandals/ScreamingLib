@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.utils.config;
+package org.screamingsandals.lib.particle;
 
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
-import org.spongepowered.configurate.loader.AbstractConfigurationLoader;
+import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.utils.BasicWrapper;
 
-@UtilityClass
-public class HoconSupplier {
-    public static AbstractConfigurationLoader.@NotNull Builder<?,?> obtainBuilder() {
-        return HoconConfigurationLoader.builder();
+public class ParticleColor extends BasicWrapper<Color> implements ParticleData {
+    public ParticleColor(@NotNull Color wrappedObject) {
+        super(wrappedObject);
+    }
+
+    public @NotNull Color color() {
+        return wrappedObject;
     }
 }
