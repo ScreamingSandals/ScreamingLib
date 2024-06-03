@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.impl.bukkit.gameevent;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,8 +28,6 @@ import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-import java.util.List;
-
 @Service
 public class BukkitGameEventRegistry extends GameEventRegistry {
     public BukkitGameEventRegistry() {
@@ -42,14 +39,7 @@ public class BukkitGameEventRegistry extends GameEventRegistry {
     @Override
     protected @NotNull RegistryItemStream<@NotNull GameEvent> getRegistryItemStream0() {
         if (BukkitFeature.GAME_EVENT.isSupported()) {
-            return new SimpleRegistryItemStream<>(
-                    () -> BukkitRegistry.stream(Registry.GAME_EVENT),
-                    BukkitGameEvent::new,
-                    BukkitRegistry::resourceLocation,
-                    (gameEvent, literal) -> gameEvent.getKey().getKey().contains(literal),
-                    (gameEvent, namespace) -> gameEvent.getKey().getNamespace().equals(namespace),
-                    List.of()
-            );
+            return BukkitRegistry.registryStream(Registry.GAME_EVENT, BukkitGameEvent::new);
         } else {
             return SimpleRegistryItemStream.createDummy();
         }
@@ -58,10 +48,7 @@ public class BukkitGameEventRegistry extends GameEventRegistry {
     @Override
     protected @Nullable GameEvent resolveMappingPlatform(@NotNull ResourceLocation location) {
         if (BukkitFeature.GAME_EVENT.isSupported()) {
-            var gameEvent = Registry.GAME_EVENT.get(new NamespacedKey(location.namespace(), location.path()));
-            if (gameEvent != null) {
-                return new BukkitGameEvent(gameEvent);
-            }
+            return BukkitRegistry.tryObtainItem(Registry.GAME_EVENT, BukkitGameEvent::new, location);
         }
         return null;
     }

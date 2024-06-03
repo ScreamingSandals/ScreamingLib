@@ -43,9 +43,9 @@ public class BukkitEnchantmentTypeRegistry extends EnchantmentTypeRegistry {
     @Override
     protected @Nullable EnchantmentType resolveMappingPlatform(@NotNull ResourceLocation location) {
         if (BukkitFeature.REGISTRY.isSupported()) {
-            var entityType = Registry.ENCHANTMENT.get(new NamespacedKey(location.namespace(), location.path()));
-            if (entityType != null) {
-                return new BukkitEnchantmentType(entityType);
+            var item = BukkitRegistry.tryObtainItem(Registry.ENCHANTMENT, BukkitEnchantmentType::new, location);
+            if (item != null) {
+                return item;
             }
 
 
@@ -127,14 +127,7 @@ public class BukkitEnchantmentTypeRegistry extends EnchantmentTypeRegistry {
     @Override
     protected @NotNull RegistryItemStream<@NotNull EnchantmentType> getRegistryItemStream0() {
         if (BukkitFeature.REGISTRY.isSupported()) {
-            return new SimpleRegistryItemStream<>(
-                    () -> BukkitRegistry.stream(Registry.ENCHANTMENT),
-                    BukkitEnchantmentType::new,
-                    BukkitRegistry::resourceLocation,
-                    (enchantment, literal) -> enchantment.getKey().getKey().contains(literal),
-                    (enchantment, namespace) -> enchantment.getKey().getNamespace().equals(namespace),
-                    List.of()
-            );
+            return BukkitRegistry.registryStream(Registry.ENCHANTMENT, BukkitEnchantmentType::new);
         } else if (BukkitFeature.FLATTENING.isSupported()) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(org.bukkit.enchantments.Enchantment.values()),

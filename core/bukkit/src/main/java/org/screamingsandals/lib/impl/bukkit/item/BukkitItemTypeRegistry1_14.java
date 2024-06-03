@@ -16,20 +16,23 @@
 
 package org.screamingsandals.lib.impl.bukkit.item;
 
-import org.bukkit.NamespacedKey;
+import org.bukkit.Material;
 import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.utils.ResourceLocation;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 public class BukkitItemTypeRegistry1_14 extends BukkitItemTypeRegistry1_13 {
     @Override
     protected @Nullable ItemType resolveMappingPlatform(@NotNull ResourceLocation location) {
-        var material = Registry.MATERIAL.get(new NamespacedKey(location.namespace(), location.path()));
-        if (material != null && material.isItem()) {
-            return new BukkitItemType1_13(material);
-        }
-        return null;
+        return BukkitRegistry.tryObtainItem(Registry.MATERIAL, BukkitItemType1_13::new, location, Material::isItem);
+    }
+
+    @Override
+    protected @NotNull RegistryItemStream<@NotNull ItemType> getRegistryItemStream0() {
+        return BukkitRegistry.registryStream(Registry.MATERIAL, BukkitItemType1_13::new, Material::isItem);
     }
 }

@@ -26,7 +26,9 @@ import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 public abstract class BukkitPotionRegistry extends PotionRegistry {
     @ServiceInitializer
     public static @NotNull BukkitPotionRegistry init() {
-        if (BukkitFeature.POTION_API.isSupported()) {
+        if (BukkitFeature.POTION_REGISTRY.isSupported()) {
+            return new BukkitPotionRegistry1_20_2();
+        } else if (BukkitFeature.POTION_API.isSupported()) {
             return new BukkitPotionRegistry1_9();
         } else {
             return new BukkitPotionRegistry1_8();

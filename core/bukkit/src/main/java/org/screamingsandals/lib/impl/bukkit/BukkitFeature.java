@@ -223,6 +223,7 @@ public class BukkitFeature {
 
     // POTION & POTION EFFECT API
     public static final @NotNull PlatformFeature POTION_API = PlatformFeature.of(() -> Version.isVersion(1, 9));
+    public static final @NotNull PlatformFeature POTION_REGISTRY = REGISTRY.and(() -> Reflect.getField("org.bukkit.Registry", "POTION") != null);
 
     public static final @NotNull PlatformFeature POTION_EFFECT_TYPE_REGISTRY = PlatformFeature.of(() -> Version.isVersion(1, 18, 2) && Reflect.getField("org.bukkit.Registry", "POTION_EFFECT_TYPE") != null); // exclusive to paper
     public static final @NotNull PlatformFeature POTION_EFFECT_TYPE_REGISTRY_SPIGOT = PlatformFeature.of(() -> Reflect.getField("org.bukkit.Registry", "EFFECT") != null);

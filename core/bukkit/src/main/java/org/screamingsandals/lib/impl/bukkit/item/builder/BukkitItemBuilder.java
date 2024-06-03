@@ -32,6 +32,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.firework.FireworkEffect;
@@ -582,7 +583,9 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         if (item != null && potionData != null) {
             var meta = item.getItemMeta();
             if (meta instanceof PotionMeta) {
-                if (BukkitFeature.POTION_API.isSupported()) {
+                if (BukkitFeature.POTION_REGISTRY.isSupported()) {
+                    ((PotionMeta) meta).setBasePotionType(potionData.as(PotionType.class));
+                } else if (BukkitFeature.POTION_API.isSupported()) {
                     ((PotionMeta) meta).setBasePotionData(potionData.as(PotionData.class));
                     item.setItemMeta(meta);
                 } else {

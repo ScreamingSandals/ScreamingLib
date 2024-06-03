@@ -29,7 +29,6 @@ import org.screamingsandals.lib.impl.entity.type.EntityTypeTagBackPorts;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
-import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
 import java.util.*;
 
@@ -37,7 +36,7 @@ public class BukkitEntityTypeRegistry1_14 extends BukkitEntityTypeRegistry {
     public BukkitEntityTypeRegistry1_14() {
         specialType(org.bukkit.entity.EntityType.class, BukkitEntityType1_11::new);
 
-        Arrays.stream(org.bukkit.entity.EntityType.values()).forEach(entityType -> {
+        Registry.ENTITY_TYPE.forEach(entityType -> {
             NamespacedKey namespaced = null;
             try {
                 namespaced = entityType.getKey();
@@ -63,9 +62,9 @@ public class BukkitEntityTypeRegistry1_14 extends BukkitEntityTypeRegistry {
 
     @Override
     protected @Nullable EntityType resolveMappingPlatform(@NotNull ResourceLocation location) {
-        var entityType = Registry.ENTITY_TYPE.get(new NamespacedKey(location.namespace(), location.path()));
-        if (entityType != null) {
-            return new BukkitEntityType1_11(entityType);
+        var item = BukkitRegistry.tryObtainItem(Registry.ENTITY_TYPE, BukkitEntityType1_11::new, location);
+        if (item != null) {
+            return item;
         }
 
         // Not found: treat the path of minecraft: location as the enum constant name and try it again
@@ -84,13 +83,6 @@ public class BukkitEntityTypeRegistry1_14 extends BukkitEntityTypeRegistry {
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull EntityType> getRegistryItemStream0() {
-        return new SimpleRegistryItemStream<>(
-                () -> BukkitRegistry.stream(Registry.ENTITY_TYPE).filter(e -> e != org.bukkit.entity.EntityType.UNKNOWN),
-                BukkitEntityType1_11::new,
-                BukkitRegistry::resourceLocation,
-                (entityType, literal) -> entityType.getKey().getKey().contains(literal),
-                (entityType, namespace) -> entityType.getKey().getNamespace().equals(namespace),
-                List.of()
-        );
+        return BukkitRegistry.registryStream(Registry.ENTITY_TYPE, BukkitEntityType1_11::new);
     }
 }

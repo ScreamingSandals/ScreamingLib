@@ -16,18 +16,14 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity.villager;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.entity.Villager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.villager.VillagerType;
-import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
+import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class BukkitVillagerTypeRegistry1_14 extends BukkitVillagerTypeRegistry {
     public BukkitVillagerTypeRegistry1_14() {
@@ -36,25 +32,11 @@ public class BukkitVillagerTypeRegistry1_14 extends BukkitVillagerTypeRegistry {
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull VillagerType> getRegistryItemStream0() {
-        return new SimpleRegistryItemStream<>(
-                () -> Arrays.stream(Villager.Type.values()),
-                BukkitVillagerType1_14::new,
-                profession -> {
-                    var bukkitKey = profession.getKey();
-                    return ResourceLocation.of(bukkitKey.getNamespace(), bukkitKey.getKey());
-                },
-                (profession, literal) -> profession.getKey().getKey().contains(literal),
-                (profession, namespace) -> profession.getKey().getNamespace().equals(namespace),
-                List.of()
-        );
+        return BukkitRegistry.registryStream(Registry.VILLAGER_TYPE, BukkitVillagerType1_14::new);
     }
 
     @Override
     protected @Nullable VillagerType resolveMappingPlatform(@NotNull ResourceLocation location) {
-        var value = Registry.VILLAGER_TYPE.get(new NamespacedKey(location.namespace(), location.path()));
-        if (value != null) {
-            return new BukkitVillagerType1_14(value);
-        }
-        return null;
+        return BukkitRegistry.tryObtainItem(Registry.VILLAGER_TYPE, BukkitVillagerType1_14::new, location);
     }
 }

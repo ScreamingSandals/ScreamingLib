@@ -42,9 +42,9 @@ public class BukkitPotionEffectTypeRegistry extends PotionEffectTypeRegistry {
     @Override
     protected @Nullable PotionEffectType resolveMappingPlatform(@NotNull ResourceLocation location) {
         if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY_SPIGOT.isSupported()) {
-            var potionEffectType = Registry.EFFECT.get(new NamespacedKey(location.namespace(), location.path()));
-            if (potionEffectType != null) {
-                return new BukkitPotionEffectType(potionEffectType);
+            var item = BukkitRegistry.tryObtainItem(Registry.EFFECT, BukkitPotionEffectType::new, location);
+            if (item != null) {
+                return null;
             }
 
             // try bukkit name (deprecated, TODO: prepare shop/config migration scripts and remove)
@@ -62,15 +62,12 @@ public class BukkitPotionEffectTypeRegistry extends PotionEffectTypeRegistry {
                     case "damage_resistance": path = "resistance"; break;
                 }
 
-                potionEffectType = Registry.EFFECT.get(new NamespacedKey("minecraft", path));
-                if (potionEffectType != null) {
-                    return new BukkitPotionEffectType(potionEffectType);
-                }
+                return BukkitRegistry.tryObtainItem(Registry.EFFECT, BukkitPotionEffectType::new, ResourceLocation.of("minecraft", path));
             }
         } else if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY.isSupported()) {
-            var potionEffectType = Registry.POTION_EFFECT_TYPE.get(new NamespacedKey(location.namespace(), location.path()));
-            if (potionEffectType != null) {
-                return new BukkitPotionEffectType(potionEffectType);
+            var item = BukkitRegistry.tryObtainItem(Registry.POTION_EFFECT_TYPE, BukkitPotionEffectType::new, location);
+            if (item != null) {
+                return null;
             }
 
             // try bukkit name (deprecated, TODO: prepare shop/config migration scripts and remove)
@@ -88,10 +85,7 @@ public class BukkitPotionEffectTypeRegistry extends PotionEffectTypeRegistry {
                     case "damage_resistance": path = "resistance"; break;
                 }
 
-                potionEffectType = Registry.POTION_EFFECT_TYPE.get(new NamespacedKey("minecraft", path));
-                if (potionEffectType != null) {
-                    return new BukkitPotionEffectType(potionEffectType);
-                }
+                return BukkitRegistry.tryObtainItem(Registry.POTION_EFFECT_TYPE, BukkitPotionEffectType::new, ResourceLocation.of("minecraft", path));
             }
         } else if (BukkitFeature.POTION_EFFECT_KEYED.isSupported()) {
             // Spigot and pre-1.18.2 Paper don't have registries for this, but have method that works the similar way
@@ -178,23 +172,9 @@ public class BukkitPotionEffectTypeRegistry extends PotionEffectTypeRegistry {
     @Override
     protected @NotNull RegistryItemStream<@NotNull PotionEffectType> getRegistryItemStream0() {
         if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY_SPIGOT.isSupported()) {
-            return new SimpleRegistryItemStream<>(
-                    () -> BukkitRegistry.stream(Registry.EFFECT),
-                    BukkitPotionEffectType::new,
-                    BukkitRegistry::resourceLocation,
-                    (potionEffect, literal) -> potionEffect.getKey().getKey().contains(literal),
-                    (potionEffect, namespace) -> potionEffect.getKey().getNamespace().equals(namespace),
-                    List.of()
-            );
+            return BukkitRegistry.registryStream(Registry.EFFECT, BukkitPotionEffectType::new);
         } else if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY.isSupported()) {
-            return new SimpleRegistryItemStream<>(
-                    () -> BukkitRegistry.stream(Registry.POTION_EFFECT_TYPE),
-                    BukkitPotionEffectType::new,
-                    BukkitRegistry::resourceLocation,
-                    (potionEffect, literal) -> potionEffect.getKey().getKey().contains(literal),
-                    (potionEffect, namespace) -> potionEffect.getKey().getNamespace().equals(namespace),
-                    List.of()
-            );
+            return BukkitRegistry.registryStream(Registry.POTION_EFFECT_TYPE, BukkitPotionEffectType::new);
         } else if (BukkitFeature.POTION_EFFECT_KEYED.isSupported()) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(org.bukkit.potion.PotionEffectType.values()),

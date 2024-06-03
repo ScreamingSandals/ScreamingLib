@@ -33,8 +33,6 @@ import java.util.Locale;
 
 @Service
 public class BukkitPotionRegistry1_9 extends BukkitPotionRegistry {
-    // TODO: is there any bukkit-like server supporting custom values for this registry?
-
     public BukkitPotionRegistry1_9() {
         specialType(PotionType.class, BukkitPotion1_9::new);
         specialType(PotionData.class, BukkitPotion1_9::new);

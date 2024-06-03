@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.impl.bukkit.attribute;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.jetbrains.annotations.NotNull;
@@ -26,9 +25,6 @@ import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
-import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
-
-import java.util.List;
 
 @Service
 public class BukkitAttributeTypeRegistry1_16 extends BukkitAttributeTypeRegistry {
@@ -38,22 +34,11 @@ public class BukkitAttributeTypeRegistry1_16 extends BukkitAttributeTypeRegistry
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull AttributeType> getRegistryItemStream0() {
-        return new SimpleRegistryItemStream<>(
-                () -> BukkitRegistry.stream(Registry.ATTRIBUTE),
-                BukkitAttributeType1_16::new,
-                BukkitRegistry::resourceLocation,
-                (attributeType, literal) -> attributeType.getKey().getKey().contains(literal),
-                (attributeType, namespace) -> attributeType.getKey().getNamespace().equals(namespace),
-                List.of()
-        );
+        return BukkitRegistry.registryStream(Registry.ATTRIBUTE, BukkitAttributeType1_16::new);
     }
 
     @Override
     protected @Nullable AttributeType resolveMappingPlatform(@NotNull ResourceLocation location) {
-        var entityType = Registry.ATTRIBUTE.get(new NamespacedKey(location.namespace(), location.path()));
-        if (entityType != null) {
-            return new BukkitAttributeType1_16(entityType);
-        }
-        return null;
+        return BukkitRegistry.tryObtainItem(Registry.ATTRIBUTE, BukkitAttributeType1_16::new, location);
     }
 }

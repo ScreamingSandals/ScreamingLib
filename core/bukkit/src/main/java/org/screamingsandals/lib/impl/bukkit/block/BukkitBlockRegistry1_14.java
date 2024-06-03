@@ -16,19 +16,20 @@
 
 package org.screamingsandals.lib.impl.bukkit.block;
 
-import org.bukkit.NamespacedKey;
+import org.bukkit.Material;
 import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.utils.ResourceLocation;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 public class BukkitBlockRegistry1_14 extends BukkitBlockRegistry1_13 {
 
     @Override
     protected @Nullable Block resolveMappingPlatform(@NotNull ResourceLocation location, @Nullable String blockState) {
-        var material = Registry.MATERIAL.get(new NamespacedKey(location.namespace(), location.path()));
-        if (material != null && material.isBlock()) {
+        return BukkitRegistry.tryObtainItem(Registry.MATERIAL, material -> {
             if (blockState != null) {
                 try {
                     return new BukkitBlock1_13(material.createBlockData(blockState));
@@ -38,7 +39,11 @@ public class BukkitBlockRegistry1_14 extends BukkitBlockRegistry1_13 {
             } else {
                 return new BukkitBlock1_13(material);
             }
-        }
-        return null;
+        }, location, Material::isBlock);
+    }
+
+    @Override
+    protected @NotNull RegistryItemStream<@NotNull Block> getRegistryItemStream0() {
+        return BukkitRegistry.registryStream(Registry.MATERIAL, BukkitBlock1_13::new, Material::isBlock);
     }
 }
