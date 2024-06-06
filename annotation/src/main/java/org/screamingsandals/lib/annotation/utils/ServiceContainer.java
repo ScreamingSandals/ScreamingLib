@@ -22,9 +22,11 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Types;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -35,7 +37,9 @@ public class ServiceContainer {
     private final @NotNull List<@NotNull TypeElement> dependencies = new LinkedList<>();
     private final @NotNull List<@NotNull TypeElement> loadAfter = new LinkedList<>();
     private final @NotNull List<@NotNull TypeElement> init = new LinkedList<>();
+    private final @NotNull Map<@NotNull TypeElement, TypeElement> registeredInitializers = new HashMap<>();
     private final @NotNull Set<@NotNull String> accessedPlugins = new HashSet<>();
+    private final @Nullable TypeElement serviceFactory;
     private final boolean earlyInitialization;
     private final boolean staticOnly;
     private final boolean coreService;
@@ -44,7 +48,7 @@ public class ServiceContainer {
     private boolean delayControllables;
 
     public static @NotNull ServiceContainer createPluginService(@NotNull Types types, @NotNull TypeElement plugin) {
-        var service = new ServiceContainer(types, plugin, false, false, false, false, false);
+        var service = new ServiceContainer(types, plugin, null, false, false, false, false, false);
         service.delayControllables = true;
         return service;
     }
@@ -53,7 +57,7 @@ public class ServiceContainer {
         if (typeElement == null) {
             return false;
         }
-        return types.isAssignable(service.asType(), typeElement.asType());
+        return types.isAssignable(service.asType(), typeElement.asType()) || (serviceFactory != null && types.isAssignable(serviceFactory.asType(), typeElement.asType()));
     }
 
     public boolean isExactly(@Nullable TypeElement typeElement) {

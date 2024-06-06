@@ -18,9 +18,10 @@ package org.screamingsandals.lib.impl.bukkit.attribute;
 
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.Attribute;
+import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributeInstanceAccessor;
 
-public class BukkitAttributes1_8 extends BukkitAttributes {
+public class BukkitAttributes1_8 extends Attributes {
     @Override
     protected @Nullable Attribute wrapAttribute0(@Nullable Object attribute) {
         if (AttributeInstanceAccessor.TYPE.get() != null && AttributeInstanceAccessor.TYPE.get().isInstance(attribute)) {

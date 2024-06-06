@@ -20,13 +20,13 @@ import org.bukkit.attribute.Attribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.impl.attribute.AttributeTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributesAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.animal.horse.HorseAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.ZombieAccessor;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
@@ -38,8 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
-@Service
-public class BukkitAttributeTypeRegistry1_9 extends BukkitAttributeTypeRegistry {
+public class BukkitAttributeTypeRegistry1_9 extends AttributeTypeRegistry {
     private final @NotNull Map<@NotNull Attribute, Object> bukkitAttributeToVanillaAttribute = new HashMap<>();
 
     private @Nullable Attribute genericArmorToughness;

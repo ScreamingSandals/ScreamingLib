@@ -20,8 +20,8 @@ import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.particle.ParticleTypeRegistry;
 import org.screamingsandals.lib.particle.ParticleType;
-import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
@@ -30,8 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-@Service
-public class BukkitParticleTypeRegistry1_9 extends BukkitParticleTypeRegistry {
+public class BukkitParticleTypeRegistry1_9 extends ParticleTypeRegistry {
     public BukkitParticleTypeRegistry1_9() {
         specialType(Particle.class, BukkitParticleType1_9::new);
     }

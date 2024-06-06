@@ -21,13 +21,12 @@ import org.bukkit.attribute.Attribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.impl.attribute.AttributeTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-@Service
-public class BukkitAttributeTypeRegistry1_16 extends BukkitAttributeTypeRegistry {
+public class BukkitAttributeTypeRegistry1_16 extends AttributeTypeRegistry {
     public BukkitAttributeTypeRegistry1_16() {
         specialType(Attribute.class, BukkitAttributeType1_16::new);
     }

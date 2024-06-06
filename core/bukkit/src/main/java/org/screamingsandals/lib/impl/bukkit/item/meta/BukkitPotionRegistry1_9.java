@@ -20,8 +20,8 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.item.meta.PotionRegistry;
 import org.screamingsandals.lib.item.meta.Potion;
-import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
@@ -31,8 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-@Service
-public class BukkitPotionRegistry1_9 extends BukkitPotionRegistry {
+public class BukkitPotionRegistry1_9 extends PotionRegistry {
     public BukkitPotionRegistry1_9() {
         specialType(PotionType.class, BukkitPotion1_9::new);
         specialType(PotionData.class, BukkitPotion1_9::new);

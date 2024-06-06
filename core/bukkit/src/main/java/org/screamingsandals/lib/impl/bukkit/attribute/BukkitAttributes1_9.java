@@ -18,10 +18,14 @@ package org.screamingsandals.lib.impl.bukkit.attribute;
 
 import org.bukkit.attribute.AttributeInstance;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.attribute.*;
+import org.screamingsandals.lib.attribute.Attribute;
+import org.screamingsandals.lib.attribute.AttributeModifier;
+import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.attribute.ItemAttribute;
+import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 
-public class BukkitAttributes1_9 extends BukkitAttributes {
+public class BukkitAttributes1_9 extends Attributes {
     public BukkitAttributes1_9() {
         attributeModifierConverter
                 .registerW2P(org.bukkit.attribute.AttributeModifier.class, holder ->

@@ -22,10 +22,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.villager.Profession;
 import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
+import org.screamingsandals.lib.impl.entity.villager.ProfessionRegistry;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-public class BukkitProfessionRegistry1_14 extends BukkitProfessionRegistry {
+public class BukkitProfessionRegistry1_14 extends ProfessionRegistry {
     public BukkitProfessionRegistry1_14() {
         specialType(Villager.Profession.class, BukkitProfession1_14::new);
     }

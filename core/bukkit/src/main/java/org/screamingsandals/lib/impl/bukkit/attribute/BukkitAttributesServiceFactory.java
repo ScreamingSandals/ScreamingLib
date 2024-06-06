@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.entity.villager;
+package org.screamingsandals.lib.impl.bukkit.attribute;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.impl.entity.villager.ProfessionRegistry;
-import org.screamingsandals.lib.impl.entity.villager.VillagerTypeRegistry;
-import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
+import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 
-@Service
-public abstract class BukkitVillagerTypeRegistry extends VillagerTypeRegistry {
-    @ServiceInitializer
-    public static @NotNull BukkitVillagerTypeRegistry init() {
-        if (BukkitFeature.NEW_VILLAGERS.isSupported()) {
-            return new BukkitVillagerTypeRegistry1_14();
+@UtilityClass
+@ServiceFactory
+public class BukkitAttributesServiceFactory {
+    public static @NotNull Attributes create() {
+        if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
+            return new BukkitAttributes1_9();
         } else {
-            return new BukkitVillagerTypeRegistry1_8();
+            return new BukkitAttributes1_8();
         }
     }
 }

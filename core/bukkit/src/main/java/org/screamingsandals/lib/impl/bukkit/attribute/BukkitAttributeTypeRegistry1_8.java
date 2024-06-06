@@ -19,12 +19,12 @@ package org.screamingsandals.lib.impl.bukkit.attribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.impl.attribute.AttributeTypeRegistry;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.ai.attributes.AttributesAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.animal.horse.HorseAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.ZombieAccessor;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
@@ -32,8 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
-public class BukkitAttributeTypeRegistry1_8 extends BukkitAttributeTypeRegistry {
+public class BukkitAttributeTypeRegistry1_8 extends AttributeTypeRegistry {
     public final @NotNull Map<@NotNull ResourceLocation, Object> locationToAttributes = new HashMap<>();
     public final @NotNull Map<@NotNull Object, ResourceLocation> attributesToLocation = new HashMap<>();
 

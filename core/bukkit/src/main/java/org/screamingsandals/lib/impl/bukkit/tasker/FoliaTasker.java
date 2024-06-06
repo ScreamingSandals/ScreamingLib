@@ -25,6 +25,7 @@ import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.impl.bukkit.tasker.task.FoliaTask;
 import org.screamingsandals.lib.tasker.DefaultThreads;
+import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.tasker.task.Task;
@@ -37,7 +38,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 @Service
-public class FoliaTasker extends AbstractBukkitTasker {
+public class FoliaTasker extends Tasker {
     private final @NotNull Plugin plugin;
     private final @NotNull AsyncScheduler asyncScheduler;
     private final @NotNull RegionScheduler regionScheduler;

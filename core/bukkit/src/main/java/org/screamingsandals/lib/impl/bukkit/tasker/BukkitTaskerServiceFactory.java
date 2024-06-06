@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.entity.type;
+package org.screamingsandals.lib.impl.bukkit.tasker;
 
+import lombok.experimental.UtilityClass;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.impl.entity.type.EntityTypeRegistry;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.tasker.Tasker;
+import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 
-import java.util.*;
-
-public abstract class BukkitEntityTypeRegistry extends EntityTypeRegistry {
-    protected static final @NotNull Map<org.bukkit.entity.@NotNull EntityType, List<String>> tagBackPorts = new HashMap<>();
-
-    public static boolean hasTagInBackPorts(org.bukkit.entity.@NotNull EntityType entityType, @NotNull String tag) {
-        return tagBackPorts.containsKey(entityType) && tagBackPorts.get(entityType).contains(tag);
+@UtilityClass
+@ServiceFactory
+public class BukkitTaskerServiceFactory {
+    public static @NotNull Tasker create(@NotNull Plugin plugin) {
+        if (BukkitFeature.FOLIA_TASKER.isSupported()) {
+            return new FoliaTasker(plugin);
+        } else {
+            return new BukkitTasker(plugin);
+        }
     }
 }

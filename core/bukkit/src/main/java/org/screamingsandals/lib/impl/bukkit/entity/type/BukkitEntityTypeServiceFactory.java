@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.item.meta;
+package org.screamingsandals.lib.impl.bukkit.entity.type;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.impl.item.meta.PotionRegistry;
-import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
+import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 
-@Service
-public abstract class BukkitPotionRegistry extends PotionRegistry {
-    @ServiceInitializer
-    public static @NotNull BukkitPotionRegistry init() {
-        if (BukkitFeature.POTION_REGISTRY.isSupported()) {
-            return new BukkitPotionRegistry1_20_2();
-        } else if (BukkitFeature.POTION_API.isSupported()) {
-            return new BukkitPotionRegistry1_9();
+@UtilityClass
+@ServiceFactory
+public class BukkitEntityTypeServiceFactory {
+    public static @NotNull BukkitEntityTypeRegistry create() {
+        if (BukkitFeature.ENTITIES_IN_REGISTRY.isSupported()) {
+            return new BukkitEntityTypeRegistry1_14();
+        } else if (BukkitFeature.NORMAL_ENTITY_RESOURCE_LOCATIONS.isSupported()) {
+            return new BukkitEntityTypeRegistry1_11();
         } else {
-            return new BukkitPotionRegistry1_8();
+            return new BukkitEntityTypeRegistry1_8();
         }
     }
 }

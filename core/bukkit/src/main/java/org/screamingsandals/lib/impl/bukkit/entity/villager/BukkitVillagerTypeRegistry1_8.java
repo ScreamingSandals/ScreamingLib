@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.entity.villager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.villager.VillagerType;
+import org.screamingsandals.lib.impl.entity.villager.VillagerTypeRegistry;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
@@ -26,7 +27,7 @@ import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class BukkitVillagerTypeRegistry1_8 extends BukkitVillagerTypeRegistry {
+public class BukkitVillagerTypeRegistry1_8 extends VillagerTypeRegistry {
     // There's only one villager type
     public static final @NotNull BukkitVillagerType1_8 INSTANCE = new BukkitVillagerType1_8();
 

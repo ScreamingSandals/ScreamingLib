@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.item.tags.BukkitLegacyItemTagResolution;
+import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -30,7 +31,7 @@ import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
 import java.util.*;
 
-public class BukkitItemTypeRegistry1_8 extends BukkitItemTypeRegistry {
+public class BukkitItemTypeRegistry1_8 extends ItemTypeRegistry {
     protected static final @NotNull Map<@NotNull Material, List<String>> tagBackPorts = new HashMap<>();
     @Getter
     protected final @NotNull Map<@NotNull ResourceLocation, @NotNull BukkitItemType1_8> ports = new HashMap<>();

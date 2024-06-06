@@ -22,19 +22,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Core;
-import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributeTypeRegistry;
-import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributes;
+import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributeTypeServiceFactory;
+import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributesServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.block.snapshot.BukkitBlockSnapshots;
-import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockRegistry;
+import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockRegistryServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacements;
 import org.screamingsandals.lib.impl.bukkit.container.BukkitContainerFactory;
 import org.screamingsandals.lib.impl.bukkit.container.type.BukkitInventoryTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.entity.BukkitEntities;
 import org.screamingsandals.lib.impl.bukkit.entity.damage.BukkitDamageTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.entity.pose.BukkitEntityPoseRegistry;
-import org.screamingsandals.lib.impl.bukkit.entity.type.BukkitEntityTypeRegistry;
-import org.screamingsandals.lib.impl.bukkit.entity.villager.BukkitProfessionRegistry;
-import org.screamingsandals.lib.impl.bukkit.entity.villager.BukkitVillagerTypeRegistry;
+import org.screamingsandals.lib.impl.bukkit.entity.type.BukkitEntityTypeServiceFactory;
+import org.screamingsandals.lib.impl.bukkit.entity.villager.BukkitProfessionRegistryServiceFactory;
+import org.screamingsandals.lib.impl.bukkit.entity.villager.BukkitVillagerTypeRegistryServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitEventManager;
 import org.screamingsandals.lib.impl.bukkit.event.block.BukkitBlockBurnEvent;
@@ -64,7 +64,68 @@ import org.screamingsandals.lib.impl.bukkit.event.block.BukkitRedstoneEvent;
 import org.screamingsandals.lib.impl.bukkit.event.chunk.BukkitChunkLoadEvent;
 import org.screamingsandals.lib.impl.bukkit.event.chunk.BukkitChunkPopulateEvent;
 import org.screamingsandals.lib.impl.bukkit.event.chunk.BukkitChunkUnloadEvent;
-import org.screamingsandals.lib.impl.bukkit.event.entity.*;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitAreaEffectCloudApplyEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitArrowBodyCountChangeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitBatToggleSleepEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitCreatureSpawnEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitCreeperPowerEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEnderDragonChangePhaseEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityAirChangeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityBreedEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityChangeBlockEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityCombustByBlockEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityCombustByEntityEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityCombustEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityCreatePortalEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityDamageByBlockEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityDamageByEntityEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityDamageEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityDeathEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityDropItemEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityEnterBlockEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityEnterLoveModeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityExhaustionEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityExplodeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityInteractEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityPickupItemEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityPlaceEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityPortalEnterEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityPortalEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityPortalExitEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityPoseChangeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityPotionEffectEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityRegainHealthEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityResurrectEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityShootBowEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntitySpawnEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityTameEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityTargetEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityTargetLivingEntityEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityTeleportEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityToggleGlideEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityToggleSwimEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitEntityUnleashEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitExpBottleEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitExplosionPrimeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitFireworkExplodeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitFoodLevelChangeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitHorseJumpEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitItemDespawnEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitItemMergeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitItemSpawnEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitLegacyPlayerPickupItemEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitModernPlayerPickupItemEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitProjectileHitEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitProjectileLaunchEvent1_13_2;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitProjectileLaunchEvent1_8;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitSheepDyeWoolEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitSheepRegrowWoolEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitSlimeSplitEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitStriderTemperatureChangeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitVehicleCreateEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitVillagerAcquireTradeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitVillagerCareerChangeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.entity.BukkitVillagerReplenishTradeEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitAsyncPlayerPreLoginEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerAnimationEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerArmorStandManipulateEvent;
@@ -126,20 +187,20 @@ import org.screamingsandals.lib.impl.bukkit.event.world.BukkitWorldUnloadEvent;
 import org.screamingsandals.lib.impl.bukkit.firework.BukkitFireworkEffectRegistry;
 import org.screamingsandals.lib.impl.bukkit.firework.BukkitFireworkEffectTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.gameevent.BukkitGameEventRegistry;
-import org.screamingsandals.lib.impl.bukkit.item.BukkitItemTypeRegistry;
+import org.screamingsandals.lib.impl.bukkit.item.BukkitItemTypeRegistryServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.item.builder.BukkitItemStackFactory;
 import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitEnchantmentRegistry;
 import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitEnchantmentTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitPotionEffectRegistry;
 import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitPotionEffectTypeRegistry;
-import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitPotionRegistry;
-import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleTypeRegistry;
+import org.screamingsandals.lib.impl.bukkit.item.meta.BukkitPotionRegistryServiceFactory;
+import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleTypeRegistryServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.player.BukkitPlayers;
 import org.screamingsandals.lib.impl.bukkit.player.gamemode.BukkitGameModeRegistry;
 import org.screamingsandals.lib.impl.bukkit.plugin.BukkitPlugin;
 import org.screamingsandals.lib.impl.bukkit.slot.BukkitEquipmentSlotRegistry;
 import org.screamingsandals.lib.impl.bukkit.spectator.SpigotBackend;
-import org.screamingsandals.lib.impl.bukkit.tasker.AbstractBukkitTasker;
+import org.screamingsandals.lib.impl.bukkit.tasker.BukkitTaskerServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.world.BukkitLocations;
 import org.screamingsandals.lib.impl.bukkit.world.BukkitWorlds;
 import org.screamingsandals.lib.impl.bukkit.world.chunk.BukkitChunks;
@@ -291,21 +352,14 @@ import java.util.function.Function;
             BukkitServer.class,
             BukkitCustomPayload.class,
             BukkitEventManager.class,
-            AbstractBukkitTasker.class,
-            BukkitEntityTypeRegistry.class,
             BukkitEntities.class,
-            BukkitAttributeTypeRegistry.class,
-            BukkitAttributes.class,
             BukkitFireworkEffectTypeRegistry.class,
             BukkitFireworkEffectRegistry.class,
             BukkitEnchantmentTypeRegistry.class,
             BukkitEnchantmentRegistry.class,
             BukkitPotionEffectTypeRegistry.class,
             BukkitPotionEffectRegistry.class,
-            BukkitPotionRegistry.class,
             BukkitEquipmentSlotRegistry.class,
-            BukkitItemTypeRegistry.class,
-            BukkitBlockRegistry.class,
             BukkitItemBlockIdsRemapper.class,
             BukkitItemStackFactory.class,
             BukkitPlayers.class,
@@ -321,14 +375,23 @@ import java.util.function.Function;
             BukkitChunks.class,
             BukkitGameRuleRegistry.class,
             BukkitWeatherRegistry.class,
-            BukkitParticleTypeRegistry.class,
             BukkitGameRuleRegistry.class,
             BukkitWorlds.class,
             BukkitContainerFactory.class,
             BukkitGameEventRegistry.class,
-            BukkitProfessionRegistry.class,
-            BukkitVillagerTypeRegistry.class,
-            BukkitDyeColorRegistry.class
+            BukkitDyeColorRegistry.class,
+
+            // SERVICE FACTORIES
+            BukkitTaskerServiceFactory.class,
+            BukkitEntityTypeServiceFactory.class,
+            BukkitAttributeTypeServiceFactory.class,
+            BukkitAttributesServiceFactory.class,
+            BukkitPotionRegistryServiceFactory.class,
+            BukkitItemTypeRegistryServiceFactory.class,
+            BukkitBlockRegistryServiceFactory.class,
+            BukkitParticleTypeRegistryServiceFactory.class,
+            BukkitProfessionRegistryServiceFactory.class,
+            BukkitVillagerTypeRegistryServiceFactory.class
     }
 )
 @AccessPluginClasses({"ViaVersion", "ProtocolSupport"})

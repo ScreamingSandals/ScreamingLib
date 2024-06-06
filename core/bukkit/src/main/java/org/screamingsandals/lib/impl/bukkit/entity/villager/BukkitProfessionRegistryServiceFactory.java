@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.block;
+package org.screamingsandals.lib.impl.bukkit.entity.villager;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.impl.block.BlockRegistry;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
+import org.screamingsandals.lib.impl.entity.villager.ProfessionRegistry;
+import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 
-@Service
-public abstract class BukkitBlockRegistry extends BlockRegistry {
-    @ServiceInitializer
-    public static @NotNull BukkitBlockRegistry init() {
-        if (BukkitFeature.REGISTRY.isSupported()) {
-            return new BukkitBlockRegistry1_14();
-        } else if (BukkitFeature.FLATTENING.isSupported()) {
-            return new BukkitBlockRegistry1_13();
+@UtilityClass
+@ServiceFactory
+public class BukkitProfessionRegistryServiceFactory {
+    public static @NotNull ProfessionRegistry create() {
+        if (BukkitFeature.NEW_VILLAGERS.isSupported()) {
+            return new BukkitProfessionRegistry1_14();
         } else {
-            return new BukkitBlockRegistry1_8();
+            return new BukkitProfessionRegistry1_8();
         }
     }
 }

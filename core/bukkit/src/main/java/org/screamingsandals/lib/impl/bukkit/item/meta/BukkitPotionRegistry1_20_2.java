@@ -21,14 +21,12 @@ import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
+import org.screamingsandals.lib.impl.item.meta.PotionRegistry;
 import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-@Service
-public class BukkitPotionRegistry1_20_2 extends BukkitPotionRegistry {
-
+public class BukkitPotionRegistry1_20_2 extends PotionRegistry {
     public BukkitPotionRegistry1_20_2() {
         specialType(PotionType.class, BukkitPotion1_20_2::new);
     }

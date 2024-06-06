@@ -20,6 +20,7 @@ import org.bukkit.entity.Villager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.villager.Profession;
+import org.screamingsandals.lib.impl.entity.villager.ProfessionRegistry;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
@@ -28,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class BukkitProfessionRegistry1_8 extends BukkitProfessionRegistry {
+public class BukkitProfessionRegistry1_8 extends ProfessionRegistry {
     public BukkitProfessionRegistry1_8() {
         specialType(Villager.Profession.class, BukkitProfession1_8::new);
     }

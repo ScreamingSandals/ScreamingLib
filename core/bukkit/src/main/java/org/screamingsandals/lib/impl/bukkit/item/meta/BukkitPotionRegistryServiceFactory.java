@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.attribute;
+package org.screamingsandals.lib.impl.bukkit.item.meta;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
+import org.screamingsandals.lib.impl.item.meta.PotionRegistry;
+import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 
-@Service
-public abstract class BukkitAttributes extends Attributes {
-    @ServiceInitializer
-    public static @NotNull BukkitAttributes init() {
-        if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
-            return new BukkitAttributes1_9();
+@UtilityClass
+@ServiceFactory
+public class BukkitPotionRegistryServiceFactory {
+    public static @NotNull PotionRegistry create() {
+        if (BukkitFeature.POTION_REGISTRY.isSupported()) {
+            return new BukkitPotionRegistry1_20_2();
+        } else if (BukkitFeature.POTION_API.isSupported()) {
+            return new BukkitPotionRegistry1_9();
         } else {
-            return new BukkitAttributes1_8();
+            return new BukkitPotionRegistry1_8();
         }
     }
 }

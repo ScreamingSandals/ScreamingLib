@@ -21,13 +21,12 @@ import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
+import org.screamingsandals.lib.impl.particle.ParticleTypeRegistry;
 import org.screamingsandals.lib.particle.ParticleType;
 import org.screamingsandals.lib.utils.ResourceLocation;
-import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-@Service
-public class BukkitParticleTypeRegistry1_20_2 extends BukkitParticleTypeRegistry {
+public class BukkitParticleTypeRegistry1_20_2 extends ParticleTypeRegistry {
     public BukkitParticleTypeRegistry1_20_2() {
         specialType(Particle.class, BukkitParticleType1_9::new);
     }

@@ -16,20 +16,20 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity.villager;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.impl.entity.villager.ProfessionRegistry;
-import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
+import org.screamingsandals.lib.impl.entity.villager.VillagerTypeRegistry;
+import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 
-@Service
-public abstract class BukkitProfessionRegistry extends ProfessionRegistry {
-    @ServiceInitializer
-    public static @NotNull BukkitProfessionRegistry init() {
+@UtilityClass
+@ServiceFactory
+public class BukkitVillagerTypeRegistryServiceFactory {
+    public static @NotNull VillagerTypeRegistry create() {
         if (BukkitFeature.NEW_VILLAGERS.isSupported()) {
-            return new BukkitProfessionRegistry1_14();
+            return new BukkitVillagerTypeRegistry1_14();
         } else {
-            return new BukkitProfessionRegistry1_8();
+            return new BukkitVillagerTypeRegistry1_8();
         }
     }
 }

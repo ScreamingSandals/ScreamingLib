@@ -18,8 +18,8 @@ package org.screamingsandals.lib.impl.bukkit.particle;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.particle.ParticleTypeRegistry;
 import org.screamingsandals.lib.particle.ParticleType;
-import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service
-public class BukkitParticleTypeRegistry1_8 extends BukkitParticleTypeRegistry {
+public class BukkitParticleTypeRegistry1_8 extends ParticleTypeRegistry {
     public static final @NotNull Map<@NotNull String, Integer> PARTICLE_NAME_TO_ORDINAL = Map.ofEntries(
         // flattening name or old enum name if not present in 1.13 -> ordinal id
         Map.entry("poof", 0),

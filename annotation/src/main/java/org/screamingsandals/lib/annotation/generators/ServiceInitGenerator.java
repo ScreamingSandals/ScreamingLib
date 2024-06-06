@@ -253,37 +253,68 @@ public final class ServiceInitGenerator {
 
     public void process(ServiceContainer serviceContainer) {
         var typeElement = serviceContainer.getService();
-        var initMethodList = typeElement.getEnclosedElements()
-                .stream()
-                .filter(element -> (element.getKind() == ElementKind.METHOD || element.getKind() == ElementKind.CONSTRUCTOR) && element.getAnnotation(ServiceInitializer.class) != null)
-                .collect(Collectors.toList());
-
+        var initializingElement = serviceContainer.getServiceFactory() != null ? serviceContainer.getServiceFactory() : typeElement;
         @Nullable Element initMethod = null;
-        if (!initMethodList.isEmpty()) {
-            if (initMethodList.size() > 1) {
-                throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Only one method or constructor can be annotated with @ServiceInitializer annotation!");
-            }
-            initMethod = initMethodList.get(0);
-            if (initMethod.getKind() == ElementKind.CONSTRUCTOR) {
-                if (!initMethod.getModifiers().contains(Modifier.PUBLIC)) {
-                    throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Constructor annotated with @ServiceInitializer must be public!");
-                }
-            } else {
-                if (!initMethod.getModifiers().contains(Modifier.STATIC) || !initMethod.getModifiers().contains(Modifier.PUBLIC)) {
-                    throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Method annotated with @ServiceInitializer must be public and static!");
-                }
-            }
-        } else if (!serviceContainer.isStaticOnly()) {
-            var constructorList = typeElement.getEnclosedElements()
+        if (initializingElement != typeElement) {
+            var initMethodList = initializingElement.getEnclosedElements()
                     .stream()
-                    .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR && element.getModifiers().contains(Modifier.PUBLIC))
+                    .filter(element -> element.getKind() == ElementKind.METHOD
+                            && element.getAnnotation(ServiceInitializer.class) != null
+                            && types.isAssignable(((ExecutableElement) element).getReturnType(), typeElement.asType()))
                     .collect(Collectors.toList());
 
-            if (!constructorList.isEmpty()) {
-                if (constructorList.size() > 1) {
-                    throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Multiple public constructors have been found! Please make sure there is just one constructor or annotate one using @ServiceInitializer annotation");
+            if (initMethodList.isEmpty()) {
+                initMethodList = initializingElement.getEnclosedElements()
+                        .stream()
+                        .filter(element -> element.getKind() == ElementKind.METHOD
+                                && "create".contentEquals(element.getSimpleName())
+                                && types.isAssignable(((ExecutableElement) element).getReturnType(), typeElement.asType()))
+                        .collect(Collectors.toList());
+            }
+
+            if (!initMethodList.isEmpty()) {
+                if (initMethodList.size() > 1) {
+                    throw new UnsupportedOperationException(initializingElement.getQualifiedName() + ": Only one method returning " + typeElement.getQualifiedName() + " compatible object can be annotated with @ServiceInitializer annotation/called create!");
                 }
-                initMethod = constructorList.get(0);
+                initMethod = initMethodList.get(0);
+                if (!initMethod.getModifiers().contains(Modifier.STATIC) || !initMethod.getModifiers().contains(Modifier.PUBLIC)) {
+                    throw new UnsupportedOperationException(initializingElement.getQualifiedName() + ": Method annotated with @ServiceInitializer/create method must be public and static!");
+                }
+            } else {
+                throw new UnsupportedOperationException(initializingElement.getQualifiedName() + ": Initialization of service " + typeElement.getQualifiedName() + " has been delegated here, but no @ServiceInitializer method or method called create is present!");
+            }
+        } else {
+            var initMethodList = typeElement.getEnclosedElements()
+                    .stream()
+                    .filter(element -> (element.getKind() == ElementKind.METHOD || element.getKind() == ElementKind.CONSTRUCTOR) && element.getAnnotation(ServiceInitializer.class) != null)
+                    .collect(Collectors.toList());
+
+            if (!initMethodList.isEmpty()) {
+                if (initMethodList.size() > 1) {
+                    throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Only one method or constructor can be annotated with @ServiceInitializer annotation!");
+                }
+                initMethod = initMethodList.get(0);
+                if (initMethod.getKind() == ElementKind.CONSTRUCTOR) {
+                    if (!initMethod.getModifiers().contains(Modifier.PUBLIC)) {
+                        throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Constructor annotated with @ServiceInitializer must be public!");
+                    }
+                } else {
+                    if (!initMethod.getModifiers().contains(Modifier.STATIC) || !initMethod.getModifiers().contains(Modifier.PUBLIC)) {
+                        throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Method annotated with @ServiceInitializer must be public and static!");
+                    }
+                }
+            } else if (!serviceContainer.isStaticOnly()) {
+                var constructorList = typeElement.getEnclosedElements()
+                        .stream()
+                        .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR && element.getModifiers().contains(Modifier.PUBLIC))
+                        .collect(Collectors.toList());
+
+                if (!constructorList.isEmpty()) {
+                    if (constructorList.size() > 1) {
+                        throw new UnsupportedOperationException(serviceContainer.getService().getQualifiedName() + ": Multiple public constructors have been found! Please make sure there is just one constructor or annotate one using @ServiceInitializer annotation");
+                    }
+                    initMethod = constructorList.get(0);
+                }
             }
         }
 
@@ -300,12 +331,13 @@ public final class ServiceInitGenerator {
                     returnedName = "indexedVariable" + (index++);
                     processedArguments.add(returnedName);
                 }
+                processedArguments.add(initializingElement);
                 if (method.getKind() == ElementKind.CONSTRUCTOR) {
                     statement.append("new $T(");
                 } else {
-                    statement.append("$T.init(");
+                    statement.append("$T.$N(");
+                    processedArguments.add(method.getSimpleName());
                 }
-                processedArguments.add(typeElement);
                 var first = new AtomicBoolean(true);
                 arguments.forEach(variableElement -> {
                     if (!first.get()) {

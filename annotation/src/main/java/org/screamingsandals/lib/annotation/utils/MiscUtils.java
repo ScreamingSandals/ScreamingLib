@@ -28,6 +28,7 @@ import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
 import org.screamingsandals.lib.utils.annotations.parameters.ProvidedBy;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
@@ -123,8 +124,8 @@ public class MiscUtils {
                 throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": A service annotated with @ProvidedService cannot have final modifier on it!");
             }
 
-            if (typeElement.getAnnotation(Service.class) != null || typeElement.getAnnotation(AbstractService.class) != null) {
-                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": @ProvidedService annotation cannot be mixed with @Service or @AbstractService annotation!");
+            if (typeElement.getAnnotation(Service.class) != null || typeElement.getAnnotation(AbstractService.class) != null || typeElement.getAnnotation(ServiceFactory.class) != null) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": @ProvidedService annotation cannot be mixed with @Service, @AbstractService or @ServiceFactory annotation!");
             }
 
             if (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null) {
@@ -134,12 +135,70 @@ public class MiscUtils {
             var container = new ServiceContainer(
                     environment.getTypeUtils(),
                     typeElement,
+                    null,
                     typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
                     false,
                     typeElement.getAnnotation(InternalCoreService.class) != null,
                     true,
                     false
             );
+
+            return platformTypes
+                    .stream()
+                    .collect(Collectors.toMap(s -> s, o -> container));
+        }
+
+        var serviceFactory = typeElement.getAnnotation(ServiceFactory.class);
+        if (serviceFactory != null) {
+            if (typeElement.getAnnotation(Service.class) != null || typeElement.getAnnotation(AbstractService.class) != null) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": @ServiceFactory annotation cannot be mixed with @Service or @AbstractService annotation!");
+            }
+
+            var initializer = typeElement.getEnclosedElements().stream()
+                    .filter(element -> element.getKind() == ElementKind.METHOD && element.getAnnotation(ServiceInitializer.class) != null)
+                    .map(element -> (ExecutableElement) element)
+                    .findFirst()
+                    .or(() -> typeElement.getEnclosedElements().stream()
+                            .filter(element -> element.getKind() == ElementKind.METHOD && "create".contentEquals(element.getSimpleName()))
+                            .map(element -> (ExecutableElement) element)
+                            .findFirst()
+                    );
+
+            if (initializer.isEmpty()) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": @ServiceFactory annotated class must contain a static initializer! This initializer should be called create() or annotated using @ServiceInitializer");
+            }
+
+            if (!initializer.get().getModifiers().contains(Modifier.STATIC) || !initializer.get().getModifiers().contains(Modifier.PUBLIC)) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + "#" + initializer.get().getSimpleName() + " method must be public and static!");
+            }
+
+            if (initializer.get().getReturnType().getKind() != TypeKind.DECLARED) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + "#" + initializer.get().getSimpleName() + " method must return an instance!");
+            }
+
+            var returnElement = (TypeElement) environment.getTypeUtils().asElement(initializer.get().getReturnType());
+
+            if (environment.getTypeUtils().isAssignable(typeElement.asType(), returnElement.asType())) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + "#" + initializer.get().getSimpleName() + ": @ServiceFactory is not supposed to construct itself (or java.lang.Object)! In that case use normal @Service with constructor or initialization method annotated with @ServiceInitializer");
+            }
+
+            var container = new ServiceContainer(
+                    environment.getTypeUtils(),
+                    returnElement,
+                    typeElement,
+                    typeElement.getAnnotation(InternalEarlyInitialization.class) != null || returnElement.getAnnotation(InternalEarlyInitialization.class) != null,
+                    false,
+                    typeElement.getAnnotation(InternalCoreService.class) != null || returnElement.getAnnotation(InternalCoreService.class) != null,
+                    false,
+                    false
+            );
+
+            checkServiceDependencies(environment, typeElement, container);
+            checkServiceDependencies(environment, returnElement, container);
+            checkConstructorDependencies(environment, returnElement, container);
+            checkEventManagerRequirement(environment, typeElement, container);
+            checkAccessedPlugins(environment, typeElement, container);
+            checkAccessedPlugins(environment, returnElement, container);
 
             return platformTypes
                     .stream()
@@ -153,6 +212,7 @@ public class MiscUtils {
                 var container = new ServiceContainer(
                         environment.getTypeUtils(),
                         typeElement,
+                        null,
                         typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
                         service.staticOnly() || (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null)
                                 || (typeElement.getKind() == ElementKind.CLASS && typeElement.getEnclosedElements().stream()
@@ -196,6 +256,7 @@ public class MiscUtils {
                 var container = new ServiceContainer(
                         environment.getTypeUtils(),
                         resolvedElement,
+                        null,
                         resolvedElement.getAnnotation(InternalEarlyInitialization.class) != null || typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
                         (resolvedElementService != null && resolvedElementService.staticOnly()) || (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null),
                         resolvedElement.getAnnotation(InternalCoreService.class) != null || typeElement.getAnnotation(InternalCoreService.class) != null

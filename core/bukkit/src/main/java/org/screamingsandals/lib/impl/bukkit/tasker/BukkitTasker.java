@@ -22,6 +22,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.tasker.task.BukkitTask;
 import org.screamingsandals.lib.tasker.DefaultThreads;
+import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.ThreadProperty;
 import org.screamingsandals.lib.tasker.task.TaskBase;
@@ -31,7 +32,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import java.util.function.Consumer;
 
 @Service
-public class BukkitTasker extends AbstractBukkitTasker {
+public class BukkitTasker extends Tasker {
     private final @NotNull Plugin plugin;
     private final @NotNull BukkitScheduler scheduler;
 

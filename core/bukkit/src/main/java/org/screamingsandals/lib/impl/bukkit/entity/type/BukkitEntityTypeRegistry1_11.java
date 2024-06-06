@@ -20,14 +20,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.entity.type.EntityTypeTagBackPorts;
-import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
 import java.util.*;
 
-@Service
 public class BukkitEntityTypeRegistry1_11 extends BukkitEntityTypeRegistry {
     public BukkitEntityTypeRegistry1_11() {
         specialType(org.bukkit.entity.EntityType.class, BukkitEntityType1_11::new);

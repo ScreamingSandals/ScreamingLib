@@ -22,10 +22,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.villager.VillagerType;
 import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
+import org.screamingsandals.lib.impl.entity.villager.VillagerTypeRegistry;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-public class BukkitVillagerTypeRegistry1_14 extends BukkitVillagerTypeRegistry {
+public class BukkitVillagerTypeRegistry1_14 extends VillagerTypeRegistry {
     public BukkitVillagerTypeRegistry1_14() {
         specialType(Villager.Type.class, BukkitVillagerType1_14::new);
     }

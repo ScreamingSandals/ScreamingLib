@@ -23,6 +23,7 @@ import org.bukkit.block.data.BlockData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
+import org.screamingsandals.lib.impl.block.BlockRegistry;
 import org.screamingsandals.lib.impl.block.tags.ModernBlockTagBackPorts;
 import org.screamingsandals.lib.impl.bukkit.item.MaterialRegistry1_13_X;
 import org.screamingsandals.lib.impl.bukkit.tags.KeyedUtils;
@@ -32,7 +33,7 @@ import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 
 import java.util.*;
 
-public class BukkitBlockRegistry1_13 extends BukkitBlockRegistry {
+public class BukkitBlockRegistry1_13 extends BlockRegistry {
     private static final @NotNull Map<@NotNull Material, List<String>> tagBackPorts = new HashMap<>();
 
     public BukkitBlockRegistry1_13() {

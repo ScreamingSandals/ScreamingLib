@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.tasker;
+package org.screamingsandals.lib.impl.bukkit.item;
 
-import org.bukkit.plugin.Plugin;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.tasker.Tasker;
-import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
+import org.screamingsandals.lib.impl.item.ItemTypeRegistry;
+import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 
-@Service
-public abstract class AbstractBukkitTasker extends Tasker {
-    @ServiceInitializer
-    public static @NotNull AbstractBukkitTasker init(@NotNull Plugin plugin) {
-        if (BukkitFeature.FOLIA_TASKER.isSupported()) {
-            return new FoliaTasker(plugin);
+@UtilityClass
+@ServiceFactory
+public class BukkitItemTypeRegistryServiceFactory {
+    public static @NotNull ItemTypeRegistry create() {
+        if (BukkitFeature.REGISTRY.isSupported()) {
+            return new BukkitItemTypeRegistry1_14();
+        } else if (BukkitFeature.FLATTENING.isSupported()) {
+            return new BukkitItemTypeRegistry1_13();
         } else {
-            return new BukkitTasker(plugin);
+            return new BukkitItemTypeRegistry1_8();
         }
     }
 }

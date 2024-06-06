@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.particle;
+package org.screamingsandals.lib.impl.bukkit.attribute;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.attribute.AttributeTypeRegistry;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.impl.particle.ParticleTypeRegistry;
-import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.annotations.methods.ServiceInitializer;
+import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 
-@Service
-public abstract class BukkitParticleTypeRegistry extends ParticleTypeRegistry {
-    @ServiceInitializer
-    public static @NotNull BukkitParticleTypeRegistry init() {
-        if (BukkitFeature.PARTICLE_REGISTRY.isSupported()) {
-            return new BukkitParticleTypeRegistry1_20_2();
-        } else if (BukkitFeature.PARTICLES_API.isSupported()) {
-            return new BukkitParticleTypeRegistry1_9();
+@UtilityClass
+@ServiceFactory
+public class BukkitAttributeTypeServiceFactory {
+    public static @NotNull AttributeTypeRegistry create() {
+        if (BukkitFeature.ATTRIBUTE_TYPE_KEYED.isSupported()) {
+            return new BukkitAttributeTypeRegistry1_16();
+        } else if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
+            return new BukkitAttributeTypeRegistry1_9();
         } else {
-            return new BukkitParticleTypeRegistry1_8();
+            return new BukkitAttributeTypeRegistry1_8();
         }
     }
-
 }
