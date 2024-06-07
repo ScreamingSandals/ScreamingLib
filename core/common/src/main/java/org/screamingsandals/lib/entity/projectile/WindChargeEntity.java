@@ -16,8 +16,11 @@
 
 package org.screamingsandals.lib.entity.projectile;
 
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
+
 /**
  * An abstract type for all wind charges.
  */
+@LimitedVersionSupport(">= 1.20.5")
 public interface WindChargeEntity extends ProjectileEntity {
 }

@@ -16,8 +16,11 @@
 
 package org.screamingsandals.lib.entity;
 
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
+
 /**
  * Represents an entity with identifier {@code minecraft:ominous_item_spawner}.
  */
+@LimitedVersionSupport(">= 1.20.5")
 public interface OminousItemSpawner extends Entity {
 }
