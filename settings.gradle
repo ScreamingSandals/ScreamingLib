@@ -10,10 +10,10 @@ pluginManagement {
     }
 }
 
-// The result will be for Java 11 but some dependencies requires Java 16 or Java 17
+// The result will be for Java 11 but some dependencies requires Java 17 or Java 21
 float javaVersion = Float.parseFloat(System.getProperty("java.class.version"))
-if (javaVersion < 61.0) {
-    throw new GradleException("ScreamingLib requires JDK 17 to compile")
+if (javaVersion < 65.0) {
+    throw new GradleException("ScreamingLib requires JDK 21 to compile")
 }
 
 rootProject.name = "ScreamingLib"
@@ -48,7 +48,7 @@ include 'annotation'
 registerModule('spectator', 'adventure', 'bungee')
 
 // Main modules
-registerModule('core', 'bukkit'/*, 'minestom'*/) //TODO: add others (minestom, sponge)
+registerModule('core', 'bukkit', 'vanilla'/*, 'minestom'*/) //TODO: add others (minestom, sponge)
 registerModule('proxy', 'bungee', 'velocity')
 
 // Extensions (Optional modules)

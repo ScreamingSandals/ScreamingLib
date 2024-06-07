@@ -20,6 +20,11 @@ subprojects {
                 if (moduleProject != null) {
                     sub.dependencies {
                         api moduleProject
+
+                        if (moduleProject.name == 'core-bukkit') {
+                            // Fix another source sets missing when compiling
+                            compileOnly moduleProject.sourceSets.main.output
+                        }
                     }
                 }
             }

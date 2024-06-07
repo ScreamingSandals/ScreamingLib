@@ -2,6 +2,8 @@
 # platforms
 paper = "1.20.4-R0.1-SNAPSHOT"
 paper-support_1_20_1 = "1.20.1-R0.1-SNAPSHOT"
+paper-support_1_12_2 = "1.12.2-R0.1-SNAPSHOT"
+paper-support_1_8_8 = "1.8.8-R0.1-SNAPSHOT"
 sponge = "8.2.0"
 minestom = "master-SNAPSHOT"
 waterfall = "1.20-R0.1-SNAPSHOT"
@@ -68,6 +70,8 @@ protocolsupport = { group = "com.github.ProtocolSupport", name = "ProtocolSuppor
 # platforms
 paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
 paper-support_one_twenty_one = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-support_1_20_1" }
+paper-support_one_twelve_two = { group = "com.destroystokyo.paper", name = "paper-api", version.ref = "paper-support_1_12_2" }
+paper-support_one_eight_eight = { group = "org.github.paperspigot", name = "paperspigot-api", version.ref = "paper-support_1_8_8" }
 sponge = { group = "org.spongepowered", name = "spongeapi", version.ref = "sponge" }
 minestom = { group = "com.github.Minestom", name = "Minestom", version.ref = "minestom" }
 waterfall = { group = "io.github.waterfallmc", name = "waterfall-api", version.ref = "waterfall" }

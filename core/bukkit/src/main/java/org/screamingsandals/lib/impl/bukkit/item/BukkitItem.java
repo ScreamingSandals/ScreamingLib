@@ -33,7 +33,7 @@ import org.screamingsandals.lib.impl.bukkit.item.builder.BukkitItemBuilder;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
-import org.screamingsandals.lib.impl.bukkit.nbt.NBTVanillaSerializer;
+import org.screamingsandals.lib.impl.vanilla.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.CompoundTagAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.ListTagAccessor;

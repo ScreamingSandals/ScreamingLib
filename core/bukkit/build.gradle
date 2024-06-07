@@ -1,10 +1,19 @@
 def supportVersions = [
-    '1_20_1': libs.paper.support.one.twenty.one
+    '1_20_1': libs.paper.support.one.twenty.one,
+    '1_12_2': libs.paper.support.one.twelve.two,
+    '1_8_8': libs.paper.support.one.eight.eight,
 ]
 
 sourceSets {
+    common {
+        java {
+        }
+    }
+
     for (def ver : supportVersions.keySet()) {
         "support_${ver}" {
+            compileClasspath += sourceSets.common.output
+
             java {
             }
         }
@@ -13,6 +22,36 @@ sourceSets {
             compileClasspath += sourceSets."support_${ver}".output
             output.dir(sourceSets."support_${ver}".output.classesDirs, builtBy: "compileSupport_${ver}Java")
         }
+    }
+}
+
+configurations {
+    mainCompileOnly {
+    }
+
+    commonCompileOnly {
+        extendsFrom(mainCompileOnly)
+        extendsFrom(compileOnly)
+        extendsFrom(api)
+    }
+
+    for (def ver : supportVersions.keySet()) {
+        it."support_${ver}CompileOnly" {
+            extendsFrom(compileOnly)
+            extendsFrom(api)
+        }
+    }
+
+    stubs {
+        extendsFrom(compileOnly)
+        extendsFrom(api)
+    }
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.mainCompileOnly + sourceSets.common.output
+        output.dir(sourceSets.common.output.classesDirs, builtBy: 'compileCommonJava')
     }
 }
 
@@ -27,7 +66,7 @@ dependencies {
     api project(':spectator-adventure')
     api project(':spectator-bungee')
 
-    compileOnly libs.paper
+    mainCompileOnly libs.paper
     for (def ver : supportVersions) {
         "support_${ver.key}CompileOnly" ver.value
     }
