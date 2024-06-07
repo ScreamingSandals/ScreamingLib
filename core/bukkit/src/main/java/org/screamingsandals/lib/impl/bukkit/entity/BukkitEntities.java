@@ -37,6 +37,7 @@ import org.screamingsandals.lib.impl.bukkit.compat.v1_20_1.EntitySpawnCompat;
 import org.screamingsandals.lib.impl.bukkit.entity.ambient.BukkitAmbientCreature;
 import org.screamingsandals.lib.impl.bukkit.entity.ambient.BukkitBat;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitAnimal;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitArmadillo;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitAxolotl;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitBee;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitCat;
@@ -118,6 +119,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitVindica
 import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitVindicator1_12;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.piglin.BukkitPiglin;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.piglin.BukkitPiglinBrute;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitBogged;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitSkeleton;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitStray1_10;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitStray1_11;
@@ -132,6 +134,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.monster.zombie.BukkitZombieVi
 import org.screamingsandals.lib.impl.bukkit.entity.monster.zombie.BukkitZombifiedPiglin;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitAbstractArrow;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitArrow;
+import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitBreezeWindCharge;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitDragonFireball;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitEgg;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitEnderPearl;
@@ -445,6 +448,12 @@ public class BukkitEntities extends Entities {
                         }
                     }
 
+                    if (BukkitFeature.ENTITY_ARMADILLO.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Armadillo) {
+                            return new BukkitArmadillo((org.bukkit.entity.Armadillo) entity);
+                        }
+                    }
+
                     return new BukkitAnimal((org.bukkit.entity.Animals) entity);
                 }
 
@@ -499,6 +508,11 @@ public class BukkitEntities extends Entities {
                         }
                         if (entity instanceof org.bukkit.entity.WitherSkeleton) {
                             return new BukkitWitherSkeleton1_11((org.bukkit.entity.WitherSkeleton) entity);
+                        }
+                        if (BukkitFeature.ENTITY_BOGGED.isSupported()) {
+                            if (entity instanceof org.bukkit.entity.Bogged) {
+                                return new BukkitBogged((org.bukkit.entity.Bogged) entity);
+                            }
                         }
                     }
 
@@ -787,6 +801,12 @@ public class BukkitEntities extends Entities {
                 }
 
                 if (BukkitFeature.ENTITY_WIND_CHARGE.isSupported()) {
+                    if (BukkitFeature.ENTITY_BREEZE_WIND_CHARGE.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.BreezeWindCharge) {
+                            return new BukkitBreezeWindCharge((org.bukkit.entity.BreezeWindCharge) entity);
+                        }
+                    }
+
                     if (entity instanceof org.bukkit.entity.WindCharge) {
                         return new BukkitWindCharge((org.bukkit.entity.WindCharge) entity);
                     }
@@ -915,6 +935,12 @@ public class BukkitEntities extends Entities {
 
         if (entity instanceof org.bukkit.entity.EnderCrystal) {
             return new BukkitEndCrystal((org.bukkit.entity.EnderCrystal) entity);
+        }
+
+        if (BukkitFeature.ENTITY_OMINOUS_ITEM_SPAWNER.isSupported()) {
+            if (entity instanceof org.bukkit.entity.OminousItemSpawner) {
+                return new BukkitOminousItemSpawner((org.bukkit.entity.OminousItemSpawner) entity);
+            }
         }
 
         if (entity instanceof org.bukkit.entity.FallingBlock) {

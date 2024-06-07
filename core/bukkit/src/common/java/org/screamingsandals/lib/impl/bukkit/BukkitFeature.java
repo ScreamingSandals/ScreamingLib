@@ -212,6 +212,10 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_THROWN_POTION_EXTENDS_THROWABLE_PROJECTILE = ENTITY_THROWABLE_PROJECTILE.and(() -> org.bukkit.entity.ThrowableProjectile.class.isAssignableFrom(org.bukkit.entity.ThrownPotion.class));
     public static final @NotNull PlatformFeature ENTITY_BREEZE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Breeze"));
     public static final @NotNull PlatformFeature ENTITY_WIND_CHARGE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.WindCharge"));
+    public static final @NotNull PlatformFeature ENTITY_ARMADILLO = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Armadillo"));
+    public static final @NotNull PlatformFeature ENTITY_BOGGED = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Bogged"));
+    public static final @NotNull PlatformFeature ENTITY_BREEZE_WIND_CHARGE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.BreezeWindCharge"));
+    public static final @NotNull PlatformFeature ENTITY_OMINOUS_ITEM_SPAWNER = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.OminousItemSpawner"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));
@@ -265,4 +269,5 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature UNSAFE_VALUES_PROTOCOL_VERSION = PlatformFeature.of(() -> Reflect.hasMethod(UnsafeValues.class, "getProtocolVersion"));
     public static final @NotNull PlatformFeature PLAYER_PROTOCOL_VERSION = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "getProtocolVersion"));
     public static final @NotNull PlatformFeature BUKKIT_GET_MINECRAFT_VERSION = PlatformFeature.of(() -> Reflect.hasMethod(Bukkit.class, "getMinecraftVersion"));
+    public static final @NotNull PlatformFeature TRANSFER = PlatformFeature.of(() -> Reflect.hasMethod(Bukkit.class, "isAcceptingTransfers"));
 }

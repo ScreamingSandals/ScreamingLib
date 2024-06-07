@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity.projectile;
+package org.screamingsandals.lib.entity.monster.skeleton;
 
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 /**
- * Represents an entity with identifier {@code minecraft:wind_charge}.
+ * Represents an entity with identifier {@code minecraft:bogged}.
  */
-@LimitedVersionSupport(">= 1.20.3")
-public interface WindCharge extends WindChargeEntity {
+@LimitedVersionSupport(">= 1.20.5")
+public interface Bogged extends SkeletonEntity {
 }

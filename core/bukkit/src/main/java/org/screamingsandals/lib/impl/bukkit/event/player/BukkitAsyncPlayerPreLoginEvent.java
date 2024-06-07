@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
 import org.screamingsandals.lib.event.player.AsyncPlayerPreLoginEvent;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 
@@ -87,5 +88,14 @@ public class BukkitAsyncPlayerPreLoginEvent implements AsyncPlayerPreLoginEvent 
     @Override
     public void message(@NotNull ComponentLike message) {
         message(message.asComponent()); // TODO: auto localize??
+    }
+
+    @Override
+    public boolean transferred() {
+        if (BukkitFeature.TRANSFER.isSupported()) {
+            return event.isTransferred();
+        } else {
+            return false;
+        }
     }
 }

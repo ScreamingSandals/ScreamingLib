@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity.projectile;
+package org.screamingsandals.lib.impl.bukkit.entity;
 
-import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.entity.OminousItemSpawner;
 
-/**
- * Represents an entity with identifier {@code minecraft:wind_charge}.
- */
-@LimitedVersionSupport(">= 1.20.3")
-public interface WindCharge extends WindChargeEntity {
+public class BukkitOminousItemSpawner extends BukkitEntity implements OminousItemSpawner {
+    public BukkitOminousItemSpawner(@NotNull org.bukkit.entity.OminousItemSpawner wrappedObject) {
+        super(wrappedObject);
+    }
 }

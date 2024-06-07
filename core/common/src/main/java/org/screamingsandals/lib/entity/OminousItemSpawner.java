@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity.projectile;
-
-import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
+package org.screamingsandals.lib.entity;
 
 /**
- * Represents an entity with identifier {@code minecraft:wind_charge}.
+ * Represents an entity with identifier {@code minecraft:ominous_item_spawner}.
  */
-@LimitedVersionSupport(">= 1.20.3")
-public interface WindCharge extends WindChargeEntity {
+public interface OminousItemSpawner extends Entity {
 }

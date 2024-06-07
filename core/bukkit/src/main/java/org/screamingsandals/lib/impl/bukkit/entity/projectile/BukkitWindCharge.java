@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.entity.projectile;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.projectile.WindCharge;
 
+// Having BukkitAbstractWindCharge would break 1.20.3/4 compatibility unless we have two implementations. Currently useless, since both interfaces are empty
 public class BukkitWindCharge extends BukkitHurtingProjectileEntity implements WindCharge {
     public BukkitWindCharge(@NotNull org.bukkit.entity.WindCharge wrappedObject) {
         super(wrappedObject);

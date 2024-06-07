@@ -21,6 +21,7 @@ import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.AsyncEvent;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.net.InetAddress;
 import java.util.UUID;
@@ -91,6 +92,14 @@ public interface AsyncPlayerPreLoginEvent extends AsyncEvent, PlatformEvent {
      * @param message new message
      */
     void message(@NotNull ComponentLike message);
+
+    /**
+     * Returns whether the user was transferred from other server.
+     *
+     * @return true if the user was transferred
+     */
+    @LimitedVersionSupport(">= 1.20.5; otherwise just return false")
+    boolean transferred();
 
     /**
      * Result of the join event.

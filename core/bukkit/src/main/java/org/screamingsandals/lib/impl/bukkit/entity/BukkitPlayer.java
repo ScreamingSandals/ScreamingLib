@@ -18,6 +18,7 @@ package org.screamingsandals.lib.impl.bukkit.entity;
 
 import com.viaversion.viaversion.api.Via;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
@@ -45,6 +46,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.impl.world.Locations;
@@ -55,6 +57,7 @@ import java.net.InetSocketAddress;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class BukkitPlayer extends BukkitHumanEntity implements Player {
     public BukkitPlayer(@NotNull org.bukkit.entity.Player wrappedObject) {
@@ -402,6 +405,41 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     @Override
     public void respawn() {
         ((org.bukkit.entity.Player) wrappedObject).spigot().respawn();
+    }
+
+    @Override
+    public boolean transferred() {
+        if (BukkitFeature.TRANSFER.isSupported()) {
+            return ((org.bukkit.entity.Player) wrappedObject).isTransferred();
+        }
+        return false;
+    }
+
+    @Override
+    public void transfer(@NotNull String host, int port) {
+        if (!BukkitFeature.TRANSFER.isSupported()) {
+            throw new UnsupportedOperationException("This server does not support transferring players using Transfer packets! Update to 1.20.5 or newer!");
+        }
+
+        ((org.bukkit.entity.Player) wrappedObject).transfer(host, port);
+    }
+
+    @Override
+    public @NotNull CompletableFuture<byte @Nullable []> retrieveCookie(@NotNull ResourceLocation location) {
+        if (!BukkitFeature.TRANSFER.isSupported()) {
+            throw new UnsupportedOperationException("This server does not support client cookies! Update to 1.20.5 or newer!");
+        }
+
+        return ((org.bukkit.entity.Player) wrappedObject).retrieveCookie(new NamespacedKey(location.namespace(), location.path()));
+    }
+
+    @Override
+    public void storeCookie(@NotNull ResourceLocation location, byte @NotNull [] value) {
+        if (!BukkitFeature.TRANSFER.isSupported()) {
+            throw new UnsupportedOperationException("This server does not support client cookies! Update to 1.20.5 or newer!");
+        }
+
+        ((org.bukkit.entity.Player) wrappedObject).storeCookie(new NamespacedKey(location.namespace(), location.path()), value);
     }
 
     @SuppressWarnings("unchecked") // Via Version

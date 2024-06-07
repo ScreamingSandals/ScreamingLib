@@ -606,6 +606,15 @@ public class BukkitServer extends Server {
                 .as(Integer.class);
     }
 
+    @Override
+    public boolean acceptsTransfers0() {
+        if (BukkitFeature.TRANSFER.isSupported()) {
+            return Bukkit.isAcceptingTransfers();
+        } else {
+            return false;
+        }
+    }
+
     public static @NotNull String UNSAFE_normalizeSoundKey0(@NotNull String s) {
         return UNSAFE_SOUND_CACHE.getOrDefault(s.replace('.', '_').toUpperCase(Locale.ROOT), s).toLowerCase(Locale.ROOT);
     }

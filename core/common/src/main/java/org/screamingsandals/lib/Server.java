@@ -25,6 +25,7 @@ import org.screamingsandals.lib.player.Sender;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.world.World;
 import org.screamingsandals.lib.world.Worlds;
 
@@ -129,6 +130,16 @@ public abstract class Server {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConsoleSender0();
     }
 
+    /**
+     * Gets if the server accepts transfers or not.
+     *
+     * @return true if transfers are accepted, false if not or unsupported
+     */
+    @LimitedVersionSupport(">= 1.20.5; otherwise returns false")
+    public static boolean acceptsTransfers() {
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").acceptsTransfers0();
+    }
+
     // abstract methods for implementations
 
     public abstract @NotNull String getVersion0();
@@ -158,4 +169,6 @@ public abstract class Server {
     public abstract @NotNull ProxyType getProxyType0();
 
     public abstract @NotNull Integer getProtocolVersion0();
+
+    public abstract boolean acceptsTransfers0();
 }

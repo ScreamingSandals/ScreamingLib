@@ -31,11 +31,14 @@ import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
+import org.screamingsandals.lib.utils.ResourceLocation;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.weather.WeatherType;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A player representation.
@@ -359,6 +362,47 @@ public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudien
      * Respawns the player.
      */
     void respawn();
+
+    /**
+     * Gets whether the player has been transferred from another server.
+     *
+     * @return true if the connection has been transferred
+     */
+    @LimitedVersionSupport(">= 1.20.5; otherwise returns false")
+    boolean transferred();
+
+    /**
+     * Transfers the player to another server. Throws exception if not supported.
+     *
+     * @param host the server hostname or address
+     * @param port port of the server
+     * @throws UnsupportedOperationException if the server does not support this operation
+     */
+    @LimitedVersionSupport(">= 1.20.5")
+    void transfer(@NotNull String host, int port);
+
+    /**
+     * Retrieves a cookie from this player.
+     *
+     * @param location the resource location identifying the cookie
+     * @return a {@link CompletableFuture} that will be completed when the
+     * Cookie response is received or otherwise available. If the cookie is not
+     * set in the client, the future will complete with {@code null}.
+     * @throws UnsupportedOperationException if the server does not support this operation
+     */
+    @LimitedVersionSupport(">= 1.20.5")
+    @NotNull CompletableFuture<byte @Nullable []> retrieveCookie(@NotNull ResourceLocation location);
+
+    /**
+     * Stores a cookie in this player's client.
+     *
+     * @param location the resource location identifying the cookie
+     * @param value the data to store in the cookie
+     * @throws IllegalStateException if a cookie cannot be stored at this time
+     * @throws UnsupportedOperationException if the server does not support this operation
+     */
+    @LimitedVersionSupport(">= 1.20.5")
+    void storeCookie(@NotNull ResourceLocation location, byte @NotNull[] value);
 
     /**
      * Launches the player in its facing direction.
