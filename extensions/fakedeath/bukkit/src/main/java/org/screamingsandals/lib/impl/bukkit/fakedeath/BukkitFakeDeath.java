@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.impl.bukkit.fakedeath;
 
 import org.bukkit.*;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -24,7 +26,9 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.event.entity.EntityDamageEvent;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.network.chat.ComponentAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerPlayerAccessor;
@@ -44,7 +48,7 @@ import java.util.Objects;
 @Service
 public class BukkitFakeDeath extends FakeDeath {
     @Override
-    protected void die0(@NotNull org.screamingsandals.lib.player.Player slibPlayer, @NotNull FakeDeath.PlayerInventoryLifeResetFunction function) {
+    protected void die0(@NotNull org.screamingsandals.lib.player.Player slibPlayer, @Nullable EntityDamageEvent damageEvent, @NotNull FakeDeath.PlayerInventoryLifeResetFunction function) {
         var player = slibPlayer.as(Player.class);
         if (player.isDead()) {
             return;
@@ -64,7 +68,21 @@ public class BukkitFakeDeath extends FakeDeath {
             message = (String) Reflect.fastInvoke(component, ComponentAccessor.METHOD_GET_COLORED_STRING.get()); // TODO: fix death message obtaining
         } catch (Throwable ignored) {}
 
-        var event = new PlayerDeathEvent(player, loot, player.getTotalExperience(), 0, message);
+        PlayerDeathEvent event;
+        try {
+            // Spigot 1.20.6: DamageSource is now required in constructor
+            DamageSource damageSource;
+            if (damageEvent != null) {
+                damageSource = damageEvent.as(org.bukkit.event.entity.EntityDamageEvent.class).getDamageSource();
+            } else {
+                damageSource = DamageSource.builder(DamageType.GENERIC_KILL).build();
+            }
+
+            event = new PlayerDeathEvent(player, damageSource, loot, player.getTotalExperience(), 0, message);
+        } catch (Throwable ignored) {
+            // 1.8.8-1.20.4
+            event = Compat1_8.construct(player, loot, message);
+        }
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         for (var stack : event.getDrops()) {

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Core;
+import org.screamingsandals.lib.event.entity.EntityDamageEvent;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -37,14 +38,18 @@ public abstract class FakeDeath {
     }
 
     public static void die(@Nullable Player player, @NotNull FakeDeath.PlayerInventoryLifeResetFunction function) {
+        die(player, null, function);
+    }
+
+    public static void die(@Nullable Player player, @Nullable EntityDamageEvent event, @NotNull FakeDeath.PlayerInventoryLifeResetFunction function) {
         if (player == null) {
             return;
         }
         Preconditions.checkArgument(fakeDeath != null, "FakeDeath is not initialized yet.");
-        fakeDeath.die0(player, function);
+        fakeDeath.die0(player, event, function);
     }
 
-    protected abstract void die0(@NotNull Player player, @NotNull FakeDeath.PlayerInventoryLifeResetFunction function);
+    protected abstract void die0(@NotNull Player player, @Nullable EntityDamageEvent event, @NotNull FakeDeath.PlayerInventoryLifeResetFunction function);
 
     @FunctionalInterface
     public interface PlayerInventoryLifeResetFunction {

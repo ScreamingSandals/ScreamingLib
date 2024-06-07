@@ -1,3 +1,16 @@
+sourceSets {
+    support_1_20_1 {
+        java {
+        }
+    }
+
+    main {
+        compileClasspath += support_1_20_1.output
+        output.dir(support_1_20_1.output.classesDirs, builtBy: "compileSupport_1_20_1Java")
+    }
+}
+
 dependencies {
     compileOnly libs.paper
+    support_1_20_1CompileOnly libs.paper.support.one.twenty.one
 }
