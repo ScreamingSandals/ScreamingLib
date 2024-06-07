@@ -31,7 +31,6 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +40,8 @@ import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitItemAttribute;
+import org.screamingsandals.lib.impl.bukkit.compat.v1_20_1.PotionDataCompat;
+import org.screamingsandals.lib.impl.bukkit.compat.v1_8_8.PotionCompat;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
@@ -586,10 +587,10 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                 if (BukkitFeature.POTION_REGISTRY.isSupported()) {
                     ((PotionMeta) meta).setBasePotionType(potionData.as(PotionType.class));
                 } else if (BukkitFeature.POTION_API.isSupported()) {
-                    ((PotionMeta) meta).setBasePotionData(potionData.as(PotionData.class));
+                    PotionDataCompat.setPotionData(((PotionMeta) meta), potionData);
                     item.setItemMeta(meta);
                 } else {
-                    item.setDurability(potionData.as(org.bukkit.potion.Potion.class).toDamageValue());
+                    PotionCompat.applyPotion(item, potionData);
                 }
             }
         }
