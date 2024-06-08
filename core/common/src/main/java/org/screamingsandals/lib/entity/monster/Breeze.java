@@ -21,6 +21,6 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 /**
  * Represents an entity with identifier {@code minecraft:breeze}.
  */
-@LimitedVersionSupport(">= 1.20.3")
+@LimitedVersionSupport(">= 1.21; as experiment in 1.20.3+ if experimental features are enabled")
 public interface Breeze extends Monster {
 }

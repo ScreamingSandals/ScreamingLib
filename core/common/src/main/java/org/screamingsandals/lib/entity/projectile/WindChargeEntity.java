@@ -21,6 +21,6 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 /**
  * An abstract type for all wind charges.
  */
-@LimitedVersionSupport(">= 1.20.5")
+@LimitedVersionSupport(">= 1.21; as experiment in 1.20.5/6 if experimental features are enabled")
 public interface WindChargeEntity extends ProjectileEntity {
 }
