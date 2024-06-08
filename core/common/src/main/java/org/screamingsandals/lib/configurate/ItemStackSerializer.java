@@ -98,12 +98,14 @@ public class ItemStackSerializer implements TypeSerializer<ItemStack> {
                     if (!(nbtTag instanceof CompoundTag)) {
                         throw new IllegalArgumentException(TAG_KEY + " should be a compound tag, got " + nbtTag);
                     }
+                    //noinspection deprecation
                     builder.tag((CompoundTag) nbtTag);
                 } else {
                     var snbtTag = internalSNBTSerializer.deserialize(tag.getString(""));
                     if (!(snbtTag instanceof CompoundTag)) {
                         throw new IllegalArgumentException(TAG_KEY + " should be a compound tag, got " + snbtTag);
                     }
+                    //noinspection deprecation
                     builder.tag((CompoundTag) snbtTag);
                 }
             }

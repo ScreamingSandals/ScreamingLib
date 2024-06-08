@@ -31,6 +31,7 @@ import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.ResourceLocation;
 
@@ -93,8 +94,12 @@ public interface ItemStackBuilder {
      * @param tag which will be assigned to this item
      * @return this builder
      * @see #mergeTag(CompoundTag)
+     * @throws UnsupportedOperationException if the item is AIR and the version does not support having AIR with NBT data (1.20.5+)
+     * @throws IllegalArgumentException if the tag is not applicable to item stack of this type
      */
     @Contract("_ -> this")
+    @Deprecated
+    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
     @NotNull ItemStackBuilder tag(@NotNull CompoundTag tag);
 
     /**
@@ -104,6 +109,8 @@ public interface ItemStackBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
+    @Deprecated
+    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
     @NotNull ItemStackBuilder mergeTag(@NotNull CompoundTag tag);
 
     @Contract(pure = true)

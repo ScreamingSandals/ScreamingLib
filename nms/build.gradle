@@ -608,6 +608,10 @@ accessors {
         method(CompoundTag, 'save', CompoundTag)
         method(CompoundTag, 'getTag')
         method(void, 'setTag', CompoundTag)
+
+        // 1.20.5+
+        method(java.util.Optional, 'parse', 'net.minecraft.core.HolderLookup$Provider', Tag)
+        method(Tag, 'save', 'net.minecraft.core.HolderLookup$Provider', Tag)
         method('net.minecraft.core.component.DataComponentPatch', 'getComponentsPatch')
     }
 

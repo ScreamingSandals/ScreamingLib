@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.spectator.bossbar.BukkitBossBar1_8;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
@@ -41,7 +42,6 @@ import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.Clientb
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundTabListPacketAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.resources.ResourceLocationAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.InteractionHandAccessor;
-import org.screamingsandals.lib.item.ItemTagKeys;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.nbt.CompoundTag;
@@ -312,15 +312,26 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
         for (var page : book.pages()) {
             pages.add(new StringTag(page.toJavaJson()));
         }
-        var item = ItemStackFactory.builder()
-                .type(ItemType.of("minecraft:written_book"))
-                .tag(CompoundTag.EMPTY
-                        .with(ItemTagKeys.TITLE, book.title().toJavaJson())
-                        .with(ItemTagKeys.AUTHOR, book.author().toJavaJson())
-                        .with(ItemTagKeys.PAGES, pages)
-                        .with(ItemTagKeys.RESOLVED, (byte) 1)
-                )
-                .build();
+
+        org.screamingsandals.lib.item.ItemStack item;
+
+        var nbt = CompoundTag.EMPTY
+                .with("title", book.title().toJavaJson())
+                .with("author", book.author().toJavaJson())
+                .with("pages", pages)
+                .with("resolved", true);
+
+        if (Server.isVersion(1, 20, 5)) {
+            item = ItemStackFactory.builder()
+                    .type(ItemType.of("minecraft:written_book"))
+                    .tag(CompoundTag.EMPTY.with("minecraft:written_book_content", nbt))
+                    .build();
+        } else {
+            item = ItemStackFactory.builder()
+                    .type(ItemType.of("minecraft:written_book"))
+                    .tag(nbt)
+                    .build();
+        }
 
         if (item == null) {
             return;

@@ -47,6 +47,7 @@ import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
+import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.vanilla.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.CompoundTagAccessor;
@@ -62,6 +63,7 @@ import org.screamingsandals.lib.item.meta.Enchantment;
 import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.item.meta.PotionEffect;
 import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.ResourceLocation;
@@ -73,6 +75,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -505,7 +508,27 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
             item = ClassStorage.asCBStack(item);
         }
-        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), NBTVanillaSerializer.serialize(tag));
+        if (ItemStackAccessor.METHOD_PARSE.get() != null) {
+            // 1.20.5+
+            if (!item.getType().isAir()) {
+                throw new UnsupportedOperationException("Cannot apply tag to AIR.");
+            }
+
+            var compound = CompoundTag.EMPTY
+                    .with("id", item.getType().getKey().toString())
+                    .with("count", item.getAmount())
+                    .with("components", tag);
+
+            var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), NBTVanillaSerializer.serialize(compound));
+            if (optional instanceof Optional) {
+                this.item = ClassStorage.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
+                        new IllegalArgumentException("The given tag is not applicable to the item of type " + item.getType().getKey() + ": " + SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build().serialize(tag)))
+                );
+            }
+        } else {
+            // 1.8.8-1.20.4
+            Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), NBTVanillaSerializer.serialize(tag));
+        }
         return this;
     }
 
@@ -521,15 +544,43 @@ public class BukkitItemBuilder implements ItemStackBuilder {
 
         var serialized = NBTVanillaSerializer.serialize(tag);
 
-        var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
+        if (ItemStackAccessor.METHOD_PARSE.get() != null) {
+            // 1.20.5+
+            var nmsStack = ClassStorage.stackAsNMS(item);
 
-        if (nbt != null) {
-            Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_MERGE.get(), serialized);
+            var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
+                    Reflect.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+
+            if (compound == null) {
+                return this; // what now?
+            }
+
+            var nbt = Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_GET.get(), "components");
+
+            if (nbt != null) {
+                Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_MERGE.get(), serialized);
+            } else {
+                Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_PUT.get(), "components", serialized);
+            }
+
+            var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), compound);
+            if (optional instanceof Optional) {
+                this.item = ClassStorage.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
+                        new IllegalArgumentException("The given tag is not applicable to the item of type " + item.getType().getKey() + ": " + SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build().serialize(tag)))
+                );
+            }
         } else {
-            nbt = serialized;
-        }
+            // 1.8.8-1.20.4
+            var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
 
-        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
+            if (nbt != null) {
+                Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_MERGE.get(), serialized);
+            } else {
+                nbt = serialized;
+            }
+
+            Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
+        }
         return this;
     }
 
@@ -657,7 +708,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             }
             return this;
         } else {
-            return mergeTag(CompoundTag.EMPTY.with(ItemTagKeys.CUSTOM_POTION_COLOR, color.compoundRgb())); // are we supposed to use NBT? was it even supported by Vanilla MC back then?
+            return mergeTag(CompoundTag.EMPTY.with("CustomPotionColor", color.compoundRgb())); // are we supposed to use NBT? was it even supported by Vanilla MC back then?
         }
     }
 

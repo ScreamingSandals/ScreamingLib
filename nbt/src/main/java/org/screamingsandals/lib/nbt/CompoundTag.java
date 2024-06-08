@@ -110,7 +110,7 @@ public final class CompoundTag implements Tag, CompoundTagTreeInspector, Compoun
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    public @NotNull CompoundTag with(@NotNull String name, @NotNull List<@NotNull Tag> value) {
+    public @NotNull CompoundTag with(@NotNull String name, @NotNull List<? extends @NotNull Tag> value) {
         var clone = new HashMap<>(this.value);
         clone.put(name, new ListTag(value));
         return new CompoundTag(clone);

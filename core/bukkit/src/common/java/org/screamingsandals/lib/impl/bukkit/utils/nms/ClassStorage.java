@@ -104,6 +104,10 @@ public class ClassStorage {
 		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftCopy", ItemStack.class).invokeStatic(item);
 	}
 
+	public static ItemStack nmsAsStack(Object nmsStack) {
+		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftMirror", ItemStack.class).invokeStatic(nmsStack);
+	}
+
 	public static int getEntityTypeId(String key, Class<?> clazz) {
 		var registry1_19_3 = BuiltInRegistriesAccessor.CONST_ENTITY_TYPE.get();
 		if (registry1_19_3 != null) {

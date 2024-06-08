@@ -31,6 +31,8 @@ import org.screamingsandals.lib.nbt.TreeInspectorKey;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 @UtilityClass
+@Deprecated(forRemoval = true)
+@LimitedVersionSupport("<= 1.20.4")
 public class ItemTagKeys {
     // GENERAL TAGS
     public static final @NotNull TreeInspectorKey<IntTag> DAMAGE = TreeInspectorKey.of(IntTag.class, "Damage");

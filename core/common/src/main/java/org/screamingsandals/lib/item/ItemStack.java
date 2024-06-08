@@ -20,6 +20,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.api.types.server.ItemStackHolder;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
@@ -31,9 +32,11 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContentLike;
 import org.screamingsandals.lib.utils.*;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.annotations.ide.MinecraftType;
 import org.screamingsandals.lib.utils.ResourceLocation;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -57,6 +60,7 @@ public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleDa
 
     @NotNull List<@NotNull ItemAttribute> getAttributeModifiers();
 
+    @ApiStatus.Obsolete
     default @NotNull List<@NotNull ItemAttribute> getItemAttributes() { // alternative getter (old name)
         return getAttributeModifiers();
     }
@@ -171,14 +175,56 @@ public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleDa
     }
 
     @Contract(value = "_ -> new", pure = true)
+    @Deprecated
+    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
     default @NotNull ItemStack withTag(@NotNull CompoundTag tag) {
         return Objects.requireNonNull(builder().tag(tag).build());
     }
 
     @Override
+    @Deprecated
+    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
     default @Nullable Tag findTag(@NotNull String @NotNull... tagKeys) {
         return getTag().findTag(tagKeys);
     }
+
+    @Override
+    @Deprecated
+    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
+    default @Nullable Tag findTag(@NotNull Collection<@NotNull String> tagKeys) {
+        return CompoundTagTreeInspector.super.findTag(tagKeys);
+    }
+
+    @Override
+    @Deprecated
+    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
+    default <T extends Tag> @Nullable T findTag(@NotNull TreeInspectorKey<T> inspectorKey) {
+        return CompoundTagTreeInspector.super.findTag(inspectorKey);
+    }
+
+    @Override
+    @Deprecated
+    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
+    default <T extends Tag> @Nullable T findTag(@NotNull Class<T> tagClass, @NotNull String @NotNull... tagKeys) {
+        return CompoundTagTreeInspector.super.findTag(tagClass, tagKeys);
+    }
+
+    @Override
+    @Deprecated
+    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
+    default <T extends Tag> @Nullable T findTag(@NotNull Class<T> tagClass, @NotNull Collection<@NotNull String> tagKeys) {
+        return CompoundTagTreeInspector.super.findTag(tagClass, tagKeys);
+    }
+
+    @Override
+    @ApiStatus.Obsolete
+    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
+    @NotNull CompoundTag getTag();
+
+    @Override
+    @ApiStatus.Obsolete
+    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
+    @NotNull CompoundTag asCompoundTag();
 
     @NotNull ItemStack clone();
 
@@ -186,9 +232,10 @@ public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleDa
     default @NotNull ItemContent asItemContent() {
         var tag = getTag();
         return ItemContent.builder()
-                .id(ResourceLocation.of(getType().platformName())) // TODO: implement namespaced holders and get the actual namespaced key
+                // On legacy, we have remapped `location()` to simulate modern environment. We need to pass the actual key to the component.
+                .id(Server.isVersion(1, 13) ? getType().location() : ResourceLocation.of(getType().platformName()))
                 .count(getAmount())
-                .tag(tag.isEmpty() ? null : tag)
+                .tag(tag.isEmpty() ? null : tag) // TODO: components
                 .build();
     }
 }

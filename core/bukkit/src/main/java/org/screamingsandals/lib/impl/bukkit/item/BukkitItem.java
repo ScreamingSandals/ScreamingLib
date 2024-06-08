@@ -33,6 +33,7 @@ import org.screamingsandals.lib.impl.bukkit.item.builder.BukkitItemBuilder;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
+import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.vanilla.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.CompoundTagAccessor;
@@ -299,7 +300,21 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
         }
 
         final var nmsStack = ClassStorage.stackAsNMS(wrappedObject);
-        final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_GET_TAG.get());
+        final Object nbtTag;
+        if (ItemStackAccessor.METHOD_SAVE_1.get() != null) {
+            // 1.20.5+
+            final var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
+                    Reflect.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+
+            if (compound == null) {
+                return CompoundTag.EMPTY;
+            }
+
+            nbtTag = Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_GET.get(), "components");
+        } else {
+            // 1.8.8-1.20.4
+            nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_GET_TAG.get());
+        }
 
         if (nbtTag == null) {
             return CompoundTag.EMPTY;
@@ -323,7 +338,15 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
         }
 
         final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(wrappedObject), ItemStackAccessor.METHOD_COPY.get());
-        final var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE.get(), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+        final Object compound;
+        if (ItemStackAccessor.METHOD_SAVE_1.get() != null) {
+            // 1.20.5+
+            compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
+                    Reflect.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+        } else {
+            // 1.8.8-1.20.4
+            compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE.get(), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+        }
 
         var tag = NBTVanillaSerializer.deserialize(compound);
         if (tag instanceof CompoundTag) {
