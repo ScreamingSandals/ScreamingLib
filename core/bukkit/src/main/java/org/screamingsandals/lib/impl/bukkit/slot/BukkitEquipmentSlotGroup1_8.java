@@ -18,16 +18,14 @@ package org.screamingsandals.lib.impl.bukkit.slot;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.slot.EquipmentSlotGroup;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitEquipmentSlot extends BasicWrapper<org.bukkit.inventory.EquipmentSlot> implements EquipmentSlot {
-    public BukkitEquipmentSlot(@NotNull org.bukkit.inventory.EquipmentSlot wrappedObject) {
+public class BukkitEquipmentSlotGroup1_8 extends BasicWrapper<org.bukkit.inventory.EquipmentSlot> implements EquipmentSlotGroup {
+    public BukkitEquipmentSlotGroup1_8(@NotNull org.bukkit.inventory.EquipmentSlot wrappedObject) {
         super(wrappedObject);
     }
 
@@ -37,20 +35,11 @@ public class BukkitEquipmentSlot extends BasicWrapper<org.bukkit.inventory.Equip
     }
 
     @Override
-    public @NotNull EquipmentSlotGroup asGroup() {
-        if (BukkitFeature.EQUIPMENT_SLOT_GROUP.isSupported()) {
-            return new BukkitEquipmentSlotGroup1_20_5(wrappedObject.getGroup());
-        } else {
-            return new BukkitEquipmentSlotGroup1_8(wrappedObject);
-        }
-    }
-
-    @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof org.bukkit.inventory.EquipmentSlot || object instanceof EquipmentSlot) {
+        if (object instanceof org.bukkit.inventory.EquipmentSlot || object instanceof EquipmentSlotGroup) {
             return equals(object);
         }
-        return equals(EquipmentSlot.ofNullable(object));
+        return equals(EquipmentSlotGroup.ofNullable(object));
     }
 
     @Override

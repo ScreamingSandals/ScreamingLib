@@ -43,6 +43,7 @@ import org.screamingsandals.lib.nbt.configurate.TagSerializer;
 import org.screamingsandals.lib.particle.ParticleType;
 import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.slot.EquipmentSlot;
+import org.screamingsandals.lib.slot.EquipmentSlotGroup;
 import org.screamingsandals.lib.spectator.configurate.SpectatorSerializers;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.difficulty.DifficultyType;
@@ -81,6 +82,7 @@ public class SLibSerializers {
                 .register(ItemType.class, ItemTypeSerializer.INSTANCE)
                 .register(Block.class, BlockSerializer.INSTANCE)
                 .register(EquipmentSlot.class, EquipmentSlotSerializer.INSTANCE)
+                .register(EquipmentSlotGroup.class, EquipmentSlotGroupSerializer.INSTANCE)
                 .register(ItemStack.class, ItemStackSerializer.INSTANCE)
                 .register(Location.class, LocationSerializer.INSTANCE)
                 .register(ItemAttribute.class, ItemAttributeSerializer.INSTANCE);

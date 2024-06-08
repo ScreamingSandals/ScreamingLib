@@ -18,10 +18,12 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.attribute.AttributeModifier;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.attribute.ItemAttribute;
-import org.screamingsandals.lib.slot.EquipmentSlot;
+import org.screamingsandals.lib.slot.EquipmentSlotGroup;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -33,6 +35,7 @@ import java.util.function.Supplier;
 
 public class ItemAttributeSerializer implements TypeSerializer<ItemAttribute> {
     private static final @NotNull String TYPE_KEY = "type";
+    private static final @NotNull String ID_KEY = "id";
     private static final @NotNull String UUID_KEY = "uuid";
     private static final @NotNull String NAME_KEY = "name";
     private static final @NotNull String AMOUNT_KEY = "amount";
@@ -45,6 +48,7 @@ public class ItemAttributeSerializer implements TypeSerializer<ItemAttribute> {
     public @NotNull ItemAttribute deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var attributeType = node.node(TYPE_KEY);
+            var id = node.node(ID_KEY);
             var uuid = node.node(UUID_KEY);
             var name = node.node(NAME_KEY);
             var amount = node.node(AMOUNT_KEY);
@@ -53,13 +57,23 @@ public class ItemAttributeSerializer implements TypeSerializer<ItemAttribute> {
 
             var typeOpt = AttributeType.of(Objects.requireNonNull(attributeType.raw()));
 
+            if (!id.empty()) {
+                return new ItemAttribute(
+                        typeOpt,
+                        ResourceLocation.of(id.getString("")),
+                        amount.getDouble(),
+                        AttributeModifierSerializer.read(operation.getString(""), AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.of(slot.getString("any"))
+                );
+            }
+
             return new ItemAttribute(
                     typeOpt,
                     uuid.get(UUID.class, (Supplier<UUID>) UUID::randomUUID),
                     name.getString(""),
                     amount.getDouble(),
-                    operation.get(AttributeModifier.Operation.class, AttributeModifier.Operation.ADDITION),
-                    EquipmentSlot.ofNullable(slot.raw())
+                    AttributeModifierSerializer.read(operation.getString(""), AttributeModifier.Operation.ADD_VALUE),
+                    EquipmentSlotGroup.of(slot.getString("any"))
             );
         } catch (Throwable t) {
             throw new SerializationException(t);
@@ -74,11 +88,15 @@ public class ItemAttributeSerializer implements TypeSerializer<ItemAttribute> {
         }
 
         node.node(TYPE_KEY).set(obj.getType().location().asString());
-        node.node(UUID_KEY).set(obj.getUuid());
-        node.node(NAME_KEY).set(obj.getName());
+        if (Server.isVersion(1, 21)) {
+            node.node(ID_KEY).set(obj.getLocation().toString());
+        } else {
+            node.node(UUID_KEY).set(obj.getUuid());
+            node.node(NAME_KEY).set(obj.getName());
+        }
         node.node(AMOUNT_KEY).set(obj.getAmount());
         node.node(OPERATION_KEY).set(obj.getOperation());
         var slot = obj.getSlot();
-        node.node(SLOT_KEY).set(slot != null ? slot.location().asString() : null);
+        node.node(SLOT_KEY).set(slot.location().asString());
     }
 }

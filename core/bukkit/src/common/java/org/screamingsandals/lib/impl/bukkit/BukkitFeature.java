@@ -270,4 +270,5 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature PLAYER_PROTOCOL_VERSION = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "getProtocolVersion"));
     public static final @NotNull PlatformFeature BUKKIT_GET_MINECRAFT_VERSION = PlatformFeature.of(() -> Reflect.hasMethod(Bukkit.class, "getMinecraftVersion"));
     public static final @NotNull PlatformFeature TRANSFER = PlatformFeature.of(() -> Reflect.hasMethod(Bukkit.class, "isAcceptingTransfers"));
+    public static final @NotNull PlatformFeature EQUIPMENT_SLOT_GROUP = PlatformFeature.of(() -> Reflect.has("org.bukkit.inventory.EquipmentSlotGroup"));
 }

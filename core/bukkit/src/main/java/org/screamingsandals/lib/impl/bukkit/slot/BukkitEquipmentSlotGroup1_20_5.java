@@ -18,39 +18,28 @@ package org.screamingsandals.lib.impl.bukkit.slot;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.slot.EquipmentSlotGroup;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitEquipmentSlot extends BasicWrapper<org.bukkit.inventory.EquipmentSlot> implements EquipmentSlot {
-    public BukkitEquipmentSlot(@NotNull org.bukkit.inventory.EquipmentSlot wrappedObject) {
+public class BukkitEquipmentSlotGroup1_20_5 extends BasicWrapper<org.bukkit.inventory.EquipmentSlotGroup> implements EquipmentSlotGroup {
+    public BukkitEquipmentSlotGroup1_20_5(@NotNull org.bukkit.inventory.EquipmentSlotGroup wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public @NotNull String platformName() {
-        return wrappedObject.name();
-    }
-
-    @Override
-    public @NotNull EquipmentSlotGroup asGroup() {
-        if (BukkitFeature.EQUIPMENT_SLOT_GROUP.isSupported()) {
-            return new BukkitEquipmentSlotGroup1_20_5(wrappedObject.getGroup());
-        } else {
-            return new BukkitEquipmentSlotGroup1_8(wrappedObject);
-        }
+        return wrappedObject.toString();
     }
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof org.bukkit.inventory.EquipmentSlot || object instanceof EquipmentSlot) {
+        if (object instanceof org.bukkit.inventory.EquipmentSlotGroup || object instanceof EquipmentSlotGroup) {
             return equals(object);
         }
-        return equals(EquipmentSlot.ofNullable(object));
+        return equals(EquipmentSlotGroup.ofNullable(object));
     }
 
     @Override
@@ -60,11 +49,6 @@ public class BukkitEquipmentSlot extends BasicWrapper<org.bukkit.inventory.Equip
 
     @Override
     public @NotNull ResourceLocation location() {
-        if ("HAND".equals(wrappedObject.name())) {
-            return ResourceLocation.of("minecraft", "mainhand");
-        } else if ("OFF_HAND".equals(wrappedObject.name())) {
-            return ResourceLocation.of("minecraft", "offhand");
-        }
-        return ResourceLocation.of(wrappedObject.name());
+        return ResourceLocation.of(wrappedObject.toString());
     }
 }

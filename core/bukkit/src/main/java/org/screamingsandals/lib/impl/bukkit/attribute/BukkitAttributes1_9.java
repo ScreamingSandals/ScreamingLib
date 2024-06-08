@@ -23,7 +23,9 @@ import org.screamingsandals.lib.attribute.AttributeModifier;
 import org.screamingsandals.lib.attribute.AttributeType;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.impl.attribute.Attributes;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.slot.EquipmentSlot;
+import org.screamingsandals.lib.slot.EquipmentSlotGroup;
 
 public class BukkitAttributes1_9 extends Attributes {
     public BukkitAttributes1_9() {
@@ -48,25 +50,46 @@ public class BukkitAttributes1_9 extends Attributes {
         itemAttributeConverter
                 .registerW2P(BukkitItemAttribute.class, holder -> {
                     org.bukkit.attribute.AttributeModifier modifier;
-                    try {
+                    if (BukkitFeature.EQUIPMENT_SLOT_GROUP.isSupported()) {
                         modifier = new org.bukkit.attribute.AttributeModifier(
                                 holder.getUuid(),
                                 holder.getName(),
                                 holder.getAmount(),
                                 org.bukkit.attribute.AttributeModifier.Operation.values()[holder.getOperation().ordinal()],
-                                holder.getSlot() != null ? holder.getSlot().as(org.bukkit.inventory.EquipmentSlot.class) : null
+                                holder.getSlot().as(org.bukkit.inventory.EquipmentSlotGroup.class)
                         );
-                    } catch (Throwable throwable) {
-                        modifier = new org.bukkit.attribute.AttributeModifier(
-                                holder.getUuid(),
-                                holder.getName(),
-                                holder.getAmount(),
-                                org.bukkit.attribute.AttributeModifier.Operation.values()[holder.getOperation().ordinal()]
-                        );
+                    } else {
+                        try {
+                            modifier = new org.bukkit.attribute.AttributeModifier(
+                                    holder.getUuid(),
+                                    holder.getName(),
+                                    holder.getAmount(),
+                                    org.bukkit.attribute.AttributeModifier.Operation.values()[holder.getOperation().ordinal()],
+                                    !holder.getSlot().is("any") ? holder.getSlot().as(org.bukkit.inventory.EquipmentSlot.class) : null
+                            );
+                        } catch (Throwable throwable) {
+                            modifier = new org.bukkit.attribute.AttributeModifier(
+                                    holder.getUuid(),
+                                    holder.getName(),
+                                    holder.getAmount(),
+                                    org.bukkit.attribute.AttributeModifier.Operation.values()[holder.getOperation().ordinal()]
+                            );
+                        }
                     }
                     return new BukkitItemAttribute(holder.getType().as(org.bukkit.attribute.Attribute.class), modifier);
                 })
                 .registerP2W(BukkitItemAttribute.class, bukkitItemAttribute -> {
+                    if (BukkitFeature.EQUIPMENT_SLOT_GROUP.isSupported()) {
+                        return new ItemAttribute(
+                                AttributeType.of(bukkitItemAttribute.getAttribute()),
+                                bukkitItemAttribute.getAttributeModifier().getUniqueId(),
+                                bukkitItemAttribute.getAttributeModifier().getName(),
+                                bukkitItemAttribute.getAttributeModifier().getAmount(),
+                                AttributeModifier.Operation.values()[bukkitItemAttribute.getAttributeModifier().getOperation().ordinal()],
+                                EquipmentSlotGroup.of(bukkitItemAttribute.getAttributeModifier().getSlotGroup())
+                        );
+                    }
+
                     try {
                         return new ItemAttribute(
                                 AttributeType.of(bukkitItemAttribute.getAttribute()),
@@ -74,7 +97,7 @@ public class BukkitAttributes1_9 extends Attributes {
                                 bukkitItemAttribute.getAttributeModifier().getName(),
                                 bukkitItemAttribute.getAttributeModifier().getAmount(),
                                 AttributeModifier.Operation.values()[bukkitItemAttribute.getAttributeModifier().getOperation().ordinal()],
-                                EquipmentSlot.ofNullable(bukkitItemAttribute.getAttributeModifier().getOperation())
+                                EquipmentSlot.ofNullable(bukkitItemAttribute.getAttributeModifier().getSlot())
                         );
                     } catch (Throwable throwable) {
                         return new ItemAttribute(
@@ -83,7 +106,7 @@ public class BukkitAttributes1_9 extends Attributes {
                                 bukkitItemAttribute.getAttributeModifier().getName(),
                                 bukkitItemAttribute.getAttributeModifier().getAmount(),
                                 AttributeModifier.Operation.values()[bukkitItemAttribute.getAttributeModifier().getOperation().ordinal()],
-                                null
+                                (EquipmentSlot) null
                         );
                     }
                 });

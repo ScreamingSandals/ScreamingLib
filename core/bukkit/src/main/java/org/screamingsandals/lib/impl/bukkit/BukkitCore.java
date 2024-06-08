@@ -198,6 +198,7 @@ import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleTypeRegistryS
 import org.screamingsandals.lib.impl.bukkit.player.BukkitPlayers;
 import org.screamingsandals.lib.impl.bukkit.player.gamemode.BukkitGameModeRegistry;
 import org.screamingsandals.lib.impl.bukkit.plugin.BukkitPlugin;
+import org.screamingsandals.lib.impl.bukkit.slot.BukkitEquipmentSlotGroupRegistryServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.slot.BukkitEquipmentSlotRegistry;
 import org.screamingsandals.lib.impl.bukkit.spectator.SpigotBackend;
 import org.screamingsandals.lib.impl.bukkit.tasker.BukkitTaskerServiceFactory;
@@ -391,7 +392,8 @@ import java.util.function.Function;
             BukkitBlockRegistryServiceFactory.class,
             BukkitParticleTypeRegistryServiceFactory.class,
             BukkitProfessionRegistryServiceFactory.class,
-            BukkitVillagerTypeRegistryServiceFactory.class
+            BukkitVillagerTypeRegistryServiceFactory.class,
+            BukkitEquipmentSlotGroupRegistryServiceFactory.class
     }
 )
 @AccessPluginClasses({"ViaVersion", "ProtocolSupport"})

@@ -19,31 +19,37 @@ package org.screamingsandals.lib.impl.slot;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.slot.EquipmentSlot;
+import org.screamingsandals.lib.impl.utils.registry.SimpleRegistry;
+import org.screamingsandals.lib.slot.EquipmentSlotGroup;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
-import org.screamingsandals.lib.impl.utils.registry.SimpleRegistry;
 
 @ProvidedService
 @ApiStatus.Internal
-public abstract class EquipmentSlotRegistry extends SimpleRegistry<EquipmentSlot> {
-    private static @Nullable EquipmentSlotRegistry registry;
+public abstract class EquipmentSlotGroupRegistry extends SimpleRegistry<EquipmentSlotGroup> {
+    private static @Nullable EquipmentSlotGroupRegistry registry;
 
-    public EquipmentSlotRegistry() {
-        super(EquipmentSlot.class);
-        Preconditions.checkArgument(registry == null, "EquipmentSlotRegistry is already initialized!");
+    public EquipmentSlotGroupRegistry() {
+        super(EquipmentSlotGroup.class);
+        Preconditions.checkArgument(registry == null, "EquipmentSlotGroupRegistry is already initialized!");
         registry = this;
     }
 
-    public static @NotNull EquipmentSlotRegistry getInstance() {
-        return Preconditions.checkNotNull(registry, "EquipmentSlotRegistry is not initialized yet!");
+    public static @NotNull EquipmentSlotGroupRegistry getInstance() {
+        return Preconditions.checkNotNull(registry, "EquipmentSlotGroupRegistry is not initialized yet!");
     }
 
     @OnPostConstruct
-    public void legacyMapping() {
+    public void legacyMapping() { // TODO: from where are these "Vanilla" names??? I forgor
         // Vanilla <-> Bukkit
-        mapAlias("MAINHAND", "HAND");
-        mapAlias("OFFHAND", "OFF_HAND");
+        mapAlias("MAIN_HAND", "HAND");
+        mapAlias("MAIN_HAND", "MAINHAND");
+        mapAlias("OFF_HAND", "OFF_HAND");
+        mapAlias("OFF_HAND", "OFFHAND");
+        mapAlias("BOOTS", "FEET");
+        mapAlias("LEGGINGS", "LEGS");
+        mapAlias("CHESTPLATE", "CHEST");
+        mapAlias("HELMET", "HEAD");
     }
 }

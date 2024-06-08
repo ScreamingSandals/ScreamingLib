@@ -18,17 +18,20 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.attribute.AttributeModifier;
-import org.screamingsandals.lib.attribute.AttributeType;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 public class AttributeModifierSerializer implements TypeSerializer<AttributeModifier> {
+    private static final @NotNull String ID_KEY = "id";
     private static final @NotNull String UUID_KEY = "uuid";
     private static final @NotNull String NAME_KEY = "name";
     private static final @NotNull String AMOUNT_KEY = "amount";
@@ -39,16 +42,25 @@ public class AttributeModifierSerializer implements TypeSerializer<AttributeModi
     @Override
     public @NotNull AttributeModifier deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
+            var id = node.node(ID_KEY);
             var uuid = node.node(UUID_KEY);
             var name = node.node(NAME_KEY);
             var amount = node.node(AMOUNT_KEY);
             var operation = node.node(OPERATION_KEY);
 
+            if (!id.empty()) {
+                return new AttributeModifier(
+                        ResourceLocation.of(id.getString("")),
+                        amount.getDouble(),
+                        read(operation.getString(""), AttributeModifier.Operation.ADD_VALUE)
+                );
+            }
+
             return new AttributeModifier(
                     uuid.get(UUID.class, (Supplier<UUID>) UUID::randomUUID),
                     name.getString(""),
                     amount.getDouble(),
-                    operation.get(AttributeModifier.Operation.class, AttributeModifier.Operation.ADDITION)
+                    read(operation.getString(""), AttributeModifier.Operation.ADD_VALUE)
             );
         } catch (Throwable t) {
             throw new SerializationException(t);
@@ -62,9 +74,29 @@ public class AttributeModifierSerializer implements TypeSerializer<AttributeModi
             return;
         }
 
-        node.node(UUID_KEY).set(obj.getUuid());
-        node.node(NAME_KEY).set(obj.getName());
+        if (Server.isVersion(1, 21)) {
+            node.node(ID_KEY).set(obj.getLocation().toString());
+        } else {
+            node.node(UUID_KEY).set(obj.getUuid());
+            node.node(NAME_KEY).set(obj.getName());
+        }
         node.node(AMOUNT_KEY).set(obj.getAmount());
         node.node(OPERATION_KEY).set(obj.getOperation());
+    }
+
+    public static AttributeModifier.@NotNull Operation read(@NotNull String operation, AttributeModifier.@NotNull Operation defaultVal) {
+        switch (operation.toLowerCase(Locale.ROOT)) {
+            case "addition":
+            case "add_value":
+                return AttributeModifier.Operation.ADD_VALUE;
+            case "multiply_base":
+            case "add_multiplied_base":
+                return AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
+            case "multiply_total":
+            case "add_multiplied_total":
+                return AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
+            default:
+                return defaultVal;
+        }
     }
 }

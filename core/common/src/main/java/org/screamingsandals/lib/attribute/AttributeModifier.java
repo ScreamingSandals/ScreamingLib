@@ -17,18 +17,50 @@
 package org.screamingsandals.lib.attribute;
 
 import lombok.Data;
+import lombok.Getter;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.impl.attribute.AttributeModifierIds;
 import org.screamingsandals.lib.impl.attribute.Attributes;
+import org.screamingsandals.lib.utils.ResourceLocation;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.util.UUID;
 
 @Data
 public class AttributeModifier implements Wrapper {
-    private final @NotNull UUID uuid;
-    private final @NotNull String name;
+    private final @NotNull ResourceLocation location;
+    @Getter(onMethod_ = {@ApiStatus.Obsolete, @LimitedVersionSupport("<= 1.20.6; most likely contains null on 1.21+")})
+    private final @Nullable UUID uuid;
+    @Getter(onMethod_ = {@ApiStatus.Obsolete, @LimitedVersionSupport("<= 1.20.6; most likely contains null on 1.21+")})
+    private final @Nullable String name;
     private final double amount;
     private final @NotNull Operation operation;
+
+    public AttributeModifier(@NotNull ResourceLocation location, double amount, @NotNull Operation operation) {
+        this.location = location;
+        if (!Server.isVersion(1, 21)) {
+            var downgrade = AttributeModifierIds.downgradeResourceLocation(location);
+            this.uuid = downgrade.first();
+            this.name = downgrade.second();
+        } else {
+            this.uuid = null;
+            this.name = null;
+        }
+        this.amount = amount;
+        this.operation = operation;
+    }
+
+    public AttributeModifier(@NotNull UUID uuid, @NotNull String name, double amount, @NotNull Operation operation) {
+        this.location = AttributeModifierIds.getResourceLocation(uuid, name);
+        this.uuid = uuid;
+        this.name = name;
+        this.amount = amount;
+        this.operation = operation;
+    }
 
     /**
      * {@inheritDoc}
@@ -39,9 +71,25 @@ public class AttributeModifier implements Wrapper {
     }
 
     public enum Operation {
-        ADDITION,
-        MULTIPLY_BASE,
-        MULTIPLY_TOTAL;
+        ADD_VALUE,
+        ADD_MULTIPLIED_BASE,
+        ADD_MULTIPLIED_TOTAL;
+
+        /**
+         * @deprecated Use {@link #ADD_VALUE}
+         */
+        @Deprecated(forRemoval = true)
+        public static final @NotNull Operation ADDITION = ADD_VALUE;
+        /**
+         * @deprecated Use {@link #ADD_MULTIPLIED_BASE}
+         */
+        @Deprecated(forRemoval = true)
+        public static final @NotNull Operation MULTIPLY_BASE = ADD_MULTIPLIED_BASE;
+        /**
+         * @deprecated Use {@link #ADD_MULTIPLIED_TOTAL}
+         */
+        @Deprecated(forRemoval = true)
+        public static final @NotNull Operation MULTIPLY_TOTAL = ADD_MULTIPLIED_TOTAL;
 
         public static @NotNull Operation byOrdinal(int ordinal) {
             return values()[ordinal];

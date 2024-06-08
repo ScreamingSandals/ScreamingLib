@@ -28,6 +28,8 @@ public interface EquipmentSlot extends RegistryItem, RawValueHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();
 
+    @NotNull EquipmentSlotGroup asGroup();
+
     @Override
     boolean is(@MinecraftType(MinecraftType.Type.EQUIPMENT_SLOT) @Nullable Object object);
 
