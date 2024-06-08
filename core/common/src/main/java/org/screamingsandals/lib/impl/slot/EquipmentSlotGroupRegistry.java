@@ -23,7 +23,6 @@ import org.screamingsandals.lib.impl.utils.registry.SimpleRegistry;
 import org.screamingsandals.lib.slot.EquipmentSlotGroup;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ProvidedService;
-import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 
 @ProvidedService
 @ApiStatus.Internal
@@ -38,18 +37,5 @@ public abstract class EquipmentSlotGroupRegistry extends SimpleRegistry<Equipmen
 
     public static @NotNull EquipmentSlotGroupRegistry getInstance() {
         return Preconditions.checkNotNull(registry, "EquipmentSlotGroupRegistry is not initialized yet!");
-    }
-
-    @OnPostConstruct
-    public void legacyMapping() { // TODO: from where are these "Vanilla" names??? I forgor
-        // Vanilla <-> Bukkit
-        mapAlias("MAIN_HAND", "HAND");
-        mapAlias("MAIN_HAND", "MAINHAND");
-        mapAlias("OFF_HAND", "OFF_HAND");
-        mapAlias("OFF_HAND", "OFFHAND");
-        mapAlias("BOOTS", "FEET");
-        mapAlias("LEGGINGS", "LEGS");
-        mapAlias("CHESTPLATE", "CHEST");
-        mapAlias("HELMET", "HEAD");
     }
 }
