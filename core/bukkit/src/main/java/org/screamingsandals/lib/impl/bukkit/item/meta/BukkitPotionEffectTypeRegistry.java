@@ -44,7 +44,7 @@ public class BukkitPotionEffectTypeRegistry extends PotionEffectTypeRegistry {
         if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY_SPIGOT.isSupported()) {
             var item = BukkitRegistry.tryObtainItem(Registry.EFFECT, BukkitPotionEffectType::new, location);
             if (item != null) {
-                return null;
+                return item;
             }
 
             // try bukkit name (deprecated, TODO: prepare shop/config migration scripts and remove)
@@ -67,7 +67,7 @@ public class BukkitPotionEffectTypeRegistry extends PotionEffectTypeRegistry {
         } else if (BukkitFeature.POTION_EFFECT_TYPE_REGISTRY.isSupported()) {
             var item = BukkitRegistry.tryObtainItem(Registry.POTION_EFFECT_TYPE, BukkitPotionEffectType::new, location);
             if (item != null) {
-                return null;
+                return item;
             }
 
             // try bukkit name (deprecated, TODO: prepare shop/config migration scripts and remove)
