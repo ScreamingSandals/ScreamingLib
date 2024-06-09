@@ -14,3 +14,11 @@ dependencies {
     compileOnly libs.paper
     support_1_20_1CompileOnly libs.paper.support.one.twenty.one
 }
+
+if (tasks.findByName("sourceJar")) {
+    tasks.named("sourceJar") {
+        sourceSets.matching { it.name != 'test' }.each {
+            from it.allJava
+        }
+    }
+}

@@ -75,3 +75,11 @@ dependencies {
     compileOnly libs.viaversion
     compileOnly libs.protocolsupport
 }
+
+if (tasks.findByName("sourceJar")) {
+    tasks.named("sourceJar") {
+        sourceSets.matching { it.name != 'test' }.each {
+            from it.allJava
+        }
+    }
+}
