@@ -78,7 +78,7 @@ public class AttributeModifierIds {
         UUID_TO_RESOURCE_LOCATION.put(UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF"), ResourceLocation.of("minecraft", "base_attack_damage"));
         UUID_TO_RESOURCE_LOCATION.put(UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3"), ResourceLocation.of("minecraft", "base_attack_speed"));
 
-        RESOURCE_LOCATION_TO_UUID = UUID_TO_RESOURCE_LOCATION.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+        RESOURCE_LOCATION_TO_UUID = UUID_TO_RESOURCE_LOCATION.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey, (a, b) -> a));
 
         NAME_TO_RESOURCE_LOCATION.put("Random spawn bonus", ResourceLocation.of("minecraft", "random_spawn_bonus"));
         NAME_TO_RESOURCE_LOCATION.put("Random zombie-spawn bonus", ResourceLocation.of("minecraft", "zombie_random_spawn_bonus"));
@@ -86,7 +86,7 @@ public class AttributeModifierIds {
         NAME_TO_RESOURCE_LOCATION.put("Zombie reinforcement callee charge", ResourceLocation.of("minecraft", "reinforcement_callee_charge"));
         NAME_TO_RESOURCE_LOCATION.put("Zombie reinforcement caller charge", ResourceLocation.of("minecraft", "reinforcement_caller_charge"));
 
-        RESOURCE_LOCATION_TO_NAME = NAME_TO_RESOURCE_LOCATION.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+        RESOURCE_LOCATION_TO_NAME = NAME_TO_RESOURCE_LOCATION.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey, (a, b) -> a));
     }
 
     public static @NotNull ResourceLocation getResourceLocation(@NotNull UUID uuid, @Nullable String name) {

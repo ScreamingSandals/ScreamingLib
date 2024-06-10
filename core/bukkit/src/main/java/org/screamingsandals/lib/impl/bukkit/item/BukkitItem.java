@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.impl.bukkit.item;
 
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.Repairable;
@@ -304,7 +305,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
         if (ItemStackAccessor.METHOD_SAVE_1.get() != null) {
             // 1.20.5+
             final var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
-                    Reflect.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+                    Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
 
             if (compound == null) {
                 return CompoundTag.EMPTY;
@@ -342,7 +343,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
         if (ItemStackAccessor.METHOD_SAVE_1.get() != null) {
             // 1.20.5+
             compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
-                    Reflect.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+                    Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
         } else {
             // 1.8.8-1.20.4
             compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE.get(), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));

@@ -30,6 +30,7 @@ import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerPlayerAcce
 import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerCommonPacketListenerImplAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerGamePacketListenerImplAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemStackAccessor;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
@@ -105,7 +106,7 @@ public class ClassStorage {
 	}
 
 	public static ItemStack nmsAsStack(Object nmsStack) {
-		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftMirror", ItemStack.class).invokeStatic(nmsStack);
+		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftMirror", ItemStackAccessor.TYPE.get()).invokeStatic(nmsStack);
 	}
 
 	public static int getEntityTypeId(String key, Class<?> clazz) {

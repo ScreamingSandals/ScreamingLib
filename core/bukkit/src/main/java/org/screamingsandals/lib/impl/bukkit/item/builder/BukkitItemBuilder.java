@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.impl.bukkit.item.builder;
 
 import lombok.AllArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -55,7 +56,6 @@ import org.screamingsandals.lib.impl.nms.accessors.nbt.ListTagAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemStackAccessor;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.item.ItemTagKeys;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.builder.ItemStackBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
@@ -510,7 +510,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         }
         if (ItemStackAccessor.METHOD_PARSE.get() != null) {
             // 1.20.5+
-            if (!item.getType().isAir()) {
+            if (item.getType().isAir()) {
                 throw new UnsupportedOperationException("Cannot apply tag to AIR.");
             }
 
@@ -519,7 +519,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                     .with("count", item.getAmount())
                     .with("components", tag);
 
-            var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), NBTVanillaSerializer.serialize(compound));
+            var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), NBTVanillaSerializer.serialize(compound));
             if (optional instanceof Optional) {
                 this.item = ClassStorage.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
                         new IllegalArgumentException("The given tag is not applicable to the item of type " + item.getType().getKey() + ": " + SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build().serialize(tag)))
@@ -549,7 +549,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             var nmsStack = ClassStorage.stackAsNMS(item);
 
             var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
-                    Reflect.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+                    Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
 
             if (compound == null) {
                 return this; // what now?
@@ -563,7 +563,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                 Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_PUT.get(), "components", serialized);
             }
 
-            var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), compound);
+            var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), compound);
             if (optional instanceof Optional) {
                 this.item = ClassStorage.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
                         new IllegalArgumentException("The given tag is not applicable to the item of type " + item.getType().getKey() + ": " + SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build().serialize(tag)))
@@ -637,6 +637,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             if (meta instanceof PotionMeta) {
                 if (BukkitFeature.POTION_REGISTRY.isSupported()) {
                     ((PotionMeta) meta).setBasePotionType(potionData.as(PotionType.class));
+                    item.setItemMeta(meta);
                 } else if (BukkitFeature.POTION_API.isSupported()) {
                     PotionDataCompat.setPotionData(((PotionMeta) meta), potionData);
                     item.setItemMeta(meta);
