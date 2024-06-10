@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.nms.accessors.core.IRegistryAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.core.MappedRegistryAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.core.RegistryAccessAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.core.registries.BuiltInRegistriesAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.chat.Component$SerializerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.PacketAccessor;
@@ -91,7 +92,7 @@ public class ClassStorage {
 		if (Component$SerializerAccessor.METHOD_FROM_JSON.get() != null) {
 			return Reflect.fastInvoke(Component$SerializerAccessor.METHOD_FROM_JSON.get(), (Object) javaJson);
 		} else {
-			return Reflect.fastInvoke(Component$SerializerAccessor.METHOD_FROM_JSON_LENIENT.get(), (Object) javaJson);
+			return Reflect.fastInvoke(Component$SerializerAccessor.METHOD_FROM_JSON_LENIENT.get(), javaJson, RegistryAccessAccessor.CONST_EMPTY.get());
 		}
 	}
 
