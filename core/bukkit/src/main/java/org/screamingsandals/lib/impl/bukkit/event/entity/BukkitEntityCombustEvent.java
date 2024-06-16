@@ -24,6 +24,8 @@ import lombok.experimental.Accessors;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.compat.v1_20_6.EntityCombustEventCompat;
 import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.Entity;
 import org.screamingsandals.lib.entity.Entities;
@@ -53,12 +55,19 @@ public class BukkitEntityCombustEvent implements EntityCombustEvent, BukkitCance
     }
 
     @Override
-    public int duration() {
-        return event.getDuration();
+    public float duration() {
+        if (BukkitFeature.ENTITY_COMBUST_EVENT_DURATION_FLOAT.isSupported()) {
+            return event.getDuration();
+        } else {
+            return EntityCombustEventCompat.getDuration(event);
+        }
     }
 
     @Override
-    public void duration(int duration) {
-        event.setDuration(duration);
-    }
+    public void duration(float duration) {
+        if (BukkitFeature.ENTITY_COMBUST_EVENT_DURATION_FLOAT.isSupported()) {
+            event.setDuration(duration);
+        } else {
+            EntityCombustEventCompat.setDuration(event, (int) duration);
+        }}
 }

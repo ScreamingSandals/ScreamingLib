@@ -84,6 +84,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature BLOCK_RECEIVE_GAME_EVENT = PlatformFeature.of(() -> Reflect.has("org.bukkit.event.block.BlockReceiveGameEvent"));
     public static final @NotNull PlatformFeature TIME_SKIP_EVENT = PlatformFeature.of(() -> Reflect.has("org.bukkit.event.world.TimeSkipEvent"));
     public static final @NotNull PlatformFeature PROJECTILE_LAUNCH_EVENT_EXTENDS_ENTITY_SPAWN_EVENT = PlatformFeature.of(() -> org.bukkit.event.entity.EntitySpawnEvent.class.isAssignableFrom(org.bukkit.event.entity.ProjectileLaunchEvent.class));
+    public static final @NotNull PlatformFeature ENTITY_COMBUST_EVENT_DURATION_FLOAT = PlatformFeature.of(() -> Reflect.hasMethod(org.bukkit.event.entity.EntityCombustEvent.class, "setDuration", float.class));
 
     // Attribute API
     public static final @NotNull PlatformFeature ATTRIBUTES_API = PlatformFeature.of(() -> Version.isVersion(1, 9));
@@ -91,7 +92,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ATTRIBUTE_TYPE_KEYED = PlatformFeature.of(() -> Version.isVersion(1, 16));
     public static final @NotNull PlatformFeature ATTRIBUTE_ARMOR_TOUGHNESS_VANILLA = PlatformFeature.of(() -> Version.isVersion(1, 9, 1));
     public static final @NotNull PlatformFeature ATTRIBUTE_ARMOR_TOUGHNESS = ATTRIBUTES_API.and(() -> Reflect.getField(Attribute.class, "GENERIC_ARMOR_TOUGHNESS") != null);
-    public static final @NotNull PlatformFeature ATTRIBUTE_MODIFIER_KEYED = ATTRIBUTES_API.and(() -> Reflect.getMethod(AttributeModifier.class, "getKey") != null);
+    public static final @NotNull PlatformFeature ATTRIBUTE_MODIFIER_KEYED = ATTRIBUTES_API.and(() -> Reflect.hasMethod(AttributeModifier.class, "getKey"));
 
     // Block API
     public static final @NotNull PlatformFeature COMMAND_BLOCK_VERBOSE_BLOCK_STATE = PlatformFeature.of(() -> Version.isVersion(1, 9));

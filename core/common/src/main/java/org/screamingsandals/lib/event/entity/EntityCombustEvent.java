@@ -25,7 +25,7 @@ public interface EntityCombustEvent extends CancellableEvent, PlatformEvent {
 
     @NotNull Entity entity();
 
-    int duration();
+    float duration();
 
-    void duration(int duration);
+    void duration(float duration);
 }
