@@ -125,7 +125,7 @@ public class PacketIdMapping1_20_5 {
 
         if (map == null) {
             // all mapped packets are just from play protocol, we don't rly need to touch handshaking, status, login or configuration protocol
-            var playProtocol = GameProtocolsAccessor.CONST_CLIENTBOUND.get();
+            var playProtocol = GameProtocolsAccessor.CONST_CLIENTBOUND_TEMPLATE.get();
 
             var protocolInfo = Reflect.fastInvoke(playProtocol, ProtocolInfo$UnboundAccessor.METHOD_BIND.get(), (Function<?, ?>) (input -> null));
 

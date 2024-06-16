@@ -1,4 +1,5 @@
 def supportVersions = [
+    '1_20_6': libs.paper.support.one.twenty.six,
     '1_20_1': libs.paper.support.one.twenty.one,
     '1_12_2': libs.paper.support.one.twelve.two,
     '1_8_8': libs.paper.support.one.eight.eight,

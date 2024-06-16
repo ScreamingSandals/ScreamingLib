@@ -1,6 +1,7 @@
 [versions]
 # platforms
-paper = "1.20.6-R0.1-SNAPSHOT"
+paper = "1.21-R0.1-SNAPSHOT"
+paper-support_1_20_6 = "1.20.6-R0.1-SNAPSHOT"
 paper-support_1_20_1 = "1.20.1-R0.1-SNAPSHOT"
 paper-support_1_12_2 = "1.12.2-R0.1-SNAPSHOT"
 paper-support_1_8_8 = "1.8.8-R0.1-SNAPSHOT"
@@ -46,7 +47,7 @@ junit-platform = "1.10.2"
 # plugins
 screaming-plugin-builder = "1.0.86"
 takenaka = "1.2.0-SNAPSHOT"
-mappings = "1.8.8+1.20.6"
+mappings = "1.8.8+1.21"
 
 [libraries]
 paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
@@ -69,6 +70,7 @@ protocolsupport = { group = "com.github.ProtocolSupport", name = "ProtocolSuppor
 
 # platforms
 paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
+paper-support_one_twenty_six = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-support_1_20_6" }
 paper-support_one_twenty_one = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-support_1_20_1" }
 paper-support_one_twelve_two = { group = "com.destroystokyo.paper", name = "paper-api", version.ref = "paper-support_1_12_2" }
 paper-support_one_eight_eight = { group = "org.github.paperspigot", name = "paperspigot-api", version.ref = "paper-support_1_8_8" }

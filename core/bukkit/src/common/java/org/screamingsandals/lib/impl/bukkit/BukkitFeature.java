@@ -22,6 +22,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -90,6 +91,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ATTRIBUTE_TYPE_KEYED = PlatformFeature.of(() -> Version.isVersion(1, 16));
     public static final @NotNull PlatformFeature ATTRIBUTE_ARMOR_TOUGHNESS_VANILLA = PlatformFeature.of(() -> Version.isVersion(1, 9, 1));
     public static final @NotNull PlatformFeature ATTRIBUTE_ARMOR_TOUGHNESS = ATTRIBUTES_API.and(() -> Reflect.getField(Attribute.class, "GENERIC_ARMOR_TOUGHNESS") != null);
+    public static final @NotNull PlatformFeature ATTRIBUTE_MODIFIER_KEYED = ATTRIBUTES_API.and(() -> Reflect.getMethod(AttributeModifier.class, "getKey") != null);
 
     // Block API
     public static final @NotNull PlatformFeature COMMAND_BLOCK_VERBOSE_BLOCK_STATE = PlatformFeature.of(() -> Version.isVersion(1, 9));

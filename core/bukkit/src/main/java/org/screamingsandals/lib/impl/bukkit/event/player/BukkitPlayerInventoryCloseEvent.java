@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.bukkit.compat.v1_20_6.InventoryViewCompat;
 import org.screamingsandals.lib.impl.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
@@ -66,7 +67,7 @@ public class BukkitPlayerInventoryCloseEvent implements PlayerInventoryCloseEven
     @Override
     public @NotNull Container bottomInventory() {
         if (bottomInventory == null) {
-            bottomInventory = Objects.requireNonNull(ContainerFactory.wrapContainer(event.getView().getBottomInventory()));
+            bottomInventory = Objects.requireNonNull(ContainerFactory.wrapContainer(InventoryViewCompat.getBottomInventory(event.getView())));
         }
         return bottomInventory;
     }
