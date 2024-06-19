@@ -35,6 +35,7 @@ import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
 import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftItemStackAccessor;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftMetaItemAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.vanilla.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.CompoundTagAccessor;
@@ -134,7 +135,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
                 // Pre 1.13.1
                 Object tag;
                 if (!CraftItemStackAccessor.TYPE.get().isInstance(wrappedObject)) {
-                    var unhandled = (Map<String, Object>) Reflect.getField(meta, "unhandledTags");
+                    var unhandled = (Map<String, Object>) Reflect.getField(meta, CraftMetaItemAccessor.FIELD_UNHANDLED_TAGS.get());
                     if (!unhandled.containsKey("AttributeModifiers")) {
                         return List.of();
                     }
@@ -200,7 +201,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
             } else if (BukkitFeature.ITEM_META_CUSTOM_TAG.isSupported()) { // 1.13.2
                 return new BukkitItemDataCustomTags(meta.getCustomTagContainer());
             } else {
-                var unhandled = (Map<String, Object>) Reflect.getField(meta, "unhandledTags");
+                var unhandled = (Map<String, Object>) Reflect.getField(meta, CraftMetaItemAccessor.FIELD_UNHANDLED_TAGS.get());
                 if (unhandled.containsKey("PublicBukkitValues")) {
                     // TODO: check if this rly copies the tags and not just reference
                     var compound = unhandled.get("PublicBukkitValues");

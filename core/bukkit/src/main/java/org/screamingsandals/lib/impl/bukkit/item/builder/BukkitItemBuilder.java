@@ -41,6 +41,7 @@ import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitItemAttribute;
+import org.screamingsandals.lib.impl.bukkit.compat.v1_12_2.ItemMetaUtils;
 import org.screamingsandals.lib.impl.bukkit.compat.v1_20_1.PotionDataCompat;
 import org.screamingsandals.lib.impl.bukkit.compat.v1_8_8.PotionCompat;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
@@ -48,7 +49,10 @@ import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftCustomItemTagContainerAccessor;
 import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftItemStackAccessor;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftMetaItemAccessor;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftPersistentDataContainerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.vanilla.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.CompoundTagAccessor;
@@ -306,7 +310,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                 dataBuilder.accept(new BukkitItemDataCustomTags(meta.getCustomTagContainer()));
                 item.setItemMeta(meta);
             } else {
-                var unhandled = (Map<String,Object>) Reflect.getField(meta, "unhandledTags");
+                var unhandled = (Map<String,Object>) Reflect.getField(meta, CraftMetaItemAccessor.FIELD_UNHANDLED_TAGS.get());
                 Object compound;
                 if (unhandled.containsKey("PublicBukkitValues")) {
                     compound = unhandled.get("PublicBukkitValues");
@@ -342,20 +346,20 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             if (BukkitFeature.ITEM_META_PDC.isSupported()) { // 1.14+
                 if (data instanceof BukkitItemDataPersistentContainer && !data.isEmpty()) {
                     var origDataContainer = ((BukkitItemDataPersistentContainer) data).getDataContainer();
-                    Reflect.getMethod(meta.getPersistentDataContainer(), "putAll", Map.class)
-                            .invoke(Reflect.fastInvoke(origDataContainer, "getRaw"));
+                    Reflect.fastInvoke(meta.getPersistentDataContainer(), CraftPersistentDataContainerAccessor.METHOD_PUT_ALL.get(),
+                            Reflect.fastInvoke(origDataContainer, CraftPersistentDataContainerAccessor.METHOD_GET_RAW.get()));
                     item.setItemMeta(meta);
                 }
             } else if (BukkitFeature.ITEM_META_CUSTOM_TAG.isSupported()) { // 1.13.2
                 if (data instanceof BukkitItemDataCustomTags && !data.isEmpty()) {
                     var origDataContainer = ((BukkitItemDataCustomTags) data).getDataContainer();
-                    Reflect.getMethod(meta.getCustomTagContainer(), "putAll", Map.class)
-                            .invoke(Reflect.fastInvoke(origDataContainer, "getRaw"));
+                    Reflect.fastInvoke(meta.getCustomTagContainer(), CraftCustomItemTagContainerAccessor.METHOD_PUT_ALL.get(),
+                            Reflect.fastInvoke(origDataContainer, CraftCustomItemTagContainerAccessor.METHOD_GET_RAW.get()));
                     item.setItemMeta(meta);
                 }
             } else {
                 if (data instanceof CraftBukkitItemData && !data.isEmpty()) {
-                    var unhandled = (Map<String,Object>) Reflect.getField(meta, "unhandledTags");
+                    var unhandled = (Map<String,Object>) Reflect.getField(meta, CraftMetaItemAccessor.FIELD_UNHANDLED_TAGS.get());
                     Object compound;
                     if (unhandled.containsKey("PublicBukkitValues")) {
                         compound = unhandled.get("PublicBukkitValues");
@@ -477,11 +481,8 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                 meta.setUnbreakable(unbreakable);
                 item.setItemMeta(meta);
             } else {
-                var spigot = Reflect.fastInvoke(meta, "spigot");
-                if (spigot != null) {
-                    Reflect.getMethod(spigot, "setUnbreakable", boolean.class).invoke(unbreakable);
-                    item.setItemMeta(meta);
-                }
+                ItemMetaUtils.spigotSetUnbreakable(meta, unbreakable);
+                item.setItemMeta(meta);
             }
         }
         return this;

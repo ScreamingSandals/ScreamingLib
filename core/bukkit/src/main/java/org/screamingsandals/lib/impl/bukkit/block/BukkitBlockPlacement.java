@@ -55,7 +55,7 @@ public final class BukkitBlockPlacement extends BasicWrapper<org.bukkit.block.Bl
                         var material = type.as(Material.class);
                         bukkitBlock.setType(material, !ignorePhysics);
                         if (type instanceof BukkitBlock1_8) {
-                            Reflect.getMethod(bukkitBlock, "setData", byte.class, boolean.class).invoke(((BukkitBlock1_8) type).legacyData(), !ignorePhysics);
+                            BlockUtils1_8.setBlockData(bukkitBlock, ((BukkitBlock1_8) type).legacyData(), !ignorePhysics);
                             BlockUtils1_8.finishSettingBlock(bukkitBlock.getState(), (BukkitBlock1_8) type, true);
                         }
                     } else {

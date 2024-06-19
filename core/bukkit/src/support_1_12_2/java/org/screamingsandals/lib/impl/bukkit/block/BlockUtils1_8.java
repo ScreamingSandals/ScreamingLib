@@ -22,12 +22,13 @@ import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.block.Bed;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.FlowerPot;
 import org.bukkit.block.Skull;
-import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftMagicNumbersAccessor;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftWorldAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.VVV.TileEntityFlowerPotAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.level.block.entity.BlockEntityAccessor;
@@ -37,6 +38,11 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 @UtilityClass
 @LimitedVersionSupport("<= 1.12.2")
 public class BlockUtils1_8 {
+    @SuppressWarnings("deprecation")
+    public void setBlockData(@NotNull org.bukkit.block.Block block, byte data, boolean apply) {
+        block.setData(data, apply);
+    }
+
     public @NotNull Block getBlock(@NotNull BlockState state) {
         int tileEntityData = 0;
         if (BukkitFeature.COLORED_BEDS.isSupported()) {
@@ -49,13 +55,12 @@ public class BlockUtils1_8 {
         }
         if (state.getType() == Material.FLOWER_POT) {
             if (BukkitFeature.FLOWER_POT_BLOCK_STATE.isSupported()) {
-                var materialData = (MaterialData) Reflect.fastInvoke(state, "getContents");
+                var materialData = ((FlowerPot) state).getContents();
                 if (materialData != null) {
                     tileEntityData = (materialData.getItemType().getId() << 4) | materialData.getData();
                 }
             } else {
-                var tile = Reflect.getMethod(state.getWorld(), "getTileEntityAt", int.class, int.class, int.class)
-                        .invoke(state.getX(), state.getY(), state.getZ());
+                var tile = Reflect.fastInvoke(state.getWorld(), CraftWorldAccessor.METHOD_GET_TILE_ENTITY_AT.get(), state.getX(), state.getY(), state.getZ());
                 if (tile != null) {
                     var id = (Integer) Reflect.fastInvoke(ItemAccessor.METHOD_GET_ID.get(), Reflect.fastInvoke(tile, TileEntityFlowerPotAccessor.METHOD_GET_ITEM.get()));
                     if (id != null) {
@@ -68,6 +73,7 @@ public class BlockUtils1_8 {
         return new BukkitBlock1_8(state.getData(), tileEntityData);
     }
 
+    @SuppressWarnings("deprecation")
     public void finishSettingBlock(@NotNull BlockState state, @NotNull BukkitBlock1_8 type, boolean updateState) {
         int tileEntityVariant = type.tileEntityVariant();
         if (tileEntityVariant != 0) {
@@ -84,16 +90,15 @@ public class BlockUtils1_8 {
             } else if (state.getType() == Material.FLOWER_POT) {
                 int id = tileEntityVariant >> 4;
                 int data = tileEntityVariant & 0xF;
-                var flowerPotMaterial = (Material) Reflect.getMethod(Material.class, "getMaterial", int.class).invokeStatic(id);
+                var flowerPotMaterial = Material.getMaterial(id);
                 if (flowerPotMaterial != null) {
                     if (BukkitFeature.FLOWER_POT_BLOCK_STATE.isSupported()) {
-                        Reflect.getMethod(state, "setContents", MaterialData.class).invoke(flowerPotMaterial.getNewData((byte) data));
+                        ((FlowerPot) state).setContents(flowerPotMaterial.getNewData((byte) data));
                         if (updateState) {
                             state.update(true, false);
                         }
                     } else {
-                        var tile = Reflect.getMethod(state.getWorld(), "getTileEntityAt", int.class, int.class, int.class)
-                                .invoke(state.getX(), state.getY(), state.getZ());
+                        var tile = Reflect.fastInvoke(state.getWorld(), CraftWorldAccessor.METHOD_GET_TILE_ENTITY_AT.get(), state.getX(), state.getY(), state.getZ());
                         if (tile != null) {
                             Reflect.fastInvoke(tile, TileEntityFlowerPotAccessor.METHOD_FUNC_145964_A.get(), Reflect.fastInvoke(CraftMagicNumbersAccessor.METHOD_GET_ITEM.get(), flowerPotMaterial), data);
                             if (updateState) {

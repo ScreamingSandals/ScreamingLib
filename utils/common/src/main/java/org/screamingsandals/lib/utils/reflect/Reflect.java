@@ -24,7 +24,6 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @UtilityClass
 public class Reflect {
@@ -134,15 +133,6 @@ public class Reflect {
     public static InstanceMethod getMethod(Object instance, String names, Class<?>...params) {
         var method = getMethod(retrieveClasses(instance), names.split(","), params);
         return new InstanceMethod(instance, method.getMethod());
-    }
-
-    public static List<InstanceMethod> getMethodsCalled(Object instance, String names, int parametersCount) {
-        var namesS = Arrays.asList(names.split(","));
-        var classes = retrieveClasses(instance);
-        return classes.stream().flatMap(aClass -> Arrays.stream(aClass.getMethods()))
-                .filter(method -> namesS.contains(method.getName()) && method.getParameterCount() == parametersCount)
-                .map(method -> new InstanceMethod(instance, method))
-                .collect(Collectors.toList());
     }
 
     public static InstanceMethod getMethod(Object instance, String[] names, Class<?>...params) {
@@ -341,25 +331,6 @@ public class Reflect {
             field.set(instance, value);
             return field.get(instance);
         } catch (Throwable ignored) {}
-        return null;
-    }
-
-    public static Object findEnumConstant(Class<?> enumClass, String constantNames) {
-        return findEnumConstant(enumClass, constantNames.split(","));
-    }
-
-    public static Object findEnumConstant(Class<?> enumClass, String[] constantNames) {
-        var enums = enumClass.getEnumConstants();
-        if (enums != null) {
-            for (var enumeration : enums) {
-                var name = getMethod(enumeration, "name").invoke();
-                for (var constant : constantNames) {
-                    if (constant.equals(name)) {
-                        return enumeration;
-                    }
-                }
-            }
-        }
         return null;
     }
 

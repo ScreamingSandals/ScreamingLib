@@ -120,9 +120,10 @@ public class BukkitItemTypeRegistry1_8 extends ItemTypeRegistry {
                     return null; // invalid
                 }
 
-                var mat = Reflect.getMethod(Material.class, "getId", int.class).invokeStatic(id);
-                if (mat instanceof Material) {
-                    return new BukkitItemType1_8((Material) mat, (short) dataValue);
+                @SuppressWarnings("deprecation")
+                var mat = Material.getMaterial(id);
+                if (mat != null) {
+                    return new BukkitItemType1_8(mat, (short) dataValue);
                 }
             }
         } else {

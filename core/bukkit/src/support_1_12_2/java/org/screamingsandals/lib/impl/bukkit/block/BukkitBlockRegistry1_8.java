@@ -147,9 +147,10 @@ public class BukkitBlockRegistry1_8 extends BlockRegistry {
                     return null; // invalid
                 }
 
-                var mat = Reflect.getMethod(Material.class, "getId", int.class).invokeStatic(id);
-                if (mat instanceof Material && ((Material) mat).isBlock()) {
-                    return new BukkitBlock1_8((Material) mat, (byte) dataValue);
+                @SuppressWarnings("deprecation")
+                var mat = Material.getMaterial(id);
+                if (mat != null && mat.isBlock()) {
+                    return new BukkitBlock1_8(mat, (byte) dataValue);
                 }
             }
         } else {
