@@ -31,6 +31,8 @@ import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributeType1_8;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributeType1_9;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftAttributeAccessor;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftAttributeMapAccessor;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityType;
@@ -88,15 +90,15 @@ public class BukkitLivingEntity extends BukkitEntity implements LivingEntity {
         // Pre 1.16
         Object attr = null;
         if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
-            var toMinecraftNewMethod = Reflect.getMethod(ClassStorage.CB.CraftAttribute, "bukkitToMinecraftHolder",  org.bukkit.attribute.Attribute.class); // 1.20.5+
-            if (toMinecraftNewMethod.getMethod() == null) {
-                toMinecraftNewMethod = Reflect.getMethod(ClassStorage.CB.CraftAttribute, "bukkitToMinecraft", org.bukkit.attribute.Attribute.class); // late 1.20.4
-                if (toMinecraftNewMethod.getMethod() == null) {
-                    toMinecraftNewMethod = Reflect.getMethod(ClassStorage.CB.CraftAttributeMap, "toMinecraft", org.bukkit.attribute.Attribute.class); // until 1.20.4
+            var toMinecraftNewMethod = CraftAttributeAccessor.METHOD_BUKKIT_TO_MINECRAFT_HOLDER.get(); // 1.20.5+
+            if (toMinecraftNewMethod == null) {
+                toMinecraftNewMethod = CraftAttributeAccessor.METHOD_BUKKIT_TO_MINECRAFT.get(); // late 1.20.4
+                if (toMinecraftNewMethod == null) {
+                    toMinecraftNewMethod = CraftAttributeMapAccessor.METHOD_TO_MINECRAFT.get(); // until 1.20.4
                 }
             }
-            if (toMinecraftNewMethod.getMethod() != null && toMinecraftNewMethod.getMethod().getReturnType() != String.class) { // 1.16+
-                attr = toMinecraftNewMethod.invokeStatic(attributeType.as(org.bukkit.attribute.Attribute.class));
+            if (toMinecraftNewMethod != null && toMinecraftNewMethod.getReturnType() != String.class) { // 1.16+
+                attr = Reflect.fastInvoke(toMinecraftNewMethod, attributeType.as(org.bukkit.attribute.Attribute.class));
             } else if (attributeType instanceof BukkitAttributeType1_9) { // 1.9-1.15.2
                 attr = ((BukkitAttributeType1_9) attributeType).getVanillaAttribute();
             }

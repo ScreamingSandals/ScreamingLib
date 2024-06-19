@@ -58,7 +58,7 @@ public class BukkitAttribute1_9 extends BasicWrapper<AttributeInstance> implemen
             return wrappedObject.getDefaultValue();
         } else {
             // 1.9-1.11
-            return (double) Reflect.fastInvokeResulted(ClassStorage.getHandleOfItemStack(wrappedObject), AttributeInstanceAccessor.METHOD_GET_ATTRIBUTE.get()).fastInvoke(AttributeAccessor.METHOD_GET_DEFAULT_VALUE.get());
+            return (double) Reflect.fastInvokeResulted(ClassStorage.getHandleField(wrappedObject), AttributeInstanceAccessor.METHOD_GET_ATTRIBUTE.get()).fastInvoke(AttributeAccessor.METHOD_GET_DEFAULT_VALUE.get());
         }
     }
 

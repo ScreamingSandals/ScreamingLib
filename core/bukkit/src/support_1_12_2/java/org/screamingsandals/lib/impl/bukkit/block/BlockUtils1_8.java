@@ -27,7 +27,7 @@ import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftMagicNumbersAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.VVV.TileEntityFlowerPotAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.level.block.entity.BlockEntityAccessor;
@@ -95,7 +95,7 @@ public class BlockUtils1_8 {
                         var tile = Reflect.getMethod(state.getWorld(), "getTileEntityAt", int.class, int.class, int.class)
                                 .invoke(state.getX(), state.getY(), state.getZ());
                         if (tile != null) {
-                            Reflect.fastInvoke(tile, TileEntityFlowerPotAccessor.METHOD_FUNC_145964_A.get(), Reflect.getMethod(ClassStorage.CB.CraftMagicNumbers, "getItem", Material.class).invokeStatic(flowerPotMaterial), data);
+                            Reflect.fastInvoke(tile, TileEntityFlowerPotAccessor.METHOD_FUNC_145964_A.get(), Reflect.fastInvoke(CraftMagicNumbersAccessor.METHOD_GET_ITEM.get(), flowerPotMaterial), data);
                             if (updateState) {
                                 Reflect.fastInvoke(tile, BlockEntityAccessor.METHOD_SET_CHANGED.get());
                             }

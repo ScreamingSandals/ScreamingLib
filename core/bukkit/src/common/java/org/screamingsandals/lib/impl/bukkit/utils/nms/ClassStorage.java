@@ -19,7 +19,6 @@ package org.screamingsandals.lib.impl.bukkit.utils.nms;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.nms.accessors.core.IRegistryAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.core.MappedRegistryAccessor;
@@ -31,9 +30,7 @@ import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerPlayerAcce
 import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerCommonPacketListenerImplAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerGamePacketListenerImplAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityTypeAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemStackAccessor;
 import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -43,22 +40,12 @@ import java.util.Optional;
 @UtilityClass
 public class ClassStorage {
 	public static final @NotNull String CB_PACKAGE = Bukkit.getServer().getClass().getPackage().getName();
-
-	// CraftBukkit classes
-	@UtilityClass
-	public static final class CB {
-		public static final Class<?> CraftAttribute = Reflect.getClassSafe(CB_PACKAGE + ".attribute.CraftAttribute");
-		public static final Class<?> CraftAttributeMap = Reflect.getClassSafe(CB_PACKAGE + ".attribute.CraftAttributeMap");
-		public static final Class<?> CraftItemStack = Reflect.getClassSafe(CB_PACKAGE + ".inventory.CraftItemStack");
-		public static final Class<?> CraftMagicNumbers = Reflect.getClassSafe(CB_PACKAGE + ".util.CraftMagicNumbers");
-		public static final Class<?> CraftSound = Reflect.getClassSafe(CB_PACKAGE + ".CraftSound");
-	}
 	
 	public static Object getHandle(Object obj) {
 		return Reflect.getMethod(obj, "getHandle").invoke();
 	}
 
-	public static Object getHandleOfItemStack(Object obj) {
+	public static Object getHandleField(Object obj) {
 		return Reflect.getField(obj, "handle");
 	}
 	
@@ -94,20 +81,6 @@ public class ClassStorage {
 		} else {
 			return Reflect.fastInvoke(Component$SerializerAccessor.METHOD_FROM_JSON_LENIENT.get(), javaJson, RegistryAccessAccessor.CONST_EMPTY.get());
 		}
-	}
-
-	public static Object stackAsNMS(ItemStack item) {
-		Preconditions.checkNotNull(item, "Item is null!");
-		return Reflect.getMethod(CB.CraftItemStack, "asNMSCopy", ItemStack.class).invokeStatic(item);
-	}
-
-	public static ItemStack asCBStack(ItemStack item) {
-		Preconditions.checkNotNull(item, "Item is null!");
-		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftCopy", ItemStack.class).invokeStatic(item);
-	}
-
-	public static ItemStack nmsAsStack(Object nmsStack) {
-		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftMirror", ItemStackAccessor.TYPE.get()).invokeStatic(nmsStack);
 	}
 
 	public static int getEntityTypeId(String key, Class<?> clazz) {

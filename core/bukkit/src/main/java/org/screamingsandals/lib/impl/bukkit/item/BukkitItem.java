@@ -34,9 +34,9 @@ import org.screamingsandals.lib.impl.bukkit.item.builder.BukkitItemBuilder;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftItemStackAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.vanilla.nbt.NBTVanillaSerializer;
-import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.CompoundTagAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.ListTagAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemStackAccessor;
@@ -133,14 +133,14 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
             } else {
                 // Pre 1.13.1
                 Object tag;
-                if (!ClassStorage.CB.CraftItemStack.isInstance(wrappedObject)) {
+                if (!CraftItemStackAccessor.TYPE.get().isInstance(wrappedObject)) {
                     var unhandled = (Map<String, Object>) Reflect.getField(meta, "unhandledTags");
                     if (!unhandled.containsKey("AttributeModifiers")) {
                         return List.of();
                     }
                     tag = unhandled.get("AttributeModifiers");
                 } else {
-                    var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(wrappedObject), ItemStackAccessor.METHOD_GET_TAG.get());
+                    var nbt = Reflect.fastInvoke(CraftItemStackAccessor.getHandleOfItemStack(wrappedObject), ItemStackAccessor.METHOD_GET_TAG.get());
                     tag = Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_GET.get(), "AttributeModifiers");
                 }
                 if (tag != null) {
@@ -300,7 +300,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
             return tagCache;
         }
 
-        final var nmsStack = ClassStorage.stackAsNMS(wrappedObject);
+        final var nmsStack = CraftItemStackAccessor.stackAsNMS(wrappedObject);
         final Object nbtTag;
         if (ItemStackAccessor.METHOD_SAVE_1.get() != null) {
             // 1.20.5+
@@ -338,7 +338,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
             return CompoundTag.EMPTY;
         }
 
-        final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(wrappedObject), ItemStackAccessor.METHOD_COPY.get());
+        final var nmsStack = Reflect.fastInvoke(CraftItemStackAccessor.stackAsNMS(wrappedObject), ItemStackAccessor.METHOD_COPY.get());
         final Object compound;
         if (ItemStackAccessor.METHOD_SAVE_1.get() != null) {
             // 1.20.5+

@@ -24,7 +24,8 @@ import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
-import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftItemStackAccessor;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftMagicNumbersAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.core.component.DataComponentPatchAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.FriendlyByteBufAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.RegistryFriendlyByteBufAccessor;
@@ -51,7 +52,7 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
 
     @Override
     protected @NotNull Object materialHolderToItem(@NotNull ItemType material) {
-        return Reflect.getMethod(ClassStorage.CB.CraftMagicNumbers, "getItem", Material.class).invokeStatic(material.as(Material.class));
+        return Reflect.fastInvoke(CraftMagicNumbersAccessor.METHOD_GET_ITEM.get(), material.as(Material.class));
     }
 
     @Override
@@ -60,15 +61,14 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
             return Reflect.fastInvoke(blockData.as(BlockData.class), "getState");
         } else {
             var materialData = blockData.as(MaterialData.class);
-            return Reflect.getMethod(ClassStorage.CB.CraftMagicNumbers, "getBlock", Material.class)
-                    .invokeStaticResulted(materialData.getItemType())
+            return Reflect.fastInvokeResulted(CraftMagicNumbersAccessor.METHOD_GET_BLOCK.get(), materialData.getItemType())
                     .fastInvoke(BlockAccessor.METHOD_FROM_LEGACY_DATA.get(), (int) materialData.getData());
         }
     }
 
     @Override
     public void writeItemComponents(@NotNull ItemStack item) {
-        final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(item.as(org.bukkit.inventory.ItemStack.class)), ItemStackAccessor.METHOD_COPY.get());
+        final var nmsStack = Reflect.fastInvoke(CraftItemStackAccessor.stackAsNMS(item.as(org.bukkit.inventory.ItemStack.class)), ItemStackAccessor.METHOD_COPY.get());
 
         if (protocol() >= ProtocolVersions.V1_20_5) {
             final var registryByteBuf = Reflect.construct(

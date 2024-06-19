@@ -48,9 +48,9 @@ import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
+import org.screamingsandals.lib.impl.bukkit.utils.cb.CraftItemStackAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.vanilla.nbt.NBTVanillaSerializer;
-import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.CompoundTagAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.ListTagAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemStackAccessor;
@@ -198,16 +198,16 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                                     .collect(Collectors.toList())
                     );
                 } else {
-                    if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
-                        item = ClassStorage.asCBStack(item);
+                    if (!CraftItemStackAccessor.TYPE.get().isInstance(item)) {
+                        item = CraftItemStackAccessor.asCBStack(item);
                     }
 
-                    var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
+                    var nbt = Reflect.fastInvoke(CraftItemStackAccessor.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
 
                     if (nbt != null && Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_GET.get(), "AttributeModifiers") != null) {
                         Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_REMOVE.get(), "AttributeModifiers");
 
-                        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
+                        Reflect.fastInvoke(CraftItemStackAccessor.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
                     }
                 }
             }
@@ -239,11 +239,11 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     private void fillStackWithModifiers(@NotNull List<@NotNull Object> modifiers) {
-        if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
-            item = ClassStorage.asCBStack(item);
+        if (!CraftItemStackAccessor.TYPE.get().isInstance(item)) {
+            item = CraftItemStackAccessor.asCBStack(item);
         }
 
-        var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
+        var nbt = Reflect.fastInvoke(CraftItemStackAccessor.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
 
         Object attributes = nbt != null ? Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_GET.get(), "AttributeModifiers") : null;
         if (nbt == null) {
@@ -257,7 +257,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             Reflect.fastInvoke(attributes, ListTagAccessor.METHOD_ADD.get(), modifier);
         }
 
-        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
+        Reflect.fastInvoke(CraftItemStackAccessor.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
     }
 
     private @NotNull CompoundTag constructPre1_13AttributeModifier(@NotNull ItemAttribute modifier) {
@@ -505,8 +505,8 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             item = new org.bukkit.inventory.ItemStack(Material.AIR); // shouldn't we throw error instead?
         }
 
-        if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
-            item = ClassStorage.asCBStack(item);
+        if (!CraftItemStackAccessor.TYPE.get().isInstance(item)) {
+            item = CraftItemStackAccessor.asCBStack(item);
         }
         if (ItemStackAccessor.METHOD_PARSE.get() != null) {
             // 1.20.5+
@@ -521,13 +521,13 @@ public class BukkitItemBuilder implements ItemStackBuilder {
 
             var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), NBTVanillaSerializer.serialize(compound));
             if (optional instanceof Optional) {
-                this.item = ClassStorage.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
+                this.item = CraftItemStackAccessor.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
                         new IllegalArgumentException("The given tag is not applicable to the item of type " + item.getType().getKey() + ": " + SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build().serialize(tag)))
                 );
             }
         } else {
             // 1.8.8-1.20.4
-            Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), NBTVanillaSerializer.serialize(tag));
+            Reflect.fastInvoke(CraftItemStackAccessor.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), NBTVanillaSerializer.serialize(tag));
         }
         return this;
     }
@@ -538,15 +538,15 @@ public class BukkitItemBuilder implements ItemStackBuilder {
             item = new org.bukkit.inventory.ItemStack(Material.AIR); // shouldn't we throw error instead?
         }
 
-        if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
-            item = ClassStorage.asCBStack(item);
+        if (!CraftItemStackAccessor.TYPE.get().isInstance(item)) {
+            item = CraftItemStackAccessor.asCBStack(item);
         }
 
         var serialized = NBTVanillaSerializer.serialize(tag);
 
         if (ItemStackAccessor.METHOD_PARSE.get() != null) {
             // 1.20.5+
-            var nmsStack = ClassStorage.stackAsNMS(item);
+            var nmsStack = CraftItemStackAccessor.stackAsNMS(item);
 
             var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
                     Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
@@ -565,13 +565,13 @@ public class BukkitItemBuilder implements ItemStackBuilder {
 
             var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), compound);
             if (optional instanceof Optional) {
-                this.item = ClassStorage.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
+                this.item = CraftItemStackAccessor.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
                         new IllegalArgumentException("The given tag is not applicable to the item of type " + item.getType().getKey() + ": " + SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build().serialize(tag)))
                 );
             }
         } else {
             // 1.8.8-1.20.4
-            var nbt = Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
+            var nbt = Reflect.fastInvoke(CraftItemStackAccessor.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_TAG.get());
 
             if (nbt != null) {
                 Reflect.fastInvoke(nbt, CompoundTagAccessor.METHOD_MERGE.get(), serialized);
@@ -579,7 +579,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                 nbt = serialized;
             }
 
-            Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
+            Reflect.fastInvoke(CraftItemStackAccessor.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), nbt);
         }
         return this;
     }

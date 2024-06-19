@@ -106,6 +106,27 @@ public class Reflect {
         return new ClassMethod(null);
     }
 
+    public static @Nullable Method getReflectMethod(@Nullable Class<?> clazz, @NotNull String name, @NotNull Class<?> @NotNull... params) {
+        if (clazz == null) {
+            return null;
+        }
+
+        try {
+            return clazz.getMethod(name.trim(), params);
+        } catch (Throwable ignored) {
+            var clazz2 = clazz;
+            do {
+                try {
+                    var method = clazz2.getDeclaredMethod(name.trim(), params);
+                    method.setAccessible(true);
+                    return method;
+                } catch (Throwable ignored2) {
+                }
+            } while ((clazz2 = clazz2.getSuperclass()) != null && clazz2 != Object.class);
+        }
+        return null;
+    }
+
     public static ClassMethod getMethod(Method method) {
         return new ClassMethod(method);
     }
@@ -211,6 +232,28 @@ public class Reflect {
                 } while ((clazz1 = clazz1.getSuperclass()) != null && clazz1 != Object.class);
             }
         }
+        return null;
+    }
+
+    public static @Nullable Field getReflectField(@Nullable Class<?> clazz, @NotNull String name) {
+        if (clazz == null) {
+            return null;
+        }
+
+        try {
+            return clazz.getField(name.trim());
+        } catch (Throwable ignored) {
+            var clazz1 = clazz;
+            do {
+                try {
+                    var field = clazz1.getDeclaredField(name.trim());
+                    field.setAccessible(true);
+                    return field;
+                } catch (Throwable ignored2) {
+                }
+            } while ((clazz1 = clazz1.getSuperclass()) != null && clazz1 != Object.class);
+        }
+
         return null;
     }
 
