@@ -145,7 +145,7 @@ public class ItemStackSerializer implements TypeSerializer<ItemStack> {
             var customModelData = node.node(CUSTOM_MODEL_DATA_KEY);
             if (!customModelData.empty()) {
                 try {
-                    builder.customModelData(locName.get(Integer.class));
+                    builder.customModelData(customModelData.get(Integer.class));
                 } catch (SerializationException ignored) {
                 }
             }
