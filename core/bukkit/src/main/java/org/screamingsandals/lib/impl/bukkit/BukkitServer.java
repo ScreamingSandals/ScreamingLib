@@ -586,6 +586,9 @@ public class BukkitServer extends Server {
             if (Bukkit.spigot().getPaperConfig().getBoolean("settings.velocity-support.enabled", false)) {
                 return ProxyType.VELOCITY;
             }
+            if (Bukkit.spigot().getPaperConfig().getBoolean("proxies.velocity.enabled", false)) { // new paper versions
+                return ProxyType.VELOCITY;
+            }
         }
         return Bukkit.spigot().getConfig().getBoolean("settings.bungeecord",false) ? ProxyType.BUNGEE : ProxyType.NONE;
     }
