@@ -589,7 +589,7 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
         f2lItem("MILK_BUCKET");
         f2lItem("BRICK", "CLAY_BRICK");
         f2lItem("CLAY_BALL");
-        f2lItem("SUGAR_CANE", "REEDS");
+        f2lItem("SUGAR_CANE");
         f2lItem("PAPER");
         f2lItem("BOOK");
         f2lItem("SLIME_BALL");
