@@ -26,7 +26,9 @@ import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 @ServiceFactory
 public class BukkitVillagerTypeRegistryServiceFactory {
     public static @NotNull VillagerTypeRegistry create() {
-        if (BukkitFeature.NEW_VILLAGERS.isSupported()) {
+        if (BukkitFeature.VILLAGER_TYPE_INTERFACE.isSupported()) {
+            return new BukkitVillagerTypeRegistry1_21();
+        } else if (BukkitFeature.NEW_VILLAGERS.isSupported()) {
             return new BukkitVillagerTypeRegistry1_14();
         } else {
             return new BukkitVillagerTypeRegistry1_8();

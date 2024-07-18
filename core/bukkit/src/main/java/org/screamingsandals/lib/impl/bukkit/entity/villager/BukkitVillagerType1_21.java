@@ -16,27 +16,32 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity.villager;
 
+import org.bukkit.entity.Villager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.villager.VillagerType;
+import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitVillagerType1_8 implements VillagerType {
-    private static final @NotNull ResourceLocation PLAINS = ResourceLocation.of("minecraft", "plains");
+public class BukkitVillagerType1_21 extends BasicWrapper<Villager.Type> implements VillagerType {
+
+    public BukkitVillagerType1_21(@NotNull Villager.Type wrappedObject) {
+        super(wrappedObject);
+    }
 
     @Override
     public @NotNull String platformName() {
-        return PLAINS.path();
+        return wrappedObject.getKey().toString();
     }
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof VillagerType) {
-            return this == object;
+        if (object instanceof Villager.Profession || object instanceof VillagerType) {
+            return equals(object);
         }
-        return this == VillagerType.ofNullable(object);
+        return equals(VillagerType.ofNullable(object));
     }
 
     @Override
@@ -46,16 +51,7 @@ public class BukkitVillagerType1_8 implements VillagerType {
 
     @Override
     public @NotNull ResourceLocation location() {
-        return PLAINS;
-    }
-
-    @Override
-    public <T> @NotNull T as(@NotNull Class<T> type) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public @NotNull Object raw() {
-        throw new UnsupportedOperationException();
+        var bukkitKey = wrappedObject.getKey();
+        return ResourceLocation.of(bukkitKey.getNamespace(), bukkitKey.getKey());
     }
 }

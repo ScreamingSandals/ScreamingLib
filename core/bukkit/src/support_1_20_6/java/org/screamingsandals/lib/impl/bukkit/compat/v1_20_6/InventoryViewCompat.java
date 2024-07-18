@@ -28,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
  * Because we need to retain compatible with older versions, we need to keep compiling against older artifact.
  * For newer versions, {@code org.bukkit.craftbukkit.util.Commodore} will fix the compatibility.
  */
-// TODO: compile it also using newer artifact to not depend on Commodore
 @UtilityClass
 public class InventoryViewCompat {
     public static @NotNull Inventory getBottomInventory(@NotNull InventoryView inventoryView) {

@@ -16,32 +16,28 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity.villager;
 
-import org.bukkit.entity.Villager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.villager.Profession;
-import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.entity.villager.VillagerType;
 import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitProfession1_8 extends BasicWrapper<Villager.Profession> implements Profession {
-
-    public BukkitProfession1_8(@NotNull Villager.Profession wrappedObject) {
-        super(wrappedObject);
-    }
+// TODO: while it does not really matter in this case, this should be in support_1_13_2
+public class BukkitVillagerType1_8 implements VillagerType {
+    private static final @NotNull ResourceLocation PLAINS = ResourceLocation.of("minecraft", "plains");
 
     @Override
     public @NotNull String platformName() {
-        return wrappedObject.name();
+        return PLAINS.path();
     }
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof Villager.Profession || object instanceof Profession) {
-            return equals(object);
+        if (object instanceof VillagerType) {
+            return this == object;
         }
-        return equals(Profession.ofNullable(object));
+        return this == VillagerType.ofNullable(object);
     }
 
     @Override
@@ -51,11 +47,16 @@ public class BukkitProfession1_8 extends BasicWrapper<Villager.Profession> imple
 
     @Override
     public @NotNull ResourceLocation location() {
-        if ("BLACKSMITH".equals(wrappedObject.name())) {
-            return ResourceLocation.of("minecraft", "toolsmith");
-        } else if ("PRIEST".equals(wrappedObject.name())) {
-            return ResourceLocation.of("minecraft", "cleric");
-        }
-        return ResourceLocation.of(wrappedObject.name());
+        return PLAINS;
+    }
+
+    @Override
+    public <T> @NotNull T as(@NotNull Class<T> type) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public @NotNull Object raw() {
+        throw new UnsupportedOperationException();
     }
 }

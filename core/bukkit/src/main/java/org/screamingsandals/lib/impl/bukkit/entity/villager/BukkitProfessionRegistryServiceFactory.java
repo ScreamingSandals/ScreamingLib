@@ -26,7 +26,9 @@ import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 @ServiceFactory
 public class BukkitProfessionRegistryServiceFactory {
     public static @NotNull ProfessionRegistry create() {
-        if (BukkitFeature.NEW_VILLAGERS.isSupported()) {
+        if (BukkitFeature.VILLAGER_PROFESSION_INTERFACE.isSupported()) {
+            return new BukkitProfessionRegistry1_21();
+        } else if (BukkitFeature.NEW_VILLAGERS.isSupported()) {
             return new BukkitProfessionRegistry1_14();
         } else {
             return new BukkitProfessionRegistry1_8();

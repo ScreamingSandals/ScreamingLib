@@ -219,6 +219,8 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_BOGGED = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Bogged"));
     public static final @NotNull PlatformFeature ENTITY_BREEZE_WIND_CHARGE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.BreezeWindCharge"));
     public static final @NotNull PlatformFeature ENTITY_OMINOUS_ITEM_SPAWNER = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.OminousItemSpawner"));
+    public static final @NotNull PlatformFeature VILLAGER_PROFESSION_INTERFACE = NEW_VILLAGERS.and(() -> Reflect.hasAsInterface("org.bukkit.entity.Villager$Profession"));
+    public static final @NotNull PlatformFeature VILLAGER_TYPE_INTERFACE = NEW_VILLAGERS.and(() -> Reflect.hasAsInterface("org.bukkit.entity.Villager$Type"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));
@@ -274,4 +276,5 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature BUKKIT_GET_MINECRAFT_VERSION = PlatformFeature.of(() -> Reflect.hasMethod(Bukkit.class, "getMinecraftVersion"));
     public static final @NotNull PlatformFeature TRANSFER = PlatformFeature.of(() -> Reflect.hasMethod(Bukkit.class, "isAcceptingTransfers"));
     public static final @NotNull PlatformFeature EQUIPMENT_SLOT_GROUP = PlatformFeature.of(() -> Reflect.has("org.bukkit.inventory.EquipmentSlotGroup"));
+    public static final @NotNull PlatformFeature INVENTORY_VIEW_INTERFACE = PlatformFeature.of(() -> Reflect.hasAsInterface("org.bukkit.inventory.InventoryView"));
 }

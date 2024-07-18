@@ -436,6 +436,11 @@ public class Reflect {
         return getClassSafe(className) != null;
     }
 
+    public static boolean hasAsInterface(@Language(value = "JAVA", prefix = "class X { void m() { ", suffix = ".class; } }") String className) {
+        var clazz = getClassSafe(className);
+        return clazz != null && clazz.isInterface();
+    }
+
     public static boolean has(Class<?> clazz) {
         return clazz != null;
     }

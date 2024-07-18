@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+// TODO: while it does not really matter in this case, this should be in support_1_13_2
 public class BukkitProfessionRegistry1_8 extends ProfessionRegistry {
     public BukkitProfessionRegistry1_8() {
         specialType(Villager.Profession.class, BukkitProfession1_8::new);

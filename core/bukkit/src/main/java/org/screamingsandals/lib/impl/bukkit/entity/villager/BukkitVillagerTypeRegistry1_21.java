@@ -16,38 +16,28 @@
 
 package org.screamingsandals.lib.impl.bukkit.entity.villager;
 
+import org.bukkit.Registry;
+import org.bukkit.entity.Villager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.villager.VillagerType;
+import org.screamingsandals.lib.impl.bukkit.utils.BukkitRegistry;
 import org.screamingsandals.lib.impl.entity.villager.VillagerTypeRegistry;
-import org.screamingsandals.lib.impl.utils.registry.SimpleRegistryItemStream;
 import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-public class BukkitVillagerTypeRegistry1_8 extends VillagerTypeRegistry {
-    // There's only one villager type
-    public static final @NotNull BukkitVillagerType1_8 INSTANCE = new BukkitVillagerType1_8();
+public class BukkitVillagerTypeRegistry1_21 extends VillagerTypeRegistry {
+    public BukkitVillagerTypeRegistry1_21() {
+        specialType(Villager.Type.class, BukkitVillagerType1_21::new);
+    }
 
     @Override
     protected @NotNull RegistryItemStream<@NotNull VillagerType> getRegistryItemStream0() {
-        return new SimpleRegistryItemStream<>(
-                () -> Stream.of(INSTANCE),
-                t -> t,
-                BukkitVillagerType1_8::location,
-                (villagerType, literal) -> villagerType.location().path().contains(literal),
-                (villagerType, namespace) -> villagerType.location().namespace().equals(namespace),
-                List.of()
-        );
+        return BukkitRegistry.registryStream(Registry.VILLAGER_TYPE, BukkitVillagerType1_21::new);
     }
 
     @Override
     protected @Nullable VillagerType resolveMappingPlatform(@NotNull ResourceLocation location) {
-        if (location.equals(INSTANCE.location())) {
-            return INSTANCE;
-        }
-        return null;
+        return BukkitRegistry.tryObtainItem(Registry.VILLAGER_TYPE, BukkitVillagerType1_21::new, location);
     }
 }
