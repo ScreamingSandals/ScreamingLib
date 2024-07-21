@@ -183,6 +183,11 @@ public abstract class AbstractSignManager {
         if (isAllowedToEdit(player) && isFirstLineValid(event.line(0))) {
             if (registerSign(new SignLocation(event.block().location()), event.line(1))) {
                 player.sendMessage(signCreatedMessage(player));
+                var signState = event.block().blockSnapshot();
+                if (signState instanceof SignBlockSnapshot) {
+                    ((SignBlockSnapshot) signState).waxed(true);
+                    signState.updateBlock(true, false);
+                }
             } else {
                 player.sendMessage(signCannotBeCreatedMessage(player));
                 event.cancelled(true);
