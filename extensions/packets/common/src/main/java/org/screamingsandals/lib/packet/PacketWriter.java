@@ -502,8 +502,9 @@ public abstract class PacketWriter extends OutputStream {
      */
     public void writeItem(@NotNull ItemStack item) {
         if (protocol() >= ProtocolVersions.V1_20_5) {
-            if (item.getType().isAir()) {
+            if (item.getType().isAir() || item.getAmount() == 0) {
                 writeVarInt(0);
+                return;
             }
 
             writeVarInt(item.getAmount());
