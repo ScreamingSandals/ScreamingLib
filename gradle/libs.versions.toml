@@ -46,8 +46,8 @@ junit-platform = "1.10.2"
 
 # plugins
 screaming-plugin-builder = "1.0.86"
-takenaka = "1.2.0-SNAPSHOT"
-mappings = "1.8.8+1.21"
+takenaka = "1.2.0"
+mappings = "1.8.8+1.21.1"
 
 [libraries]
 paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
