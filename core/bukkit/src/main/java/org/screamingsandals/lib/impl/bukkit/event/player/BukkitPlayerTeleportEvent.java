@@ -31,7 +31,11 @@ public class BukkitPlayerTeleportEvent extends BukkitPlayerMoveEvent implements 
     @Override
     public @NotNull TeleportCause cause() {
         if (teleportCause == null) {
-            teleportCause = TeleportCause.valueOf(event().getCause().name());
+            try {
+                teleportCause = TeleportCause.valueOf(event().getCause().name());
+            } catch (IllegalArgumentException ignored) {
+                teleportCause = TeleportCause.UNKNOWN;
+            }
         }
         return teleportCause;
     }

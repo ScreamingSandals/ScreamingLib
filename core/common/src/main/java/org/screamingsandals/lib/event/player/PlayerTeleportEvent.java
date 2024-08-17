@@ -60,6 +60,8 @@ public interface PlayerTeleportEvent extends PlayerMoveEvent {
          * fruit
          */
         CHORUS_FRUIT,
+        DISMOUNT,
+        EXIT_BED,
         /**
          * Indicates the teleportation was caused by an event not covered by
          * this enum
