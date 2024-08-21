@@ -17,14 +17,14 @@
 package org.screamingsandals.lib.event.server;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.CancellableEvent;
+import org.screamingsandals.lib.event.Event;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.spectator.Component;
 
 import java.net.InetAddress;
 
 // TODO: move to shared-core?
-public interface ServerListPingEvent extends CancellableEvent, PlatformEvent {
+public interface ServerListPingEvent extends Event, PlatformEvent {
     @NotNull InetAddress address();
 
     @NotNull Component description();

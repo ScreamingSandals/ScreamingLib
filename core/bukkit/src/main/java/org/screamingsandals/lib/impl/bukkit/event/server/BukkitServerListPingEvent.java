@@ -25,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.server.ServerListPingEvent;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
-import org.screamingsandals.lib.impl.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.spectator.Component;
 
 import java.net.InetAddress;
@@ -34,7 +33,7 @@ import java.net.InetAddress;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-public class BukkitServerListPingEvent implements ServerListPingEvent, BukkitCancellable {
+public class BukkitServerListPingEvent implements ServerListPingEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
