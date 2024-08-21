@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Core;
+import org.screamingsandals.lib.event.server.ServerListPingEvent;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributeTypeServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributesServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.block.snapshot.BukkitBlockSnapshots;
@@ -176,6 +177,7 @@ import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerUnleashEnti
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerUpdateSignEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerVelocityChangeEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerWorldChangeEvent;
+import org.screamingsandals.lib.impl.bukkit.event.server.BukkitServerListPingEvent;
 import org.screamingsandals.lib.impl.bukkit.event.world.BukkitPlantGrowEvent;
 import org.screamingsandals.lib.impl.bukkit.event.world.BukkitSpawnChangeEvent;
 import org.screamingsandals.lib.impl.bukkit.event.world.BukkitSpongeAbsorbEvent;
@@ -692,6 +694,9 @@ public class BukkitCore extends Core {
         // plugins
         constructDefaultListener(org.bukkit.event.server.PluginEnableEvent.class, PluginEnabledEvent.class, event -> () -> new BukkitPlugin(event.getPlugin()));
         constructDefaultListener(org.bukkit.event.server.PluginDisableEvent.class, PluginDisabledEvent.class, event -> () -> new BukkitPlugin(event.getPlugin()));
+
+        // server
+        constructDefaultListener(org.bukkit.event.server.ServerListPingEvent.class, ServerListPingEvent.class, BukkitServerListPingEvent::new);
     }
 
     /**
