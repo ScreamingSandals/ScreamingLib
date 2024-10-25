@@ -47,7 +47,7 @@ import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.Clientb
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundResetScorePacketAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundRotateHeadPacketAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetCameraPacketAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetCarriedItemPacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetHeldSlotPacketAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetDisplayObjectivePacketAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetEntityDataPacketAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetEntityLinkPacketAccessor;
@@ -97,7 +97,7 @@ public class PacketIdMapping {
         putTranslateSafely(ClientboundRemoveMobEffectPacket.class, ClientboundRemoveMobEffectPacketAccessor.TYPE.get());
         putTranslateSafely(ClientboundRotateHeadPacket.class, ClientboundRotateHeadPacketAccessor.TYPE.get());
         putTranslateSafely(ClientboundSetCameraPacket.class, ClientboundSetCameraPacketAccessor.TYPE.get());
-        putTranslateSafely(ClientboundSetCarriedItemPacket.class, ClientboundSetCarriedItemPacketAccessor.TYPE.get());
+        putTranslateSafely(ClientboundSetCarriedItemPacket.class, ClientboundSetHeldSlotPacketAccessor.TYPE.get());
         putTranslateSafely(ClientboundSetDisplayObjectivePacket.class, ClientboundSetDisplayObjectivePacketAccessor.TYPE.get());
         putTranslateSafely(ClientboundSetEntityDataPacket.class, ClientboundSetEntityDataPacketAccessor.TYPE.get());
         putTranslateSafely(ClientboundSetEntityLinkPacket.class, ClientboundSetEntityLinkPacketAccessor.TYPE.get());

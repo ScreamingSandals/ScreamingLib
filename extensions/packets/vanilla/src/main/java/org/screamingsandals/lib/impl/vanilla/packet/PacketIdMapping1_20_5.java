@@ -70,6 +70,7 @@ public class PacketIdMapping1_20_5 {
     private static final @NotNull Map<@NotNull Class<? extends AbstractPacket>, Integer> ID_CACHE = new ConcurrentHashMap<>();
     private static @Nullable Map<Object, Integer> map;
 
+    // TODO: update the protocol to 1.21.2/3
     static {
         PACKET_RESOURCE_LOCATION.put(ClientboundAddEntityPacket.class, "minecraft:add_entity");
         PACKET_RESOURCE_LOCATION.put(ClientboundAnimatePacket.class, "minecraft:animate");
@@ -92,7 +93,7 @@ public class PacketIdMapping1_20_5 {
         PACKET_RESOURCE_LOCATION.put(ClientboundRemoveMobEffectPacket.class, "minecraft:remove_mob_effect");
         PACKET_RESOURCE_LOCATION.put(ClientboundRotateHeadPacket.class, "minecraft:rotate_head");
         PACKET_RESOURCE_LOCATION.put(ClientboundSetCameraPacket.class, "minecraft:set_camera");
-        PACKET_RESOURCE_LOCATION.put(ClientboundSetCarriedItemPacket.class, "minecraft:set_carried_item");
+        PACKET_RESOURCE_LOCATION.put(ClientboundSetCarriedItemPacket.class, "minecraft:set_carried_item"); // TODO: did the id change?
         PACKET_RESOURCE_LOCATION.put(ClientboundSetDisplayObjectivePacket.class, "minecraft:set_display_objective");
         PACKET_RESOURCE_LOCATION.put(ClientboundSetEntityDataPacket.class, "minecraft:set_entity_data");
         PACKET_RESOURCE_LOCATION.put(ClientboundSetEntityLinkPacket.class, "minecraft:set_entity_link");
