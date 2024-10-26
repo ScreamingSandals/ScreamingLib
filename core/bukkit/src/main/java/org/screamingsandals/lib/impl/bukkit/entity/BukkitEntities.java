@@ -94,6 +94,8 @@ import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitRavager;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitVex;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitWarden;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.BukkitZoglin;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.creaking.BukkitCreaking;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.creaking.BukkitCreakingTransient;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitEvoker1_11;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitEvoker1_12;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitEvokerFangs;
@@ -639,6 +641,16 @@ public class BukkitEntities extends Entities {
                     if (BukkitFeature.ENTITY_BREEZE.isSupported()) {
                         if (entity instanceof org.bukkit.entity.Breeze) {
                             return new BukkitBreeze((org.bukkit.entity.Breeze) entity);
+                        }
+                    }
+
+                    if (BukkitFeature.ENTITY_CREAKING.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.Creaking) {
+                            if (entity instanceof org.bukkit.entity.CreakingTransient) {
+                                return new BukkitCreakingTransient((org.bukkit.entity.CreakingTransient) entity);
+                            }
+
+                            return new BukkitCreaking((org.bukkit.entity.Creaking) entity);
                         }
                     }
 

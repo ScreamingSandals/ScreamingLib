@@ -21,6 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.packet.ProtocolVersions;
 import org.screamingsandals.lib.world.Location;
 
 @EqualsAndHashCode(callSuper = true)
@@ -40,7 +41,16 @@ public class ClientboundTeleportEntityPacket extends AbstractPacket {
         } else {
             writer.writeFixedPointVector(location);
         }
-        writer.writeByteRotation(location);
+        if (writer.protocol() >= ProtocolVersions.V1_21_2) {
+            // Delta movement: we do not need the entity to move
+            writer.writeDouble(0);
+            writer.writeDouble(0);
+            writer.writeDouble(0);
+            writer.writeFloat(location.getYaw());
+            writer.writeFloat(location.getPitch());
+        } else {
+            writer.writeByteRotation(location);
+        }
         writer.writeBoolean(onGround);
     }
 }

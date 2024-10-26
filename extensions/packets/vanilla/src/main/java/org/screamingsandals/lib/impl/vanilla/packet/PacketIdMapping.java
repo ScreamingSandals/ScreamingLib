@@ -97,7 +97,7 @@ public class PacketIdMapping {
         putTranslateSafely(ClientboundRemoveMobEffectPacket.class, ClientboundRemoveMobEffectPacketAccessor.TYPE.get());
         putTranslateSafely(ClientboundRotateHeadPacket.class, ClientboundRotateHeadPacketAccessor.TYPE.get());
         putTranslateSafely(ClientboundSetCameraPacket.class, ClientboundSetCameraPacketAccessor.TYPE.get());
-        putTranslateSafely(ClientboundSetCarriedItemPacket.class, ClientboundSetHeldSlotPacketAccessor.TYPE.get());
+        putTranslateSafely(ClientboundSetHeldSlotPacket.class, ClientboundSetHeldSlotPacketAccessor.TYPE.get());
         putTranslateSafely(ClientboundSetDisplayObjectivePacket.class, ClientboundSetDisplayObjectivePacketAccessor.TYPE.get());
         putTranslateSafely(ClientboundSetEntityDataPacket.class, ClientboundSetEntityDataPacketAccessor.TYPE.get());
         putTranslateSafely(ClientboundSetEntityLinkPacket.class, ClientboundSetEntityLinkPacketAccessor.TYPE.get());

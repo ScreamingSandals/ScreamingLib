@@ -68,6 +68,11 @@ public class BukkitParticleConverter {
             );
         } else if (data instanceof ParticleColor) {
             return getBukkitColor(((ParticleColor) data).color());
+        } else if (data instanceof TargetColor) {
+            return new Particle.TargetColor(
+                    ((TargetColor) data).location().as(Location.class),
+                    getBukkitColor(((TargetColor) data).color())
+            );
         }
         return null;
     }

@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.packet;
+package org.screamingsandals.lib.entity.monster.creaking;
 
-import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.ApiStatus;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
-@UtilityClass
-public class ProtocolVersions {
-    // TODO: convert all magic protocol numbers to constants
-    public static final int V1_20_5 = 766;
-    public static final int V1_21_2 = 768;
+/**
+ * Represents an entity with identifier {@code minecraft:creaking_transient}.
+ */
+@ApiStatus.Experimental
+@LimitedVersionSupport("as experiment in 1.21.2+ if winter drop experiment is enabled")
+public interface CreakingTransient extends Creaking {
 }

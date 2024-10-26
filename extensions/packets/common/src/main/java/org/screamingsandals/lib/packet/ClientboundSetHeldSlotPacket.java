@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 @Data
 @Accessors(chain = true, fluent = true)
 @Builder(toBuilder = true)
-public class ClientboundSetCarriedItemPacket extends AbstractPacket {
+public class ClientboundSetHeldSlotPacket extends AbstractPacket {
     private final byte slot;
 
     @Override

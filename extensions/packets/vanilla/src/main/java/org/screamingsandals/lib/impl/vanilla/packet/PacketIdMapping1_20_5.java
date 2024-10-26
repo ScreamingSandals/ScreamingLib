@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.vanilla.packet;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.impl.nms.accessors.network.ProtocolInfo$UnboundAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.ProtocolInfoAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.codec.IdDispatchCodecAccessor;
@@ -43,7 +44,7 @@ import org.screamingsandals.lib.packet.ClientboundRemoveEntitiesPacket;
 import org.screamingsandals.lib.packet.ClientboundRemoveMobEffectPacket;
 import org.screamingsandals.lib.packet.ClientboundRotateHeadPacket;
 import org.screamingsandals.lib.packet.ClientboundSetCameraPacket;
-import org.screamingsandals.lib.packet.ClientboundSetCarriedItemPacket;
+import org.screamingsandals.lib.packet.ClientboundSetHeldSlotPacket;
 import org.screamingsandals.lib.packet.ClientboundSetDisplayObjectivePacket;
 import org.screamingsandals.lib.packet.ClientboundSetEntityDataPacket;
 import org.screamingsandals.lib.packet.ClientboundSetEntityLinkPacket;
@@ -93,7 +94,7 @@ public class PacketIdMapping1_20_5 {
         PACKET_RESOURCE_LOCATION.put(ClientboundRemoveMobEffectPacket.class, "minecraft:remove_mob_effect");
         PACKET_RESOURCE_LOCATION.put(ClientboundRotateHeadPacket.class, "minecraft:rotate_head");
         PACKET_RESOURCE_LOCATION.put(ClientboundSetCameraPacket.class, "minecraft:set_camera");
-        PACKET_RESOURCE_LOCATION.put(ClientboundSetCarriedItemPacket.class, "minecraft:set_carried_item"); // TODO: did the id change?
+        PACKET_RESOURCE_LOCATION.put(ClientboundSetHeldSlotPacket.class, Server.isVersion(1, 21, 2) ? "minecraft:set_held_slot" : "minecraft:set_carried_item");
         PACKET_RESOURCE_LOCATION.put(ClientboundSetDisplayObjectivePacket.class, "minecraft:set_display_objective");
         PACKET_RESOURCE_LOCATION.put(ClientboundSetEntityDataPacket.class, "minecraft:set_entity_data");
         PACKET_RESOURCE_LOCATION.put(ClientboundSetEntityLinkPacket.class, "minecraft:set_entity_link");
@@ -106,7 +107,7 @@ public class PacketIdMapping1_20_5 {
         PACKET_RESOURCE_LOCATION.put(ClientboundSetScorePacket.ClientboundResetScorePacket1_20_3.class, "minecraft:reset_score");
         PACKET_RESOURCE_LOCATION.put(ClientboundTabListPacket.class, "minecraft:tab_list");
         PACKET_RESOURCE_LOCATION.put(ClientboundTakeItemEntityPacket.class, "minecraft:take_item_entity");
-        PACKET_RESOURCE_LOCATION.put(ClientboundTeleportEntityPacket.class, "minecraft:teleport_entity");
+        PACKET_RESOURCE_LOCATION.put(ClientboundTeleportEntityPacket.class, Server.isVersion(1, 21, 2) ? "minecraft:entity_position_sync" : "minecraft:teleport_entity");
         PACKET_RESOURCE_LOCATION.put(ClientboundUpdateMobEffectPacket.class, "minecraft:update_mob_effect");
     }
     

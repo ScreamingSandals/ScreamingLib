@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.packet;
+package org.screamingsandals.lib.impl.bukkit.entity.monster.creaking;
 
-import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.entity.monster.creaking.CreakingTransient;
 
-@UtilityClass
-public class ProtocolVersions {
-    // TODO: convert all magic protocol numbers to constants
-    public static final int V1_20_5 = 766;
-    public static final int V1_21_2 = 768;
+public class BukkitCreakingTransient extends BukkitCreaking implements CreakingTransient {
+    public BukkitCreakingTransient(@NotNull org.bukkit.entity.CreakingTransient wrappedObject) {
+        super(wrappedObject);
+    }
 }

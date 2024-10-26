@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.packet;
+package org.screamingsandals.lib.particle;
 
-import lombok.experimental.UtilityClass;
+import lombok.Data;
+import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.world.Location;
 
-@UtilityClass
-public class ProtocolVersions {
-    // TODO: convert all magic protocol numbers to constants
-    public static final int V1_20_5 = 766;
-    public static final int V1_21_2 = 768;
+@Data
+@Accessors(fluent = true)
+public class TargetColor implements ParticleData {
+    private final @NotNull Location location;
+    private final @NotNull Color color;
 }

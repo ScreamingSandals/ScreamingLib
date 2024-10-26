@@ -43,5 +43,38 @@ public abstract class AttributeTypeRegistry extends SimpleRegistry<AttributeType
     @OnPostConstruct
     public void mapAliases() {
         mapAlias("generic.jump_strength", "horse.jump_strength");
+
+        // 1.21.2 <-> 1.21.1
+        mapAlias("generic.max_health", "max_health");
+        mapAlias("generic.follow_range", "follow_range");
+        mapAlias("generic.knockback_resistance", "knockback_resistance");
+        mapAlias("generic.movement_speed", "movement_speed");
+        mapAlias("generic.flying_speed", "flying_speed");
+        mapAlias("generic.attack_damage", "attack_damage");
+        mapAlias("generic.attack_knockback", "attack_knockback");
+        mapAlias("generic.attack_speed", "attack_speed");
+        mapAlias("generic.armor", "armor");
+        mapAlias("generic.armor_toughness", "armor_toughness");
+        mapAlias("generic.fall_damage_multiplier", "fall_damage_multiplier");
+        mapAlias("generic.luck", "luck");
+        mapAlias("generic.max_absorption", "max_absorption");
+        mapAlias("generic.safe_fall_distance", "safe_fall_distance");
+        mapAlias("generic.scale", "scale");
+        mapAlias("generic.step_height", "step_height");
+        mapAlias("generic.gravity", "gravity");
+        mapAlias("generic.jump_strength", "jump_strength");
+        mapAlias("generic.burning_time", "burning_time");
+        mapAlias("generic.explosion_knockback_resistance", "explosion_knockback_resistance");
+        mapAlias("generic.movement_efficiency", "movement_efficiency");
+        mapAlias("generic.oxygen_bonus", "oxygen_bonus");
+        mapAlias("generic.water_movement_efficiency", "water_movement_efficiency");
+        mapAlias("player.block_interaction_range", "block_interaction_range");
+        mapAlias("player.entity_interaction_range", "entity_interaction_range");
+        mapAlias("player.block_break_speed", "block_break_speed");
+        mapAlias("player.mining_efficiency", "mining_efficiency");
+        mapAlias("player.sneaking_speed", "sneaking_speed");
+        mapAlias("player.submerged_mining_speed", "submerged_mining_speed");
+        mapAlias("player.sweeping_damage_ratio", "sweeping_damage_ratio");
+        mapAlias("zombie.spawn_reinforcements", "spawn_reinforcements");
     }
 }

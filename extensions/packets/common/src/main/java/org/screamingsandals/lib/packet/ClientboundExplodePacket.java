@@ -22,6 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.packet.ProtocolVersions;
 import org.screamingsandals.lib.particle.Particle;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.particle.ParticleType;
@@ -48,15 +49,27 @@ public class ClientboundExplodePacket extends AbstractPacket {
         } else {
             writer.writeVector(location);
         }
-        writer.writeFloat(strength);
-        writer.writeSizedCollection(blockLocations, locationHolder -> writer.writeByteOffset(location, locationHolder.asVectorf()));
-        writer.writeVector(knockBackVelocity);
+        if (writer.protocol() >= ProtocolVersions.V1_21_2) {
+            writer.writeBoolean(true);
+        } else {
+            writer.writeFloat(strength);
+            writer.writeSizedCollection(blockLocations, locationHolder -> writer.writeByteOffset(location, locationHolder.asVectorf()));
+        }
+        if (writer.protocol() >= 761) {
+            writer.writeVector(knockBackVelocity.toVector3D());
+        } else {
+            writer.writeVector(knockBackVelocity);
+        }
 
         if (writer.protocol() >= 765) {
             // TODO: make this configurable
-            writer.writeVarInt(1);
-            writer.writeVarInt(23); // "explosion"
-            writer.writeVarInt(22); // "explosion_emitter"
+            if (writer.protocol() >= ProtocolVersions.V1_21_2) {
+                writer.writeVarInt(23); // "explosion"
+            } else {
+                writer.writeVarInt(1);
+                writer.writeVarInt(23); // "explosion"
+                writer.writeVarInt(22); // "explosion_emitter"
+            }
             writer.writeSizedString("minecraft:entity.generic.explode");
             writer.writeBoolean(false);
 

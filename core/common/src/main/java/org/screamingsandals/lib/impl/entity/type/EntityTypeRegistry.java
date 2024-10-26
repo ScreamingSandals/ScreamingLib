@@ -53,5 +53,10 @@ public abstract class EntityTypeRegistry extends SimpleRegistry<EntityType> {
     public void aliasMapping() {
         // Newer flattening <-> Older flattening
         mapAlias("ZOMBIFIED_PIGLIN", "ZOMBIE_PIGMAN");
+
+        // 1.21.2 <-> 1.21.1
+        mapAlias("oak_boat", "boat");
+        mapAlias("oak_chest_boat", "chest_boat");
+        // TODO: maintain boat and chest boat variant in entity type on <= 1.21.1 (similar to horses and zombies on legacy versions)
     }
 }
