@@ -38,6 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
+// TODO: move to support_1_15_2 source set
 public class BukkitAttributeTypeRegistry1_9 extends AttributeTypeRegistry {
     private final @NotNull Map<@NotNull Attribute, Object> bukkitAttributeToVanillaAttribute = new HashMap<>();
 

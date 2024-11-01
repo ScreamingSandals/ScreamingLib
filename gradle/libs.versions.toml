@@ -1,6 +1,7 @@
 [versions]
 # platforms
 paper = "1.21.3-R0.1-SNAPSHOT"
+paper-support_1_21_1 = "1.21.1-R0.1-SNAPSHOT"
 paper-support_1_20_6 = "1.20.6-R0.1-SNAPSHOT"
 paper-support_1_20_1 = "1.20.1-R0.1-SNAPSHOT"
 paper-support_1_12_2 = "1.12.2-R0.1-SNAPSHOT"
@@ -70,6 +71,7 @@ protocolsupport = { group = "com.github.ProtocolSupport", name = "ProtocolSuppor
 
 # platforms
 paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
+paper-support_one_twentyone_one = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-support_1_21_1" }
 paper-support_one_twenty_six = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-support_1_20_6" }
 paper-support_one_twenty_one = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-support_1_20_1" }
 paper-support_one_twelve_two = { group = "com.destroystokyo.paper", name = "paper-api", version.ref = "paper-support_1_12_2" }

@@ -20,9 +20,6 @@ import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -88,11 +85,12 @@ public class BukkitFeature {
 
     // Attribute API
     public static final @NotNull PlatformFeature ATTRIBUTES_API = PlatformFeature.of(() -> Version.isVersion(1, 9));
-    public static final @NotNull PlatformFeature ATTRIBUTE_DEFAULT_VALUE = ATTRIBUTES_API.and(() -> Reflect.hasMethod(AttributeInstance.class, "getDefaultValue"));
+    public static final @NotNull PlatformFeature ATTRIBUTE_DEFAULT_VALUE = ATTRIBUTES_API.and(() -> Reflect.hasMethod("org.bukkit.attribute.AttributeInstance", "getDefaultValue"));
     public static final @NotNull PlatformFeature ATTRIBUTE_TYPE_KEYED = PlatformFeature.of(() -> Version.isVersion(1, 16));
     public static final @NotNull PlatformFeature ATTRIBUTE_ARMOR_TOUGHNESS_VANILLA = PlatformFeature.of(() -> Version.isVersion(1, 9, 1));
-    public static final @NotNull PlatformFeature ATTRIBUTE_ARMOR_TOUGHNESS = ATTRIBUTES_API.and(() -> Reflect.getField(Attribute.class, "GENERIC_ARMOR_TOUGHNESS") != null);
-    public static final @NotNull PlatformFeature ATTRIBUTE_MODIFIER_KEYED = ATTRIBUTES_API.and(() -> Reflect.hasMethod(AttributeModifier.class, "getKey"));
+    public static final @NotNull PlatformFeature ATTRIBUTE_ARMOR_TOUGHNESS = ATTRIBUTES_API.and(() -> Reflect.getField("org.bukkit.attribute.Attribute", "GENERIC_ARMOR_TOUGHNESS") != null);
+    public static final @NotNull PlatformFeature ATTRIBUTE_MODIFIER_KEYED = ATTRIBUTES_API.and(() -> Reflect.hasMethod("org.bukkit.attribute.AttributeModifier", "getKey"));
+    public static final @NotNull PlatformFeature ATTRIBUTE_INTERFACE = ATTRIBUTES_API.and(() -> Reflect.hasAsInterface("org.bukkit.attribute.Attribute"));
 
     // Block API
     public static final @NotNull PlatformFeature COMMAND_BLOCK_VERBOSE_BLOCK_STATE = PlatformFeature.of(() -> Version.isVersion(1, 9));

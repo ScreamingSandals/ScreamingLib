@@ -26,7 +26,9 @@ import org.screamingsandals.lib.utils.annotations.ServiceFactory;
 @ServiceFactory
 public class BukkitAttributeTypeServiceFactory {
     public static @NotNull AttributeTypeRegistry create() {
-        if (BukkitFeature.ATTRIBUTE_TYPE_KEYED.isSupported()) {
+        if (BukkitFeature.ATTRIBUTE_INTERFACE.isSupported()) {
+            return new BukkitAttributeTypeRegistry1_21_2();
+        } else if (BukkitFeature.ATTRIBUTE_TYPE_KEYED.isSupported()) {
             return new BukkitAttributeTypeRegistry1_16();
         } else if (BukkitFeature.ATTRIBUTES_API.isSupported()) {
             return new BukkitAttributeTypeRegistry1_9();

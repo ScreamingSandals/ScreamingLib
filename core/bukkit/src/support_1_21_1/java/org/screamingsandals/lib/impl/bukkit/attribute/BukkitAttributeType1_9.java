@@ -26,6 +26,7 @@ import org.screamingsandals.lib.utils.ResourceLocation;
 
 import java.util.Arrays;
 
+// TODO: move to support_1_15_2 source set
 public class BukkitAttributeType1_9 extends BasicWrapper<Attribute> implements AttributeType {
 
     @Getter
