@@ -257,7 +257,8 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature HEX_COLORS = PlatformFeature.of(() -> Version.isVersion(1, 16));
 
     // MISC
-    public static final @NotNull PlatformFeature SOUND_KEYED = PlatformFeature.of(() -> Reflect.hasMethod(Sound.class, "getKey"));
+    public static final @NotNull PlatformFeature SOUND_KEYED = PlatformFeature.of(() -> Reflect.hasMethod("org.bukkit.Sound", "getKey"));
+    public static final @NotNull PlatformFeature SOUND_INTERFACE = PlatformFeature.of(() -> Reflect.hasAsInterface("org.bukkit.Sound"));
     public static final @NotNull PlatformFeature HAS_PAPER_CONFIG = PlatformFeature.of(() -> Reflect.hasMethod(org.bukkit.Server.Spigot.class, "getPaperConfig"));
     public static final @NotNull PlatformFeature COLORED_BEDS = PlatformFeature.of(() -> Version.isVersion(1, 12));
     public static final @NotNull PlatformFeature OFF_HAND = PlatformFeature.of(() -> Version.isVersion(1, 9));
