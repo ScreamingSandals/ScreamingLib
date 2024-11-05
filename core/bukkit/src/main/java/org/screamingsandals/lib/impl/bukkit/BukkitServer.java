@@ -18,6 +18,7 @@ package org.screamingsandals.lib.impl.bukkit;
 
 import io.netty.channel.ChannelFuture;
 import org.bukkit.Bukkit;
+import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.impl.bukkit.compat.v1_21_1.SoundCompat;
@@ -50,8 +51,13 @@ public class BukkitServer extends Server {
         try {
             UNSAFE_SOUND_CACHE.clear();
 
-            if (!BukkitFeature.SOUND_INTERFACE.isSupported()) {
-                // Maps bukkit names to minecraft names
+            if (BukkitFeature.SOUND_INTERFACE.isSupported()) {
+                Registry.SOUNDS.forEach(v -> {
+                    if ("minecraft".equals(v.getKey().getNamespace())) {
+                        UNSAFE_SOUND_CACHE.put(v.getKey().getKey().replace(".", "_"), v.getKey().getKey());
+                    }
+                });
+            } else {
                 SoundCompat.fillSoundCache(UNSAFE_SOUND_CACHE);
             }
 
