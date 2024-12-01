@@ -59,7 +59,7 @@ public abstract class SimpleRegistry<T extends RegistryItem> extends Registry<T>
 
         var alias = this.aliasMap.get(location);
         if (alias != null) {
-            return this.resolveMappingPlatform(location);
+            return this.resolveMappingPlatform(alias);
         }
 
         return null;
