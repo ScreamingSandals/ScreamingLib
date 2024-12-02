@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.entity.monster.creaking;
+package org.screamingsandals.lib.impl.bukkit.entity.monster;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.monster.creaking.CreakingTransient;
+import org.screamingsandals.lib.entity.monster.Creaking;
 
-public class BukkitCreakingTransient extends BukkitCreaking implements CreakingTransient {
-    public BukkitCreakingTransient(@NotNull org.bukkit.entity.CreakingTransient wrappedObject) {
+public class BukkitCreaking extends BukkitMonster implements Creaking {
+    public BukkitCreaking(@NotNull org.bukkit.entity.Creaking wrappedObject) {
         super(wrappedObject);
     }
 }

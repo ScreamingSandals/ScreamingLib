@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity.monster.creaking;
+package org.screamingsandals.lib.entity.monster;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 /**
- * Represents an entity with identifier {@code minecraft:creaking_transient}.
+ * Represents an entity with identifier {@code minecraft:creaking}.
  */
-@ApiStatus.Experimental
-@LimitedVersionSupport("as experiment in 1.21.2+ if winter drop experiment is enabled")
-public interface CreakingTransient extends Creaking {
+@LimitedVersionSupport(">= 1.21.4; as experiment in 1.21.2+ if winter drop experiment is enabled")
+public interface Creaking extends Monster {
 }

@@ -21,12 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.packet.ProtocolVersions;
-import org.screamingsandals.lib.particle.Particle;
-import org.screamingsandals.lib.particle.ParticleData;
-import org.screamingsandals.lib.particle.ParticleType;
-import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.Location;
 
