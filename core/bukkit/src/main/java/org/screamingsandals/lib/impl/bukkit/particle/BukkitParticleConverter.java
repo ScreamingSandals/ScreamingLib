@@ -68,10 +68,11 @@ public class BukkitParticleConverter {
             );
         } else if (data instanceof ParticleColor) {
             return getBukkitColor(((ParticleColor) data).color());
-        } else if (data instanceof TargetColor) {
+        } else if (data instanceof Trail) {
+            // TODO: update to Trail when the paper-api 1.21.4 artifact is published and move this to support_1_21_3
             return new Particle.TargetColor(
-                    ((TargetColor) data).location().as(Location.class),
-                    getBukkitColor(((TargetColor) data).color())
+                    ((Trail) data).location().as(Location.class),
+                    getBukkitColor(((Trail) data).color())
             );
         }
         return null;

@@ -24,7 +24,8 @@ import org.screamingsandals.lib.world.Location;
 
 @Data
 @Accessors(fluent = true)
-public class TargetColor implements ParticleData {
+public class Trail implements ParticleData {
     private final @NotNull Location location;
     private final @NotNull Color color;
+    private final int duration;
 }

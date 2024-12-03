@@ -29,7 +29,7 @@ import org.screamingsandals.lib.particle.IntegerData;
 import org.screamingsandals.lib.particle.ParticleColor;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.particle.ParticleType;
-import org.screamingsandals.lib.particle.TargetColor;
+import org.screamingsandals.lib.particle.Trail;
 import org.screamingsandals.lib.particle.Vibration;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
@@ -71,7 +71,8 @@ public class BukkitParticleType1_9 extends BasicWrapper<Particle> implements Par
                 case "Color":
                     return ParticleColor.class;
                 case "TargetColor":
-                    return TargetColor.class;
+//                case "Trail": // TODO: uncomment when the paper-api 1.21.4 artifact is published
+                    return Trail.class;
             }
         }
         return null;
