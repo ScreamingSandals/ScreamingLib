@@ -71,7 +71,7 @@ public class BukkitParticleType1_9 extends BasicWrapper<Particle> implements Par
                 case "Color":
                     return ParticleColor.class;
                 case "TargetColor":
-//                case "Trail": // TODO: uncomment when the paper-api 1.21.4 artifact is published
+                case "Trail":
                     return Trail.class;
             }
         }

@@ -26,6 +26,8 @@ import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.compat.v1_21_3.TargetColorCompat;
+import org.screamingsandals.lib.impl.bukkit.utils.ColorUtils;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.particle.*;
@@ -44,11 +46,11 @@ public class BukkitParticleConverter {
         } else if (data instanceof ItemStack) {
             return ((ItemStack) data).as(org.bukkit.inventory.ItemStack.class);
         } else if (data instanceof DustOptions) {
-            return new Particle.DustOptions(getBukkitColor(((DustOptions) data).color()), ((DustOptions) data).size());
+            return new Particle.DustOptions(ColorUtils.getBukkitColor(((DustOptions) data).color()), ((DustOptions) data).size());
         } else if (data instanceof DustTransition) {
             return new Particle.DustTransition(
-                    getBukkitColor(((DustTransition) data).fromColor()),
-                    getBukkitColor(((DustTransition) data).toColor()),
+                    ColorUtils.getBukkitColor(((DustTransition) data).fromColor()),
+                    ColorUtils.getBukkitColor(((DustTransition) data).toColor()),
                     ((DustTransition) data).size()
             );
         } else if (data instanceof FloatData) {
@@ -67,18 +69,18 @@ public class BukkitParticleConverter {
                     ((Vibration) data).arrivalTime()
             );
         } else if (data instanceof ParticleColor) {
-            return getBukkitColor(((ParticleColor) data).color());
+            return ColorUtils.getBukkitColor(((ParticleColor) data).color());
         } else if (data instanceof Trail) {
-            // TODO: update to Trail when the paper-api 1.21.4 artifact is published and move this to support_1_21_3
-            return new Particle.TargetColor(
-                    ((Trail) data).location().as(Location.class),
-                    getBukkitColor(((Trail) data).color())
-            );
+            if (BukkitFeature.TRAIL_PARTICLE_API.isSupported()) {
+                return new Particle.Trail(
+                        ((Trail) data).location().as(Location.class),
+                        ColorUtils.getBukkitColor(((Trail) data).color()),
+                        ((Trail) data).duration()
+                );
+            } else if (BukkitFeature.TARGET_COLOR_PARTICLE_API.isSupported()) {
+                return TargetColorCompat.convertTargetColor((Trail) data);
+            }
         }
         return null;
-    }
-
-    public Color getBukkitColor(org.screamingsandals.lib.spectator.Color rgb) {
-        return Color.fromRGB(rgb.red(), rgb.green(), rgb.blue());
     }
 }

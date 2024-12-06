@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.particle;
+package org.screamingsandals.lib.impl.bukkit.compat.v1_21_3;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.experimental.UtilityClass;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.spectator.Color;
-import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.world.Location;
+import org.screamingsandals.lib.impl.bukkit.utils.ColorUtils;
+import org.screamingsandals.lib.particle.Trail;
 
-@Data
-@Accessors(fluent = true)
-@LimitedVersionSupport(">= 1.21.3; duration works only on >= 1.21.4")
-public class Trail implements ParticleData {
-    private final @NotNull Location location;
-    private final @NotNull Color color;
-    private final int duration;
+@UtilityClass
+public class TargetColorCompat {
+    public static @NotNull Object convertTargetColor(@NotNull Trail trail) {
+        return new Particle.TargetColor(
+                trail.location().as(Location.class),
+                ColorUtils.getBukkitColor(trail.color())
+        );
+    }
 }

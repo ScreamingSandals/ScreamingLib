@@ -35,6 +35,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.utils.feature.PlatformFeature;
+import org.screamingsandals.lib.particle.Trail;
 import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -228,6 +229,8 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature EXTENDED_PARTICLE_METHOD = PARTICLES_API.and(() -> Reflect.hasMethod(World.class, "spawnParticle", Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class));
     public static final @NotNull PlatformFeature PARTICLE_REGISTRY = REGISTRY.and(() ->  Reflect.getField("org.bukkit.Registry", "PARTICLE_TYPE") != null);
     public static final @NotNull PlatformFeature CHUNK_TICKET_API = PlatformFeature.of(() -> Reflect.hasMethod(Chunk.class, "addPluginChunkTicket", Plugin.class));
+    public static final @NotNull PlatformFeature TRAIL_PARTICLE_API = PlatformFeature.of(() -> Reflect.has("org.bukkit.Particle$Trail"));
+    public static final @NotNull PlatformFeature TARGET_COLOR_PARTICLE_API = PlatformFeature.of(() -> Reflect.has("org.bukkit.Particle$TargetColor"));
 
     // POTION & POTION EFFECT API
     public static final @NotNull PlatformFeature POTION_API = PlatformFeature.of(() -> Version.isVersion(1, 9));
