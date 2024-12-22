@@ -23,6 +23,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.impl.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.util.Collection;
 import java.util.List;
@@ -90,6 +91,18 @@ public interface BossBar extends Wrapper, RawValueHolder {
 
         @Contract("_ -> this")
         @NotNull Builder listener(@NotNull BossBarListener listener);
+
+        /**
+         * Allows using ViaVersion BossBar API for 1.9+ clients on 1.8.8 server if available.
+         *
+         * @param enableViaHooks true, if using the BossBar API can be enabled
+         * @return this builder
+         */
+        @LimitedVersionSupport("1.8.8; has no effect on any other version")
+        @Contract("_ -> this")
+        default @NotNull Builder enableViaHooks(boolean enableViaHooks) {
+            return this; // only one implementation can use this
+        }
 
         @Contract(value = "-> new", pure = true)
         @NotNull BossBar build();

@@ -55,8 +55,9 @@ public class BukkitBossBar1_8 implements BossBar {
     private final @NotNull FakeEntityNMS<?> bossbarEntity;
     private final boolean viaActive;
     private com.viaversion.viaversion.api.legacy.bossbar.BossBar viaBossBar; // can't be final (type may not exist, we don't want JVM to try initialising it)
+    private boolean viaVersionJsonParam;
 
-    public BukkitBossBar1_8(@NotNull Component title, float progress, @NotNull BossBarColor color, @NotNull BossBarDivision division, @NotNull List<@NotNull BossBarFlag> flags, @NotNull BukkitBossBar1_8.@NotNull Backend backend) {
+    public BukkitBossBar1_8(@NotNull Component title, float progress, @NotNull BossBarColor color, @NotNull BossBarDivision division, @NotNull List<@NotNull BossBarFlag> flags, @NotNull BukkitBossBar1_8.@NotNull Backend backend, boolean enableViaHooks) {
         this.title = title;
         this.progress = progress;
         this.color = color;
@@ -71,9 +72,12 @@ public class BukkitBossBar1_8 implements BossBar {
         bossbarEntity.setVisible(true);
 
         boolean viaActive = false;
-        if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) {
+        if (enableViaHooks && Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) {
             try {
-                viaBossBar = Via.getAPI().legacyAPI().createLegacyBossBar("", 1, BossColor.PURPLE, BossStyle.SOLID);
+                String version = Bukkit.getPluginManager().getPlugin("ViaVersion").getDescription().getVersion();
+                // due to Via now accepting both formats (prioritizing json), many strings including an empty string fails
+                viaVersionJsonParam = Integer.parseInt(version.split("\\.", 2)[0]) >= 5 && !"5.0.0".equals(version) && !"5.0.1".equals(version);
+                viaBossBar = Via.getAPI().legacyAPI().createLegacyBossBar(viaVersionJsonParam ? "{text: \"\"}" : "", 1, BossColor.PURPLE, BossStyle.SOLID);
                 viaBossBar.show();
                 viaActive = true;
             } catch (Throwable ignored) {
@@ -114,7 +118,7 @@ public class BukkitBossBar1_8 implements BossBar {
         this.title = title;
         bossbarEntity.setCustomName(title);
         if (viaActive) {
-            viaBossBar.setTitle(title.toLegacy());
+            viaBossBar.setTitle(viaVersionJsonParam ? title.toJavaJson() : title.toLegacy());
         }
         internalListeners.forEach(registeredListener -> registeredListener.listener().onTitleChanged(this, old, title));
         return this;
@@ -270,6 +274,7 @@ public class BukkitBossBar1_8 implements BossBar {
         private @NotNull BossBarDivision division = BossBarDivision.NO_DIVISION;
         private @Nullable Collection<@NotNull BossBarFlag> flags;
         private final @NotNull List<@NotNull BossBarListener> listeners = new ArrayList<>();
+        private boolean enableViaHooks = true;
 
         @Override
         public @NotNull Builder flags(@NotNull Collection<@NotNull BossBarFlag> flags) {
@@ -290,6 +295,12 @@ public class BukkitBossBar1_8 implements BossBar {
         }
 
         @Override
+        public @NotNull Builder enableViaHooks(boolean enableViaHooks) {
+            this.enableViaHooks = enableViaHooks;
+            return this;
+        }
+
+        @Override
         public org.screamingsandals.lib.spectator.bossbar.@NotNull BossBar build() {
             var boss = new BukkitBossBar1_8(
                     title,
@@ -297,7 +308,8 @@ public class BukkitBossBar1_8 implements BossBar {
                     color,
                     division,
                     flags == null ? List.of() : List.copyOf(flags),
-                    GlobalBossBarBackend1_8.getBackend()
+                    GlobalBossBarBackend1_8.getBackend(),
+                    enableViaHooks
             );
             listeners.forEach(boss::addListener);
             return boss;
