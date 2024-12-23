@@ -22,4 +22,6 @@ public interface CollectionTag extends Tag {
     @NotNull Tag getAsTag(int index);
 
     int size();
+
+    boolean isEmpty();
 }

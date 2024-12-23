@@ -31,6 +31,7 @@ import org.screamingsandals.lib.impl.adventure.spectator.event.AdventureHoverEve
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.ShadowColor;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
@@ -121,8 +122,27 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
+    public @Nullable ShadowColor shadowColor() {
+        if (AdventureFeature.SHADOW_COLOR.isSupported()) {
+            var shadowColor = wrappedObject.style().shadowColor();
+            return shadowColor == null ? null : new AdventureShadowColor(shadowColor);
+        }
+
+        return null;
+    }
+
+    @Override
     public @NotNull Component withColor(@Nullable Color color) {
         return AdventureBackend.wrapComponent(wrappedObject.color(color == null ? null : color.as(TextColor.class)));
+    }
+
+    @Override
+    public @NotNull Component withShadowColor(@Nullable ShadowColor color) {
+        if (!AdventureFeature.SHADOW_COLOR.isSupported()) {
+            return this; // no mutation is possible
+        }
+
+        return AdventureBackend.wrapComponent(wrappedObject.shadowColor(color == null ? null : color.as(net.kyori.adventure.text.format.ShadowColor.class)));
     }
 
     @Override
@@ -320,6 +340,14 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         @Override
         public @NotNull B color(@NotNull Color color) {
             builder.color(color.as(TextColor.class));
+            return self();
+        }
+
+        @Override
+        public @NotNull B shadowColor(@NotNull ShadowColor color) {
+            if (AdventureFeature.SHADOW_COLOR.isSupported()) {
+                builder.shadowColor(color.as(net.kyori.adventure.text.format.ShadowColor.class));
+            }
             return self();
         }
 

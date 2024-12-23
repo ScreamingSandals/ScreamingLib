@@ -45,6 +45,10 @@ public final class ByteArrayTag implements CollectionTag, Iterable<Byte> {
         return value.length;
     }
 
+    public boolean isEmpty() {
+        return value.length == 0;
+    }
+
     @Override
     public @NotNull Iterator<@NotNull Byte> iterator() {
         return new Iterator<>() {

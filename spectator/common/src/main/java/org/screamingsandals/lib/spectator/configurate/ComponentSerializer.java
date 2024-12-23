@@ -81,6 +81,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     // Shared content & Formatting
     private static final @NotNull String EXTRA_KEY = "extra";
     private static final @NotNull String COLOR_KEY = "color";
+    private static final @NotNull String SHADOW_COLOR_KEY = "shadowColor";
     private static final @NotNull String FONT_KEY = "font";
     private static final @NotNull String BOLD_KEY = "bold";
     private static final @NotNull String ITALIC_KEY = "italic";
@@ -226,6 +227,10 @@ public class ComponentSerializer implements TypeSerializer<Component> {
                 builder.color(node.node(COLOR_KEY).get(Color.class));
             }
 
+            if (node.hasChild(SHADOW_COLOR_KEY)) {
+                builder.shadowColor(node.node(SHADOW_COLOR_KEY).get(ShadowColor.class));
+            }
+
             if (node.hasChild(BOLD_KEY)) {
                 builder.bold(node.node(BOLD_KEY).getBoolean());
             }
@@ -345,6 +350,11 @@ public class ComponentSerializer implements TypeSerializer<Component> {
         var color = obj.color();
         if (color != null) {
             node.node(COLOR_KEY).set(Color.class, color);
+        }
+
+        var shadowColor = obj.shadowColor();
+        if (shadowColor != null) {
+            node.node(SHADOW_COLOR_KEY).set(ShadowColor.class, shadowColor);
         }
 
         var bold = obj.bold();

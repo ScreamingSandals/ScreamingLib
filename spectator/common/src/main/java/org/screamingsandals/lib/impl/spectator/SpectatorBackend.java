@@ -27,6 +27,7 @@ import org.screamingsandals.lib.spectator.EntityNBTComponent;
 import org.screamingsandals.lib.spectator.KeybindComponent;
 import org.screamingsandals.lib.spectator.ScoreComponent;
 import org.screamingsandals.lib.spectator.SelectorComponent;
+import org.screamingsandals.lib.spectator.ShadowColor;
 import org.screamingsandals.lib.spectator.StorageNBTComponent;
 import org.screamingsandals.lib.spectator.TextComponent;
 import org.screamingsandals.lib.spectator.TranslatableComponent;
@@ -99,4 +100,8 @@ public interface SpectatorBackend {
     ItemContent.@NotNull Builder itemContent();
 
     @Nullable Component fromPlatform(@NotNull Object platformObject);
+
+    @NotNull ShadowColor shadowArgb(int alpha, int red, int green, int blue);
+
+    @NotNull ShadowColor shadowHex(@NotNull String hex);
 }

@@ -116,6 +116,10 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
         return tags.size();
     }
 
+    public boolean isEmpty() {
+        return tags.isEmpty();
+    }
+
     @Override
     public @NotNull Iterator<@NotNull Tag> iterator() {
         return new Iterator<>() {

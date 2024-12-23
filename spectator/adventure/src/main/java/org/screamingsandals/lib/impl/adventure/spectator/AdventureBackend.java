@@ -48,11 +48,14 @@ import org.screamingsandals.lib.impl.adventure.spectator.sound.AdventureSoundSou
 import org.screamingsandals.lib.impl.adventure.spectator.sound.AdventureSoundStart;
 import org.screamingsandals.lib.impl.adventure.spectator.sound.AdventureSoundStop;
 import org.screamingsandals.lib.impl.adventure.spectator.title.AdventureTitle;
+import org.screamingsandals.lib.impl.spectator.DummyShadowColor;
+import org.screamingsandals.lib.impl.utils.feature.PlatformFeature;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.impl.spectator.SpectatorBackend;
+import org.screamingsandals.lib.spectator.ShadowColor;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
@@ -84,6 +87,8 @@ public class AdventureBackend implements SpectatorBackend {
     private static final @NotNull BidirectionalConverter<AdventureItemContent> additionalItemContentConverter = BidirectionalConverter.build();
     @Getter
     private static final @NotNull BidirectionalConverter<AdventureColor> additionalColorConverter = BidirectionalConverter.build();
+    @Getter
+    private static final @NotNull BidirectionalConverter<AdventureShadowColor> additionalShadowColorConverter = BidirectionalConverter.build();
     @Getter
     private static final @NotNull LegacyComponentSerializer legacyComponentSerializer = LegacyComponentSerializer.builder()
             .hexColors()
@@ -334,6 +339,29 @@ public class AdventureBackend implements SpectatorBackend {
         }
         // TODO: conversion from shaded and relocated Adventure
         throw new IllegalArgumentException("Not possible to convert unknown object type to Component: " + platformObject);
+    }
+
+    @Override
+    public @NotNull ShadowColor shadowArgb(int alpha, int red, int green, int blue) {
+        if (!AdventureFeature.SHADOW_COLOR.isSupported()) {
+            return new DummyShadowColor(red, green, blue, alpha);
+        }
+        return new AdventureShadowColor(net.kyori.adventure.text.format.ShadowColor.shadowColor(red, green, blue, alpha));
+    }
+
+    @Override
+    public @NotNull ShadowColor shadowHex(@NotNull String hex) {
+        if (!hex.startsWith("#")) {
+            hex = "#" + hex;
+        }
+        var hexColor = TextColor.fromCSSHexString(hex);
+        if (hexColor == null) {
+            hexColor = NamedTextColor.WHITE;
+        }
+        if (!AdventureFeature.SHADOW_COLOR.isSupported()) {
+            return new DummyShadowColor(hexColor.red(), hexColor.green(), hexColor.blue(), 1);
+        }
+        return new AdventureShadowColor(net.kyori.adventure.text.format.ShadowColor.shadowColor(hexColor.red(), hexColor.green(), hexColor.blue(), 1));
     }
 
     @Contract("null -> null; !null -> !null")

@@ -38,4 +38,5 @@ public class BungeeChatFeature {
 
     // Misc
     public static final @NotNull PlatformFeature RGB_COLORS = PlatformFeature.of(() -> !ChatColor.class.isEnum());
+    public static final @NotNull PlatformFeature SHADOW_COLORS = PlatformFeature.of(() -> Reflect.hasMethod(BaseComponent.class, "getShadowColor"));
 }

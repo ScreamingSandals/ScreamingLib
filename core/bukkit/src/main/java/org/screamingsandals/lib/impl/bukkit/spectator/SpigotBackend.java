@@ -349,6 +349,24 @@ public class SpigotBackend extends AbstractBungeeBackend {
         return super.fromJson(json);
     }
 
+    @Override
+    public @NotNull ShadowColor shadowHex(@NotNull String hex) {
+        if (adventureBackend != null) {
+            return adventureBackend.shadowHex(hex);
+        }
+
+        return super.shadowHex(hex);
+    }
+
+    @Override
+    public @NotNull ShadowColor shadowArgb(int alpha, int red, int green, int blue) {
+        if (adventureBackend != null) {
+            return adventureBackend.shadowArgb(alpha, red, green, blue);
+        }
+
+        return super.shadowArgb(alpha, red, green, blue);
+    }
+
     @SuppressWarnings("unchecked")
     public <A extends Adapter> @NotNull A adapter(@NotNull CommandSender wrapper, @NotNull org.bukkit.command.CommandSender sender) {
         if (adventureBackend != null) {

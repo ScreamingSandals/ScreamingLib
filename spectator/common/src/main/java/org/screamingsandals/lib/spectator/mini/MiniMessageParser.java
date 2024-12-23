@@ -473,6 +473,7 @@ public final class MiniMessageParser {
             registerStylingTag("gradient", new GradientResolver());
             registerStylingTag("transition", new TransitionResolver());
             registerStylingTag("font", new FontResolver());
+            registerStylingTag("pride", new PrideResolver());
 
             return this;
         }

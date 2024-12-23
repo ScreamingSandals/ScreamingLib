@@ -48,4 +48,5 @@ public class AdventureFeature {
     public static final @NotNull PlatformFeature SHOW_ENTITY_NEW_FACTORY_METHOD = PlatformFeature.of(() -> Reflect.hasMethod(HoverEvent.ShowEntity.class, "showEntity", Key.class, UUID.class, Component.class));
     public static final @NotNull PlatformFeature SHOW_ITEM_NEW_FACTORY_METHOD = PlatformFeature.of(() -> Reflect.hasMethod(HoverEvent.ShowItem.class, "showItem", Key.class, int.class, BinaryTagHolder.class));
     public static final @NotNull PlatformFeature TIMES_NEW_FACTORY_METHOD = PlatformFeature.of(() -> Reflect.hasMethod(Title.Times.class, "times", Duration.class, Duration.class, Duration.class));
+    public static final @NotNull PlatformFeature SHADOW_COLOR = PlatformFeature.of(() -> Reflect.has("net.kyori.adventure.text.format.ShadowColor"));
 }

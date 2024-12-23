@@ -238,14 +238,29 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     @Nullable Color color();
 
+    @LimitedVersionSupport(">= 1.21.4")
+    @Nullable ShadowColor shadowColor();
+
     @Contract(pure = true)
     @NotNull Component withColor(@Nullable Color color);
-
 
     @Contract(pure = true)
     default @NotNull Component withColorIfAbsent(@Nullable Color color) {
         if (color() == null) {
             return withColor(color);
+        }
+        return this;
+    }
+
+    @LimitedVersionSupport(">= 1.21.4")
+    @Contract(pure = true)
+    @NotNull Component withShadowColor(@Nullable ShadowColor color);
+
+    @LimitedVersionSupport(">= 1.21.4")
+    @Contract(pure = true)
+    default @NotNull Component withShadowColorIfAbsent(@Nullable ShadowColor color) {
+        if (shadowColor() == null) {
+            return withShadowColor(color);
         }
         return this;
     }
@@ -417,6 +432,10 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     interface Builder<B extends Builder<B, C>, C extends Component> extends ComponentLike {
         @Contract("_ -> this")
         @NotNull B color(@NotNull Color color);
+
+        @LimitedVersionSupport(">= 1.21.4")
+        @Contract("_ -> this")
+        @NotNull B shadowColor(@NotNull ShadowColor color);
 
         @Contract("_ -> this")
         default @NotNull B append(@NotNull String text) {

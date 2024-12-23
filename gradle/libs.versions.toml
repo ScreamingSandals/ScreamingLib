@@ -9,9 +9,9 @@ paper-support_1_12_2 = "1.12.2-R0.1-SNAPSHOT"
 paper-support_1_8_8 = "1.8.8-R0.1-SNAPSHOT"
 sponge = "8.2.0"
 minestom = "master-SNAPSHOT"
-waterfall = "1.20-R0.1-SNAPSHOT"
+waterfall = "1.21-R0.1-SNAPSHOT"
 velocity = "3.2.0-SNAPSHOT"
-adventure = "4.17.0"
+adventure = "4.18.0"
 
 # paperlib (shaded)
 paperlib = "1.0.8"
@@ -47,7 +47,7 @@ junit = "5.10.2"
 junit-platform = "1.10.2"
 
 # plugins
-screaming-plugin-builder = "1.0.86"
+screaming-plugin-builder = "1.0.87"
 takenaka = "1.2.0"
 mappings = "1.8.8+1.21.4"
 

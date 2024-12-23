@@ -61,6 +61,8 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Getter
     private static final @NotNull BidirectionalConverter<BungeeColor> additionalColorConverter = BidirectionalConverter.build();
     @Getter
+    private static final @NotNull BidirectionalConverter<BungeeShadowColor> additionalShadowColorConverter = BidirectionalConverter.build();
+    @Getter
     // We can't use NoArgsConstructor because it's too new
     private static final @NotNull Component empty = wrapComponent(new TextComponent(""));
     private static final @NotNull Component newLine = wrapComponent(new TextComponent("\n"));
@@ -359,6 +361,16 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
         } else {
             return new BungeeLegacyItemContent.BungeeLegacyItemContentBuilder();
         }
+    }
+
+    @Override
+    public @NotNull ShadowColor shadowHex(@NotNull String hex) {
+        return new BungeeShadowColor(java.awt.Color.decode(hex));
+    }
+
+    @Override
+    public @NotNull ShadowColor shadowArgb(int alpha, int red, int green, int blue) {
+        return new BungeeShadowColor(new java.awt.Color(red, green, blue, alpha));
     }
 
     @Override

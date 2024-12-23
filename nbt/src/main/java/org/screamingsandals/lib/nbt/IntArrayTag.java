@@ -48,6 +48,10 @@ public final class IntArrayTag implements CollectionTag, Iterable<Integer> {
         return value.length;
     }
 
+    public boolean isEmpty() {
+        return value.length == 0;
+    }
+
     public PrimitiveIterator.@NotNull OfInt iterator() {
         return new PrimitiveIterator.OfInt() {
             private int cursor;

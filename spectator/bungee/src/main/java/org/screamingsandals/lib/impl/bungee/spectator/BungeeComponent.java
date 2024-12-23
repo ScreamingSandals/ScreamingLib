@@ -28,6 +28,7 @@ import org.screamingsandals.lib.impl.bungee.spectator.event.BungeeHoverEvent;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.ShadowColor;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
@@ -112,9 +113,29 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
+    public @Nullable ShadowColor shadowColor() {
+        if (BungeeChatFeature.SHADOW_COLORS.isSupported()) {
+            var shadowColor = wrappedObject.getShadowColorRaw();
+            return shadowColor == null ? null : new BungeeShadowColor(shadowColor);
+        }
+        return null;
+    }
+
+    @Override
     public @NotNull Component withColor(@Nullable Color color) {
         var duplicate = wrappedObject.duplicate();
         duplicate.setColor(color == null ? null : color.as(ChatColor.class));
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    public @NotNull Component withShadowColor(@Nullable ShadowColor color) {
+        if (!BungeeChatFeature.SHADOW_COLORS.isSupported()) {
+            return this; // no mutation possible
+        }
+
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setShadowColor(color == null ? null : color.as(java.awt.Color.class));
         return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
@@ -338,6 +359,14 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         @Override
         public @NotNull B color(@NotNull Color color) {
             component.setColor(color.as(ChatColor.class));
+            return self();
+        }
+
+        @Override
+        public @NotNull B shadowColor(@NotNull ShadowColor color) {
+            if (BungeeChatFeature.SHADOW_COLORS.isSupported()) {
+                component.setShadowColor(color.as(java.awt.Color.class));
+            }
             return self();
         }
 

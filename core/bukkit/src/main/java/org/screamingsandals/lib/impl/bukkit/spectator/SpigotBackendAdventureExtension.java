@@ -21,6 +21,7 @@ import lombok.experimental.UtilityClass;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ItemTag;
@@ -38,12 +39,15 @@ import org.screamingsandals.lib.impl.adventure.spectator.audience.adapter.Advent
 import org.screamingsandals.lib.impl.adventure.spectator.audience.adapter.AdventurePlayerAdapter;
 import org.screamingsandals.lib.impl.bukkit.BukkitServer;
 import org.screamingsandals.lib.impl.bungee.spectator.AbstractBungeeBackend;
+import org.screamingsandals.lib.impl.bungee.spectator.BungeeChatFeature;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.impl.spectator.SpectatorBackend;
 import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
+
+import java.awt.*;
 
 // let's trick the bukkit's class loader a little
 @UtilityClass
@@ -112,6 +116,14 @@ class SpigotBackendAdventureExtension {
                     var name = adventureEntityContent.name();
                     return new Entity(adventureEntityContent.type().asString(), adventureEntityContent.id().toString(), name != null ? name.as(BaseComponent.class) : null);
                 });
+
+        if (AdventureFeature.SHADOW_COLOR.isSupported() && BungeeChatFeature.SHADOW_COLORS.isSupported()) {
+            AdventureBackend.getAdditionalShadowColorConverter()
+                    .registerW2P(Color.class, color -> new Color(color.red(), color.green(), color.blue(), color.alpha()));
+
+            AbstractBungeeBackend.getAdditionalShadowColorConverter() // TODO: uncomment
+                    .registerW2P(ShadowColor.class, shadowColor -> ShadowColor.shadowColor(shadowColor.red(), shadowColor.green(), shadowColor.blue(), shadowColor.alpha()));
+        }
 
         AbstractBungeeBackend.getAdditionalComponentConverter()
                 .registerW2P(

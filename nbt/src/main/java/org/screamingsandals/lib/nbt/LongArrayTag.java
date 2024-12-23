@@ -48,6 +48,10 @@ public final class LongArrayTag implements CollectionTag, Iterable<Long> {
         return value.length;
     }
 
+    public boolean isEmpty() {
+        return value.length == 0;
+    }
+
     public PrimitiveIterator.@NotNull OfLong iterator() {
         return new PrimitiveIterator.OfLong() {
             private int cursor;

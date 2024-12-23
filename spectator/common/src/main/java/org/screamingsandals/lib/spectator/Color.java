@@ -124,6 +124,10 @@ public interface Color extends Wrapper, ComponentBuilderApplicable, RawValueHold
         return Spectator.getBackend().rgb(red, green, blue);
     }
 
+    static @NotNull Color rgb(int compound) {
+        return Spectator.getBackend().rgb((compound >> 16) & 0xFF, (compound >> 8) & 0xFF, compound & 0xFF);
+    }
+
     static @Nullable Color named(@NotNull String name) {
         // bri'ish
         if ("grey".equalsIgnoreCase(name)) {
@@ -167,6 +171,14 @@ public interface Color extends Wrapper, ComponentBuilderApplicable, RawValueHold
                 Math.round(ag + clampedT * (bg - ag)),
                 Math.round(ab + clampedT * (bb - ab))
         );
+    }
+
+    default @NotNull ShadowColor asShadow() {
+        return ShadowColor.rgb(red(), green(), blue());
+    }
+
+    default @NotNull ShadowColor asShadow(int alpha) {
+        return ShadowColor.rgba(red(), green(), blue(), alpha);
     }
 
     @Override
