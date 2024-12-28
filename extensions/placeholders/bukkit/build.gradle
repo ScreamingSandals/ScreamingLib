@@ -4,7 +4,5 @@ dependencies {
     compileOnly libs.paper
 
     compileOnly libs.placeholderapi
-    compileOnly libs.vault, {
-        transitive(false)
-    }
+    compileOnly libs.vault
 }

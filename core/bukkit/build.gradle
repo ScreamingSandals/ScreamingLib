@@ -77,7 +77,6 @@ dependencies {
     compileOnly libs.netty
     compileOnly libs.viaversion
     compileOnly libs.protocolsupport
-    mainCompileOnly libs.adventure.api
 }
 
 if (tasks.findByName("sourceJar")) {
