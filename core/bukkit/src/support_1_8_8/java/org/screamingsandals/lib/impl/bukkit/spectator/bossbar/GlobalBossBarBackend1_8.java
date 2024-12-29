@@ -26,4 +26,7 @@ public class GlobalBossBarBackend1_8 {
     @Getter
     @Setter
     private static BukkitBossBar1_8.@NotNull Backend backend = BukkitBossBar1_8.Backend.WITHER;
+    @Getter
+    @Setter
+    private static boolean viaHooks = true;
 }

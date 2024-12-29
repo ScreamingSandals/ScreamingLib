@@ -150,6 +150,22 @@ public abstract class Server {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConnections0();
     }
 
+    @LimitedVersionSupport("1.8.8; has no effect on any other version")
+    public static void preferEnderDragonBossBar(boolean prefer) {
+        Preconditions.checkNotNull(server, "Server has not yet been initialized!").preferEnderDragonBossBar0(prefer);
+    }
+
+    @LimitedVersionSupport("1.8.8; has no effect on any other version")
+    public static void enableViaHooksForBossBar(boolean enable) {
+        Preconditions.checkNotNull(server, "Server has not yet been initialized!").enableViaHooksForBossBar0(enable);
+    }
+
+    protected void preferEnderDragonBossBar0(boolean prefer) {
+    }
+
+    protected void enableViaHooksForBossBar0(boolean enable) {
+    }
+
     public abstract boolean isVersion0(int major, int minor);
 
     public abstract boolean isVersion0(int major, int minor, int patch);

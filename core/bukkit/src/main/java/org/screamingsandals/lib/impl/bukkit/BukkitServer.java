@@ -24,6 +24,8 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.impl.bukkit.compat.v1_21_1.SoundCompat;
 import org.screamingsandals.lib.impl.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.impl.bukkit.player.GenericCommandSender;
+import org.screamingsandals.lib.impl.bukkit.spectator.bossbar.BukkitBossBar1_8;
+import org.screamingsandals.lib.impl.bukkit.spectator.bossbar.GlobalBossBarBackend1_8;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.nms.accessors.SharedConstantsAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.status.ServerStatus$VersionAccessor;
@@ -612,5 +614,23 @@ public class BukkitServer extends Server {
 
     public static @NotNull String UNSAFE_normalizeSoundKey0(@NotNull String s) {
         return UNSAFE_SOUND_CACHE.getOrDefault(s.replace('.', '_').toUpperCase(Locale.ROOT), s).toLowerCase(Locale.ROOT);
+    }
+
+    @Override
+    protected void preferEnderDragonBossBar0(boolean prefer) {
+        if (Version.isVersion(1, 9)) {
+            return;
+        }
+
+        GlobalBossBarBackend1_8.setBackend(prefer ? BukkitBossBar1_8.Backend.ENDER_DRAGON : BukkitBossBar1_8.Backend.WITHER);
+    }
+
+    @Override
+    protected void enableViaHooksForBossBar0(boolean enable) {
+        if (Version.isVersion(1, 9)) {
+            return;
+        }
+
+        GlobalBossBarBackend1_8.setViaHooks(enable);
     }
 }

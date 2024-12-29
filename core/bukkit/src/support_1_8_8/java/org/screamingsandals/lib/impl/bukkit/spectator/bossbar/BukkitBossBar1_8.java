@@ -274,7 +274,8 @@ public class BukkitBossBar1_8 implements BossBar {
         private @NotNull BossBarDivision division = BossBarDivision.NO_DIVISION;
         private @Nullable Collection<@NotNull BossBarFlag> flags;
         private final @NotNull List<@NotNull BossBarListener> listeners = new ArrayList<>();
-        private boolean enableViaHooks = true;
+        private boolean enableViaHooks = GlobalBossBarBackend1_8.isViaHooks();
+        private @NotNull Backend backend = GlobalBossBarBackend1_8.getBackend();
 
         @Override
         public @NotNull Builder flags(@NotNull Collection<@NotNull BossBarFlag> flags) {
@@ -301,6 +302,12 @@ public class BukkitBossBar1_8 implements BossBar {
         }
 
         @Override
+        public @NotNull Builder preferEnderDragonBossBar(boolean preferEnderDragonBossBar) {
+            this.backend = preferEnderDragonBossBar ? Backend.ENDER_DRAGON : Backend.WITHER;
+            return this;
+        }
+
+        @Override
         public org.screamingsandals.lib.spectator.bossbar.@NotNull BossBar build() {
             var boss = new BukkitBossBar1_8(
                     title,
@@ -308,7 +315,7 @@ public class BukkitBossBar1_8 implements BossBar {
                     color,
                     division,
                     flags == null ? List.of() : List.copyOf(flags),
-                    GlobalBossBarBackend1_8.getBackend(),
+                    backend,
                     enableViaHooks
             );
             listeners.forEach(boss::addListener);

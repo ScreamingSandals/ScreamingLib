@@ -104,6 +104,18 @@ public interface BossBar extends Wrapper, RawValueHolder {
             return this; // only one implementation can use this
         }
 
+        /**
+         * Prefers using Ender Dragon Boss Bar over Wither Boss Bar. Has no effect on versions newer than 1.8.8.
+         *
+         * @param preferEnderDragonBossBar true, if ender dragon boss bar should be used
+         * @return this builder
+         */
+        @LimitedVersionSupport("1.8.8; has no effect on any other version")
+        @Contract("_ -> this")
+        default @NotNull Builder preferEnderDragonBossBar(boolean preferEnderDragonBossBar) {
+            return this; // only one implementation can use this
+        }
+
         @Contract(value = "-> new", pure = true)
         @NotNull BossBar build();
     }
