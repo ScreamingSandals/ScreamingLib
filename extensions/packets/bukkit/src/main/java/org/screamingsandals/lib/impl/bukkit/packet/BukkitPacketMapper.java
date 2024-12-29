@@ -113,8 +113,12 @@ public class BukkitPacketMapper extends PacketMapper {
                 if (conn != null) {
                     try {
                         conn.transformClientbound(buffer, CancelEncoderException::generate);
-                    } catch (Throwable ignored) {
-                        // no u Via
+                    } catch (Throwable ex) {
+                        // Cancelled by Via
+                        if (!(ex instanceof CancelEncoderException)) {
+                            ex.printStackTrace();
+                        }
+                        return;
                     }
                 }
 
