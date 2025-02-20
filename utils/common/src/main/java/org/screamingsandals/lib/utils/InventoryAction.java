@@ -107,16 +107,38 @@ public enum InventoryAction {
      * <p>
      * This is only for transitional purposes on a new Minecraft update, and
      * should never be relied upon.
-     * <p>
-     * Any ClickType.UNKNOWN is called on a best-effort basis.
      */
-    UNKNOWN;
+    UNKNOWN,
+    /**
+     * The first stack of items in the clicked bundle is moved to the cursor.
+     */
+    PICKUP_FROM_BUNDLE,
+    /**
+     * All of the items on the clicked slot are moved into the bundle on the cursor.
+     */
+    PICKUP_ALL_INTO_BUNDLE,
+    /**
+     * Some of the items on the clicked slot are moved into the bundle on the cursor.
+     */
+    PICKUP_SOME_INTO_BUNDLE,
+    /**
+     * The first stack of items is moved to the clicked slot.
+     */
+    PLACE_FROM_BUNDLE,
+    /**
+     * All of the items on the cursor are moved into the bundle in the clicked slot.
+     */
+    PLACE_ALL_INTO_BUNDLE,
+    /**
+     * Some of the items on the cursor are moved into the bundle in the clicked slot.
+     */
+    PLACE_SOME_INTO_BUNDLE,;
 
     public static InventoryAction convert(String action) {
         try {
             return InventoryAction.valueOf(action.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException ex) {
-            return InventoryAction.NOTHING;
+            return InventoryAction.UNKNOWN;
         }
     }
 }

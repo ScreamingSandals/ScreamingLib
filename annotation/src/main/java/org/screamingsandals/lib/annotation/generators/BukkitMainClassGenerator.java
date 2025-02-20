@@ -111,6 +111,10 @@ public class BukkitMainClassGenerator extends StandardMainClassGenerator {
                 node.node("loadbefore").set(loadbefore.stream().distinct().collect(Collectors.toList()));
             }
 
+            if (pluginAnnotation.supportsFolia()) {
+                node.node("folia-supported").set(true);
+            }
+
             loader.save(node);
         }
 
@@ -139,6 +143,10 @@ public class BukkitMainClassGenerator extends StandardMainClassGenerator {
             }
             if (pluginAnnotation.authors().length > 0) {
                 node.node("authors").set(Arrays.asList(pluginAnnotation.authors()));
+            }
+
+            if (pluginAnnotation.supportsFolia()) {
+                node.node("folia-supported").set(true);
             }
 
             var depend = new ArrayList<String>();

@@ -45,6 +45,13 @@ public @interface Plugin {
     String[] authors() default {};
     LoadTime loadTime() default LoadTime.POSTWORLD;
 
+    /**
+     * Defines whether the plugin supports region-threaded servers like Folia.
+     *
+     * @return true if Folia is supported
+     */
+    boolean supportsFolia() default false;
+
     enum LoadTime {
         STARTUP,
         POSTWORLD
