@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.packet.ProtocolVersions;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Preconditions;
 
@@ -68,8 +69,14 @@ public class ClientboundSetPlayerTeamPacket extends AbstractPacket {
                 writer.writeSizedString(teamSuffix.toLegacy());
             }
             writer.writeByte((byte) ((friendlyFire ? 0x01 : 0) | (seeInvisible ? 0x02 : 0)));
-            writer.writeSizedString(tagVisibility.enumName());
-            if (writer.protocol() > 70) {
+            if (writer.protocol() > ProtocolVersions.V1_21_5) {
+                writer.writeVarInt(tagVisibility.ordinal());
+            } else {
+                writer.writeSizedString(tagVisibility.enumName());
+            }
+            if (writer.protocol() > ProtocolVersions.V1_21_5) {
+                writer.writeVarInt(collisionRule.ordinal());
+            } else if (writer.protocol() > 70) {
                 writer.writeSizedString(collisionRule.enumName());
             }
             if (writer.protocol() < 352) {
@@ -98,9 +105,9 @@ public class ClientboundSetPlayerTeamPacket extends AbstractPacket {
     @RequiredArgsConstructor
     public enum TagVisibility {
         ALWAYS("always"),
+        NEVER("never"),
         HIDE_FOR_OTHER_TEAMS("hideForOtherTeams"),
-        HIDE_FOR_OWN_TEAM("hideForOwnTeam"),
-        NEVER("never");
+        HIDE_FOR_OWN_TEAM("hideForOwnTeam");
 
         @Getter
         private final @NotNull String enumName;
@@ -109,9 +116,9 @@ public class ClientboundSetPlayerTeamPacket extends AbstractPacket {
     @RequiredArgsConstructor
     public enum CollisionRule {
         ALWAYS("always"),
+        NEVER("never"),
         PUSH_OTHER_TEAMS("pushOtherTeams"),
-        PUSH_OWN_TEAM("pushOwnTeam"),
-        NEVER("never");
+        PUSH_OWN_TEAM("pushOwnTeam");
 
         @Getter
         private final @NotNull String enumName;
