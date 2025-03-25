@@ -40,6 +40,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -111,15 +112,15 @@ public class CraftBukkitItemData implements ItemData {
         }
 
         if (ByteTagAccessor.TYPE.get() == nbt.getClass() && tClass == Byte.class) {
-            return (T) Reflect.fastInvoke(nbt, ByteTagAccessor.METHOD_GET_AS_BYTE.get());
+            return (T) Reflect.fastInvoke(nbt, ByteTagAccessor.METHOD_BYTE_VALUE.get());
         }
 
         if (DoubleTagAccessor.TYPE.get() == nbt.getClass() && tClass == Double.class) {
-            return (T) Reflect.fastInvoke(nbt, DoubleTagAccessor.METHOD_GET_AS_DOUBLE.get());
+            return (T) Reflect.fastInvoke(nbt, DoubleTagAccessor.METHOD_DOUBLE_VALUE.get());
         }
 
         if (FloatTagAccessor.TYPE.get() == nbt.getClass() && tClass == Float.class) {
-            return (T) Reflect.fastInvoke(nbt, FloatTagAccessor.METHOD_GET_AS_FLOAT.get());
+            return (T) Reflect.fastInvoke(nbt, FloatTagAccessor.METHOD_FLOAT_VALUE.get());
         }
 
         if (IntArrayTagAccessor.TYPE.get() == nbt.getClass() && tClass == int[].class) {
@@ -127,7 +128,7 @@ public class CraftBukkitItemData implements ItemData {
         }
 
         if (IntTagAccessor.TYPE.get() == nbt.getClass() && tClass == Integer.class) {
-            return (T) Reflect.fastInvoke(nbt, IntTagAccessor.METHOD_GET_AS_INT.get());
+            return (T) Reflect.fastInvoke(nbt, IntTagAccessor.METHOD_INT_VALUE.get());
         }
 
         if (LongArrayTagAccessor.TYPE.get() == nbt.getClass() && tClass == long[].class) {
@@ -135,20 +136,30 @@ public class CraftBukkitItemData implements ItemData {
         }
 
         if (LongTagAccessor.TYPE.get() == nbt.getClass() && tClass == Long.class) {
-            return (T) Reflect.fastInvoke(nbt, LongTagAccessor.METHOD_GET_AS_LONG.get());
+            return (T) Reflect.fastInvoke(nbt, LongTagAccessor.METHOD_LONG_VALUE.get());
         }
 
         if (ShortTagAccessor.TYPE.get() == nbt.getClass() && tClass == Short.class) {
-            return (T) Reflect.fastInvoke(nbt, ShortTagAccessor.METHOD_GET_AS_SHORT.get());
+            return (T) Reflect.fastInvoke(nbt, ShortTagAccessor.METHOD_SHORT_VALUE.get());
         }
 
         if (tClass == String.class) {
-            return (T) Reflect.fastInvoke(nbt, TagAccessor.METHOD_GET_AS_STRING.get());
+            if (TagAccessor.METHOD_AS_STRING.get() != null) {
+                return ((Optional<T>) Reflect.fastInvoke(nbt, TagAccessor.METHOD_AS_STRING.get())).orElse(null);
+            } else {
+                return (T) Reflect.fastInvoke(nbt, TagAccessor.METHOD_GET_AS_STRING.get());
+            }
         }
 
         // TODO: Complex arrays and maps
 
-        return GsonUtils.gson().fromJson(Reflect.fastInvoke(nbt, TagAccessor.METHOD_GET_AS_STRING.get()).toString(), tClass); // from json
+        @Nullable String value;
+        if (TagAccessor.METHOD_AS_STRING.get() != null) {
+            value = ((Optional<String>) Reflect.fastInvoke(nbt, TagAccessor.METHOD_AS_STRING.get())).orElse(null);
+        } else {
+            value = (String) Reflect.fastInvoke(nbt, TagAccessor.METHOD_GET_AS_STRING.get());
+        }
+        return GsonUtils.gson().fromJson(value, tClass); // from json
     }
 
     @Override

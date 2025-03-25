@@ -45,7 +45,7 @@ class SlibNamingStrategy extends ForwardingNamingStrategy {
 accessors {
     // uncomment this and remove the mappingBundle dependency,
     // if you want to develop against custom versions
-    /*versionRange('1.8.8', '1.21.4') {
+    /*versionRange('1.8.8', '1.21.5') {
         // exclude 1.20, 1.20.3, 1.20.5 and 1.21.2 - hotfixed versions
         // exclude 1.16 and 1.10.1, they don't have most mappings and are basically not used at all
         // exclude 1.8.9, client-only update - no Spigot mappings, no thank you
@@ -106,7 +106,7 @@ accessors {
         getter(boolean, 'invisible')
         setter(String, 'customName')
         setter(Component, 'customName')
-        method(void, 'absMoveTo', double, double, double, float, float)
+        method(void, 'absSnapTo', double, double, double, float, float)
         method(boolean, 'startRiding', it.name, boolean)
         method(void, 'stopRiding')
         field(int, 'entityCount')
@@ -471,12 +471,18 @@ accessors {
 
     // 1.20.5+ - Registry-backed protocol info
     mapClass('net.minecraft.network.protocol.game.GameProtocols') {
-        field('net.minecraft.network.ProtocolInfo$Unbound', 'CLIENTBOUND_TEMPLATE')
+        fieldInferred('CLIENTBOUND_TEMPLATE', '1.21.4') // 'net.minecraft.network.ProtocolInfo$Details'
+
+        // 1.21.5+
+        field('net.minecraft.network.protocol.SimpleUnboundProtocol', 'CLIENTBOUND_TEMPLATE')
     }
     mapClass('net.minecraft.network.ProtocolInfo') {
         method('net.minecraft.network.codec.StreamCodec', 'codec')
     }
-    mapClass('net.minecraft.network.ProtocolInfo$Unbound') {
+    mapClass('net.minecraft.network.ProtocolInfo$Details') {
+        method('net.minecraft.network.ProtocolInfo', 'bind', Function)
+    }
+    mapClass('net.minecraft.network.protocol.SimpleUnboundProtocol') {
         method('net.minecraft.network.ProtocolInfo', 'bind', Function)
     }
     mapClass('net.minecraft.network.codec.IdDispatchCodec') {
@@ -514,6 +520,7 @@ accessors {
     }
 
     var Tag = mapClass('net.minecraft.nbt.Tag') {
+        method(java.util.Optional, 'asString')
         method(String, 'getAsString')
     }
 
@@ -524,13 +531,13 @@ accessors {
 
     mapClass('net.minecraft.nbt.ByteTag') {
         constructor(byte)
-        method(byte, 'getAsByte')
+        method(byte, 'byteValue')
         method(it.name, 'valueOf', byte)
     }
 
     var CompoundTag = mapClass('net.minecraft.nbt.CompoundTag') {
         constructor()
-        method(Set, 'getAllKeys')
+        method(Set, 'keySet')
         method(Tag, 'get', String)
         method(void, 'remove', String)
 
@@ -547,13 +554,13 @@ accessors {
 
     mapClass('net.minecraft.nbt.DoubleTag') {
         constructor(double)
-        method(double, 'getAsDouble')
+        method(double, 'doubleValue')
         method(it.name, 'valueOf', double) // 1.15+
     }
 
     mapClass('net.minecraft.nbt.FloatTag') {
         constructor(float)
-        method(float, 'getAsFloat')
+        method(float, 'floatValue')
         method(it.name, 'valueOf', float) // 1.15+
     }
 
@@ -564,7 +571,7 @@ accessors {
 
     mapClass('net.minecraft.nbt.IntTag') {
         constructor(int)
-        method(int, 'getAsInt')
+        method(int, 'intValue')
         method(it.name, 'valueOf', int) // 1.15+
     }
 
@@ -589,13 +596,13 @@ accessors {
 
     mapClass('net.minecraft.nbt.LongTag') {
         constructor(long)
-        method(long, 'getAsLong')
+        method(long, 'longValue')
         method(it.name, 'valueOf', long) // 1.15+
     }
 
     mapClass('net.minecraft.nbt.ShortTag') {
         constructor(short)
-        method(short, 'getAsShort')
+        method(short, 'shortValue')
         method(it.name, 'valueOf', short) // 1.15+
     }
 

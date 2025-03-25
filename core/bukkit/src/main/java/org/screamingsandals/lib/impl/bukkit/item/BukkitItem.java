@@ -206,7 +206,7 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
                     var compound = unhandled.get("PublicBukkitValues");
                     var nmap = new HashMap<String, Object>();
                     if (CompoundTagAccessor.TYPE.get().isInstance(compound)) {
-                        var keys = (Set) Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_GET_ALL_KEYS.get());
+                        var keys = (Set) Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_KEY_SET.get());
                         for (var key : keys) {
                             nmap.put(key.toString(), Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_GET.get(), key));
                         }

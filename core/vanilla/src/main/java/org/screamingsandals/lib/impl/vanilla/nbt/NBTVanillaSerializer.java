@@ -39,29 +39,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @UtilityClass
 public class NBTVanillaSerializer {
+    @SuppressWarnings("unchecked")
     public static @NotNull Tag deserialize(@NotNull Object nmsTag) {
         Preconditions.checkArgument(TagAccessor.TYPE.get().isInstance(nmsTag), "nmsTag must be of type " + TagAccessor.TYPE.get().getName() + ", got " + nmsTag);
 
         if (ByteTagAccessor.TYPE.get().isInstance(nmsTag)) {
-            return new ByteTag((byte) Reflect.fastInvoke(nmsTag, ByteTagAccessor.METHOD_GET_AS_BYTE.get()));
+            return new ByteTag((byte) Reflect.fastInvoke(nmsTag, ByteTagAccessor.METHOD_BYTE_VALUE.get()));
         } else if (ShortTagAccessor.TYPE.get().isInstance(nmsTag)) {
-            return new ShortTag((short) Reflect.fastInvoke(nmsTag, ShortTagAccessor.METHOD_GET_AS_SHORT.get()));
+            return new ShortTag((short) Reflect.fastInvoke(nmsTag, ShortTagAccessor.METHOD_SHORT_VALUE.get()));
         } else if (IntTagAccessor.TYPE.get().isInstance(nmsTag)) {
-            return new IntTag((int) Reflect.fastInvoke(nmsTag, IntTagAccessor.METHOD_GET_AS_INT.get()));
+            return new IntTag((int) Reflect.fastInvoke(nmsTag, IntTagAccessor.METHOD_INT_VALUE.get()));
         } else if (LongTagAccessor.TYPE.get().isInstance(nmsTag)) {
-            return new LongTag((long) Reflect.fastInvoke(nmsTag, LongTagAccessor.METHOD_GET_AS_LONG.get()));
+            return new LongTag((long) Reflect.fastInvoke(nmsTag, LongTagAccessor.METHOD_LONG_VALUE.get()));
         } else if (StringTagAccessor.TYPE.get().isInstance(nmsTag)) {
-            return new StringTag((String) Reflect.fastInvoke(nmsTag, TagAccessor.METHOD_GET_AS_STRING.get()));
+            if (TagAccessor.METHOD_AS_STRING.get() != null) {
+                return new StringTag(((Optional<String>) Reflect.fastInvoke(nmsTag, TagAccessor.METHOD_AS_STRING.get())).orElse(""));
+            } else {
+                return new StringTag((String) Reflect.fastInvoke(nmsTag, TagAccessor.METHOD_GET_AS_STRING.get()));
+            }
         } else if (FloatTagAccessor.TYPE.get().isInstance(nmsTag)) {
-            return new FloatTag((float) Reflect.fastInvoke(nmsTag, FloatTagAccessor.METHOD_GET_AS_FLOAT.get()));
+            return new FloatTag((float) Reflect.fastInvoke(nmsTag, FloatTagAccessor.METHOD_FLOAT_VALUE.get()));
         } else if (DoubleTagAccessor.TYPE.get().isInstance(nmsTag)) {
-            return new DoubleTag((double) Reflect.fastInvoke(nmsTag, DoubleTagAccessor.METHOD_GET_AS_DOUBLE.get()));
+            return new DoubleTag((double) Reflect.fastInvoke(nmsTag, DoubleTagAccessor.METHOD_DOUBLE_VALUE.get()));
         } else if (CompoundTagAccessor.TYPE.get().isInstance(nmsTag)) {
             var map = new HashMap<String, Tag>();
-            for (var key : (Iterable<?>) Reflect.fastInvoke(nmsTag, CompoundTagAccessor.METHOD_GET_ALL_KEYS.get())) {
+            for (var key : (Iterable<?>) Reflect.fastInvoke(nmsTag, CompoundTagAccessor.METHOD_KEY_SET.get())) {
                 map.put(key.toString(), deserialize(Reflect.fastInvoke(nmsTag, CompoundTagAccessor.METHOD_GET.get(), key)));
             }
             return new CompoundTag(map);

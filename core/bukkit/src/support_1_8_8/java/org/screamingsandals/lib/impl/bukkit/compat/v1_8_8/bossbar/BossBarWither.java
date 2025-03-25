@@ -36,7 +36,7 @@ public class BossBarWither extends FakeEntityNMS<Wither> {
 
     public static @NotNull Object construct(@NotNull Location location) {
         final Object nmsEntity = Reflect.construct(WitherBossAccessor.CONSTRUCTOR_0.get(), ClassStorage.getHandle(location.getWorld()));
-        Reflect.fastInvoke(nmsEntity, EntityAccessor.METHOD_ABS_MOVE_TO.get(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        Reflect.fastInvoke(nmsEntity, EntityAccessor.METHOD_ABS_SNAP_TO.get(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         return nmsEntity;
     }
 }

@@ -190,7 +190,7 @@ public class FakeEntityNMS<E extends Entity> implements Listener {
     }
 
     public void teleport(Player viewer, Location location) {
-        Reflect.fastInvoke(handler, EntityAccessor.METHOD_ABS_MOVE_TO.get(), location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
+        Reflect.fastInvoke(handler, EntityAccessor.METHOD_ABS_SNAP_TO.get(), location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
         ClassStorage.sendNMSConstructedPacket(viewer, createLocationPacket());
     }
 

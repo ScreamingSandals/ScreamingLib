@@ -316,7 +316,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                 }
                 var nmap = new HashMap<String, Object>();
                 if (CompoundTagAccessor.TYPE.get().isInstance(compound)) {
-                    var keys = (Set) Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_GET_ALL_KEYS.get());
+                    var keys = (Set) Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_KEY_SET.get());
                     for (var key : keys) {
                         nmap.put(key.toString(), Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_GET.get(), key));
                     }

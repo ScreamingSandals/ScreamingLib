@@ -20,11 +20,12 @@ import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.impl.nms.accessors.network.ProtocolInfo$UnboundAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.ProtocolInfo$DetailsAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.ProtocolInfoAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.codec.IdDispatchCodecAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.PacketFlowAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.PacketTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.protocol.SimpleUnboundProtocolAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.GameProtocolsAccessor;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.ClientboundAddEntityPacket;
@@ -127,9 +128,17 @@ public class PacketIdMapping1_20_5 {
 
         if (map == null) {
             // all mapped packets are just from play protocol, we don't rly need to touch handshaking, status, login or configuration protocol
-            var playProtocol = GameProtocolsAccessor.CONST_CLIENTBOUND_TEMPLATE.get();
+            @NotNull Object protocolInfo;
+            if (GameProtocolsAccessor.CONST_CLIENTBOUND_TEMPLATE_1.get() != null) {
+                // 1.21.5+
+                var playProtocol = GameProtocolsAccessor.CONST_CLIENTBOUND_TEMPLATE_1.get();
 
-            var protocolInfo = Reflect.fastInvoke(playProtocol, ProtocolInfo$UnboundAccessor.METHOD_BIND.get(), (Function<?, ?>) (input -> null));
+                protocolInfo = Reflect.fastInvoke(playProtocol, SimpleUnboundProtocolAccessor.METHOD_BIND.get(), (Function<?, ?>) (input -> null));
+            } else {
+                var playProtocol = GameProtocolsAccessor.CONST_CLIENTBOUND_TEMPLATE.get();
+
+                protocolInfo = Reflect.fastInvoke(playProtocol, ProtocolInfo$DetailsAccessor.METHOD_BIND.get(), (Function<?, ?>) (input -> null));
+            }
 
             var codec = Reflect.fastInvoke(protocolInfo, ProtocolInfoAccessor.METHOD_CODEC.get());
 
