@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
@@ -44,7 +45,16 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
                 if (tags.get(0) instanceof NumericTag && t instanceof NumericTag && ((NumericTag) tags.get(0)).canHoldDataOfTag((NumericTag) t)) {
                     t = ((NumericTag) tags.get(0)).convert((NumericTag) t);
                 } else {
-                    throw new IllegalArgumentException("This is a list of " + determinedType.getSimpleName() + ", got " + t.getClass().getSimpleName());
+                    // Heterogeneous list, just copy or wrap&copy the original contents
+                    this.tags.clear();
+                    for (var tag : tags) {
+                        if (tag instanceof CompoundTag) {
+                            continue;
+                        }
+
+                        this.tags.add(new CompoundTag(Map.of("", tag)));
+                    }
+                    break;
                 }
             }
             this.tags.add(t);
@@ -57,16 +67,6 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
 
     @Contract(value = "_ -> new", pure = true)
     public @NotNull ListTag with(@NotNull Tag tag) {
-        if (!tags.isEmpty()) {
-            var firstTag = tags.get(0);
-            if (!firstTag.getClass().isInstance(tag)) {
-                if (firstTag instanceof NumericTag && tag instanceof NumericTag && ((NumericTag) firstTag).canHoldDataOfTag((NumericTag) tag)) {
-                    tag = ((NumericTag) firstTag).convert((NumericTag) tag);
-                } else {
-                    throw new IllegalArgumentException("This is a list of " + firstTag.getClass().getSimpleName() + ", got " + tag.getClass().getSimpleName());
-                }
-            }
-        }
         var clone = new ArrayList<>(tags);
         clone.add(tag);
         return new ListTag(clone);
@@ -74,16 +74,6 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
 
     @Contract(value = "_,_ -> new", pure = true)
     public @NotNull ListTag withAt(int index, @NotNull Tag tag) {
-        if (!tags.isEmpty()) {
-            var firstTag = tags.get(0);
-            if (!firstTag.getClass().isInstance(tag)) {
-                if (firstTag instanceof NumericTag && tag instanceof NumericTag && ((NumericTag) firstTag).canHoldDataOfTag((NumericTag) tag)) {
-                    tag = ((NumericTag) firstTag).convert((NumericTag) tag);
-                } else {
-                    throw new IllegalArgumentException("This is a list of " + firstTag.getClass().getSimpleName() + ", got " + tag.getClass().getSimpleName());
-                }
-            }
-        }
         var clone = new ArrayList<>(tags);
         clone.set(index, tag);
         return new ListTag(clone);
