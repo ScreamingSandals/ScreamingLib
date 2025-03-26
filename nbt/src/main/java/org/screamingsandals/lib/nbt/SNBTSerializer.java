@@ -18,6 +18,7 @@ package org.screamingsandals.lib.nbt;
 
 import lombok.Builder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -191,22 +192,16 @@ public class SNBTSerializer {
                 if (firstChar == 'B') {
                     var byteArrayString = readStringUntil(chars, i, ']');
                     var bytes = new ArrayList<Byte>();
+                    var testByte = new ByteTag((byte) 0);
                     for (var byteValue : byteArrayString.split(",")) {
                         byteValue = byteValue.trim();
-                        try {
-                            if (byteValue.endsWith("b") || byteValue.endsWith("B")) {
-                                bytes.add(Byte.parseByte(byteValue.substring(0, byteValue.length() - 1)));
-                                // We are kinda lenient and allow something that is not part of the definition
-                            } else if ("true".equalsIgnoreCase(byteValue)) {
-                                bytes.add((byte) 1);
-                            } else if ("false".equalsIgnoreCase(byteArrayString)) {
-                                bytes.add((byte) 0);
-                            } else {
-                                bytes.add(Byte.parseByte(byteValue));
-                            }
-                        } catch (NumberFormatException exception) {
-                            throw new IllegalArgumentException("Invalid byte tag: " + byteValue + " (position " + i.get() + ")", exception);
+                        var byteV = parseNumber(byteValue, false);
+
+                        if (byteV == null || !testByte.canHoldDataOfTag(byteV)) {
+                            throw new IllegalArgumentException("Invalid byte tag: " + byteValue + " (position " + i.get() + ")");
                         }
+
+                        bytes.add(byteV.byteValue());
                     }
                     var result = new byte[bytes.size()];
                     for (int j = 0; j < bytes.size(); j++) {
@@ -217,58 +212,32 @@ public class SNBTSerializer {
                 } else if (firstChar == 'I') {
                     var intArrayString = readStringUntil(chars, i, ']');
                     var stream = IntStream.builder();
+                    var testInt = new IntTag(0);
                     for (var intValue : intArrayString.split(",")) {
                         intValue = intValue.trim();
-                        try {
-                            // We are kinda lenient because we allow suffixes. We also allow any short or byte value because they are compatible with int
-                            if (intValue.endsWith("i")
-                                    || intValue.endsWith("I")
-                                    || intValue.endsWith("s")
-                                    || intValue.endsWith("S")
-                                    || intValue.endsWith("b")
-                                    || intValue.endsWith("B")
-                            ) {
-                                stream.add(Integer.parseInt(intValue.substring(0, intValue.length() - 1)));
-                            } else if ("true".equalsIgnoreCase(intValue)) {
-                                stream.add(1);
-                            } else if ("false".equalsIgnoreCase(intValue)) {
-                                stream.add(0);
-                            } else {
-                                stream.add(Integer.parseInt(intValue));
-                            }
-                        } catch (NumberFormatException exception) {
-                            throw new IllegalArgumentException("Invalid integer tag: " + intValue + " (position " + i.get() + ")", exception);
+                        var intV = parseNumber(intValue, false);
+
+                        if (intV == null || !testInt.canHoldDataOfTag(intV)) {
+                            throw new IllegalArgumentException("Invalid integer tag: " + intValue + " (position " + i.get() + ")");
                         }
+
+                        stream.add(intV.intValue());
                     }
                     i.incrementAndGet();
                     return new IntArrayTag(stream.build().toArray());
                 } else if (firstChar == 'L') {
                     var longArrayString = readStringUntil(chars, i, ']');
                     var stream = LongStream.builder();
+                    var testLong = new LongTag(0);
                     for (var longValue : longArrayString.split(",")) {
                         longValue = longValue.trim();
-                        try {
-                            // We are lenient because we allow any integer, short or byte value because they are compatible with long
-                            if (longValue.endsWith("l")
-                                    || longValue.endsWith("L")
-                                    || longValue.endsWith("i")
-                                    || longValue.endsWith("I")
-                                    || longValue.endsWith("s")
-                                    || longValue.endsWith("S")
-                                    || longValue.endsWith("b")
-                                    || longValue.endsWith("B")
-                            ) {
-                                stream.add(Long.parseLong(longValue.substring(0, longValue.length() - 1)));
-                            } else if ("true".equalsIgnoreCase(longValue)) {
-                                stream.add(1);
-                            } else if ("false".equalsIgnoreCase(longValue)) {
-                                stream.add(0);
-                            } else {
-                                stream.add(Long.parseLong(longValue));
-                            }
-                        } catch (NumberFormatException exception) {
-                            throw new IllegalArgumentException("Invalid long tag: " + longValue + " (position " + i.get() + ")", exception);
+                        var longV = parseNumber(longValue, true);
+
+                        if (longV == null || !testLong.canHoldDataOfTag(longV)) {
+                            throw new IllegalArgumentException("Invalid long tag: " + longValue + " (position " + i.get() + ")");
                         }
+
+                        stream.add(longV.longValue());
                     }
                     i.incrementAndGet();
                     return new LongArrayTag(stream.build().toArray());
@@ -300,15 +269,6 @@ public class SNBTSerializer {
             return readUntil(chars, i, c);
         } else {
             var value = readUntilControlSymbol(chars, i);
-            if (value.startsWith("bool(") && value.endsWith(")")) {
-                var inner = value.substring(5, value.length() - 1);
-                var deserialized = deserialize(inner);
-                if (!(deserialized instanceof NumericTag)) {
-                    throw new IllegalArgumentException("Expected numeric tag inside bool() function, but got " + deserialized.getClass().getName());
-                }
-
-                return ((NumericTag) deserialized).booleanValue() ? ByteTag.TRUE : ByteTag.FALSE;
-            }
             if (value.startsWith("uuid(") && value.endsWith(")")) {
                 var inner = value.substring(5, value.length() - 1);
                 var deserialized = deserialize(inner);
@@ -327,42 +287,9 @@ public class SNBTSerializer {
 
                 return new IntArrayTag(new int[] {(int) (mostSignificantBits >> 32), (int) mostSignificantBits, (int) (leastSignificantBits >> 32), (int) leastSignificantBits});
             }
-            if ("true".equalsIgnoreCase(value)) {
-                return ByteTag.TRUE;
-            } else if ("false".equalsIgnoreCase(value)) {
-                return ByteTag.FALSE;
-            }
-            try {
-                var lastChar = value.charAt(value.length() - 1);
-                var substring = value.substring(0, value.length() - 1);
-                if (lastChar == 'b' || lastChar == 'B') {
-                    return new ByteTag(Byte.parseByte(substring));
-                } else if (lastChar == 's' || lastChar == 'S') {
-                    return new ShortTag(Short.parseShort(substring));
-                } else if (lastChar == 'i' || lastChar == 'I') {
-                    // not defined by SNBT, but Adventure NBT library understands it as well
-                    return new IntTag(Integer.parseInt(substring));
-                } else if (lastChar == 'l' || lastChar == 'L') {
-                    return new LongTag(Long.parseLong(substring));
-                } else if (lastChar == 'f' || lastChar == 'F') {
-                    var number = Float.parseFloat(substring);
-                    if (Float.isFinite(number)) { // don't accept NaN and Infinity
-                        return new FloatTag(number);
-                    }
-                } else if (lastChar == 'd' || lastChar == 'D') {
-                    var number = Double.parseDouble(substring);
-                    if (Double.isFinite(number)) { // don't accept NaN and Infinity
-                        return new DoubleTag(number);
-                    }
-                } else if (value.contains(".")) {
-                    var number = Double.parseDouble(value);
-                    if (Double.isFinite(number)) { // don't accept NaN and Infinity
-                        return new DoubleTag(number);
-                    }
-                } else {
-                    return new IntTag(Integer.parseInt(value));
-                }
-            } catch (Throwable ignored) {
+            var number = parseNumber(value, false);
+            if (number != null) {
+                return number;
             }
             return new StringTag(value);
         }
@@ -379,7 +306,108 @@ public class SNBTSerializer {
             var cc = chars[i.get()];
             if (escaped) {
                 escaped = false;
-                builder.append(cc);
+                switch (cc) {
+                    case 'x':
+                        if (chars.length - 1 - i.get() < 2) {
+                            throw new IllegalArgumentException("Unfinished \\x escape sequence (pos " + i.get() + ")");
+                        }
+                        var esc2 = "" + chars[i.incrementAndGet()] + chars[i.incrementAndGet()];
+                        try {
+                            var num = Integer.parseUnsignedInt(esc2, 16);
+
+                            if (!Character.isValidCodePoint(num)) {
+                                throw new IllegalArgumentException("Invalid character '" + esc2 + "' (pos " + i.get() + ")");
+                            }
+                            builder.append(Character.toString(num));
+                        } catch (NumberFormatException exception) {
+                            throw new IllegalArgumentException("Illegal escape sequence \\x" + esc2 + " (pos " + i.get() + ")", exception);
+                        }
+                        break;
+                    case 'u':
+                        if (chars.length - 1 - i.get() < 4) {
+                            throw new IllegalArgumentException("Unfinished \\u escape sequence (pos " + i.get() + ")");
+                        }
+                        var esc4 = "" + chars[i.incrementAndGet()] + chars[i.incrementAndGet()] + chars[i.incrementAndGet()] + chars[i.incrementAndGet()];
+                        try {
+                            var num = Integer.parseUnsignedInt(esc4, 16);
+
+                            if (!Character.isValidCodePoint(num)) {
+                                throw new IllegalArgumentException("Invalid character '" + esc4 + "' (pos " + i.get() + ")");
+                            }
+                            builder.append(Character.toString(num));
+                        } catch (NumberFormatException exception) {
+                            throw new IllegalArgumentException("Illegal escape sequence \\u" + esc4 + " (pos " + i.get() + ")", exception);
+                        }
+
+                        break;
+                    case 'U':
+                        if (chars.length - 1 - i.get() < 8) {
+                            throw new IllegalArgumentException("Unfinished \\U escape sequence (pos " + i.get() + ")");
+                        }
+                        var esc8 = "" + chars[i.incrementAndGet()] + chars[i.incrementAndGet()] + chars[i.incrementAndGet()] + chars[i.incrementAndGet()]
+                                + chars[i.incrementAndGet()] + chars[i.incrementAndGet()] + chars[i.incrementAndGet()] + chars[i.incrementAndGet()];
+                        try {
+                            var num = Integer.parseUnsignedInt(esc8, 16);
+
+                            if (!Character.isValidCodePoint(num)) {
+                                throw new IllegalArgumentException("Invalid character '" + esc8 + "' (pos " + i.get() + ")");
+                            }
+                            builder.append(Character.toString(num));
+                        } catch (NumberFormatException exception) {
+                            throw new IllegalArgumentException("Illegal escape sequence \\U" + esc8 + " (pos " + i.get() + ")", exception);
+                        }
+
+                        break;
+                    case 'N':
+                        if (i.get() == chars.length - 1) {
+                            throw new IllegalArgumentException("Unfinished \\N escape sequence (pos " + i.get() + ")");
+                        }
+                        if (chars[i.incrementAndGet()] != '{') {
+                            throw new IllegalArgumentException("Illegal escape sequence \\N (pos " + i.get() + "): expected {, got" + chars[i.get()]);
+                        }
+                        var argument = new StringBuilder();
+                        boolean correctlyEnded = false;
+                        while (i.get() + 1 < chars.length) {
+                            var argCc = chars[i.incrementAndGet()];
+                            if (argCc == '}') {
+                                correctlyEnded = true;
+                                break;
+                            }
+                            argument.append(argCc);
+                        }
+                        if (!correctlyEnded) {
+                            throw new IllegalArgumentException("Unfinished \\N escape sequence (pos " + i.get() + "), missing ending }");
+                        }
+                        var arg = argument.toString();
+                        try {
+                            int r = Character.codePointOf(arg);
+
+                            builder.append(Character.toString(r));
+                        } catch (IllegalArgumentException exception) {
+                            throw new IllegalArgumentException("Invalid character '" + arg + "' (pos " + i.get() + ")", exception);
+                        }
+                        break;
+                    case 'b':
+                        builder.append('\b');
+                        break;
+                    case 's':
+                        builder.append(' ');
+                        break;
+                    case 't':
+                        builder.append('\t');
+                        break;
+                    case 'n':
+                        builder.append('\n');
+                        break;
+                    case 'f':
+                        builder.append('\f');
+                        break;
+                    case 'r':
+                        builder.append('\r');
+                        break;
+                    default:
+                        builder.append(cc);
+                }
             } else if (cc == c){
                 i.incrementAndGet();
                 return builder.toString();
@@ -418,5 +446,108 @@ public class SNBTSerializer {
         while (i.get() < chars.length && Character.isWhitespace(chars[i.get()])) {
             i.incrementAndGet();
         }
+    }
+
+    private @Nullable NumericTag parseNumber(String value, boolean nonsuffixedIsLong) {
+        if (value.startsWith("bool(") && value.endsWith(")")) {
+            var inner = value.substring(5, value.length() - 1);
+            var deserialized = deserialize(inner);
+            if (!(deserialized instanceof NumericTag)) {
+                throw new IllegalArgumentException("Expected numeric tag inside bool() function, but got " + deserialized.getClass().getName());
+            }
+
+            return ((NumericTag) deserialized).booleanValue() ? ByteTag.TRUE : ByteTag.FALSE;
+        }
+        if ("true".equalsIgnoreCase(value)) {
+            return ByteTag.TRUE;
+        } else if ("false".equalsIgnoreCase(value)) {
+            return ByteTag.FALSE;
+        }
+        try {
+            var lastChar = value.charAt(value.length() - 1);
+            var substring = value.substring(0, value.length() - 1).replace("_", "");
+            var radix = 10;
+            if (substring.startsWith("0x")) {
+                radix = 16;
+                substring = substring.substring(2);
+            } else if (substring.startsWith("0b")) {
+                radix = 2;
+                substring = substring.substring(2);
+            }
+            if (lastChar == 'b' || lastChar == 'B') {
+                if (substring.endsWith("u")) {
+                    var intV = Integer.parseInt(substring.substring(0, substring.length() - 1), radix);
+
+                    if (intV >> Byte.SIZE == 0) {
+                        return new ByteTag((byte) intV);
+                    } else {
+                        throw new NumberFormatException("Unsigned boolean out of range: " + intV);
+                    }
+                } else if (substring.endsWith("s")) {
+                    substring = substring.substring(0, substring.length() - 1);
+                }
+                return new ByteTag(Byte.parseByte(substring, radix));
+            } else if (lastChar == 's' || lastChar == 'S') {
+                if (substring.endsWith("u")) {
+                    var intV = Integer.parseInt(substring.substring(0, substring.length() - 1), radix);
+
+                    if (intV >> Short.SIZE == 0) {
+                        return new ShortTag((short) intV);
+                    } else {
+                        throw new NumberFormatException("Unsigned boolean out of range: " + intV);
+                    }
+                } else if (substring.endsWith("s")) {
+                    substring = substring.substring(0, substring.length() - 1);
+                }
+                return new ShortTag(Short.parseShort(substring, radix));
+            } else if (lastChar == 'i' || lastChar == 'I') {
+                if (substring.endsWith("u")) {
+                    return new IntTag(Integer.parseUnsignedInt(substring, radix));
+                } else if (substring.endsWith("s")) {
+                    substring = substring.substring(0, substring.length() - 1);
+                }
+                return new IntTag(Integer.parseInt(substring, radix));
+            } else if (lastChar == 'l' || lastChar == 'L') {
+                if (substring.endsWith("u")) {
+                    return new LongTag(Long.parseUnsignedLong(substring, radix));
+                } else if (substring.endsWith("s")) {
+                    substring = substring.substring(0, substring.length() - 1);
+                }
+                return new LongTag(Long.parseLong(substring, radix));
+            } else if (radix == 10 && (lastChar == 'f' || lastChar == 'F')) {
+                var number = Float.parseFloat(substring);
+                if (Float.isFinite(number)) { // don't accept NaN and Infinity
+                    return new FloatTag(number);
+                }
+            } else if (radix == 10 && (lastChar == 'd' || lastChar == 'D')) {
+                var number = Double.parseDouble(substring);
+                if (Double.isFinite(number)) { // don't accept NaN and Infinity
+                    return new DoubleTag(number);
+                }
+            } else if (radix == 10 && (value.contains(".") || value.contains("e"))) {
+                var number = Double.parseDouble(substring + lastChar);
+                if (Double.isFinite(number)) { // don't accept NaN and Infinity
+                    return new DoubleTag(number);
+                }
+            } else {
+                substring = substring + lastChar;
+                if (substring.endsWith("u")) {
+                    if (nonsuffixedIsLong) {
+                        return new LongTag(Long.parseUnsignedLong(substring, radix));
+                    } else {
+                        return new IntTag(Integer.parseUnsignedInt(substring, radix));
+                    }
+                } else if (substring.endsWith("s")) {
+                    substring = substring.substring(0, substring.length() - 1);
+                }
+                if (nonsuffixedIsLong) {
+                    return new LongTag(Long.parseLong(substring, radix));
+                } else {
+                    return new IntTag(Integer.parseInt(substring, radix));
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        return null;
     }
 }

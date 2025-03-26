@@ -20,7 +20,9 @@ import org.junit.jupiter.api.Test;
 import org.screamingsandals.lib.nbt.ByteTag;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nbt.IntArrayTag;
+import org.screamingsandals.lib.nbt.IntTag;
 import org.screamingsandals.lib.nbt.ListTag;
+import org.screamingsandals.lib.nbt.LongArrayTag;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.nbt.StringTag;
 
@@ -245,5 +247,109 @@ public class SNBTSerializerTest {
         var string = "bool(text)";
 
         assertThrows(IllegalArgumentException.class, () -> serializer.deserialize(string));
+    }
+
+    @Test
+    public void testNumberSigned() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "42sb";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = new ByteTag((byte) 42);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testNumberUnsigned() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "220ub";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = new ByteTag((byte) -36);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testLargeNonsuffixedLong() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "[L;999999999999]";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = new LongArrayTag(new long[] {999999999999L});
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBuiltInEscapeSequences() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "\"\\\"\\b\\s\\t\\n\\f\\r\\'\\\\\"";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = new StringTag("\"\b \t\n\f\r'\\");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testXEscapeSequence() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "\"\\x42\"";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = new StringTag("" + ((char) 0x42));
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testuEscapeSequence() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "\"\\u2603\"";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = new StringTag("\u2603");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testUEscapeSequence() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "\"\\U00002603\"";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = new StringTag("\u2603");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testNEscapeSequence() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "\"\\N{Snowman}\"";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = new StringTag("\u2603");
+
+        assertEquals(expected, actual);
     }
 }

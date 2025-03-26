@@ -62,7 +62,7 @@ public final class IntTag implements Tag, NumericTag {
 
     @Override
     public boolean canHoldDataOfTag(@NotNull NumericTag tag) {
-        return tag instanceof ByteTag || tag instanceof ShortTag || tag instanceof IntTag;
+        return tag instanceof ByteTag || tag instanceof ShortTag || tag instanceof IntTag || (tag.longValue() <= Integer.MAX_VALUE && tag.longValue() >= Integer.MIN_VALUE);
     }
 
     @Override

@@ -65,7 +65,7 @@ public final class ByteTag implements Tag, NumericTag {
 
     @Override
     public boolean canHoldDataOfTag(@NotNull NumericTag tag) {
-        return tag instanceof ByteTag;
+        return tag instanceof ByteTag || (tag.longValue() <= Byte.MAX_VALUE && tag.longValue() >= Byte.MIN_VALUE);
     }
 
     @Override
