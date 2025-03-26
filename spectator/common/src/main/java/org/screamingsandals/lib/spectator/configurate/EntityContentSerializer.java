@@ -32,14 +32,29 @@ public class EntityContentSerializer implements TypeSerializer<EntityContent> {
     public static final @NotNull EntityContentSerializer INSTANCE = new EntityContentSerializer();
 
     private static final @NotNull String TYPE_KEY = "type";
-    private static final @NotNull String ID_KEY = "id";
+    private static final @NotNull String ID_KEY = "id"; // repurposed since 1.21.5
     private static final @NotNull String NAME_KEY = "name";
+
+    // New
+    private static final @NotNull String UUID_KEY = "uuid";
 
     @Override
     public @NotNull EntityContent deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            var entityType = ResourceLocation.of(node.node(TYPE_KEY).getString("minecraft:pig"));
-            var idNode = node.node(ID_KEY);
+            String typeKey;
+            String idKey;
+            if (node.hasChild(UUID_KEY)) {
+                // 1.21.5+
+                idKey = UUID_KEY;
+                typeKey = ID_KEY;
+            } else {
+                typeKey = TYPE_KEY;
+                idKey = ID_KEY;
+            }
+
+            var entityType = ResourceLocation.of(node.node(typeKey).getString("minecraft:pig"));
+
+            var idNode = node.node(idKey);
             var id = idNode.isList() ? deserializeUuidFromListOrRandom(idNode) : idNode.get(UUID.class, UUID.randomUUID());
             @Nullable var name = node.node(NAME_KEY).get(Component.class);
 
@@ -68,8 +83,8 @@ public class EntityContentSerializer implements TypeSerializer<EntityContent> {
             return;
         }
 
-        node.node(TYPE_KEY).set(obj.type().asString());
-        node.node(ID_KEY).set(UUID.class, obj.id());
+        node.node(ID_KEY).set(obj.type().asString());
+        node.node(UUID_KEY).set(UUID.class, obj.id());
         node.node(NAME_KEY).set(Component.class, obj.name());
     }
 }

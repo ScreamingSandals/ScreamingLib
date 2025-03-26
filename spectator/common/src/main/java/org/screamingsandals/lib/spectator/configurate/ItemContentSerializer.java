@@ -45,6 +45,7 @@ public class ItemContentSerializer implements TypeSerializer<ItemContent> {
             var count = node.node(COUNT_KEY).getInt(1);
             var tag = node.node(TAG_KEY);
             CompoundTag compoundTag;
+            // TODO: load components
             if (!tag.empty()) {
                 if (tag.isMap()) {
                     compoundTag = (CompoundTag) TagSerializer.INSTANCE.deserialize(Tag.class, tag);
@@ -73,6 +74,7 @@ public class ItemContentSerializer implements TypeSerializer<ItemContent> {
 
         node.node(ID_KEY).set(obj.id().asString());
         node.node(COUNT_KEY).set(obj.count());
+        // TODO: save components
         node.node(TAG_KEY).set(obj.tag());
     }
 }

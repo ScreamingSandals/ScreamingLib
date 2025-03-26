@@ -81,7 +81,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     // Shared content & Formatting
     private static final @NotNull String EXTRA_KEY = "extra";
     private static final @NotNull String COLOR_KEY = "color";
-    private static final @NotNull String SHADOW_COLOR_KEY = "shadowColor";
+    private static final @NotNull String SHADOW_COLOR_KEY = "shadow_color";
     private static final @NotNull String FONT_KEY = "font";
     private static final @NotNull String BOLD_KEY = "bold";
     private static final @NotNull String ITALIC_KEY = "italic";
@@ -89,8 +89,10 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     private static final @NotNull String STRIKETHROUGH_KEY = "strikethrough";
     private static final @NotNull String OBFUSCATED_KEY = "obfuscated";
     private static final @NotNull String INSERTION_KEY = "insertion";
-    private static final @NotNull String CLICK_EVENT_KEY = "clickEvent";
-    private static final @NotNull String HOVER_EVENT_KEY = "hoverEvent";
+    private static final @NotNull String CLICK_EVENT_KEY = "click_event";
+    private static final @NotNull String CLICK_EVENT_KEY_OLD = "clickEvent";
+    private static final @NotNull String HOVER_EVENT_KEY = "hover_event";
+    private static final @NotNull String HOVER_EVENT_KEY_OLD = "hoverEvent";
 
     // Types
     private static final @NotNull String TYPE_KEY = "type";
@@ -257,10 +259,14 @@ public class ComponentSerializer implements TypeSerializer<Component> {
 
             if (node.hasChild(CLICK_EVENT_KEY)) {
                 builder.clickEvent(node.node(CLICK_EVENT_KEY).get(ClickEvent.class));
+            } else if (node.hasChild(CLICK_EVENT_KEY_OLD)) {
+                builder.clickEvent(node.node(CLICK_EVENT_KEY_OLD).get(ClickEvent.class));
             }
 
             if (node.hasChild(HOVER_EVENT_KEY)) {
                 builder.hoverEvent(node.node(HOVER_EVENT_KEY).get(HoverEvent.class));
+            } else if (node.hasChild(HOVER_EVENT_KEY_OLD)) {
+                builder.hoverEvent(node.node(HOVER_EVENT_KEY_OLD).get(HoverEvent.class));
             }
 
             return builder.build();

@@ -352,4 +352,17 @@ public class SNBTSerializerTest {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void testNEscapeSequence2() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "\"\\N{Snowman}OtherString\"";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = new StringTag("\u2603OtherString");
+
+        assertEquals(expected, actual);
+    }
 }

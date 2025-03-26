@@ -53,7 +53,7 @@ public class HoverEventSerializer implements TypeSerializer<HoverEvent> {
                     default:
                         content = value.get(Component.class);
                 }
-            } else {
+            } else if (node.hasChild(CONTENTS_KEY)) {
                 var contents = node.node(CONTENTS_KEY);
                 switch (action) {
                     case SHOW_ITEM:
@@ -65,6 +65,12 @@ public class HoverEventSerializer implements TypeSerializer<HoverEvent> {
                     default:
                         content = contents.get(Component.class);
                 }
+            } else if (action == HoverEvent.Action.SHOW_ITEM) {
+                content = node.get(ItemContent.class);
+            } else if (action == HoverEvent.Action.SHOW_ENTITY) {
+                content = node.get(EntityContent.class);
+            } else {
+                content = null;
             }
             Preconditions.checkNotNull(content);
             return HoverEvent.builder()
@@ -83,16 +89,16 @@ public class HoverEventSerializer implements TypeSerializer<HoverEvent> {
             return;
         }
 
-        node.node(ACTION_KEY).set(obj.action().name().toLowerCase(Locale.ROOT)); // lower case to match vanilla keys
         switch (obj.action()) {
             case SHOW_ITEM:
-                node.node(CONTENTS_KEY).set(ItemContent.class, (ItemContent) obj.content());
+                node.set(ItemContent.class, (ItemContent) obj.content());
                 break;
             case SHOW_ENTITY:
-                node.node(CONTENTS_KEY).set(EntityContent.class, (EntityContent) obj.content());
+                node.set(EntityContent.class, (EntityContent) obj.content());
                 break;
             default:
-                node.node(CONTENTS_KEY).set(Component.class, (Component) obj.content());
+                node.node(VALUE_KEY).set(Component.class, (Component) obj.content());
         }
+        node.node(ACTION_KEY).set(obj.action().name().toLowerCase(Locale.ROOT)); // lower case to match vanilla keys
     }
 }

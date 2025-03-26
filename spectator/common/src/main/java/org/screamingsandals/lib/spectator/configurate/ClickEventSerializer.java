@@ -32,11 +32,24 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
     private static final @NotNull String ACTION_KEY = "action";
     private static final @NotNull String VALUE_KEY = "value";
 
+    private static final @NotNull String URL_KEY = "url";
+    private static final @NotNull String COMMAND_KEY = "command";
+    private static final @NotNull String PAGE_KEY = "page";
+
     @Override
     public @NotNull ClickEvent deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var action = ClickEvent.Action.valueOf(node.node(ACTION_KEY).getString("open_url").toUpperCase(Locale.ROOT));
-            var value = node.node(VALUE_KEY).getString("");
+            String value;
+            if (action == ClickEvent.Action.OPEN_URL && node.hasChild(URL_KEY)) {
+                value = node.node(URL_KEY).getString("");
+            } else if ((action == ClickEvent.Action.RUN_COMMAND || action == ClickEvent.Action.SUGGEST_COMMAND) && node.hasChild(COMMAND_KEY)) {
+                value = node.node(COMMAND_KEY).getString("");
+            } else if (action == ClickEvent.Action.CHANGE_PAGE && node.hasChild(PAGE_KEY)) {
+                value = node.node(PAGE_KEY).getString("");
+            } else {
+                value = node.node(VALUE_KEY).getString("");
+            }
             return ClickEvent.builder()
                     .action(action)
                     .value(value)
@@ -54,6 +67,19 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
         }
 
         node.node(ACTION_KEY).set(obj.action().name().toLowerCase(Locale.ROOT));
-        node.node(VALUE_KEY).set(obj.value());
+        switch (obj.action()) {
+            case OPEN_URL:
+                node.node(URL_KEY).set(obj.value());
+                break;
+            case RUN_COMMAND:
+            case SUGGEST_COMMAND:
+                node.node(COMMAND_KEY).set(obj.value());
+                break;
+            case CHANGE_PAGE:
+                node.node(PAGE_KEY).set(obj.value());
+                break;
+            default:
+                node.node(VALUE_KEY).set(obj.value());
+        }
     }
 }
