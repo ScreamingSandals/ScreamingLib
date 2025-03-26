@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -30,6 +32,8 @@ import java.util.stream.LongStream;
 public class SNBTSerializer {
     @Builder.Default
     private final boolean shouldSaveLongArraysDirectly = false; // not present before 1.12
+    @Builder.Default
+    private final boolean serializeHeterogeneousListNonWrapped = false;
 
     public @NotNull String serialize(@NotNull Tag tag) {
         if (tag instanceof ByteArrayTag) {
@@ -97,7 +101,11 @@ public class SNBTSerializer {
                 } else {
                     first = false;
                 }
-                builder.append(serialize(t));
+                if (serializeHeterogeneousListNonWrapped && t instanceof CompoundTag && ((CompoundTag) t).isTagWrapper()) {
+                    builder.append(serialize(Objects.requireNonNull(((CompoundTag) t).wrappedTag())));
+                } else {
+                    builder.append(serialize(t));
+                }
             }
             builder.append("]");
             return builder.toString();
@@ -292,6 +300,33 @@ public class SNBTSerializer {
             return readUntil(chars, i, c);
         } else {
             var value = readUntilControlSymbol(chars, i);
+            if (value.startsWith("bool(") && value.endsWith(")")) {
+                var inner = value.substring(5, value.length() - 1);
+                var deserialized = deserialize(inner);
+                if (!(deserialized instanceof NumericTag)) {
+                    throw new IllegalArgumentException("Expected numeric tag inside bool() function, but got " + deserialized.getClass().getName());
+                }
+
+                return ((NumericTag) deserialized).booleanValue() ? ByteTag.TRUE : ByteTag.FALSE;
+            }
+            if (value.startsWith("uuid(") && value.endsWith(")")) {
+                var inner = value.substring(5, value.length() - 1);
+                var deserialized = deserialize(inner);
+                if (!(deserialized instanceof StringTag)) {
+                    throw new IllegalArgumentException("Expected StringTag inside uuid() function, but got " + deserialized.getClass().getName());
+                }
+
+                UUID uuid;
+                try {
+                    uuid = UUID.fromString(((StringTag) deserialized).value());
+                } catch (IllegalArgumentException exception) {
+                    throw new IllegalArgumentException("Expected valid UUID inside uuid() function, but got " + ((StringTag) deserialized).value(), exception);
+                }
+                long mostSignificantBits = uuid.getMostSignificantBits();
+                long leastSignificantBits = uuid.getLeastSignificantBits();
+
+                return new IntArrayTag(new int[] {(int) (mostSignificantBits >> 32), (int) mostSignificantBits, (int) (leastSignificantBits >> 32), (int) leastSignificantBits});
+            }
             if ("true".equalsIgnoreCase(value)) {
                 return ByteTag.TRUE;
             } else if ("false".equalsIgnoreCase(value)) {

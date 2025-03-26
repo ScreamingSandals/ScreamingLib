@@ -17,7 +17,10 @@
 package org.screamingsandals.lib.test.nbt;
 
 import org.junit.jupiter.api.Test;
+import org.screamingsandals.lib.nbt.ByteTag;
 import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.IntArrayTag;
+import org.screamingsandals.lib.nbt.ListTag;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.nbt.StringTag;
 
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SNBTSerializerTest {
     @Test
@@ -104,5 +108,142 @@ public class SNBTSerializerTest {
                 .with("invalid name", "Hello world!");
 
         assertEquals(expected, tag);
+    }
+
+    @Test
+    public void testDeserializingHeterogeneous() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "{list:[1B,test,{a: b}]}";
+
+        var tag = serializer.deserialize(string);
+
+        var expected = new CompoundTag(Map.of())
+                .with("list", new ListTag(List.of(
+                        CompoundTag.wrapper(new ByteTag((byte) 1)),
+                        CompoundTag.wrapper(new StringTag("test")),
+                        new CompoundTag(Map.of("a", new StringTag("b")))
+                )));
+
+        assertEquals(expected, tag);
+    }
+
+    @Test
+    public void testSerializingHeterogeneous() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var tag = new CompoundTag(Map.of())
+                .with("list", new ListTag(List.of(
+                        CompoundTag.wrapper(new ByteTag((byte) 1)),
+                        CompoundTag.wrapper(new StringTag("test")),
+                        new CompoundTag(Map.of("a", new StringTag("b")))
+                )));
+
+        var actual = serializer.serialize(tag);
+
+        var expected = "{list:[{\"\":1b},{\"\":\"test\"},{a:\"b\"}]}";
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testSerializingHeterogeneousNonWrapped() {
+        var serializer = SNBTSerializer.builder().serializeHeterogeneousListNonWrapped(true).build();
+
+        var tag = new CompoundTag(Map.of())
+                .with("list", new ListTag(List.of(
+                        CompoundTag.wrapper(new ByteTag((byte) 1)),
+                        CompoundTag.wrapper(new StringTag("test")),
+                        new CompoundTag(Map.of("a", new StringTag("b")))
+                )));
+
+        var actual = serializer.serialize(tag);
+
+        var expected = "{list:[1b,\"test\",{a:\"b\"}]}";
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBoolFunctionTrue() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "bool(true)";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = ByteTag.TRUE;
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBoolFunctionFalse() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "bool(false)";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = ByteTag.FALSE;
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBoolFunctionNonZero() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "bool(55)";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = ByteTag.TRUE;
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBoolFunctionZero() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "bool(0)";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = ByteTag.FALSE;
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBoolFunctionInvalid() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "bool(text)";
+
+        assertThrows(IllegalArgumentException.class, () -> serializer.deserialize(string));
+    }
+
+    @Test
+    public void testUuidFunction() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "uuid(f81d4fae-7dec-11d0-a765-00a0c91e6bf6)";
+
+        var actual = serializer.deserialize(string);
+
+        var expected = new IntArrayTag(new int[] {-132296786, 2112623056, -1486552928, -920753162});
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testUuidFunctionInvalid() {
+        var serializer = SNBTSerializer.builder().build();
+
+        var string = "bool(text)";
+
+        assertThrows(IllegalArgumentException.class, () -> serializer.deserialize(string));
     }
 }

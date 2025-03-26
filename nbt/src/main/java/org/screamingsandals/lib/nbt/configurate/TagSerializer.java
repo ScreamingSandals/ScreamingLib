@@ -232,7 +232,11 @@ public class TagSerializer implements TypeSerializer<Tag> {
         } else if (obj instanceof ListTag) {
             node.setList(Tag.class, List.of());
             for (var child : ((ListTag) obj).value()) {
-                node.appendListNode().set(Tag.class, child);
+                if (child instanceof CompoundTag && ((CompoundTag) child).isTagWrapper()) {
+                    node.appendListNode().set(Tag.class, ((CompoundTag) child).wrappedTag());
+                } else {
+                    node.appendListNode().set(Tag.class, child);
+                }
             }
         } else if (obj instanceof LongArrayTag) {
             node.node(SPECIAL_TYPE_KEY).set(LONG_ARRAY_VALUE);

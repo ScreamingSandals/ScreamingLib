@@ -29,9 +29,17 @@ import java.util.stream.Stream;
 @Data
 @Accessors(fluent = true)
 public final class CompoundTag implements Tag, CompoundTagTreeInspector, CompoundTagModifier {
+    private static final @NotNull String WRAPPER_KEY = "";
     public static final @NotNull CompoundTag EMPTY = new CompoundTag(Map.of());
 
     private final @NotNull Map<@NotNull String, Tag> value;
+
+    public static @NotNull CompoundTag wrapper(@NotNull Tag tag) {
+        if (tag instanceof CompoundTag) {
+            throw new IllegalArgumentException("Cannot wrap a CompoundTag");
+        }
+        return new CompoundTag(Map.of(WRAPPER_KEY, tag));
+    }
 
     @Contract(value = "-> new", pure = true)
     public @NotNull Map<@NotNull String, Tag> value() {
@@ -44,6 +52,17 @@ public final class CompoundTag implements Tag, CompoundTagTreeInspector, Compoun
 
     public @Nullable Tag tag(@NotNull String name) {
         return value.get(name);
+    }
+
+    public boolean isTagWrapper() {
+        return value.size() == 1 && value.containsKey(WRAPPER_KEY);
+    }
+
+    public @Nullable Tag wrappedTag() {
+        if (isTagWrapper()) {
+            return value.get(WRAPPER_KEY);
+        }
+        return null;
     }
 
     @Contract(value = "_, _ -> new", pure = true)

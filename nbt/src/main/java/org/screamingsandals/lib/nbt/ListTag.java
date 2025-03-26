@@ -49,10 +49,11 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
                     this.tags.clear();
                     for (var tag : tags) {
                         if (tag instanceof CompoundTag) {
+                            this.tags.add(tag);
                             continue;
                         }
 
-                        this.tags.add(new CompoundTag(Map.of("", tag)));
+                        this.tags.add(CompoundTag.wrapper(tag));
                     }
                     break;
                 }
