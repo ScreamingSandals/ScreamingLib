@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.entity.animal;
 
 /**
- * Represents an entity with identifier {@code minecraft:cow}. It is also a parent type for {@code minecraft:mooshroom}.
+ * Represents an entity with identifier {@code minecraft:cow}.
  */
-public interface Cow extends Animal {
+public interface Cow extends AbstractCow {
 }

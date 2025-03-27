@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.entity.animal;
 
 /**
- * Represents an entity with identifier {@code minecraft:mooshroom}.
+ * An abstract type for all cow-like animals
  */
-public interface Mooshroom extends AbstractCow {
+public interface AbstractCow extends Animal {
 }

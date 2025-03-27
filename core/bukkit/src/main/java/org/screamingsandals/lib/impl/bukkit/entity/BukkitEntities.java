@@ -283,10 +283,11 @@ public class BukkitEntities extends Entities {
                         return new BukkitChicken((org.bukkit.entity.Chicken) entity);
                     }
 
+                    if (entity instanceof org.bukkit.entity.MushroomCow) {
+                        return new BukkitMooshroom((org.bukkit.entity.MushroomCow) entity);
+                    }
+
                     if (entity instanceof org.bukkit.entity.Cow) {
-                        if (entity instanceof org.bukkit.entity.MushroomCow) {
-                            return new BukkitMooshroom((org.bukkit.entity.MushroomCow) entity);
-                        }
                         return new BukkitCow((org.bukkit.entity.Cow) entity);
                     }
 

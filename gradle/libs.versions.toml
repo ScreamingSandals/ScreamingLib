@@ -1,6 +1,6 @@
 [versions]
 # platforms
-paper = "1.21.4-R0.1-SNAPSHOT"
+paper = "1.21.5-R0.1-SNAPSHOT"
 paper-support_1_21_3 = "1.21.3-R0.1-SNAPSHOT"
 paper-support_1_21_1 = "1.21.1-R0.1-SNAPSHOT"
 paper-support_1_20_6 = "1.20.6-R0.1-SNAPSHOT"

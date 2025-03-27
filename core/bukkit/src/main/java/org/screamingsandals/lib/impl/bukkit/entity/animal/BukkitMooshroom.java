@@ -19,7 +19,7 @@ package org.screamingsandals.lib.impl.bukkit.entity.animal;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.animal.Mooshroom;
 
-public class BukkitMooshroom extends BukkitCow implements Mooshroom {
+public class BukkitMooshroom extends BukkitAnimal implements Mooshroom {
     public BukkitMooshroom(@NotNull org.bukkit.entity.MushroomCow wrappedObject) {
         super(wrappedObject);
     }

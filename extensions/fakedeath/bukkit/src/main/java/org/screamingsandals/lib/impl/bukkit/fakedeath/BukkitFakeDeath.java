@@ -133,7 +133,7 @@ public class BukkitFakeDeath extends FakeDeath {
         function.reset(slibPlayer, event.getKeepInventory());
         try {
             player.setKiller(null);
-            player.setLastDamageCause(null);
+            Reflect.getMethod(player, "setLastDamageCause", EntityDamageEvent.class).invoke((Object) null); // Not exposed to the API anymore
         } catch (Throwable ignored) {}
 
         if (event.getKeepLevel() || event.getKeepInventory()) {

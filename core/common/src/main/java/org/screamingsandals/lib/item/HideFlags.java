@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @RequiredArgsConstructor
+// TODO: rework this API
 public enum HideFlags {
     ENCHANTMENTS("HIDE_ENCHANTS"),
     ATTRIBUTE_MODIFIERS("HIDE_ATTRIBUTES"),
