@@ -98,9 +98,22 @@ public interface ItemStackBuilder {
      * @throws IllegalArgumentException if the tag is not applicable to item stack of this type
      */
     @Contract("_ -> this")
-    @Deprecated
-    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
-    @NotNull ItemStackBuilder tag(@NotNull CompoundTag tag);
+    default @NotNull ItemStackBuilder tag(@NotNull CompoundTag tag) {
+        return tag(tag, 0);
+    }
+
+    /**
+     * Sets new item tag for this item. This means that everything except amount and type will be overriden.
+     *
+     * @param tag which will be assigned to this item
+     * @param dataVersion data version of the input tag (or 0 if current)
+     * @return this builder
+     * @see #mergeTag(CompoundTag)
+     * @throws UnsupportedOperationException if the item is AIR and the version does not support having AIR with NBT data (1.20.5+)
+     * @throws IllegalArgumentException if the tag is not applicable to item stack of this type
+     */
+    @Contract("_,_ -> this")
+    @NotNull ItemStackBuilder tag(@NotNull CompoundTag tag, int dataVersion);
 
     /**
      * Merges provided tag with this item tag
@@ -109,8 +122,6 @@ public interface ItemStackBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
-    @Deprecated
-    @LimitedVersionSupport("<= 1.20.4; works on >= 1.20.5, but the results may be unexpected, avoid using this method")
     @NotNull ItemStackBuilder mergeTag(@NotNull CompoundTag tag);
 
     @Contract(pure = true)

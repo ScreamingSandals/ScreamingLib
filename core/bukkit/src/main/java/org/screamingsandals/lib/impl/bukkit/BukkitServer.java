@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.impl.bukkit;
 
+import com.mojang.datafixers.DataFixer;
 import io.netty.channel.ChannelFuture;
 import org.bukkit.Bukkit;
 import org.bukkit.Registry;
@@ -31,6 +32,7 @@ import org.screamingsandals.lib.impl.nms.accessors.SharedConstantsAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.status.ServerStatus$VersionAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.status.ServerStatusAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.VVV.DataConverterManagerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerConnectionListenerAccessor;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.player.Sender;
@@ -601,6 +603,26 @@ public class BukkitServer extends Server {
                 .fastInvokeResulted(ServerStatusAccessor.METHOD_GET_VERSION.get())
                 .fastInvokeResulted(ServerStatus$VersionAccessor.METHOD_PROTOCOL.get())
                 .as(Integer.class);
+    }
+
+    public @NotNull Integer getDataVersion0() {
+        // 1.13+
+        if (BukkitFeature.UNSAFE_VALUES_DATA_VERSION.isSupported()) {
+            return Bukkit.getUnsafe().getDataVersion();
+        }
+
+        // 1.9-1.12.2
+        if (DataConverterManagerAccessor.TYPE.get() != null) {
+            var fixerUpper = (DataFixer) Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").getField(MinecraftServerAccessor.FIELD_DATA_CONVERTER_MANAGER.get());
+            var currentVersion = (Integer) Reflect.getField(fixerUpper, DataConverterManagerAccessor.FIELD_FIELD_188262_D.get());
+            if (currentVersion != null) {
+                return currentVersion;
+            } else {
+                return 0; // Unable to return correct data version
+            }
+        }
+
+        return -1; // 1.8
     }
 
     @Override

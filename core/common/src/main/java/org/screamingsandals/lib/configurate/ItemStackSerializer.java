@@ -18,6 +18,7 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.item.HideFlags;
@@ -50,6 +51,7 @@ public class ItemStackSerializer implements TypeSerializer<ItemStack> {
     private static final @NotNull String ID_KEY = "id"; // type alternative
     private static final @NotNull String META_KEY = "meta";
     private static final @NotNull String TAG_KEY = "tag";
+    private static final @NotNull String DATA_VERSION_KEY = "DataVersion";
     private static final @NotNull String AMOUNT_KEY = "amount";
     private static final @NotNull String COUNT_KEY = "count"; // amount alternative
     private static final @NotNull String DAMAGE_KEY = "damage";
@@ -93,20 +95,22 @@ public class ItemStackSerializer implements TypeSerializer<ItemStack> {
 
             var tag = node.node(TAG_KEY);
             if (!tag.empty()) {
+                var dataVersion = node.node(DATA_VERSION_KEY);
+
                 if (tag.isMap()) {
                     var nbtTag = TagSerializer.INSTANCE.deserialize(Tag.class, tag);
                     if (!(nbtTag instanceof CompoundTag)) {
                         throw new IllegalArgumentException(TAG_KEY + " should be a compound tag, got " + nbtTag);
                     }
                     //noinspection deprecation
-                    builder.tag((CompoundTag) nbtTag);
+                    builder.tag((CompoundTag) nbtTag, dataVersion.getInt(0));
                 } else {
                     var snbtTag = internalSNBTSerializer.deserialize(tag.getString(""));
                     if (!(snbtTag instanceof CompoundTag)) {
                         throw new IllegalArgumentException(TAG_KEY + " should be a compound tag, got " + snbtTag);
                     }
                     //noinspection deprecation
-                    builder.tag((CompoundTag) snbtTag);
+                    builder.tag((CompoundTag) snbtTag, dataVersion.getInt(0));
                 }
             }
 
@@ -304,11 +308,12 @@ public class ItemStackSerializer implements TypeSerializer<ItemStack> {
         node.set(null);
 
         if (obj != null) {
-            ItemTypeSerializer.INSTANCE.serialize(ItemType.class, obj.getType(), node.node(TYPE_KEY));
-            node.node(AMOUNT_KEY).set(obj.getAmount());
+            ItemTypeSerializer.INSTANCE.serialize(ItemType.class, obj.getType(), node.node(ID_KEY));
+            node.node(COUNT_KEY).set(obj.getAmount());
             var tag = obj.getTag();
             if (!tag.isEmpty()) {
-                TagSerializer.INSTANCE.serialize(Tag.class, tag, node.node(TAG_KEY));
+                node.node(TAG_KEY).set(internalSNBTSerializer.serialize(tag));
+                node.node(DATA_VERSION_KEY).set(Server.getDataVersion());
             }
         }
     }

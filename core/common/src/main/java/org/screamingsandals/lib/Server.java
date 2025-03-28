@@ -38,6 +38,7 @@ import java.util.List;
 public abstract class Server {
     private static @Nullable Server server;
     private static @Nullable Integer PROTOCOL_VERSION;
+    private static @Nullable Integer DATA_VERSION;
 
     @ApiStatus.Internal
     public Server() {
@@ -126,6 +127,13 @@ public abstract class Server {
         return PROTOCOL_VERSION;
     }
 
+    public static @NotNull Integer getDataVersion() {
+        if (DATA_VERSION == null) {
+            DATA_VERSION = Preconditions.checkNotNull(server, "Server has not yet been initialized!").getDataVersion0();
+        }
+        return DATA_VERSION;
+    }
+
     public static @NotNull Sender getConsoleSender() {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConsoleSender0();
     }
@@ -185,6 +193,8 @@ public abstract class Server {
     public abstract @NotNull ProxyType getProxyType0();
 
     public abstract @NotNull Integer getProtocolVersion0();
+
+    public abstract @NotNull Integer getDataVersion0();
 
     public abstract boolean acceptsTransfers0();
 }

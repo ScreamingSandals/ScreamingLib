@@ -16,6 +16,10 @@
 
 package org.screamingsandals.lib.impl.bukkit.item.builder;
 
+import com.mojang.datafixers.DSL;
+import com.mojang.datafixers.DataFixer;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -48,7 +52,11 @@ import org.screamingsandals.lib.impl.bukkit.item.BukkitItemType1_8;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
+import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.nms.accessors.nbt.NbtOpsAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.VVV.DataConverterManagerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.util.datafix.fixes.ReferencesAccessor;
 import org.screamingsandals.lib.impl.vanilla.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.CompoundTagAccessor;
@@ -500,7 +508,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
     }
 
     @Override
-    public @NotNull ItemStackBuilder tag(@NotNull CompoundTag tag) {
+    public @NotNull ItemStackBuilder tag(@NotNull CompoundTag tag, int dataVersion) {
         if (item == null) {
             item = new org.bukkit.inventory.ItemStack(Material.AIR); // shouldn't we throw error instead?
         }
@@ -508,6 +516,65 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
             item = ClassStorage.asCBStack(item);
         }
+
+        // Applying CompoundTag with conversion
+        conversion:
+        if (dataVersion != 0 && Version.isVersion(1, 9)) {
+            if (Version.isVersion(1, 13)) {
+                // 1.13+
+                int currentVersion = Bukkit.getUnsafe().getDataVersion();
+
+                // TODO: convert using Paper's methods if available
+
+                if (dataVersion >= currentVersion) {
+                    break conversion;
+                }
+
+                var compound = CompoundTag.EMPTY
+                        .with("id", item.getType().getKey().toString())
+                        .with("count", item.getAmount())
+                        .with(dataVersion > 3837 ? "components" : "tag", tag);
+
+                var vanilla = NBTVanillaSerializer.serialize(compound);
+
+                var mcServer = Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer");
+                var fixerUpper = (DataFixer) mcServer.getField(MinecraftServerAccessor.FIELD_FIXER_UPPER.get());
+                //noinspection unchecked
+                vanilla = fixerUpper.update((DSL.TypeReference) ReferencesAccessor.CONST_ITEM_STACK.get(), new Dynamic<>((DynamicOps<Object>) NbtOpsAccessor.CONST_INSTANCE.get(), vanilla), dataVersion, currentVersion).getValue();
+
+                if (ItemStackAccessor.METHOD_PARSE.get() != null) {
+                    var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), mcServer.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), vanilla);
+                    if (optional instanceof Optional) {
+                        this.item = ClassStorage.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
+                                new IllegalArgumentException("The given tag is not applicable to the item of type " + item.getType().getKey() + ": " + SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build().serialize(tag)))
+                        );
+                    }
+                } else {
+                    Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), Reflect.fastInvoke(vanilla, CompoundTagAccessor.METHOD_GET.get(), "tag"));
+                }
+            } else {
+                var fixerUpper = (DataFixer) Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").getField(MinecraftServerAccessor.FIELD_DATA_CONVERTER_MANAGER.get());
+                var currentVersion = (Integer) Reflect.getField(fixerUpper, DataConverterManagerAccessor.FIELD_FIELD_188262_D.get());
+                if (currentVersion == null || dataVersion >= currentVersion) {
+                    break conversion;
+                }
+
+                // 1.9-1.12.2
+                var compound = CompoundTag.EMPTY
+                        .with("id", item.getType().getKey().toString())
+                        .with("Count", item.getAmount())
+                        .with("tag", tag);
+
+                var vanilla = NBTVanillaSerializer.serialize(compound);
+
+                vanilla = Reflect.fastInvoke(fixerUpper, DataConverterManagerAccessor.METHOD_FUNC_188251_A.get(), ReferencesAccessor.CONST_ITEM_STACK.get(), vanilla, dataVersion);
+
+                Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), Reflect.fastInvoke(vanilla, CompoundTagAccessor.METHOD_GET.get(), "tag"));
+            }
+            return this;
+        }
+
+        // Applying CompoundTag without any conversion
         if (ItemStackAccessor.METHOD_PARSE.get() != null) {
             // 1.20.5+
             if (item.getType().isAir()) {
