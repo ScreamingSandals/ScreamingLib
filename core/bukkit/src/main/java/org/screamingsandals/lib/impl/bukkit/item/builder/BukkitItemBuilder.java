@@ -39,12 +39,14 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.firework.FireworkEffect;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitItemAttribute;
+import org.screamingsandals.lib.impl.bukkit.compat.datafixer2.DataFixer2Compat;
 import org.screamingsandals.lib.impl.bukkit.compat.v1_20_1.PotionDataCompat;
 import org.screamingsandals.lib.impl.bukkit.compat.v1_8_8.PotionCompat;
 import org.screamingsandals.lib.impl.bukkit.item.BukkitItem;
@@ -53,10 +55,13 @@ import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.nms.accessors.core.MappedRegistryAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.NbtOpsAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.resources.ResourceLocationAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.VVV.DataConverterManagerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.util.datafix.fixes.ReferencesAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.item.ItemAccessor;
 import org.screamingsandals.lib.impl.vanilla.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.CompoundTagAccessor;
@@ -532,15 +537,19 @@ public class BukkitItemBuilder implements ItemStackBuilder {
 
                 var compound = CompoundTag.EMPTY
                         .with("id", item.getType().getKey().toString())
-                        .with("count", item.getAmount())
+                        .with(dataVersion > 3837 ? "count" : "Count", item.getAmount())
                         .with(dataVersion > 3837 ? "components" : "tag", tag);
 
                 var vanilla = NBTVanillaSerializer.serialize(compound);
 
                 var mcServer = Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer");
                 var fixerUpper = (DataFixer) mcServer.getField(MinecraftServerAccessor.FIELD_FIXER_UPPER.get());
-                //noinspection unchecked
-                vanilla = fixerUpper.update((DSL.TypeReference) ReferencesAccessor.CONST_ITEM_STACK.get(), new Dynamic<>((DynamicOps<Object>) NbtOpsAccessor.CONST_INSTANCE.get(), vanilla), dataVersion, currentVersion).getValue();
+                if (BukkitFeature.DATA_FIXER_SPLIT_SERIALIZATION.isSupported()) {
+                    //noinspection unchecked
+                    vanilla = fixerUpper.update((DSL.TypeReference) ReferencesAccessor.CONST_ITEM_STACK.get(), new Dynamic<>((DynamicOps<Object>) NbtOpsAccessor.CONST_INSTANCE.get(), vanilla), dataVersion, currentVersion).getValue();
+                } else {
+                    vanilla = DataFixer2Compat.dataFix(fixerUpper, vanilla, dataVersion, currentVersion);
+                }
 
                 if (ItemStackAccessor.METHOD_PARSE.get() != null) {
                     var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), mcServer.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), vanilla);
@@ -553,20 +562,20 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                     Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), Reflect.fastInvoke(vanilla, CompoundTagAccessor.METHOD_GET.get(), "tag"));
                 }
             } else {
-                var fixerUpper = (DataFixer) Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").getField(MinecraftServerAccessor.FIELD_DATA_CONVERTER_MANAGER.get());
-                var currentVersion = (Integer) Reflect.getField(fixerUpper, DataConverterManagerAccessor.FIELD_FIELD_188262_D.get());
-                if (currentVersion == null || dataVersion >= currentVersion) {
+                var currentVersion = Server.getDataVersion();
+                if (dataVersion >= currentVersion) {
                     break conversion;
                 }
 
                 // 1.9-1.12.2
                 var compound = CompoundTag.EMPTY
-                        .with("id", item.getType().getKey().toString())
+                        .with("id", Reflect.fastInvoke(ItemAccessor.CONST_REGISTRY.get(), MappedRegistryAccessor.METHOD_FUNC_177774_C.get(), Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_GET_ITEM.get())).toString())
                         .with("Count", item.getAmount())
                         .with("tag", tag);
 
                 var vanilla = NBTVanillaSerializer.serialize(compound);
 
+                var fixerUpper = Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").getField(MinecraftServerAccessor.FIELD_DATA_CONVERTER_MANAGER.get());
                 vanilla = Reflect.fastInvoke(fixerUpper, DataConverterManagerAccessor.METHOD_FUNC_188251_A.get(), ReferencesAccessor.CONST_ITEM_STACK.get(), vanilla, dataVersion);
 
                 Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), Reflect.fastInvoke(vanilla, CompoundTagAccessor.METHOD_GET.get(), "tag"));

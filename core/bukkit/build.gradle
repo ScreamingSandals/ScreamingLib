@@ -5,6 +5,8 @@ def supportVersions = [
     '1_20_1': libs.paper.support.one.twenty.one,
     '1_12_2': libs.paper.support.one.twelve.two,
     '1_8_8': libs.paper.support.one.eight.eight,
+
+    'datafixer2': libs.datafixerupper2,
 ]
 
 sourceSets {
@@ -70,6 +72,7 @@ dependencies {
     api project(':spectator-bungee')
 
     mainCompileOnly libs.paper
+    mainCompileOnly libs.datafixerupper
     for (def ver : supportVersions) {
         "support_${ver.key}CompileOnly" ver.value
     }
@@ -77,7 +80,6 @@ dependencies {
     compileOnly libs.netty
     compileOnly libs.viaversion
     compileOnly libs.protocolsupport
-    compileOnly libs.datafixerupper
 }
 
 if (tasks.findByName("sourceJar")) {

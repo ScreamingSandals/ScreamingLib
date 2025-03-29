@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.impl.bukkit;
 
-import com.mojang.datafixers.DataFixer;
 import io.netty.channel.ChannelFuture;
 import org.bukkit.Bukkit;
 import org.bukkit.Registry;
@@ -613,7 +612,7 @@ public class BukkitServer extends Server {
 
         // 1.9-1.12.2
         if (DataConverterManagerAccessor.TYPE.get() != null) {
-            var fixerUpper = (DataFixer) Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").getField(MinecraftServerAccessor.FIELD_DATA_CONVERTER_MANAGER.get());
+            var fixerUpper = Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").getField(MinecraftServerAccessor.FIELD_DATA_CONVERTER_MANAGER.get());
             var currentVersion = (Integer) Reflect.getField(fixerUpper, DataConverterManagerAccessor.FIELD_FIELD_188262_D.get());
             if (currentVersion != null) {
                 return currentVersion;

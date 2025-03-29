@@ -281,4 +281,5 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature TRANSFER = PlatformFeature.of(() -> Reflect.hasMethod(Bukkit.class, "isAcceptingTransfers"));
     public static final @NotNull PlatformFeature EQUIPMENT_SLOT_GROUP = PlatformFeature.of(() -> Reflect.has("org.bukkit.inventory.EquipmentSlotGroup"));
     public static final @NotNull PlatformFeature INVENTORY_VIEW_INTERFACE = PlatformFeature.of(() -> Reflect.hasAsInterface("org.bukkit.inventory.InventoryView"));
+    public static final @NotNull PlatformFeature DATA_FIXER_SPLIT_SERIALIZATION = PlatformFeature.of(() -> Reflect.has("com.mojang.serialization.Dynamic"));
 }

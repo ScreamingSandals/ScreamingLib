@@ -13,6 +13,7 @@ waterfall = "1.21-R0.1-SNAPSHOT"
 velocity = "3.2.0-SNAPSHOT"
 adventure = "4.18.0"
 datafixerupper = "8.0.16"
+datafixerupper2 = "2.0.24"
 
 # paperlib (shaded)
 paperlib = "1.0.8"
@@ -71,6 +72,7 @@ viaversion = { group = "com.viaversion", name = "viaversion-api", version.ref = 
 vault = { group = "com.github.MilkBowl", name = "VaultAPI", version.ref = "vault" }
 protocolsupport = { group = "com.github.ProtocolSupport", name = "ProtocolSupport", version.ref = "protocolsupport" }
 datafixerupper = { group = "com.mojang", name = "datafixerupper", version.ref = "datafixerupper" }
+datafixerupper2 = { group = "com.mojang", name = "datafixerupper", version.ref = "datafixerupper2" }
 
 # platforms
 paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }

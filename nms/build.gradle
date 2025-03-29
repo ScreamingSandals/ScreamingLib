@@ -93,6 +93,7 @@ accessors {
 
     mapClass('net.minecraft.core.MappedRegistry') {
         methodInferred('func_148757_b', '1.8.8', Object) // <= 1.13
+        method(Object, 'func_177774_c', Object) // < 1.13
     }
 
     var SynchedEntityData = mapClass('net.minecraft.network.syncher.SynchedEntityData') {
@@ -415,6 +416,8 @@ accessors {
     }
 
     mapClass('net.minecraft.world.item.Item') {
+        field('net.minecraft.server.VVV.RegistryMaterials', 'REGISTRY') // <= 1.13
+
         method(int, 'getId', it.name)
     }
 
@@ -619,6 +622,7 @@ accessors {
         method(CompoundTag, 'save', CompoundTag)
         method(CompoundTag, 'getTag')
         method(void, 'setTag', CompoundTag)
+        getter('net.minecraft.world.item.Item', 'item')
 
         // 1.20.5+
         method(java.util.Optional, 'parse', 'net.minecraft.core.HolderLookup$Provider', Tag)
