@@ -43,7 +43,7 @@ public class BungeeSelectorComponent extends BungeeComponent implements Selector
     @Override
     public SelectorComponent.@NotNull Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.SelectorComponent) wrappedObject.duplicate();
-        if (AbstractBungeeBackend.COMPONENTS_PORTED_SUCCESSFULLY) {
+        if (!BungeeChatFeature.SELECTOR_COMPONENT_SEPARATORS.isSupported() && AbstractBungeeBackend.COMPONENTS_PORTED_SUCCESSFULLY) {
             return new MultipleImplementationsBuilder(duplicate);
         }
         return new BungeeSelectorBuilder(duplicate);
@@ -51,11 +51,26 @@ public class BungeeSelectorComponent extends BungeeComponent implements Selector
 
     @Override
     public @Nullable Component separator() {
-        return null; // WHERE IS IT ???
+        if (BungeeChatFeature.SELECTOR_COMPONENT_SEPARATORS.isSupported()) {
+            var component = ((net.md_5.bungee.api.chat.SelectorComponent) wrappedObject).getSeparator();
+            return component != null ? AbstractBungeeBackend.wrapComponent(component) : null;
+        }
+        return null;
     }
 
     @Override
     public @NotNull SelectorComponent withSeparator(@Nullable Component separator) {
+        if (BungeeChatFeature.SELECTOR_COMPONENT_SEPARATORS.isSupported()) {
+            var duplicate = (net.md_5.bungee.api.chat.SelectorComponent) wrappedObject.duplicate();
+            duplicate.setSeparator(separator != null ? separator.as(BaseComponent.class) : null);
+            return (SelectorComponent) AbstractBungeeBackend.wrapComponent(duplicate);
+        } else if (AbstractBungeeBackend.COMPONENTS_PORTED_SUCCESSFULLY && separator != null) {
+            var old = (net.md_5.bungee.api.chat.SelectorComponent) wrappedObject;
+            var newComponent = new SelectorPortedComponent(old.getSelector());
+            newComponent.copyFrom(old);
+            newComponent.setSeparator(separator.as(BaseComponent.class));
+            return (SelectorComponent) AbstractBungeeBackend.wrapComponent(newComponent);
+        }
         return this; // WHERE IS IT ???
     }
 
@@ -73,7 +88,9 @@ public class BungeeSelectorComponent extends BungeeComponent implements Selector
 
         @Override
         public SelectorComponent.@NotNull Builder separator(@Nullable Component separator) {
-            // Hey md_5, I hate you with all my hearth
+            if (BungeeChatFeature.SELECTOR_COMPONENT_SEPARATORS.isSupported()) {
+                component.setSeparator(separator != null ? separator.as(BaseComponent.class) : null);
+            }
             return this;
         }
     }

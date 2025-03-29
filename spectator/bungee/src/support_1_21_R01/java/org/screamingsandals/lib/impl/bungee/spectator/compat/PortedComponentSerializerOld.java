@@ -14,24 +14,31 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bungee.spectator.backports;
+package org.screamingsandals.lib.impl.bungee.spectator.compat;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.BaseComponentSerializer;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.reflect.Type;
+import java.util.function.BiConsumer;
 
-@ApiStatus.Internal
-public class PortedComponentSerializer extends BaseComponentSerializer implements JsonSerializer<BasePortedComponent> {
+public class PortedComponentSerializerOld<T extends BaseComponent> extends BaseComponentSerializer implements JsonSerializer<T> {
+    private final BiConsumer<T, JsonObject> serializer;
+
+    public PortedComponentSerializerOld(BiConsumer<T, JsonObject> serializer) {
+        this.serializer = serializer;
+    }
+
     @Override
-    public JsonElement serialize(BasePortedComponent src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject object = new JsonObject();
         serialize(object, src, context);
-        src.write(object);
+        this.serializer.accept(src, object);
         return object;
     }
 }
+

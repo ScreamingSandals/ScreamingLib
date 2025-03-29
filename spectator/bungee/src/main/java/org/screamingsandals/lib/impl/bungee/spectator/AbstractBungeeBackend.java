@@ -22,11 +22,14 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
+import net.md_5.bungee.chat.ChatVersion;
 import net.md_5.bungee.chat.ComponentSerializer;
+import net.md_5.bungee.chat.VersionedComponentSerializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bungee.spectator.backports.*;
+import org.screamingsandals.lib.impl.bungee.spectator.compat.PortedComponentSerializerOld;
 import org.screamingsandals.lib.impl.bungee.spectator.event.BungeeClickEvent;
 import org.screamingsandals.lib.impl.bungee.spectator.event.BungeeHoverEvent;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeEntityContent;
@@ -75,11 +78,28 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     static final boolean COMPONENTS_PORTED_SUCCESSFULLY;
 
     static {
-        var gson = Reflect.getField(ComponentSerializer.class, "gson");
-        if (gson instanceof Gson) {
-            COMPONENTS_PORTED_SUCCESSFULLY = Injector.injectGson((Gson) gson, gsonBuilder -> gsonBuilder.registerTypeHierarchyAdapter(BasePortedComponent.class, new PortedComponentSerializer()));
+        if (BungeeChatFeature.VERSIONED_COMPONENT_SERIALIZER.isSupported()) {
+            boolean ported = false;
+            for (var version : ChatVersion.values()) {
+                var serializer = VersionedComponentSerializer.forVersion(version);
+                var gson = Reflect.getField(serializer, "gson");
+                if (gson instanceof Gson) {
+                    ported = Injector.injectGson((Gson) gson, gsonBuilder -> gsonBuilder.registerTypeHierarchyAdapter(BasePortedComponent.class, new PortedComponentSerializer1_21_R02(serializer)));
+                } else {
+                    ported = false;
+                }
+                if (!ported) {
+                    break;
+                }
+            }
+            COMPONENTS_PORTED_SUCCESSFULLY = ported;
         } else {
-            COMPONENTS_PORTED_SUCCESSFULLY = false;
+            var gson = Reflect.getField(ComponentSerializer.class, "gson");
+            if (gson instanceof Gson) {
+                COMPONENTS_PORTED_SUCCESSFULLY = Injector.injectGson((Gson) gson, gsonBuilder -> gsonBuilder.registerTypeHierarchyAdapter(BasePortedComponent.class, new PortedComponentSerializerOld<>(BasePortedComponent::write)));
+            } else {
+                COMPONENTS_PORTED_SUCCESSFULLY = false;
+            }
         }
     }
 
@@ -149,7 +169,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Override
     public SelectorComponent.@NotNull Builder selector() {
         if (BungeeChatFeature.SELECTOR_COMPONENT.isSupported()) {
-            if (COMPONENTS_PORTED_SUCCESSFULLY) {
+            if (!BungeeChatFeature.SELECTOR_COMPONENT_SEPARATORS.isSupported() && COMPONENTS_PORTED_SUCCESSFULLY) {
                 // We prefer using the original component, but because it does not support everything, we may need to switch the underlying component to our own
                 return new BungeeSelectorComponent.MultipleImplementationsBuilder(new net.md_5.bungee.api.chat.SelectorComponent(""));
             }

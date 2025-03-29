@@ -30,6 +30,7 @@ public class BungeeChatFeature {
     public static final @NotNull PlatformFeature KEYBIND_COMPONENT = PlatformFeature.of(() -> Reflect.has("net.md_5.bungee.api.chat.KeybindComponent"));
     public static final @NotNull PlatformFeature SCORE_COMPONENT = PlatformFeature.of(() -> Reflect.has("net.md_5.bungee.api.chat.ScoreComponent"));
     public static final @NotNull PlatformFeature SELECTOR_COMPONENT = PlatformFeature.of(() -> Reflect.has("net.md_5.bungee.api.chat.SelectorComponent"));
+    public static final @NotNull PlatformFeature SELECTOR_COMPONENT_SEPARATORS = SELECTOR_COMPONENT.and(() -> Reflect.hasMethod("net.md_5.bungee.api.chat.SelectorComponent", "setSeparator", BaseComponent.class));
 
     // Component parts
     public static final @NotNull PlatformFeature FONT = PlatformFeature.of(() -> Reflect.hasMethod(BaseComponent.class, "getFontRaw"));
@@ -39,4 +40,5 @@ public class BungeeChatFeature {
     // Misc
     public static final @NotNull PlatformFeature RGB_COLORS = PlatformFeature.of(() -> !ChatColor.class.isEnum());
     public static final @NotNull PlatformFeature SHADOW_COLORS = PlatformFeature.of(() -> Reflect.hasMethod(BaseComponent.class, "getShadowColor"));
+    public static final @NotNull PlatformFeature VERSIONED_COMPONENT_SERIALIZER = PlatformFeature.of(() -> Reflect.has("net.md_5.bungee.chat.VersionedComponentSerializer"));
 }

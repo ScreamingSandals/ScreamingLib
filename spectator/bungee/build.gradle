@@ -1,3 +1,24 @@
+sourceSets {
+    support_1_21_R01 {
+        java {
+        }
+    }
+
+    main {
+        compileClasspath += support_1_21_R01.output
+        output.dir(support_1_21_R01.output.classesDirs, builtBy: "compileSupport_1_21_R01Java")
+    }
+}
+
 dependencies {
-    compileOnly libs.waterfall.chat
+    compileOnly libs.bungeecord.chat
+    support_1_21_R01CompileOnly libs.bungeecord.chat.support.one.twentyone.r01
+}
+
+if (tasks.findByName("sourceJar")) {
+    tasks.named("sourceJar") {
+        sourceSets.matching { it.name != 'test' }.each {
+            from it.allJava
+        }
+    }
 }
