@@ -92,7 +92,7 @@ public class BukkitEntityType1_11 extends BasicWrapper<org.bukkit.entity.EntityT
     public @NotNull ResourceLocation location() {
         if (BukkitFeature.ENTITY_KEYED.isSupported()) {
             var namespaced = wrappedObject.getKey();
-            return ResourceLocation.of(namespaced.namespace(), namespaced.getKey());
+            return ResourceLocation.of(namespaced.getNamespace(), namespaced.getKey());
         } else {
             return InternalEntityLegacyConstants.translateLegacyName1_11(wrappedObject);
         }

@@ -19,6 +19,8 @@ package org.screamingsandals.lib.impl.bungee.spectator;
 import lombok.Data;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.hover.content.Content;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -346,6 +348,10 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
         try {
+            if (BungeeChatFeature.MODERN_HOVER_CONTENTS.isSupported() && type == Content.class) {
+                //noinspection unchecked
+                return (T) new Text(wrappedObject.duplicate());
+            }
             return super.as(type);
         } catch (Throwable ignored) {
             return AbstractBungeeBackend.getAdditionalComponentConverter().convert(this, type);
