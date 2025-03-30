@@ -69,12 +69,12 @@ public class ClientboundSetPlayerTeamPacket extends AbstractPacket {
                 writer.writeSizedString(teamSuffix.toLegacy());
             }
             writer.writeByte((byte) ((friendlyFire ? 0x01 : 0) | (seeInvisible ? 0x02 : 0)));
-            if (writer.protocol() > ProtocolVersions.V1_21_5) {
+            if (writer.protocol() >= ProtocolVersions.V1_21_5) {
                 writer.writeVarInt(tagVisibility.ordinal());
             } else {
                 writer.writeSizedString(tagVisibility.enumName());
             }
-            if (writer.protocol() > ProtocolVersions.V1_21_5) {
+            if (writer.protocol() >= ProtocolVersions.V1_21_5) {
                 writer.writeVarInt(collisionRule.ordinal());
             } else if (writer.protocol() > 70) {
                 writer.writeSizedString(collisionRule.enumName());
