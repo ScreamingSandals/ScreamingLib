@@ -136,7 +136,7 @@ public class VelocityMainClassGenerator extends StandardMainClassGenerator {
     @Override
     protected void wrapLoggers(MethodSpec.@NotNull Builder builder, boolean requiredScreamingLogger, boolean requiredSlf4jLogger) {
         if (requiredScreamingLogger) {
-            builder.addStatement("this.$N = new $T($N)", "screamingLogger", Classes.SLib.SLF4J_LOGGER_WRAPPER, "slf4jLogger");
+            builder.addStatement("this.$N = new $T($N)", "screamingLogger", Classes.SLib.SLF4J_LOGGER, "slf4jLogger");
         }
     }
 

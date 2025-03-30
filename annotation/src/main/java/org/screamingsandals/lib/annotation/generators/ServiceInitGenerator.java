@@ -222,8 +222,14 @@ public final class ServiceInitGenerator {
             processedArguments.add("description");
             ServiceInitGenerator.this.requiredDescription = true;
         });
-        add(Classes.SLib.LOGGER_WRAPPER.canonicalName(), (statement, processedArguments) -> {
+        add(Classes.SLib.LOGGER.canonicalName(), (statement, processedArguments) -> {
             statement.append("$N");
+            processedArguments.add("screamingLogger");
+            ServiceInitGenerator.this.requiredScreamingLogger = true;
+        });
+        add(Classes.SLib.LOGGER_WRAPPER.canonicalName(), (statement, processedArguments) -> {
+            statement.append("($T) $N");
+            processedArguments.add(Classes.SLib.LOGGER_WRAPPER);
             processedArguments.add("screamingLogger");
             ServiceInitGenerator.this.requiredScreamingLogger = true;
         });

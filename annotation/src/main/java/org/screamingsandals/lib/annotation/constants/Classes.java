@@ -30,10 +30,10 @@ public class Classes {
         public static final @NotNull ClassName CONTROLLABLE_IMPL = ClassName.get("org.screamingsandals.lib.impl.utils", "ControllableImpl");
         public static final @NotNull ClassName CORE = ClassName.get("org.screamingsandals.lib", "Core");
         public static final @NotNull ClassName PROXY_CORE = ClassName.get("org.screamingsandals.lib.proxy", "ProxyCore");
+        public static final @NotNull ClassName LOGGER = ClassName.get("org.screamingsandals.lib.utils.logger", "Logger");
         public static final @NotNull ClassName LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.utils.logger", "LoggerWrapper");
-        public static final @NotNull ClassName JUL_LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.impl.utils.logger", "JULLoggerWrapper");
-        public static final @NotNull ClassName SLF4J_LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.impl.utils.logger", "Slf4jLoggerWrapper");
-        public static final @NotNull ClassName DUAL_LOGGER_WRAPPER = ClassName.get("org.screamingsandals.lib.impl.utils.logger", "DualLoggerWrapper");
+        public static final @NotNull ClassName JUL_LOGGER = ClassName.get("org.screamingsandals.lib.impl.utils.logger", "JULLogger");
+        public static final @NotNull ClassName SLF4J_LOGGER = ClassName.get("org.screamingsandals.lib.impl.utils.logger", "Slf4jLogger");
         public static final @NotNull ClassName REFLECT = ClassName.get("org.screamingsandals.lib.utils.reflect", "Reflect");
         public static final @NotNull ClassName SERIALIZERS = ClassName.get("org.screamingsandals.lib.configurate", "SLibSerializers");
         public static final @NotNull ClassName SPECTATOR_SERIALIZERS = ClassName.get("org.screamingsandals.lib.spectator.configurate", "SpectatorSerializers");

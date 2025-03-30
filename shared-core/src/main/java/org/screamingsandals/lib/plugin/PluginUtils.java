@@ -19,7 +19,7 @@ package org.screamingsandals.lib.plugin;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.utils.logger.LoggerWrapper;
+import org.screamingsandals.lib.utils.logger.Logger;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import java.io.IOException;
 @ApiStatus.Experimental // should be moved somewhere and have fewer arguments
 public class PluginUtils {
     // stolen from bukkit api ;)
-    public static void saveResource(@NotNull Plugin plugin, @NotNull LoggerWrapper logger, @NotNull String resourcePath, boolean replace) {
+    public static void saveResource(@NotNull Plugin plugin, @NotNull Logger logger, @NotNull String resourcePath, boolean replace) {
         if ("".equals(resourcePath)) {
             throw new IllegalArgumentException("ResourcePath cannot be null or empty");
         }

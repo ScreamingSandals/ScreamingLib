@@ -17,18 +17,19 @@
 package org.screamingsandals.lib.impl.utils.logger;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.logger.Logger;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
-import org.slf4j.Logger;
 
-public class Slf4jLoggerWrapper extends BasicWrapper<Logger> implements LoggerWrapper {
+public class Slf4jLogger extends BasicWrapper<org.slf4j.Logger> implements Logger, LoggerWrapper {
 
-    public Slf4jLoggerWrapper(@NotNull Logger wrappedObject) {
+    public Slf4jLogger(@NotNull org.slf4j.Logger wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public String getName() {
+    public @Nullable String getName() {
         return wrappedObject.getName();
     }
 
@@ -38,22 +39,22 @@ public class Slf4jLoggerWrapper extends BasicWrapper<Logger> implements LoggerWr
     }
 
     @Override
-    public void trace(String msg) {
+    public void trace(@NotNull String msg) {
         wrappedObject.trace(msg);
     }
 
     @Override
-    public void trace(String format, Object argument, Throwable throwable) {
+    public void trace(@NotNull String format, @Nullable Object argument, @NotNull Throwable throwable) {
         wrappedObject.trace(format, argument, throwable);
     }
 
     @Override
-    public void trace(String format, Object... arguments) {
+    public void trace(@NotNull String format, @Nullable Object @NotNull ... arguments) {
         wrappedObject.trace(format, arguments);
     }
 
     @Override
-    public void trace(String msg, Throwable t) {
+    public void trace(@NotNull String msg, @NotNull Throwable t) {
         wrappedObject.trace(msg, t);
     }
 
@@ -63,22 +64,22 @@ public class Slf4jLoggerWrapper extends BasicWrapper<Logger> implements LoggerWr
     }
 
     @Override
-    public void debug(String msg) {
+    public void debug(@NotNull String msg) {
         wrappedObject.debug(msg);
     }
 
     @Override
-    public void debug(String format, Object argument, Throwable throwable) {
+    public void debug(@NotNull String format, @Nullable Object argument, @NotNull Throwable throwable) {
         wrappedObject.debug(format, argument, throwable);
     }
 
     @Override
-    public void debug(String format, Object... arguments) {
+    public void debug(@NotNull String format, @Nullable Object @NotNull ... arguments) {
         wrappedObject.debug(format, arguments);
     }
 
     @Override
-    public void debug(String msg, Throwable t) {
+    public void debug(@NotNull String msg, @NotNull Throwable t) {
         wrappedObject.debug(msg, t);
     }
 
@@ -88,22 +89,22 @@ public class Slf4jLoggerWrapper extends BasicWrapper<Logger> implements LoggerWr
     }
 
     @Override
-    public void info(String msg) {
+    public void info(@NotNull String msg) {
         wrappedObject.info(msg);
     }
 
     @Override
-    public void info(String format, Object argument, Throwable throwable) {
+    public void info(@NotNull String format, @Nullable Object argument, @NotNull Throwable throwable) {
         wrappedObject.info(format, argument, throwable);
     }
 
     @Override
-    public void info(String format, Object... arguments) {
+    public void info(@NotNull String format, @Nullable Object @NotNull ... arguments) {
         wrappedObject.info(format, arguments);
     }
 
     @Override
-    public void info(String msg, Throwable t) {
+    public void info(@NotNull String msg, @NotNull Throwable t) {
         wrappedObject.info(msg, t);
     }
 
@@ -113,22 +114,22 @@ public class Slf4jLoggerWrapper extends BasicWrapper<Logger> implements LoggerWr
     }
 
     @Override
-    public void warn(String msg) {
+    public void warn(@NotNull String msg) {
         wrappedObject.warn(msg);
     }
 
     @Override
-    public void warn(String format, Object... arguments) {
+    public void warn(@NotNull String format, @Nullable Object @NotNull ... arguments) {
         wrappedObject.warn(format, arguments);
     }
 
     @Override
-    public void warn(String format, Object argument, Throwable throwable) {
+    public void warn(@NotNull String format, @Nullable Object argument, @NotNull Throwable throwable) {
         wrappedObject.warn(format, argument, throwable);
     }
 
     @Override
-    public void warn(String msg, Throwable t) {
+    public void warn(@NotNull String msg, @NotNull Throwable t) {
         wrappedObject.warn(msg, t);
     }
 
@@ -138,22 +139,22 @@ public class Slf4jLoggerWrapper extends BasicWrapper<Logger> implements LoggerWr
     }
 
     @Override
-    public void error(String msg) {
+    public void error(@NotNull String msg) {
         wrappedObject.error(msg);
     }
 
     @Override
-    public void error(String format, Object argument, Throwable throwable) {
+    public void error(@NotNull String format, @Nullable Object argument, @NotNull Throwable throwable) {
         wrappedObject.error(format, argument, throwable);
     }
 
     @Override
-    public void error(String format, Object... arguments) {
+    public void error(@NotNull String format, @Nullable Object @NotNull ... arguments) {
         wrappedObject.error(format, arguments);
     }
 
     @Override
-    public void error(String msg, Throwable t) {
+    public void error(@NotNull String msg, @NotNull Throwable t) {
         wrappedObject.error(msg, t);
     }
 }

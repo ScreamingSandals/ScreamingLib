@@ -120,10 +120,12 @@ public class BungeeMainClassGenerator extends StandardMainClassGenerator {
         if (requiredScreamingLogger) { // works for requiredScreamingLogger && requiredSlf4jLogger as well
             builder
                     .addStatement("$T $N = null", Object.class, "slf4jLogger")
-                    .addStatement("$T $N = new $T(this.getLogger())", Classes.SLib.LOGGER_WRAPPER, "screamingLogger", Classes.SLib.JUL_LOGGER_WRAPPER)
+                    .addStatement("$T $N", Classes.SLib.LOGGER, "screamingLogger")
                     .beginControlFlow("if ($T.hasMethod(this, $S))", Classes.SLib.REFLECT, "getSLF4JLogger")
                         .addStatement("$N = this.getSLF4JLogger()", "slf4jLogger")
-                        .addStatement("$N = new $T(new $T(this.getSLF4JLogger()), $N)", "screamingLogger", Classes.SLib.DUAL_LOGGER_WRAPPER, Classes.SLib.SLF4J_LOGGER_WRAPPER, "screamingLogger")
+                        .addStatement("$N = new $T(this.getSLF4JLogger())", "screamingLogger", Classes.SLib.SLF4J_LOGGER)
+                    .nextControlFlow("else")
+                        .addStatement("$N = new $T(this.getLogger())", "screamingLogger", Classes.SLib.JUL_LOGGER)
                     .endControlFlow();
         } else if (requiredSlf4jLogger) {
             builder

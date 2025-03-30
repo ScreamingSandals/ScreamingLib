@@ -32,22 +32,21 @@ import java.lang.annotation.Target;
  * <p>
  * Above-mentioned injectable objects include:
  * <ul>
- *  <li>a <strong>org.screamingsandals.lib.plugin.PluginContainer</strong> of your plugin if your plugin still uses it</li>
  *  <li>a <strong>org.screamingsandals.lib.plugin.Plugin</strong> of your plugin, which is a class describing the plugin</li>
  *  <li>the platform class of your plugin - not recommended, unless this is platform specific service</li>
  *  <li>
  *      a {@link org.screamingsandals.lib.utils.Controllable} or {@link ControllableImpl},
  *      yet we highly discourage from using controllables in favor of annotations from {@link org.screamingsandals.lib.utils.annotations}
  *  </li>
- *  <li>an another service defined in {@link ServiceDependencies#dependsOn()} or {@link ServiceDependencies#dependsOnConditioned()}</li>
- *  <li>a {@link org.screamingsandals.lib.utils.logger.LoggerWrapper} or a SLF4J logger, if supported</li>
+ *  <li>an another service defined in {@link ServiceDependencies#dependsOn()}</li>
+ *  <li>a {@link org.screamingsandals.lib.utils.logger.Logger} or a SLF4J logger, if supported</li>
  *  <li>
  *      a {@link java.nio.file.Path} or a {@link java.io.File} annotated with
  *      {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}
  *  </li>
  *  <li>
  *      any subclass of {@link org.spongepowered.configurate.loader.ConfigurationLoader} annotated with
- *      {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}
+ *      {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile}
  *  </li>
  * </ul>
  * <p>

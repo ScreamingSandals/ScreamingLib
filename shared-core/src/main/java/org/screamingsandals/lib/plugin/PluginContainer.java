@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import java.nio.file.Path;
 
 @Getter
-@Deprecated
+@Deprecated(forRemoval = true)
 public abstract class PluginContainer implements Wrapper {
     private Plugin pluginDescription;
     private LoggerWrapper logger;

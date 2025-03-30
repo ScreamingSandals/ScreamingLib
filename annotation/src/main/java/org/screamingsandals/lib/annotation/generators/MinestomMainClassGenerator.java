@@ -110,7 +110,7 @@ public class MinestomMainClassGenerator extends StandardMainClassGenerator {
             builder.addStatement("$T $N = this.getLogger()", Classes.Slf4j.LOGGER, "slf4jLogger");
         }
         if (requiredScreamingLogger) {
-            builder.addStatement("$T $N = new $T($N)", Classes.SLib.SLF4J_LOGGER_WRAPPER, "screamingLogger", Classes.SLib.SLF4J_LOGGER_WRAPPER, "slf4jLogger");
+            builder.addStatement("$T $N = new $T($N)", Classes.SLib.SLF4J_LOGGER, "screamingLogger", Classes.SLib.SLF4J_LOGGER, "slf4jLogger");
         }
     }
 
