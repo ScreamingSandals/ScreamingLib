@@ -86,7 +86,7 @@ public abstract class BlockRegistry extends Registry<Block> {
 
         var alias = this.aliasMap.get(location);
         if (alias != null) {
-            return this.resolveMappingPlatform(location, blockState);
+            return this.resolveMappingPlatform(alias, blockState);
         }
 
         return null;
