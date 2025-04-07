@@ -40,4 +40,8 @@ public class DummyShadowColor implements ShadowColor {
     public @NotNull Object raw() {
         throw new UnsupportedOperationException("Platform does not support shadow colors");
     }
+
+    public @NotNull String toString() {
+        return String.format("#%02X%02X%02X%02X", red, green, blue, alpha);
+    }
 }

@@ -47,7 +47,7 @@ public class AdventureShadowColor extends BasicWrapper<net.kyori.adventure.text.
 
     @Override
     public @NotNull String toString() {
-        return wrappedObject.toString();
+        return wrappedObject.asHexString();
     }
 
     @Override

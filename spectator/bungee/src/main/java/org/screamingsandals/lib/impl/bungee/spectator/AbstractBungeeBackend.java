@@ -36,6 +36,7 @@ import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeEntityCo
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeItemContent;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeLegacyEntityContent;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeLegacyItemContent;
+import org.screamingsandals.lib.impl.spectator.DummyShadowColor;
 import org.screamingsandals.lib.impl.spectator.SpectatorBackend;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.spectator.*;
@@ -384,8 +385,19 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     }
 
     @Override
-    public @NotNull ShadowColor shadowHex(@NotNull String hex) {
-        return new BungeeShadowColor(java.awt.Color.decode(hex));
+    public @NotNull ShadowColor shadowHex(@NotNull String hexOrName) {
+        if ((!hexOrName.startsWith("#") && hexOrName.length() == 8) || (hexOrName.startsWith("#") && hexOrName.length() == 9)) {
+            var hex = !hexOrName.startsWith("#") ? "#" + hexOrName : hexOrName;
+            try {
+                int r = Integer.parseInt(hex.substring(1, 3), 16);
+                int g = Integer.parseInt(hex.substring(3, 5), 16);
+                int b = Integer.parseInt(hex.substring(5, 7), 16);
+                int a = Integer.parseInt(hex.substring(7, 9), 16);
+                return new BungeeShadowColor(new java.awt.Color(r, g, b, a));
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return hexOrName(hexOrName).asShadow();
     }
 
     @Override

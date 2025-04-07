@@ -40,7 +40,6 @@ public class ShadowColorSerializer implements TypeSerializer<ShadowColor> {
     @Override
     public @NotNull ShadowColor deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            // TODO: numerical values to match Adventure
             if (node.isMap()) {
                 return ShadowColor.rgba(
                         node.node(RED_KEY).getInt(node.node(RED_KEY_LEGACY_BUKKIT).getInt()),
@@ -48,9 +47,28 @@ public class ShadowColorSerializer implements TypeSerializer<ShadowColor> {
                         node.node(BLUE_KEY).getInt(node.node(BLUE_KEY_LEGACY_BUKKIT).getInt()),
                         node.node(ALPHA_KEY).getInt(node.node(ALPHA_KEY_LEGACY_BUKKIT).getInt(1))
                 );
+            } else if (node.isList()) {
+                var floatList = node.getList(Float.class);
+                if (floatList.size() != 4) {
+                    throw new SerializationException(node, ShadowColor.class, "Expected a 4-element float array ([R, G, B, A]), but got a " + floatList.size() + "-long array instead.");
+                }
+
+                int r = componentFromFloat(floatList.get(0));
+                int g = componentFromFloat(floatList.get(1));
+                int b = componentFromFloat(floatList.get(2));
+                int a = componentFromFloat(floatList.get(3));
+
+                return ShadowColor.rgba(r, g, b, a);
             } else {
+                try {
+                    var number = node.get(Integer.class);
+                    if (number != null) {
+                        return ShadowColor.argb(number);
+                    }
+                } catch (Exception ignored) {
+                }
                 var color = node.getString("");
-                return ShadowColor.hex(color);
+                return ShadowColor.hexOrName(color);
             }
         } catch (Throwable throwable) {
             throw new SerializationException(throwable);
@@ -64,9 +82,10 @@ public class ShadowColorSerializer implements TypeSerializer<ShadowColor> {
             return;
         }
 
-        node.node(RED_KEY).set(color.red());
-        node.node(GREEN_KEY).set(color.green());
-        node.node(BLUE_KEY).set(color.blue());
-        node.node(ALPHA_KEY).set(color.alpha());
+        node.set(color.compoundArgb());
+    }
+
+    private static int componentFromFloat(final double element) {
+        return (int) (((float) element) * 0xff);
     }
 }

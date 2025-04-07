@@ -350,18 +350,22 @@ public class AdventureBackend implements SpectatorBackend {
     }
 
     @Override
-    public @NotNull ShadowColor shadowHex(@NotNull String hex) {
-        if (!hex.startsWith("#")) {
-            hex = "#" + hex;
+    public @NotNull ShadowColor shadowHex(@NotNull String hexOrName) {
+        if ((!hexOrName.startsWith("#") && hexOrName.length() == 8) || (hexOrName.startsWith("#") && hexOrName.length() == 9)) {
+            var hex = !hexOrName.startsWith("#") ? "#" + hexOrName : hexOrName;
+            try {
+                int r = Integer.parseInt(hex.substring(1, 3), 16);
+                int g = Integer.parseInt(hex.substring(3, 5), 16);
+                int b = Integer.parseInt(hex.substring(5, 7), 16);
+                int a = Integer.parseInt(hex.substring(7, 9), 16);
+                if (!AdventureFeature.SHADOW_COLOR.isSupported()) {
+                    return new DummyShadowColor(r, g, b, a);
+                }
+                return new AdventureShadowColor(net.kyori.adventure.text.format.ShadowColor.shadowColor(r, g, b, a));
+            } catch (NumberFormatException ignored) {
+            }
         }
-        var hexColor = TextColor.fromCSSHexString(hex);
-        if (hexColor == null) {
-            hexColor = NamedTextColor.WHITE;
-        }
-        if (!AdventureFeature.SHADOW_COLOR.isSupported()) {
-            return new DummyShadowColor(hexColor.red(), hexColor.green(), hexColor.blue(), 1);
-        }
-        return new AdventureShadowColor(net.kyori.adventure.text.format.ShadowColor.shadowColor(hexColor.red(), hexColor.green(), hexColor.blue(), 1));
+        return hexOrName(hexOrName).asShadow();
     }
 
     @Contract("null -> null; !null -> !null")

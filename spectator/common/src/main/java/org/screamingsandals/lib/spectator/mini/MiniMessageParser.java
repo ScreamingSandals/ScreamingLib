@@ -36,6 +36,7 @@ import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 import org.screamingsandals.lib.spectator.mini.placeholders.StringLikePlaceholder;
 import org.screamingsandals.lib.spectator.mini.resolvers.*;
 import org.screamingsandals.lib.spectator.mini.transformers.NegatedDecorationTransformer;
+import org.screamingsandals.lib.spectator.mini.transformers.NegatedShadowColorTransformer;
 import org.screamingsandals.lib.spectator.mini.transformers.TagToAttributeTransformer;
 
 import java.util.*;
@@ -463,6 +464,10 @@ public final class MiniMessageParser {
             putStylingAlias("!underlined", negatedDecorationTransformer, "!u");
             putStylingAlias("!strikethrough", negatedDecorationTransformer, "!st");
             putStylingAlias("!obfuscated", negatedDecorationTransformer, "!obf");
+
+            // shadow colors
+            registerStylingTag("shadow", new ShadowColorResolver());
+            putStylingAlias("!shadow", new NegatedShadowColorTransformer());
 
             // misc
 

@@ -22,6 +22,8 @@ import org.screamingsandals.lib.impl.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
+import java.util.Locale;
+
 @LimitedVersionSupport(">= 1.21.4")
 public interface ShadowColor extends Wrapper, ComponentBuilderApplicable, RawValueHolder {
     int red();
@@ -38,19 +40,42 @@ public interface ShadowColor extends Wrapper, ComponentBuilderApplicable, RawVal
 
     @NotNull String toString();
 
+    default @NotNull ShadowColor alpha(int alpha) {
+        return rgba(red(), green(), blue(), alpha);
+    }
+
     static @NotNull ShadowColor rgb(int red, int green, int blue) {
         return Spectator.getBackend().shadowArgb(1, red, green, blue);
     }
 
     static @NotNull ShadowColor rgba(int red, int green, int blue, int alpha) {
-        return Spectator.getBackend().shadowArgb(red, green, blue, alpha);
+        return Spectator.getBackend().shadowArgb(alpha, red, green, blue);
     }
 
     static @NotNull ShadowColor argb(int compound) {
         return Spectator.getBackend().shadowArgb((compound >> 24) & 0xFF, (compound >> 16) & 0xFF, (compound >> 8) & 0xFF, compound & 0xFF);
     }
 
+    /**
+     * @deprecated use {@link #hexOrName(String)}
+     */
+    @Deprecated(forRemoval = true)
     static @NotNull ShadowColor hex(@NotNull String hex) {
+        return hexOrName(hex);
+    }
+
+    static @NotNull ShadowColor hexOrName(@NotNull String hex) {
+        // bri'ish
+        if ("grey".equalsIgnoreCase(hex)) {
+            hex = "gray";
+        } else if ("dark_grey".equalsIgnoreCase(hex)) {
+            hex = "dark_gray";
+        }
+
+        var value = Color.EXTENDED_NAMED_VALUES.get(hex.toLowerCase(Locale.ROOT));
+        if (value != null) {
+            return value.asShadow(); // support for new bedrock colors
+        }
         return Spectator.getBackend().shadowHex(hex);
     }
 

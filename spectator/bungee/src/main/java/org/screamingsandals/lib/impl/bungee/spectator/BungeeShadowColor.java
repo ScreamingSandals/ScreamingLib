@@ -47,7 +47,7 @@ public class BungeeShadowColor extends BasicWrapper<java.awt.Color> implements S
 
     @Override
     public @NotNull String toString() {
-        return wrappedObject.toString();
+        return String.format("#%02X%02X%02X%02X", red(), green(), blue(), alpha());
     }
 
     @Override

@@ -121,7 +121,7 @@ class SpigotBackendAdventureExtension {
             AdventureBackend.getAdditionalShadowColorConverter()
                     .registerW2P(Color.class, color -> new Color(color.red(), color.green(), color.blue(), color.alpha()));
 
-            AbstractBungeeBackend.getAdditionalShadowColorConverter() // TODO: uncomment
+            AbstractBungeeBackend.getAdditionalShadowColorConverter()
                     .registerW2P(ShadowColor.class, shadowColor -> ShadowColor.shadowColor(shadowColor.red(), shadowColor.green(), shadowColor.blue(), shadowColor.alpha()));
         }
 
