@@ -20,12 +20,18 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.md_5.bungee.api.chat.ClickEventCustom;
+import net.md_5.bungee.api.dialog.chat.ShowDialogClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bungee.spectator.AbstractBungeeBackend;
+import org.screamingsandals.lib.impl.bungee.spectator.BungeeChatFeature;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.utils.ResourceLocation;
+
+import java.util.Objects;
 
 public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.ClickEvent> implements ClickEvent {
     public BungeeClickEvent(net.md_5.bungee.api.chat.@NotNull ClickEvent wrappedObject) {
@@ -49,22 +55,64 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
         } catch (Throwable throwable) {
             bungeeAction = net.md_5.bungee.api.chat.ClickEvent.Action.OPEN_URL;
         }
+        if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported()) {
+            if (action == Action.CUSTOM) {
+                if (wrappedObject instanceof ClickEventCustom) {
+                    return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(wrappedObject.getValue(), ((ClickEventCustom) wrappedObject).getPayload()));
+                } else {
+                    return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(wrappedObject.getValue(), null));
+                }
+            }
+        }
         return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEvent(bungeeAction, wrappedObject.getValue()));
     }
 
     @Override
     public @NotNull String value() {
+        if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported()) {
+            if (wrappedObject instanceof ClickEventCustom) {
+                return ((ClickEventCustom) wrappedObject).getPayload();
+            } else if (wrappedObject instanceof ShowDialogClickEvent) {
+                // TODO: change the API to allow dialogs, look at adventure
+                return Objects.requireNonNullElse(((ShowDialogClickEvent) wrappedObject).getReference(), "");
+            }
+        }
         return wrappedObject.getValue();
     }
 
     @Override
     public @NotNull ClickEvent withValue(@NotNull String value) {
+        if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported()) {
+            if (action() == Action.CUSTOM) {
+                return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(wrappedObject.getValue(), value));
+            }
+        }
         return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEvent(wrappedObject.getAction(), value));
     }
 
     @Override
+    public @Nullable ResourceLocation id() {
+        if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported() && action() == Action.CUSTOM) {
+            return ResourceLocation.of(wrappedObject.getValue());
+        }
+        return null;
+    }
+
+    @Override
+    public @NotNull ClickEvent withId(@NotNull ResourceLocation id) {
+        if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported()) {
+            if (wrappedObject instanceof ClickEventCustom) {
+                return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(id.toString(), ((ClickEventCustom) wrappedObject).getPayload()));
+            } else if (action() == Action.CUSTOM) {
+                return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(id.toString(), null));
+            }
+        }
+        throw new UnsupportedOperationException("Cannot set id for ClickEvent of type " + action());
+    }
+
+    @Override
     public ClickEvent.@NotNull Builder toBuilder() {
-        return new BungeeClickBuilder(action(), value());
+        return new BungeeClickBuilder(action(), value(), id());
     }
 
     @Override
@@ -83,6 +131,7 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
     public static class BungeeClickBuilder implements ClickEvent.Builder {
         private @NotNull Action action = Action.OPEN_URL;
         private @Nullable String value;
+        private @Nullable ResourceLocation id;
 
         @Override
         public @NotNull ClickEvent build() {
@@ -93,6 +142,12 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
                 action = net.md_5.bungee.api.chat.ClickEvent.Action.valueOf(this.action.name());
             } catch (Throwable throwable) {
                 action = net.md_5.bungee.api.chat.ClickEvent.Action.OPEN_URL;
+            }
+            if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported()) {
+                if (this.action == Action.CUSTOM) {
+                    Preconditions.checkNotNull(id, "Id is not specified!");
+                    return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(id.toString(), value));
+                }
             }
             return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEvent(action, value));
         }

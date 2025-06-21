@@ -74,8 +74,7 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
             final var registryByteBuf = Reflect.construct(
                     RegistryFriendlyByteBufAccessor.CONSTRUCTOR_0.get(),
                     getBuffer(),
-                    Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer")
-                            .fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get())
+                    Reflect.fastInvoke(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get())
             );
 
             final var dataComponents = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_GET_COMPONENTS_PATCH.get());

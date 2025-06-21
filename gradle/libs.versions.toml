@@ -10,7 +10,7 @@ paper-support_1_8_8 = "1.8.8-R0.1-SNAPSHOT"
 sponge = "8.2.0"
 minestom = "master-SNAPSHOT"
 waterfall = "1.21-R0.1-SNAPSHOT"
-bungeecord = "1.21-R0.2"
+bungeecord = "1.21-R0.3"
 bungeecord-support_1_21_R01 = "1.21-R0.1"
 velocity = "3.2.0-SNAPSHOT"
 adventure = "4.18.0"
@@ -52,8 +52,8 @@ junit-platform = "1.10.2"
 
 # plugins
 screaming-plugin-builder = "1.0.87"
-takenaka = "1.2.0"
-mappings = "1.8.8+1.21.5"
+takenaka = "1.2.1-SNAPSHOT"
+mappings = "1.8.8+1.21.6"
 
 [libraries]
 paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
@@ -87,7 +87,7 @@ paper-support_one_eight_eight = { group = "org.github.paperspigot", name = "pape
 sponge = { group = "org.spongepowered", name = "spongeapi", version.ref = "sponge" }
 minestom = { group = "com.github.Minestom", name = "Minestom", version.ref = "minestom" }
 waterfall = { group = "io.github.waterfallmc", name = "waterfall-api", version.ref = "waterfall" }
-bungeecord-chat = { group = "net.md-5", name = "bungeecord-chat", version.ref = "bungeecord" }
+bungeecord-chat = { group = "net.md-5", name = "bungeecord-serializer", version.ref = "bungeecord" }
 bungeecord-chat-support_one_twentyone_r01 = { group = "net.md-5", name = "bungeecord-chat", version.ref = "bungeecord-support_1_21_R01" }
 velocity = { group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity" }
 adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }

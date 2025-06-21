@@ -70,6 +70,9 @@ accessors {
     var Component = mapClass('net.minecraft.network.chat.Component') {
         getter(String, 'coloredString') //method String, 'func_150254_d' // get legacy string
     }
+    mapClass('net.minecraft.network.chat.ComponentSerialization') {
+        field('com.mojang.serialization.Codec', 'CODEC')
+    }
 
     var EntityType = mapClass('net.minecraft.world.entity.EntityType') {
         method(java.util.Optional, 'byString', String) // 1.14+
@@ -102,7 +105,10 @@ accessors {
 
     var Entity = mapClass('net.minecraft.world.entity.Entity') {
         getter(SynchedEntityData, 'entityData') // DataWatcher
-        getter('net.minecraft.world.level.Level', 'commandSenderWorld') // world
+        methodChain {
+            it.item('net.minecraft.world.level.Level', 'getCommandSenderWorld')
+            it.item('net.minecraft.world.level.Level', 'level')
+        }
         setter(boolean, 'invisible')
         getter(boolean, 'invisible')
         setter(String, 'customName')
@@ -625,9 +631,14 @@ accessors {
         getter('net.minecraft.world.item.Item', 'item')
 
         // 1.20.5+
-        method(java.util.Optional, 'parse', 'net.minecraft.core.HolderLookup$Provider', Tag)
+        method(java.util.Optional, 'parse', 'net.minecraft.core.HolderLookup$Provider', Tag) // <= 1.21.5
         method(Tag, 'save', 'net.minecraft.core.HolderLookup$Provider', Tag)
         method('net.minecraft.core.component.DataComponentPatch', 'getComponentsPatch')
+        field('com.mojang.serialization.Codec', 'CODEC') // 1.21.6+
+    }
+
+    mapClass('net.minecraft.core.HolderLookup$Provider') {
+        method('net.minecraft.resources.RegistryOps', 'createSerializationContext', 'com.mojang.serialization.DynamicOps')
     }
 
     // 1.10.x compat
@@ -737,7 +748,7 @@ accessors {
     /* 1.8.8 compat end */
 
     mapClass('net.minecraft.world.entity.item.PrimedTnt') {
-        field(LivingEntity, 'owner')
+        field(LivingEntity, 'owner') // <= 1.16.3
     }
 
     mapClass('net.minecraft.world.entity.EntityType$EntityFactory') {

@@ -26,6 +26,7 @@ import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.utils.ResourceLocation;
 
 public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.event.ClickEvent> implements ClickEvent {
     public AdventureClickEvent(net.kyori.adventure.text.event.@NotNull ClickEvent wrappedObject) {
@@ -60,8 +61,18 @@ public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.e
     }
 
     @Override
+    public @Nullable ResourceLocation id() {
+        return null; // TODO
+    }
+
+    @Override
+    public @NotNull ClickEvent withId(@NotNull ResourceLocation id) {
+        return this; // TODO
+    }
+
+    @Override
     public ClickEvent.@NotNull Builder toBuilder() {
-        return new AdventureClickEventBuilder(action(), value());
+        return new AdventureClickEventBuilder(action(), value(), id());
     }
 
     @Override
@@ -80,6 +91,7 @@ public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.e
     public static class AdventureClickEventBuilder implements ClickEvent.Builder {
         private @NotNull Action action = Action.OPEN_URL;
         private @Nullable String value;
+        private @Nullable ResourceLocation id; // TODO
 
         @Override
         public @NotNull ClickEvent build() {

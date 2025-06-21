@@ -16,10 +16,6 @@
 
 package org.screamingsandals.lib.impl.bukkit.item.builder;
 
-import com.mojang.datafixers.DSL;
-import com.mojang.datafixers.DataFixer;
-import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.DynamicOps;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -45,6 +41,7 @@ import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.utils.DataFixerUtils;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.compat.datafixer2.DataFixer2Compat;
 import org.screamingsandals.lib.impl.bukkit.compat.v1_20_1.PotionDataCompat;
@@ -56,8 +53,6 @@ import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentCo
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.nms.accessors.core.MappedRegistryAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.nbt.NbtOpsAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.resources.ResourceLocationAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.VVV.DataConverterManagerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.util.datafix.fixes.ReferencesAccessor;
@@ -542,17 +537,19 @@ public class BukkitItemBuilder implements ItemStackBuilder {
 
                 var vanilla = NBTVanillaSerializer.serialize(compound);
 
-                var mcServer = Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer");
-                var fixerUpper = (DataFixer) mcServer.getField(MinecraftServerAccessor.FIELD_FIXER_UPPER.get());
                 if (BukkitFeature.DATA_FIXER_SPLIT_SERIALIZATION.isSupported()) {
-                    //noinspection unchecked
-                    vanilla = fixerUpper.update((DSL.TypeReference) ReferencesAccessor.CONST_ITEM_STACK.get(), new Dynamic<>((DynamicOps<Object>) NbtOpsAccessor.CONST_INSTANCE.get(), vanilla), dataVersion, currentVersion).getValue();
+                    vanilla = DataFixerUtils.dataFixItemStack(vanilla, dataVersion, currentVersion);
                 } else {
-                    vanilla = DataFixer2Compat.dataFix(fixerUpper, vanilla, dataVersion, currentVersion);
+                    vanilla = DataFixer2Compat.dataFixItemStack(vanilla, dataVersion, currentVersion);
                 }
 
-                if (ItemStackAccessor.METHOD_PARSE.get() != null) {
-                    var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), mcServer.fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), vanilla);
+                if (ItemStackAccessor.METHOD_PARSE.get() != null || Version.isVersion(1, 21, 6)) {
+                    Object optional;
+                    if (Version.isVersion(1, 21, 6)) {
+                        optional = DataFixerUtils.parseItemStack(vanilla);
+                    } else {
+                        optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvoke(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), vanilla);
+                    }
                     if (optional instanceof Optional) {
                         this.item = ClassStorage.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
                                 new IllegalArgumentException("The given tag is not applicable to the item of type " + item.getType().getKey() + ": " + SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build().serialize(tag)))
@@ -575,7 +572,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
 
                 var vanilla = NBTVanillaSerializer.serialize(compound);
 
-                var fixerUpper = Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").getField(MinecraftServerAccessor.FIELD_DATA_CONVERTER_MANAGER.get());
+                var fixerUpper = Reflect.getField(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.FIELD_DATA_CONVERTER_MANAGER.get());
                 vanilla = Reflect.fastInvoke(fixerUpper, DataConverterManagerAccessor.METHOD_FUNC_188251_A.get(), ReferencesAccessor.CONST_ITEM_STACK.get(), vanilla, dataVersion);
 
                 Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.METHOD_SET_TAG.get(), Reflect.fastInvoke(vanilla, CompoundTagAccessor.METHOD_GET.get(), "tag"));
@@ -584,7 +581,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
         }
 
         // Applying CompoundTag without any conversion
-        if (ItemStackAccessor.METHOD_PARSE.get() != null) {
+        if (ItemStackAccessor.METHOD_PARSE.get() != null || Version.isVersion(1, 21, 6)) {
             // 1.20.5+
             if (item.getType().isAir()) {
                 throw new UnsupportedOperationException("Cannot apply tag to AIR.");
@@ -595,7 +592,14 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                     .with("count", item.getAmount())
                     .with("components", tag);
 
-            var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), NBTVanillaSerializer.serialize(compound));
+            var vanilla = NBTVanillaSerializer.serialize(compound);
+
+            Object optional;
+            if (Version.isVersion(1, 21, 6)) {
+                optional = DataFixerUtils.parseItemStack(vanilla);
+            } else {
+                optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvoke(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), vanilla);
+            }
             if (optional instanceof Optional) {
                 this.item = ClassStorage.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
                         new IllegalArgumentException("The given tag is not applicable to the item of type " + item.getType().getKey() + ": " + SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build().serialize(tag)))
@@ -620,12 +624,18 @@ public class BukkitItemBuilder implements ItemStackBuilder {
 
         var serialized = NBTVanillaSerializer.serialize(tag);
 
-        if (ItemStackAccessor.METHOD_PARSE.get() != null) {
+        if (ItemStackAccessor.METHOD_PARSE.get() != null || Version.isVersion(1, 21, 6)) {
             // 1.20.5+
             var nmsStack = ClassStorage.stackAsNMS(item);
 
-            var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
-                    Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+            Object compound;
+            if (Version.isVersion(1, 21, 6)) {
+                //noinspection unchecked,rawtypes
+                compound = DataFixerUtils.encodeItemStack(nmsStack);
+            } else {
+                compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
+                        Reflect.fastInvoke(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+            }
 
             if (compound == null) {
                 return this; // what now?
@@ -639,7 +649,7 @@ public class BukkitItemBuilder implements ItemStackBuilder {
                 Reflect.fastInvoke(compound, CompoundTagAccessor.METHOD_PUT.get(), "components", serialized);
             }
 
-            var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), compound);
+            var optional = Reflect.fastInvoke(ItemStackAccessor.METHOD_PARSE.get(), Reflect.fastInvoke(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), compound);
             if (optional instanceof Optional) {
                 this.item = ClassStorage.nmsAsStack(((Optional<?>) optional).orElseThrow(() ->
                         new IllegalArgumentException("The given tag is not applicable to the item of type " + item.getType().getKey() + ": " + SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build().serialize(tag)))

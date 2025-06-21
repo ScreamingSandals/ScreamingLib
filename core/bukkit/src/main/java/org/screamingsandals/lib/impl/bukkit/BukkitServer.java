@@ -27,6 +27,7 @@ import org.screamingsandals.lib.impl.bukkit.player.GenericCommandSender;
 import org.screamingsandals.lib.impl.bukkit.spectator.bossbar.BukkitBossBar1_8;
 import org.screamingsandals.lib.impl.bukkit.spectator.bossbar.GlobalBossBarBackend1_8;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
+import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.SharedConstantsAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.status.ServerStatus$VersionAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.status.ServerStatusAccessor;
@@ -554,8 +555,7 @@ public class BukkitServer extends Server {
     @SuppressWarnings("unchecked")
     @Override
     public List<@NotNull ChannelFuture> getConnections0() {
-        return (List<ChannelFuture>) Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer")
-                .getFieldResulted(MinecraftServerAccessor.FIELD_CONNECTION.get())
+        return (List<ChannelFuture>) Reflect.getFieldResulted(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.FIELD_CONNECTION.get())
                 .getFieldResulted(ServerConnectionListenerAccessor.FIELD_CHANNELS.get())
                 .raw();
     }
@@ -598,7 +598,7 @@ public class BukkitServer extends Server {
             return Reflect.fastInvokeResulted(SharedConstantsAccessor.METHOD_GET_PROTOCOL_VERSION.get()).as(Integer.class);
         }
 
-        return Reflect.getFieldResulted(Reflect.fastInvoke(Bukkit.getServer(), "getServer"), MinecraftServerAccessor.FIELD_STATUS.get())
+        return Reflect.getFieldResulted(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.FIELD_STATUS.get())
                 .fastInvokeResulted(ServerStatusAccessor.METHOD_GET_VERSION.get())
                 .fastInvokeResulted(ServerStatus$VersionAccessor.METHOD_PROTOCOL.get())
                 .as(Integer.class);
@@ -612,7 +612,7 @@ public class BukkitServer extends Server {
 
         // 1.9-1.12.2
         if (DataConverterManagerAccessor.TYPE.get() != null) {
-            var fixerUpper = Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").getField(MinecraftServerAccessor.FIELD_DATA_CONVERTER_MANAGER.get());
+            var fixerUpper = Reflect.getField(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.FIELD_DATA_CONVERTER_MANAGER.get());
             var currentVersion = (Integer) Reflect.getField(fixerUpper, DataConverterManagerAccessor.FIELD_FIELD_188262_D.get());
             if (currentVersion != null) {
                 return currentVersion;

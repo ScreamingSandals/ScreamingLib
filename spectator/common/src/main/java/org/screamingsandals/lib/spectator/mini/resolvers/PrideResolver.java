@@ -34,7 +34,7 @@ public class PrideResolver extends ColorChangingResolver {
 
     static {
         // colors ported from Adventure, licensed under MIT:
-        // https://github.com/KyoriPowered/adventure/blob/d0e78f844c2f48070f1ccf64056331522d025874/text-minimessage/src/main/java/net/kyori/adventure/text/minimessage/tag/standard/PrideTag.java
+        // https://github.com/KyoriPowered/adventure/blob/1c16bdd2ec4a1f1b115e4c0c5acb0d1376a37f32/text-minimessage/src/main/java/net/kyori/adventure/text/minimessage/tag/standard/PrideTag.java
 
         FLAGS.put("pride", colors(0xE50000, 0xFF8D00, 0xFFEE00, 0x28121, 0x004CFF, 0x770088));
         FLAGS.put("progress", colors(0xFFFFFF, 0xFFAFC7, 0x73D7EE, 0x613915, 0x000000, 0xE50000, 0xFF8D00, 0xFFEE00, 0x28121, 0x004CFF, 0x770088));
@@ -42,7 +42,7 @@ public class PrideResolver extends ColorChangingResolver {
         FLAGS.put("bi", colors(0xD60270, 0x9B4F96, 0x0038A8));
         FLAGS.put("pan", colors(0xFF1C8D, 0xFFD700, 0x1AB3FF));
         FLAGS.put("nb", colors(0xFCF431, 0xFCFCFC, 0x9D59D2, 0x282828));
-        FLAGS.put("lesbian", colors(0xD62800, 0xFF9B56, 0xFFFFFF, 0xD4662A6, 0xA40062));
+        FLAGS.put("lesbian", colors(0xD62800, 0xFF9B56, 0xFFFFFF, 0xD462A6, 0xA40062));
         FLAGS.put("ace", colors(0x000000, 0xA4A4A4, 0xFFFFFF, 0x810081));
         FLAGS.put("agender", colors(0x000000, 0xBABABA, 0xFFFFFF, 0xBAF484, 0xFFFFFF, 0xBABABA, 0x000000));
         FLAGS.put("demisexual", colors(0x000000, 0xFFFFFF, 0x6E0071, 0xD3D3D3));

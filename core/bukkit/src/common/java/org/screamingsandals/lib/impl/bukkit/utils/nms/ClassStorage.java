@@ -21,11 +21,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.bukkit.utils.DataFixerUtils;
 import org.screamingsandals.lib.impl.nms.accessors.core.IRegistryAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.core.MappedRegistryAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.core.RegistryAccessAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.core.registries.BuiltInRegistriesAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.chat.Component$SerializerAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.network.chat.ComponentSerializationAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.PacketAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerPlayerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerCommonPacketListenerImplAccessor;
@@ -52,6 +54,10 @@ public class ClassStorage {
 		public static final Class<?> CraftItemStack = Reflect.getClassSafe(CB_PACKAGE + ".inventory.CraftItemStack");
 		public static final Class<?> CraftMagicNumbers = Reflect.getClassSafe(CB_PACKAGE + ".util.CraftMagicNumbers");
 		public static final Class<?> CraftSound = Reflect.getClassSafe(CB_PACKAGE + ".CraftSound");
+	}
+
+	public static Object getMinecraftServerObject() {
+		return Reflect.fastInvoke(Bukkit.getServer(), "getServer");
 	}
 	
 	public static Object getHandle(Object obj) {
@@ -91,9 +97,13 @@ public class ClassStorage {
 	public static @NotNull Object asMinecraftComponent(@NotNull String javaJson) {
 		if (Component$SerializerAccessor.METHOD_FROM_JSON.get() != null) {
 			return Reflect.fastInvoke(Component$SerializerAccessor.METHOD_FROM_JSON.get(), (Object) javaJson);
-		} else {
+		} else if (Component$SerializerAccessor.METHOD_FROM_JSON_LENIENT.get() != null) {
 			return Reflect.fastInvoke(Component$SerializerAccessor.METHOD_FROM_JSON_LENIENT.get(), javaJson, RegistryAccessAccessor.CONST_EMPTY.get());
+		} else if (ComponentSerializationAccessor.TYPE.get() != null) {
+			return DataFixerUtils.parseComponent(javaJson);
 		}
+		// should not be reached!!
+		throw new IllegalArgumentException("Cannot convert component to MinecraftComponent");
 	}
 
 	public static Object stackAsNMS(ItemStack item) {

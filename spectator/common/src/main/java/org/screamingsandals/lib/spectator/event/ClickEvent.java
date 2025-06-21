@@ -18,9 +18,11 @@ package org.screamingsandals.lib.spectator.event;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 public interface ClickEvent extends Wrapper, RawValueHolder {
@@ -71,6 +73,16 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
     @Contract(pure = true)
     @NotNull ClickEvent withValue(@NotNull String value);
 
+    @LimitedVersionSupport(">= 1.21.6")
+    @Nullable ResourceLocation id();
+
+    /**
+     * @throws UnsupportedOperationException if this ClickEvent is not of type {@link Action#CUSTOM}
+     */
+    @Contract(pure = true)
+    @LimitedVersionSupport(">= 1.21.6")
+    @NotNull ClickEvent withId(@NotNull ResourceLocation id);
+
     @Contract(value = "-> new", pure = true)
     ClickEvent.@NotNull Builder toBuilder();
 
@@ -84,7 +96,11 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
          */
         CHANGE_PAGE,
         @LimitedVersionSupport(">= 1.15")
-        COPY_TO_CLIPBOARD
+        COPY_TO_CLIPBOARD,
+        @LimitedVersionSupport(">= 1.21.6")
+        SHOW_DIALOG,
+        @LimitedVersionSupport(">= 1.21.6")
+        CUSTOM
     }
 
     interface Builder {
@@ -93,6 +109,10 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
 
         @Contract("_ -> this")
         @NotNull Builder value(@NotNull String value);
+
+        @LimitedVersionSupport(">= 1.21.6")
+        @Contract("_ -> this")
+        @NotNull Builder id(@NotNull ResourceLocation id);
 
         @Contract(value = "-> new", pure = true)
         @NotNull ClickEvent build();

@@ -22,13 +22,20 @@ import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.nbt.NbtOpsAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.util.datafix.fixes.ReferencesAccessor;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
+/**
+ * Serialization stuff used to be part of the datafixers package in earlier versions.
+ */
 @UtilityClass
 public class DataFixer2Compat {
     @SuppressWarnings("unchecked")
-    public static @NotNull Object dataFix(@NotNull DataFixer fixerUpper, @NotNull Object vanilla, int dataVersion, int currentVersion) {
+    public static @NotNull Object dataFixItemStack(@NotNull Object vanilla, int dataVersion, int currentVersion) {
+        var fixerUpper = (DataFixer) Reflect.getField(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.FIELD_FIXER_UPPER.get());
         return fixerUpper
                 .update((DSL.TypeReference) ReferencesAccessor.CONST_ITEM_STACK.get(), new Dynamic<>((DynamicOps<Object>) NbtOpsAccessor.CONST_INSTANCE.get(), vanilla), dataVersion, currentVersion)
                 .getValue();

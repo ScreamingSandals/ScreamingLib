@@ -24,6 +24,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.impl.bungee.spectator.BungeeChatFeature;
+import org.screamingsandals.lib.impl.bungee.spectator.compat.HoverEventCompat;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeEntityContent;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeItemContent;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeLegacyEntityContent;
@@ -100,7 +101,7 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
             }
         } else {
             // old api
-            var values = wrappedObject.getValue();
+            var values = HoverEventCompat.getValue(wrappedObject);
             switch (wrappedObject.getAction()) {
                 case SHOW_ENTITY:
                     if (values.length == 1 && values[0] instanceof TextComponent) {

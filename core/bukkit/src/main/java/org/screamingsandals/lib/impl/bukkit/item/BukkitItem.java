@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.impl.bukkit.item;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.Repairable;
@@ -28,12 +27,14 @@ import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.impl.attribute.Attributes;
 import org.screamingsandals.lib.attribute.ItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.utils.DataFixerUtils;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.impl.bukkit.BukkitCore;
 import org.screamingsandals.lib.impl.bukkit.item.builder.BukkitItemBuilder;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.impl.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.impl.bukkit.item.data.CraftBukkitItemData;
+import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.nms.accessors.server.MinecraftServerAccessor;
 import org.screamingsandals.lib.impl.vanilla.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
@@ -302,10 +303,15 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
 
         final var nmsStack = ClassStorage.stackAsNMS(wrappedObject);
         final Object nbtTag;
-        if (ItemStackAccessor.METHOD_SAVE_1.get() != null) {
+        if (ItemStackAccessor.METHOD_SAVE_1.get() != null || Version.isVersion(1, 21, 6)) {
             // 1.20.5+
-            final var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
-                    Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+            final Object compound;
+            if (Version.isVersion(1, 21, 6)) {
+                compound = DataFixerUtils.encodeItemStack(nmsStack);
+            } else {
+                compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
+                        Reflect.fastInvoke(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+            }
 
             if (compound == null) {
                 return CompoundTag.EMPTY;
@@ -340,10 +346,12 @@ public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> imp
 
         final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(wrappedObject), ItemStackAccessor.METHOD_COPY.get());
         final Object compound;
-        if (ItemStackAccessor.METHOD_SAVE_1.get() != null) {
+        if (Version.isVersion(1, 21, 6)) {
+            compound = DataFixerUtils.encodeItemStack(nmsStack);
+        } else if (ItemStackAccessor.METHOD_SAVE_1.get() != null) {
             // 1.20.5+
             compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE_1.get(),
-                    Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer").fastInvoke(MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
+                    Reflect.fastInvoke(ClassStorage.getMinecraftServerObject(), MinecraftServerAccessor.METHOD_REGISTRY_ACCESS.get()), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
         } else {
             // 1.8.8-1.20.4
             compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.METHOD_SAVE.get(), Reflect.construct(CompoundTagAccessor.CONSTRUCTOR_0.get()));
