@@ -18,16 +18,21 @@ package org.screamingsandals.lib.spectator.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.click.Payload;
+import org.screamingsandals.lib.utils.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
+    private static final @NotNull SNBTSerializer internalSNBTSerializer = SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build();
     public static final @NotNull ClickEventSerializer INSTANCE = new ClickEventSerializer();
 
     private static final @NotNull String ACTION_KEY = "action";
@@ -37,25 +42,40 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
     private static final @NotNull String COMMAND_KEY = "command";
     private static final @NotNull String PAGE_KEY = "page";
 
+    private static final @NotNull String DIALOG_KEY = "dialog";
+    private static final @NotNull String ID_KEY = "id";
+    private static final @NotNull String PAYLOAD_KEY = "payload";
+
     @Override
     public @NotNull ClickEvent deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var action = ClickEvent.Action.valueOf(node.node(ACTION_KEY).getString("open_url").toUpperCase(Locale.ROOT));
-            String value;
-            // TODO: update to support new variables and events
-            if (action == ClickEvent.Action.OPEN_URL && node.hasChild(URL_KEY)) {
-                value = node.node(URL_KEY).getString("");
-            } else if ((action == ClickEvent.Action.RUN_COMMAND || action == ClickEvent.Action.SUGGEST_COMMAND) && node.hasChild(COMMAND_KEY)) {
-                value = node.node(COMMAND_KEY).getString("");
-            } else if (action == ClickEvent.Action.CHANGE_PAGE && node.hasChild(PAGE_KEY)) {
-                value = node.node(PAGE_KEY).getString("");
+            if (action == ClickEvent.Action.CUSTOM) {
+                var id = ResourceLocation.of(Objects.requireNonNull(node.node(ID_KEY).getString()));
+                var payload = node.node(PAYLOAD_KEY).getString();
+                var payloadTag = payload != null ? internalSNBTSerializer.deserialize(payload) : CompoundTag.EMPTY;
+
+                return ClickEvent.custom(id, payloadTag);
+            } else if (action == ClickEvent.Action.SHOW_DIALOG) {
+                // TODO: dialog deserializing (needs support in Adventure)
+                throw new UnsupportedOperationException("Not implemented yet");
+                // return ClickEvent.showDialog(dialog);
             } else {
-                value = node.node(VALUE_KEY).getString("");
+                String value;
+                if (action == ClickEvent.Action.OPEN_URL && node.hasChild(URL_KEY)) {
+                    value = node.node(URL_KEY).getString("");
+                } else if ((action == ClickEvent.Action.RUN_COMMAND || action == ClickEvent.Action.SUGGEST_COMMAND) && node.hasChild(COMMAND_KEY)) {
+                    value = node.node(COMMAND_KEY).getString("");
+                } else if (action == ClickEvent.Action.CHANGE_PAGE && node.hasChild(PAGE_KEY)) {
+                    value = node.node(PAGE_KEY).getString("");
+                } else {
+                    value = node.node(VALUE_KEY).getString("");
+                }
+                return ClickEvent.builder()
+                        .action(action)
+                        .payload(Payload.text(value))
+                        .build();
             }
-            return ClickEvent.builder()
-                    .action(action)
-                    .payload(Payload.text(value))
-                    .build();
         } catch (Throwable throwable) {
             throw new SerializationException(throwable);
         }
@@ -68,21 +88,34 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
             return;
         }
 
-        // TODO: update to support new variables and events
         node.node(ACTION_KEY).set(obj.action().name().toLowerCase(Locale.ROOT));
-        switch (obj.action()) {
-            case OPEN_URL:
-                node.node(URL_KEY).set(obj.value());
-                break;
-            case RUN_COMMAND:
-            case SUGGEST_COMMAND:
-                node.node(COMMAND_KEY).set(obj.value());
-                break;
-            case CHANGE_PAGE:
-                node.node(PAGE_KEY).set(obj.value());
-                break;
-            default:
-                node.node(VALUE_KEY).set(obj.value());
+        var payload = obj.payload();
+        if (payload instanceof Payload.Custom) {
+            node.node(ID_KEY).set(((Payload.Custom) payload).location().toString());
+            node.node(PAYLOAD_KEY).set(internalSNBTSerializer.serialize(((Payload.Custom) payload).tag()));
+        } else if (payload instanceof Payload.ShowDialog) {
+            // TODO: dialog serializing (needs support in Adventure)
+            throw new SerializationException(new UnsupportedOperationException("Not implemented yet"));
+        } else if (payload instanceof Payload.Int) {
+            node.node(PAGE_KEY).set(((Payload.Int) payload).number());
+        } else if (payload instanceof Payload.Text) {
+            var value = ((Payload.Text) payload).text();
+            switch (obj.action()) {
+                case OPEN_URL:
+                    node.node(URL_KEY).set(value);
+                    break;
+                case RUN_COMMAND:
+                case SUGGEST_COMMAND:
+                    node.node(COMMAND_KEY).set(value);
+                    break;
+                case CHANGE_PAGE:
+                    node.node(PAGE_KEY).set(value);
+                    break;
+                default:
+                    node.node(VALUE_KEY).set(value);
+            }
+        } else {
+            throw new SerializationException(new UnsupportedOperationException("Unknown payload of type " + payload.getClass()));
         }
     }
 }

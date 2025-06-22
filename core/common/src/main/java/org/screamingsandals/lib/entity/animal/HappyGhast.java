@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity.flying;
+package org.screamingsandals.lib.entity.animal;
 
-import org.screamingsandals.lib.entity.Mob;
+import org.screamingsandals.lib.entity.vehicle.Vehicle;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 /**
- * Represents an entity with identifier {@code minecraft:phantom}.
+ * Represents an entity with identifier {@code minecraft:happy_ghast}.
  */
-@LimitedVersionSupport(">= 1.13")
-public interface Phantom extends Mob {
+@LimitedVersionSupport(">= 1.21.6")
+public interface HappyGhast extends Animal, Vehicle {
 }

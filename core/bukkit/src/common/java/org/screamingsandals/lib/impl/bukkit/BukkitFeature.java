@@ -35,7 +35,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.impl.utils.feature.PlatformFeature;
-import org.screamingsandals.lib.particle.Trail;
 import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -221,6 +220,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature VILLAGER_PROFESSION_INTERFACE = NEW_VILLAGERS.and(() -> Reflect.hasAsInterface("org.bukkit.entity.Villager$Profession"));
     public static final @NotNull PlatformFeature VILLAGER_TYPE_INTERFACE = NEW_VILLAGERS.and(() -> Reflect.hasAsInterface("org.bukkit.entity.Villager$Type"));
     public static final @NotNull PlatformFeature ENTITY_CREAKING = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Creaking"));
+    public static final @NotNull PlatformFeature ENTITY_HAPPY_GHAST = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.HappyGhast"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));
@@ -282,4 +282,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature EQUIPMENT_SLOT_GROUP = PlatformFeature.of(() -> Reflect.has("org.bukkit.inventory.EquipmentSlotGroup"));
     public static final @NotNull PlatformFeature INVENTORY_VIEW_INTERFACE = PlatformFeature.of(() -> Reflect.hasAsInterface("org.bukkit.inventory.InventoryView"));
     public static final @NotNull PlatformFeature DATA_FIXER_SPLIT_SERIALIZATION = PlatformFeature.of(() -> Reflect.has("com.mojang.serialization.Dynamic"));
+    public static final @NotNull PlatformFeature TELEPORT_ASYNC = PlatformFeature.of(() -> Reflect.hasMethod(Entity.class, "teleportAsync", Location.class));
+    public static final @NotNull PlatformFeature CHUNK_ASYNC_1_9 = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getChunkAtAsync", int.class, int.class, Reflect.getClassSafe("org.bukkit.World$ChunkLoadCallback")));
+    public static final @NotNull PlatformFeature CHUNK_ASYNC_1_13 = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getChunkAtAsync", Location.class));
 }

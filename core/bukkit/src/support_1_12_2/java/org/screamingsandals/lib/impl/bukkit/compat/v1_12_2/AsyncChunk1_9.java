@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.entity.flying;
+package org.screamingsandals.lib.impl.bukkit.compat.v1_12_2;
 
+import lombok.experimental.UtilityClass;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.flying.FlyingMob;
-import org.screamingsandals.lib.impl.bukkit.entity.BukkitMob;
 
-public class BukkitFlyingMob extends BukkitMob implements FlyingMob {
-    public BukkitFlyingMob(@NotNull org.bukkit.entity.Flying wrappedObject) {
-        super(wrappedObject);
+import java.util.concurrent.CompletableFuture;
+
+@UtilityClass
+public class AsyncChunk1_9 {
+    public static @NotNull CompletableFuture<Chunk> getChunkAtAsync(@NotNull Location loc) {
+        CompletableFuture<Chunk> chunkFuture = new CompletableFuture<>();
+        loc.getWorld().getChunkAtAsync(loc, chunkFuture::complete);
+        return chunkFuture;
     }
 }

@@ -16,8 +16,10 @@
 
 package org.screamingsandals.lib.entity.flying;
 
+import org.screamingsandals.lib.entity.Mob;
+
 /**
  * Represents an entity with identifier {@code minecraft:ghast}.
  */
-public interface Ghast extends FlyingMob {
+public interface Ghast extends Mob {
 }

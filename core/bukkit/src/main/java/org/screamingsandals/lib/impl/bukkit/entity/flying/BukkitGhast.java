@@ -18,8 +18,9 @@ package org.screamingsandals.lib.impl.bukkit.entity.flying;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.flying.Ghast;
+import org.screamingsandals.lib.impl.bukkit.entity.BukkitMob;
 
-public class BukkitGhast extends BukkitFlyingMob implements Ghast {
+public class BukkitGhast extends BukkitMob implements Ghast {
     public BukkitGhast(@NotNull org.bukkit.entity.Ghast wrappedObject) {
         super(wrappedObject);
     }

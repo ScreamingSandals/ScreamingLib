@@ -37,7 +37,6 @@ def registerExtension(String name, String... platforms) {
 }
 
 // Shared content
-include 'paperlib' // relocation
 include 'api-utils'
 registerModule('utils')
 include 'nms'

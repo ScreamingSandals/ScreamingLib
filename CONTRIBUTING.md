@@ -10,7 +10,6 @@ The repository is divided into the following modules:
 * `nbt`: A simple module for working with NBT and SNBT data (can be used independently of ScreamingLib).
 * `minitag`: A simple module for serializing and deserializing MiniMessage-like data. This module is abstract and does not interpret the data itself (can be used independently of ScreamingLib).
 * `nms`: Provides access to NMS classes in Bukkit and other platforms based on the vanilla Minecraft server, using Takenaka.
-* `paperlib`: Relocates PaperLib (not exposed to plugins, so they should not relocate it).
 * `utils`: Utility classes used across most modules.
 * `spectator`: Facilitates working with Raw JSON Text Components, inspired by Adventure and BungeeCord Chat API, acting as a wrapper around these.
 * `shared-core`: Common classes for `core` and `proxy` modules.

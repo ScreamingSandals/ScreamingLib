@@ -37,7 +37,6 @@ public class BungeeClickEventCustom extends BasicWrapper<ClickEventCustom> imple
 
     @Override
     public @NotNull Tag tag() {
-        // TODO: this is probably incorrect, the data are probably not in Snbt in the string form, out NBT parser needs to understand Json?
         if (wrappedObject.getPayload() != null && !wrappedObject.getPayload().isEmpty()) {
             return AbstractBungeeBackend.getSnbtSerializer().deserialize(wrappedObject.getPayload());
         } else {

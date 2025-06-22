@@ -46,6 +46,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitCow;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitFox;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitFrog;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitGoat;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitHappyGhast;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitHoglin;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitMooshroom;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitOcelot1_14;
@@ -77,7 +78,6 @@ import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitSkeletonHo
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitTraderLlama;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitZombieHorse1_11;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitZombieHorse1_8;
-import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitFlyingMob;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitGhast;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitPhantom;
 import org.screamingsandals.lib.impl.bukkit.entity.golem.BukkitGolem;
@@ -279,6 +279,12 @@ public class BukkitEntities extends Entities {
 
             if (entity instanceof org.bukkit.entity.Creature) {
                 if (entity instanceof org.bukkit.entity.Animals) {
+                    if (BukkitFeature.ENTITY_HAPPY_GHAST.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.HappyGhast) {
+                            return new BukkitHappyGhast((org.bukkit.entity.HappyGhast) entity);
+                        }
+                    }
+
                     if (entity instanceof org.bukkit.entity.Chicken) {
                         return new BukkitChicken((org.bukkit.entity.Chicken) entity);
                     }
@@ -695,18 +701,15 @@ public class BukkitEntities extends Entities {
                 return new BukkitSlime((org.bukkit.entity.Slime) entity);
             }
 
-            if (entity instanceof org.bukkit.entity.Flying) {
-                if (entity instanceof org.bukkit.entity.Ghast) {
-                    return new BukkitGhast((org.bukkit.entity.Ghast) entity);
-                }
 
-                if (BukkitFeature.ENTITY_PHANTOM.isSupported()) {
-                    if (entity instanceof org.bukkit.entity.Phantom) {
-                        return new BukkitPhantom((org.bukkit.entity.Phantom) entity);
-                    }
-                }
+            if (entity instanceof org.bukkit.entity.Ghast) {
+                return new BukkitGhast((org.bukkit.entity.Ghast) entity);
+            }
 
-                return new BukkitFlyingMob((org.bukkit.entity.Flying) entity);
+            if (BukkitFeature.ENTITY_PHANTOM.isSupported()) {
+                if (entity instanceof org.bukkit.entity.Phantom) {
+                    return new BukkitPhantom((org.bukkit.entity.Phantom) entity);
+                }
             }
 
             if (entity instanceof org.bukkit.entity.EnderDragon) {

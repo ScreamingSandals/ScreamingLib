@@ -1,6 +1,6 @@
 [versions]
 # platforms
-paper = "1.21.5-R0.1-SNAPSHOT"
+paper = "1.21.6-R0.1-SNAPSHOT"
 paper-support_1_21_3 = "1.21.3-R0.1-SNAPSHOT"
 paper-support_1_21_1 = "1.21.1-R0.1-SNAPSHOT"
 paper-support_1_20_6 = "1.20.6-R0.1-SNAPSHOT"
@@ -16,9 +16,6 @@ velocity = "3.2.0-SNAPSHOT"
 adventure = "4.23.0"
 datafixerupper = "8.0.16"
 datafixerupper2 = "2.0.24"
-
-# paperlib (shaded)
-paperlib = "1.0.8"
 
 # annotation (implementation)
 javapoet = "1.13.0"
@@ -56,7 +53,6 @@ takenaka = "1.2.1-SNAPSHOT"
 mappings = "1.8.8+1.21.6"
 
 [libraries]
-paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
 javapoet = { group = "com.squareup", name = "javapoet", version.ref = "javapoet" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }

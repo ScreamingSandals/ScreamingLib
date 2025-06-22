@@ -412,7 +412,7 @@ public final class MiniMessageParser {
             return defaultStylingTags(true);
         }
 
-        @Contract("-> this")
+        @Contract("_ -> this")
         public @NotNull Builder defaultStylingTags(boolean bedrockColorNames) {
             // colors
             registerStylingTag("color", new ColorResolver(), "colour", "c");

@@ -22,11 +22,11 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Zombie;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
+import org.screamingsandals.lib.impl.bukkit.compat.v1_12_2.AsyncChunk1_9;
 import org.screamingsandals.lib.impl.bukkit.entity.type.BukkitEntityType1_11;
 import org.screamingsandals.lib.impl.bukkit.entity.type.BukkitEntityType1_8;
 import org.screamingsandals.lib.impl.bukkit.entity.type.InternalEntityLegacyConstants;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.impl.ext.paperlib.PaperLib;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -139,7 +139,14 @@ public class BukkitEntity extends BasicWrapper<org.bukkit.entity.Entity> impleme
 
     @Override
     public @NotNull CompletableFuture<@NotNull Boolean> teleport(@NotNull Location locationHolder) {
-        return PaperLib.teleportAsync(wrappedObject, locationHolder.as(org.bukkit.Location.class));
+        if (BukkitFeature.TELEPORT_ASYNC.isSupported()) {
+            return wrappedObject.teleportAsync(locationHolder.as(org.bukkit.Location.class));
+        } else if (BukkitFeature.CHUNK_ASYNC_1_9.isSupported()) {
+            var loc = locationHolder.as(org.bukkit.Location.class);
+            return AsyncChunk1_9.getChunkAtAsync(loc).thenApply(chunk -> wrappedObject.teleport(loc));
+        } else {
+            return CompletableFuture.completedFuture(wrappedObject.teleport(locationHolder.as(org.bukkit.Location.class)));
+        }
     }
 
     @Override

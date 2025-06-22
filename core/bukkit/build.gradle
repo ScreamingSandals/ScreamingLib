@@ -65,9 +65,6 @@ dependencies {
         targetConfiguration = 'shadow'
     }
 
-    api project(':paperlib'), {
-        targetConfiguration = 'shadow'
-    }
     api project(':spectator-adventure')
     api project(':spectator-bungee')
 

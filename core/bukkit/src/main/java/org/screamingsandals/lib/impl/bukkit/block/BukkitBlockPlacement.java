@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.impl.bukkit.block;
 
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.jetbrains.annotations.NotNull;
@@ -25,11 +26,13 @@ import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.block.snapshot.BlockSnapshot;
 import org.screamingsandals.lib.impl.block.snapshot.BlockSnapshots;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
-import org.screamingsandals.lib.impl.ext.paperlib.PaperLib;
+import org.screamingsandals.lib.impl.bukkit.compat.v1_12_2.AsyncChunk1_9;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.impl.world.Locations;
+
+import java.util.concurrent.CompletableFuture;
 
 public final class BukkitBlockPlacement extends BasicWrapper<org.bukkit.block.Block> implements BlockPlacement {
     public BukkitBlockPlacement(org.bukkit.block.@NotNull Block wrappedObject) {
@@ -48,20 +51,28 @@ public final class BukkitBlockPlacement extends BasicWrapper<org.bukkit.block.Bl
 
     private void setType(@NotNull Block type, boolean ignorePhysics) {
         final var bukkitLocation = wrappedObject.getLocation();
-        PaperLib.getChunkAtAsync(bukkitLocation)
-                .thenAccept(result -> {
-                    if (!BukkitFeature.FLATTENING.isSupported()) {
-                        var bukkitBlock = bukkitLocation.getBlock();
-                        var material = type.as(Material.class);
-                        bukkitBlock.setType(material, !ignorePhysics);
-                        if (type instanceof BukkitBlock1_8) {
-                            Reflect.getMethod(bukkitBlock, "setData", byte.class, boolean.class).invoke(((BukkitBlock1_8) type).legacyData(), !ignorePhysics);
-                            BlockUtils1_8.finishSettingBlock(bukkitBlock.getState(), (BukkitBlock1_8) type, true);
-                        }
-                    } else {
-                        bukkitLocation.getBlock().setBlockData(type.as(BlockData.class), !ignorePhysics);
-                    }
-                });
+        CompletableFuture<Chunk> chunkFuture;
+        if (BukkitFeature.CHUNK_ASYNC_1_13.isSupported()) {
+            chunkFuture = bukkitLocation.getWorld().getChunkAtAsync(bukkitLocation);
+        } else if (BukkitFeature.CHUNK_ASYNC_1_9.isSupported()) {
+            chunkFuture = AsyncChunk1_9.getChunkAtAsync(bukkitLocation);
+        } else {
+            chunkFuture = CompletableFuture.completedFuture(bukkitLocation.getChunk());
+        }
+
+        chunkFuture.thenAccept(result -> {
+            if (!BukkitFeature.FLATTENING.isSupported()) {
+                var bukkitBlock = bukkitLocation.getBlock();
+                var material = type.as(Material.class);
+                bukkitBlock.setType(material, !ignorePhysics);
+                if (type instanceof BukkitBlock1_8) {
+                    Reflect.getMethod(bukkitBlock, "setData", byte.class, boolean.class).invoke(((BukkitBlock1_8) type).legacyData(), !ignorePhysics);
+                    BlockUtils1_8.finishSettingBlock(bukkitBlock.getState(), (BukkitBlock1_8) type, true);
+                }
+            } else {
+                bukkitLocation.getBlock().setBlockData(type.as(BlockData.class), !ignorePhysics);
+            }
+        });
     }
 
     @Override

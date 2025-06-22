@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.entity.flying;
+package org.screamingsandals.lib.impl.bukkit.entity.animal;
 
-import org.screamingsandals.lib.entity.Mob;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.entity.animal.HappyGhast;
 
-/**
- * An abstract type for all flying mobs.
- */
-public interface FlyingMob extends Mob {
+public class BukkitHappyGhast extends BukkitAnimal implements HappyGhast {
+    public BukkitHappyGhast(@NotNull org.bukkit.entity.HappyGhast wrappedObject) {
+        super(wrappedObject);
+    }
 }
