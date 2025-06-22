@@ -23,10 +23,12 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
+import org.screamingsandals.lib.impl.adventure.spectator.event.click.PayloadConverter;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
+import org.screamingsandals.lib.spectator.event.click.Payload;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.ResourceLocation;
 
 public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.event.ClickEvent> implements ClickEvent {
     public AdventureClickEvent(net.kyori.adventure.text.event.@NotNull ClickEvent wrappedObject) {
@@ -44,35 +46,48 @@ public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.e
 
     @Override
     public @NotNull ClickEvent withAction(@NotNull Action action) {
-        return new AdventureClickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(
-                net.kyori.adventure.text.event.ClickEvent.Action.valueOf(action.name()),
-                wrappedObject.value()
-        ));
+        if (AdventureFeature.CLICK_EVENT_PAYLOAD.isSupported()) {
+            return new AdventureClickEvent(PayloadConverter.withAction(
+                    net.kyori.adventure.text.event.ClickEvent.Action.valueOf(action.name()),
+                    wrappedObject
+            ));
+        } else {
+            return new AdventureClickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(
+                    net.kyori.adventure.text.event.ClickEvent.Action.valueOf(action.name()),
+                    wrappedObject.value()
+            ));
+        }
     }
 
     @Override
-    public @NotNull String value() {
-        return wrappedObject.value();
+    public @NotNull Payload payload() {
+        if (AdventureFeature.CLICK_EVENT_PAYLOAD.isSupported()) {
+            return PayloadConverter.convertPayload(wrappedObject);
+        } else {
+            return new Payload.Text.Default(wrappedObject.value());
+        }
     }
 
     @Override
-    public @NotNull ClickEvent withValue(@NotNull String value) {
-        return new AdventureClickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(wrappedObject.action(), value));
-    }
-
-    @Override
-    public @Nullable ResourceLocation id() {
-        return null; // TODO
-    }
-
-    @Override
-    public @NotNull ClickEvent withId(@NotNull ResourceLocation id) {
-        return this; // TODO
+    public @NotNull ClickEvent withPayload(@NotNull Payload payload) {
+        if (AdventureFeature.CLICK_EVENT_PAYLOAD.isSupported()) {
+            return new AdventureClickEvent(PayloadConverter.withPayload(wrappedObject.action(), payload));
+        } else {
+            String value;
+            if (payload instanceof Payload.Text) {
+                value = ((Payload.Text) payload).text();
+            } else if (payload instanceof Payload.Int) {
+                value = String.valueOf(((Payload.Int) payload).number());
+            } else {
+                throw new IllegalArgumentException("Invalid payload type for action " + wrappedObject.action().name() + ": " + payload.getClass());
+            }
+            return new AdventureClickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(wrappedObject.action(), value));
+        }
     }
 
     @Override
     public ClickEvent.@NotNull Builder toBuilder() {
-        return new AdventureClickEventBuilder(action(), value(), id());
+        return new AdventureClickEventBuilder(action(), payload());
     }
 
     @Override
@@ -90,14 +105,31 @@ public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.e
     @Setter
     public static class AdventureClickEventBuilder implements ClickEvent.Builder {
         private @NotNull Action action = Action.OPEN_URL;
-        private @Nullable String value;
-        private @Nullable ResourceLocation id; // TODO
+        private @Nullable Payload payload;
 
         @Override
         public @NotNull ClickEvent build() {
             Preconditions.checkNotNull(action, "Action is not specified!");
-            Preconditions.checkNotNull(value, "Value is not specified!");
-            return new AdventureClickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(net.kyori.adventure.text.event.ClickEvent.Action.valueOf(action.name()), value));
+            Preconditions.checkNotNull(payload, "Payload is not specified!");
+            if (AdventureFeature.CLICK_EVENT_PAYLOAD.isSupported()) {
+                return new AdventureClickEvent(PayloadConverter.withPayload(
+                        net.kyori.adventure.text.event.ClickEvent.Action.valueOf(action.name()),
+                        payload
+                ));
+            } else {
+                String value;
+                if (payload instanceof Payload.Text) {
+                    value = ((Payload.Text) payload).text();
+                } else if (payload instanceof Payload.Int) {
+                    value = String.valueOf(((Payload.Int) payload).number());
+                } else {
+                    throw new IllegalArgumentException("Invalid payload type for action " + action.name() + ": " + payload.getClass());
+                }
+                return new AdventureClickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(
+                        net.kyori.adventure.text.event.ClickEvent.Action.valueOf(action.name()),
+                        value
+                ));
+            }
         }
     }
 }

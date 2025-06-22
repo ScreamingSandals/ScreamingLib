@@ -116,7 +116,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
         try {
             return new BukkitSoundSource(SoundCategory.valueOf(source.toUpperCase(Locale.ROOT)));
         } catch (Throwable t) {
-            return new BukkitSoundSource(SoundCategory.NEUTRAL);
+            return new BukkitSoundSource(SoundCategory.MASTER);
         }
     }
 

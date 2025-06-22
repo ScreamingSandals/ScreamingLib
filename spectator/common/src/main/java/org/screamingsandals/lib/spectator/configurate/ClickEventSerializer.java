@@ -19,6 +19,7 @@ package org.screamingsandals.lib.spectator.configurate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
+import org.screamingsandals.lib.spectator.event.click.Payload;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -41,6 +42,7 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
         try {
             var action = ClickEvent.Action.valueOf(node.node(ACTION_KEY).getString("open_url").toUpperCase(Locale.ROOT));
             String value;
+            // TODO: update to support new variables and events
             if (action == ClickEvent.Action.OPEN_URL && node.hasChild(URL_KEY)) {
                 value = node.node(URL_KEY).getString("");
             } else if ((action == ClickEvent.Action.RUN_COMMAND || action == ClickEvent.Action.SUGGEST_COMMAND) && node.hasChild(COMMAND_KEY)) {
@@ -52,7 +54,7 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
             }
             return ClickEvent.builder()
                     .action(action)
-                    .value(value)
+                    .payload(Payload.text(value))
                     .build();
         } catch (Throwable throwable) {
             throw new SerializationException(throwable);
@@ -66,6 +68,7 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
             return;
         }
 
+        // TODO: update to support new variables and events
         node.node(ACTION_KEY).set(obj.action().name().toLowerCase(Locale.ROOT));
         switch (obj.action()) {
             case OPEN_URL:

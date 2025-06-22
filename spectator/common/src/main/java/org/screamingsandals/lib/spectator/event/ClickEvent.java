@@ -20,6 +20,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.spectator.Spectator;
+import org.screamingsandals.lib.nbt.Tag;
+import org.screamingsandals.lib.spectator.dialog.Dialog;
+import org.screamingsandals.lib.spectator.event.click.Payload;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.ResourceLocation;
@@ -35,32 +38,59 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
     @LimitedVersionSupport(">= 1.15")
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ClickEvent copyToClipboard(@NotNull String value) {
-        return Spectator.getBackend().clickEvent().action(Action.COPY_TO_CLIPBOARD).value(value).build();
+        return Spectator.getBackend().clickEvent().action(Action.COPY_TO_CLIPBOARD).payload(Payload.text(value)).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ClickEvent openUrl(@NotNull String value) {
-        return Spectator.getBackend().clickEvent().action(Action.OPEN_URL).value(value).build();
+        return Spectator.getBackend().clickEvent().action(Action.OPEN_URL).payload(Payload.text(value)).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ClickEvent openFile(@NotNull String value) {
-        return Spectator.getBackend().clickEvent().action(Action.OPEN_FILE).value(value).build();
+        return Spectator.getBackend().clickEvent().action(Action.OPEN_FILE).payload(Payload.text(value)).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ClickEvent runCommand(@NotNull String value) {
-        return Spectator.getBackend().clickEvent().action(Action.RUN_COMMAND).value(value).build();
+        return Spectator.getBackend().clickEvent().action(Action.RUN_COMMAND).payload(Payload.text(value)).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ClickEvent suggestCommand(@NotNull String value) {
-        return Spectator.getBackend().clickEvent().action(Action.SUGGEST_COMMAND).value(value).build();
+        return Spectator.getBackend().clickEvent().action(Action.SUGGEST_COMMAND).payload(Payload.text(value)).build();
+    }
+
+    /**
+     * @see #changePage(int)
+     */
+    @Deprecated(forRemoval = true)
+    @LimitedVersionSupport(">= 1.15")
+    @Contract(value = "_ -> new", pure = true)
+    static @NotNull ClickEvent changePage(@NotNull String value) {
+        try {
+            return changePage(Integer.parseInt(value));
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Cannot set value " + value + " as payload for CHANGE_PAGE click event", e);
+        }
     }
 
     @Contract(value = "_ -> new", pure = true)
-    static @NotNull ClickEvent changePage(@NotNull String value) {
-        return Spectator.getBackend().clickEvent().action(Action.CHANGE_PAGE).value(value).build();
+    @LimitedVersionSupport(">= 1.15")
+    static @NotNull ClickEvent changePage(int page) {
+        return Spectator.getBackend().clickEvent().action(Action.CHANGE_PAGE).payload(Payload.integer(page)).build();
+    }
+
+    @Contract(value = "_, _ -> new", pure = true)
+    @LimitedVersionSupport(">= 1.21.6")
+    static @NotNull ClickEvent custom(@NotNull ResourceLocation id, @Nullable Tag data) {
+        return Spectator.getBackend().clickEvent().action(Action.CUSTOM).payload(Payload.custom(id, data)).build();
+    }
+
+    @Contract(value = "_ -> new", pure = true)
+    @LimitedVersionSupport(">= 1.21.6")
+    static @NotNull ClickEvent showDialog(@NotNull Dialog dialog) {
+        return Spectator.getBackend().clickEvent().action(Action.SHOW_DIALOG).payload(Payload.showDialog(dialog)).build();
     }
 
     @NotNull Action action();
@@ -68,20 +98,37 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
     @Contract(pure = true)
     @NotNull ClickEvent withAction(@NotNull Action action);
 
-    @NotNull String value();
-
-    @Contract(pure = true)
-    @NotNull ClickEvent withValue(@NotNull String value);
-
-    @LimitedVersionSupport(">= 1.21.6")
-    @Nullable ResourceLocation id();
+    /**
+     * @see #payload()
+     */
+    @Deprecated(forRemoval = true)
+    default @NotNull String value() {
+        var payload = payload();
+        if (payload instanceof Payload.Text) {
+            return ((Payload.Text) payload).text();
+        } else if (payload instanceof Payload.Int) {
+            return String.valueOf(((Payload.Int) payload).number());
+        } else {
+            throw new IllegalStateException("Payload is not a string payload, is " + payload);
+        }
+    }
 
     /**
-     * @throws UnsupportedOperationException if this ClickEvent is not of type {@link Action#CUSTOM}
+     * @see #withPayload(Payload)
+     */
+    @Deprecated(forRemoval = true)
+    @Contract(pure = true)
+    default @NotNull ClickEvent withValue(@NotNull String value) {
+        return withPayload(Payload.text(value));
+    }
+
+    @NotNull Payload payload();
+
+    /**
+     * @throws IllegalArgumentException if the payload is not supported by the action
      */
     @Contract(pure = true)
-    @LimitedVersionSupport(">= 1.21.6")
-    @NotNull ClickEvent withId(@NotNull ResourceLocation id);
+    @NotNull ClickEvent withPayload(@NotNull Payload payload);
 
     @Contract(value = "-> new", pure = true)
     ClickEvent.@NotNull Builder toBuilder();
@@ -100,19 +147,41 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
         @LimitedVersionSupport(">= 1.21.6")
         SHOW_DIALOG,
         @LimitedVersionSupport(">= 1.21.6")
-        CUSTOM
+        CUSTOM;
+
+        public @NotNull Class<? extends Payload> supportedPayload() {
+            switch (this) {
+                case CHANGE_PAGE:
+                    return Payload.Int.class;
+                case SHOW_DIALOG:
+                    return Payload.ShowDialog.class;
+                case CUSTOM:
+                    return Payload.Custom.class;
+                default:
+                    return Payload.Text.class;
+            }
+        }
+
+        public boolean supportsPayload(@NotNull Class<? extends Payload> payloadClass) {
+            return supportedPayload().isAssignableFrom(payloadClass) || (this == CHANGE_PAGE && Payload.Text.class.isAssignableFrom(payloadClass));
+        }
     }
 
     interface Builder {
         @Contract("_ -> this")
         @NotNull Builder action(@NotNull Action action);
 
+        /**
+         * @see #payload(Payload)
+         */
+        @Deprecated(forRemoval = true)
         @Contract("_ -> this")
-        @NotNull Builder value(@NotNull String value);
+        default @NotNull Builder value(@NotNull String value) {
+            return payload(Payload.text(value));
+        }
 
-        @LimitedVersionSupport(">= 1.21.6")
         @Contract("_ -> this")
-        @NotNull Builder id(@NotNull ResourceLocation id);
+        @NotNull Builder payload(@NotNull Payload payload);
 
         @Contract(value = "-> new", pure = true)
         @NotNull ClickEvent build();

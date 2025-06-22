@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
+import org.screamingsandals.lib.spectator.event.click.Payload;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
@@ -34,11 +35,12 @@ public class ClickResolver implements StylingResolver {
             return;
         }
 
+        // TODO: other payloads?
         builder.clickEvent(ClickEvent.builder()
                 .action(ClickEvent.Action.valueOf(tag.getArgs().get(0).toUpperCase(Locale.ROOT)))
-                .value(
+                .payload(Payload.text(
                         parser.resolvePlaceholdersInString(tag.getArgs().get(1), placeholders)
-                )
+                ))
                 .build()
         );
     }

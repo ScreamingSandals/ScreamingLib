@@ -147,7 +147,7 @@ public final class MinecraftExceptionHandler<C> {
                                             .build()
                                 )
                 );
-                final ClickEvent click = ClickEvent.builder().action(ClickEvent.Action.COPY_TO_CLIPBOARD).value(stackTrace).build();
+                final ClickEvent click = ClickEvent.copyToClipboard(stackTrace);
                 return Component.text()
                         .content("An internal error occurred while attempting to perform this command.")
                         .color(Color.RED)

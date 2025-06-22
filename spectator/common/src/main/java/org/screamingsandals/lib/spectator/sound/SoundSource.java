@@ -22,6 +22,7 @@ import org.screamingsandals.lib.impl.spectator.Spectator;
 import org.screamingsandals.lib.impl.spectator.sound.SoundSourceLink;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 public interface SoundSource extends Wrapper, RawValueHolder {
     @NotNull SoundSource MASTER = new SoundSourceLink("master");
@@ -34,6 +35,8 @@ public interface SoundSource extends Wrapper, RawValueHolder {
     @NotNull SoundSource PLAYER = new SoundSourceLink("player");
     @NotNull SoundSource AMBIENT = new SoundSourceLink("ambient");
     @NotNull SoundSource VOICE = new SoundSourceLink("voice");
+    @LimitedVersionSupport(">= 1.21.6; defaults to MASTER on older versions")
+    @NotNull SoundSource UI = new SoundSourceLink("ui");
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull SoundSource soundSource(@NotNull String source) {

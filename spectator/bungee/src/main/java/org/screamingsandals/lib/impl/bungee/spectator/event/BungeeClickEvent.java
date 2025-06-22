@@ -21,17 +21,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.md_5.bungee.api.chat.ClickEventCustom;
+import net.md_5.bungee.api.dialog.Dialog;
 import net.md_5.bungee.api.dialog.chat.ShowDialogClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.impl.bungee.spectator.BungeeChatFeature;
+import org.screamingsandals.lib.impl.bungee.spectator.dialog.BungeeDialog;
+import org.screamingsandals.lib.impl.bungee.spectator.dialog.BungeeDialogReference;
+import org.screamingsandals.lib.impl.bungee.spectator.event.click.BungeeClickEventCustom;
+import org.screamingsandals.lib.impl.bungee.spectator.event.click.BungeeShowDialogClickEvent;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
+import org.screamingsandals.lib.spectator.event.click.Payload;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.ResourceLocation;
-
-import java.util.Objects;
 
 public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.ClickEvent> implements ClickEvent {
     public BungeeClickEvent(net.md_5.bungee.api.chat.@NotNull ClickEvent wrappedObject) {
@@ -58,9 +61,15 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
         if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported()) {
             if (action == Action.CUSTOM) {
                 if (wrappedObject instanceof ClickEventCustom) {
-                    return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(wrappedObject.getValue(), ((ClickEventCustom) wrappedObject).getPayload()));
+                    return this;
                 } else {
                     return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(wrappedObject.getValue(), null));
+                }
+            } else if (action == Action.SHOW_DIALOG) {
+                if (wrappedObject instanceof ShowDialogClickEvent) {
+                    return this;
+                } else {
+                    return new BungeeClickEvent(new ShowDialogClickEvent(wrappedObject.getValue()));
                 }
             }
         }
@@ -68,51 +77,59 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
     }
 
     @Override
-    public @NotNull String value() {
+    public @NotNull Payload payload() {
         if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported()) {
             if (wrappedObject instanceof ClickEventCustom) {
-                return ((ClickEventCustom) wrappedObject).getPayload();
+                return new BungeeClickEventCustom((ClickEventCustom) wrappedObject);
             } else if (wrappedObject instanceof ShowDialogClickEvent) {
-                // TODO: change the API to allow dialogs, look at adventure
-                return Objects.requireNonNullElse(((ShowDialogClickEvent) wrappedObject).getReference(), "");
+                return new BungeeShowDialogClickEvent((ShowDialogClickEvent) wrappedObject);
             }
         }
-        return wrappedObject.getValue();
+        var text = wrappedObject.getValue();
+        return Payload.text(text != null ? text : "");
     }
 
     @Override
-    public @NotNull ClickEvent withValue(@NotNull String value) {
+    public @NotNull ClickEvent withPayload(@NotNull Payload payload) {
         if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported()) {
             if (action() == Action.CUSTOM) {
-                return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(wrappedObject.getValue(), value));
+                if (payload instanceof BungeeClickEventCustom) {
+                    return new BungeeClickEvent(((BungeeClickEventCustom) payload).as(ClickEventCustom.class));
+                } else if (payload instanceof Payload.Custom) {
+                    return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(
+                            ((Payload.Custom) payload).location().toString(),
+                            AbstractBungeeBackend.getSnbtSerializer().serialize(((Payload.Custom) payload).tag())
+                    ));
+                }
+                throw new IllegalArgumentException("Invalid payload type for action " + wrappedObject.getAction().name() + ": " + payload.getClass());
+            } else if (action() == Action.SHOW_DIALOG) {
+                if (payload instanceof BungeeShowDialogClickEvent) {
+                    return new BungeeClickEvent(((BungeeShowDialogClickEvent) payload).as(ShowDialogClickEvent.class));
+                } else if (payload instanceof Payload.ShowDialog) {
+                    var dialog = ((Payload.ShowDialog) payload).dialog();
+                    if (dialog instanceof BungeeDialog) {
+                        return new BungeeClickEvent(new ShowDialogClickEvent(dialog.as(Dialog.class)));
+                    } else if (dialog instanceof BungeeDialogReference) {
+                        return new BungeeClickEvent(new ShowDialogClickEvent(((BungeeDialogReference) dialog).getReference()));
+                    }
+                }
+                throw new IllegalArgumentException("Invalid payload type for action " + wrappedObject.getAction().name() + ": " + payload.getClass());
             }
+        }
+        String value;
+        if (payload instanceof Payload.Text) {
+            value = ((Payload.Text) payload).text();
+        } else if (payload instanceof Payload.Int) {
+            value = String.valueOf(((Payload.Int) payload).number());
+        } else {
+            throw new IllegalArgumentException("Invalid payload type for action " + wrappedObject.getAction().name() + ": " + payload.getClass());
         }
         return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEvent(wrappedObject.getAction(), value));
     }
 
     @Override
-    public @Nullable ResourceLocation id() {
-        if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported() && action() == Action.CUSTOM) {
-            return ResourceLocation.of(wrappedObject.getValue());
-        }
-        return null;
-    }
-
-    @Override
-    public @NotNull ClickEvent withId(@NotNull ResourceLocation id) {
-        if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported()) {
-            if (wrappedObject instanceof ClickEventCustom) {
-                return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(id.toString(), ((ClickEventCustom) wrappedObject).getPayload()));
-            } else if (action() == Action.CUSTOM) {
-                return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(id.toString(), null));
-            }
-        }
-        throw new UnsupportedOperationException("Cannot set id for ClickEvent of type " + action());
-    }
-
-    @Override
     public ClickEvent.@NotNull Builder toBuilder() {
-        return new BungeeClickBuilder(action(), value(), id());
+        return new BungeeClickBuilder(action(), payload());
     }
 
     @Override
@@ -130,13 +147,12 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
     @Setter
     public static class BungeeClickBuilder implements ClickEvent.Builder {
         private @NotNull Action action = Action.OPEN_URL;
-        private @Nullable String value;
-        private @Nullable ResourceLocation id;
+        private @Nullable Payload payload;
 
         @Override
         public @NotNull ClickEvent build() {
             Preconditions.checkNotNull(action, "Action is not specified!");
-            Preconditions.checkNotNull(value, "Value is not specified!");
+            Preconditions.checkNotNull(payload, "Payload is not specified!");
             net.md_5.bungee.api.chat.ClickEvent.Action action;
             try {
                 action = net.md_5.bungee.api.chat.ClickEvent.Action.valueOf(this.action.name());
@@ -145,9 +161,36 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
             }
             if (BungeeChatFeature.NEW_CLICK_EVENTS.isSupported()) {
                 if (this.action == Action.CUSTOM) {
-                    Preconditions.checkNotNull(id, "Id is not specified!");
-                    return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(id.toString(), value));
+                    if (payload instanceof BungeeClickEventCustom) {
+                        return new BungeeClickEvent(((BungeeClickEventCustom) payload).as(ClickEventCustom.class));
+                    } else if (payload instanceof Payload.Custom) {
+                        return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEventCustom(
+                                ((Payload.Custom) payload).location().toString(),
+                                AbstractBungeeBackend.getSnbtSerializer().serialize(((Payload.Custom) payload).tag())
+                        ));
+                    }
+                    throw new IllegalArgumentException("Invalid payload type for action " + action.name() + ": " + payload.getClass());
+                } else if (this.action == Action.SHOW_DIALOG) {
+                    if (payload instanceof BungeeShowDialogClickEvent) {
+                        return new BungeeClickEvent(((BungeeShowDialogClickEvent) payload).as(ShowDialogClickEvent.class));
+                    } else if (payload instanceof Payload.ShowDialog) {
+                        var dialog = ((Payload.ShowDialog) payload).dialog();
+                        if (dialog instanceof BungeeDialog) {
+                            return new BungeeClickEvent(new ShowDialogClickEvent(dialog.as(Dialog.class)));
+                        } else if (dialog instanceof BungeeDialogReference) {
+                            return new BungeeClickEvent(new ShowDialogClickEvent(((BungeeDialogReference) dialog).getReference()));
+                        }
+                    }
+                    throw new IllegalArgumentException("Invalid payload type for action " +action.name() + ": " + payload.getClass());
                 }
+            }
+            String value;
+            if (payload instanceof Payload.Text) {
+                value = ((Payload.Text) payload).text();
+            } else if (payload instanceof Payload.Int) {
+                value = String.valueOf(((Payload.Int) payload).number());
+            } else {
+                throw new IllegalArgumentException("Invalid payload type for action " + action.name() + ": " + payload.getClass());
             }
             return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEvent(action, value));
         }

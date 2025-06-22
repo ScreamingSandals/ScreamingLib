@@ -94,6 +94,8 @@ class SpigotBackendAdventureExtension {
                     } catch (Throwable throwable) {
                         bungeeAction = net.md_5.bungee.api.chat.ClickEvent.Action.OPEN_URL;
                     }
+
+                    // TODO: update to support new events
                     return new net.md_5.bungee.api.chat.ClickEvent(bungeeAction, adventureClickEvent.value());
                 });
 
@@ -136,6 +138,7 @@ class SpigotBackendAdventureExtension {
 
         AbstractBungeeBackend.getAdditionalClickEventConverter()
                 .registerW2P(net.kyori.adventure.text.event.ClickEvent.class, bungeeClickEvent ->
+                        // TODO: update to support new events
                         net.kyori.adventure.text.event.ClickEvent.clickEvent(
                                 net.kyori.adventure.text.event.ClickEvent.Action.valueOf(bungeeClickEvent.action().name()),
                                 bungeeClickEvent.value()
