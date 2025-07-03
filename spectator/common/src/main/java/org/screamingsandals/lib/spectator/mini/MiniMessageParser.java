@@ -177,8 +177,8 @@ public final class MiniMessageParser {
                     if (resolved.size() == 1) {
                         var child = (B) resolveChildren(resolved.get(0), placeholders);
                         if (child.hasStyling()) {
-                            var component = (B) Component.text();
-                            return Objects.requireNonNullElse(res.resolve(this, component, (TagNode) node, placeholders), component).append(child);
+                            var component = (B) Component.text().append(child);
+                            return Objects.requireNonNullElse(res.resolve(this, component, (TagNode) node, placeholders), component);
                         } else {
                             return Objects.requireNonNullElse(res.resolve(this, child, (TagNode) node, placeholders), child);
                         }
