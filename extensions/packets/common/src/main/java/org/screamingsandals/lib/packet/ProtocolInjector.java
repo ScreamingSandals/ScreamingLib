@@ -26,7 +26,6 @@ import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.event.player.PlayerJoinEvent;
 import org.screamingsandals.lib.event.player.PlayerLeaveEvent;
-import org.screamingsandals.lib.event.player.PlayerLoginEvent;
 import org.screamingsandals.lib.packet.event.SPacketEvent;
 import org.screamingsandals.lib.player.Players;
 import org.screamingsandals.lib.player.Player;
@@ -38,6 +37,7 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 
+// Available only in PLAY phase
 @Service
 @ServiceDependencies(dependsOn = {
         EventManager.class,
@@ -52,9 +52,8 @@ public class ProtocolInjector {
             throw new UnsupportedOperationException("Default EventManager is not initialized yet");
         }
 
-        EventManager.getDefaultEventManager().register(PlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.player(), true), EventExecutionOrder.FIRST);
-        EventManager.getDefaultEventManager().register(PlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.player(), false), EventExecutionOrder.LATE);
-        EventManager.getDefaultEventManager().register(PlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.player()), EventExecutionOrder.LAST);
+        EventManager.getDefaultEventManager().register(PlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.player(), false), EventExecutionOrder.FIRST);
+        EventManager.getDefaultEventManager().register(PlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.player()), EventExecutionOrder.MONITOR);
         Server.getConnectedPlayers().forEach(player -> addPlayer(player, false));
     }
 

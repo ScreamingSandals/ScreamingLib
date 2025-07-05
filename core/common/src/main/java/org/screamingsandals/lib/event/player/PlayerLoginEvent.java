@@ -24,6 +24,10 @@ import org.screamingsandals.lib.spectator.ComponentLike;
 
 import java.net.InetAddress;
 
+/**
+ * @deprecated Deprecated due to Paper changes, use {@link AsyncPlayerPreLoginEvent}
+ */
+@Deprecated(forRemoval = true)
 public interface PlayerLoginEvent extends PlayerEvent, PlatformEvent {
 
     @NotNull Player player();
