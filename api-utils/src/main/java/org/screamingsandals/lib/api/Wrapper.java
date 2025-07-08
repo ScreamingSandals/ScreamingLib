@@ -23,6 +23,10 @@ import java.util.Optional;
 
 /**
  * Indicates something that can be wrapped and converted to different types of choice.
+ *
+ * @since 2.0.3
+ * @apiNote This file is part of the ScreamingLib project and thus follow its versioning.
+ *          Check the derived API changelog for when it was introduced there.
  */
 public interface Wrapper {
     /**
@@ -35,6 +39,7 @@ public interface Wrapper {
      * @param <T> the type to cast the class object of the wrapped object to
      * @return this wrapped object cast to represent a subclass of the specified class object.
      * @throws RuntimeException if it is unknown how to convert the wrapper to the specific type
+     * @since 2.0.3
      */
     <T> @NotNull T as(@NotNull Class<T> type);
 
@@ -48,6 +53,7 @@ public interface Wrapper {
      * @param type the class to convert the wrapped object to
      * @param <T> the type to cast the class object of the wrapped object to
      * @return this wrapped object cast to represent a subclass of the specified class object.
+     * @since 2.0.3
      */
     default <T> @NotNull Optional<T> asOptional(@NotNull Class<T> type) {
         try {
@@ -67,6 +73,7 @@ public interface Wrapper {
      * @param type the class to convert the wrapped object to
      * @param <T> the type to cast the class object of the wrapped object to
      * @return this wrapped object cast to represent a subclass of the specified class object.
+     * @since 2.0.3
      */
     default <T> @Nullable T asNullable(@NotNull Class<T> type) {
         try {

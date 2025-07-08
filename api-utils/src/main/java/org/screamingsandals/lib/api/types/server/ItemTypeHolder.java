@@ -51,7 +51,7 @@ import java.util.function.Function;
  * <p>
  * Currently supported platform types:
  * <ul>
- *     <li>{@code org.bukkit.Material} - for legacy versions (<= 1.12.2), unwrapping to this class can be
+ *     <li>{@code org.bukkit.Material} - for legacy versions (&lt;= 1.12.2), unwrapping to this class can be
  *     inaccurate and may cause unexpected type conversion (e.g. diorite -> stone)</li>
  *     <li>{@code org.bukkit.inventory.ItemStack}</li>
  * </ul>
@@ -62,6 +62,8 @@ import java.util.function.Function;
  * The holder itself lacks identity and should not be compared using {@code ==}, use {@link Object#equals(Object)} instead.
  *
  * @since 2.0.3
+ * @apiNote This file is part of the ScreamingLib project and thus follow its versioning.
+ *          Check the derived API changelog for when it was introduced there.
  */
 @ApiStatus.NonExtendable
 public interface ItemTypeHolder extends Wrapper {
@@ -101,6 +103,9 @@ public interface ItemTypeHolder extends Wrapper {
         return Provider.provider.apply(itemType);
     }
 
+    /**
+     * @hidden
+     */
     @ApiStatus.Internal
     final class Provider {
         private static @Nullable Function<@NotNull Object, @Nullable ItemTypeHolder> provider;

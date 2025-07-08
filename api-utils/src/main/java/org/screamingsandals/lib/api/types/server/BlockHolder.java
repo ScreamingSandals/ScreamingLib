@@ -51,10 +51,10 @@ import java.util.function.Function;
  * <p>
  * Currently supported platform types:
  * <ul>
- *     <li>{@code org.bukkit.block.data.BlockData} (>= 1.13 only)</li>
- *     <li>{@code org.bukkit.material.MaterialData} (<= 1.12.2 only)</li>
+ *     <li>{@code org.bukkit.block.data.BlockData} (&gt;= 1.13 only)</li>
+ *     <li>{@code org.bukkit.material.MaterialData} (&lt;= 1.12.2 only)</li>
  *     <li>{@code org.bukkit.Material} - converting to this type causes a loss of state on all versions (only type is preserved);
- *     for legacy versions (<= 1.12.2), unwrapping to this class can be inaccurate and may cause unexpected type conversion (e.g. diorite -> stone)</li>
+ *     for legacy versions (&lt;= 1.12.2), unwrapping to this class can be inaccurate and may cause unexpected type conversion (e.g. diorite -> stone)</li>
  * </ul>
  * <p>
  * NOTE: The type should be directly used only when interacting with an API of a ScreamingLib-based plugin.
@@ -63,6 +63,8 @@ import java.util.function.Function;
  * The holder itself lacks identity and should not be compared using {@code ==}, use {@link Object#equals(Object)} instead.
  *
  * @since 2.0.3
+ * @apiNote This file is part of the ScreamingLib project and thus follow its versioning.
+ *          Check the derived API changelog for when it was introduced there.
  */
 @ApiStatus.NonExtendable
 public interface BlockHolder extends Wrapper {
@@ -102,6 +104,9 @@ public interface BlockHolder extends Wrapper {
         return Provider.provider.apply(block);
     }
 
+    /**
+     * @hidden
+     */
     @ApiStatus.Internal
     final class Provider {
         private static @Nullable Function<@NotNull Object, @Nullable BlockHolder> provider;

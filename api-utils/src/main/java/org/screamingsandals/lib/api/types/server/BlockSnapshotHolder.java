@@ -61,6 +61,8 @@ import java.util.function.Function;
  * The holder itself lacks identity and should not be compared using {@code ==}, use {@link Object#equals(Object)} instead.
  *
  * @since 2.0.3
+ * @apiNote This file is part of the ScreamingLib project and thus follow its versioning.
+ *          Check the derived API changelog for when it was introduced there.
  */
 @ApiStatus.NonExtendable
 public interface BlockSnapshotHolder extends Wrapper {
@@ -100,6 +102,9 @@ public interface BlockSnapshotHolder extends Wrapper {
         return Provider.provider.apply(blockSnapshot);
     }
 
+    /**
+     * @hidden
+     */
     @ApiStatus.Internal
     final class Provider {
         private static @Nullable Function<@NotNull Object, @Nullable BlockSnapshotHolder> provider;

@@ -51,7 +51,7 @@ import java.util.function.Function;
  * <p>
  * Currently supported platform types:
  * <ul>
- *     <li>{@code org.bukkit.entity.EntityType} - for legacy versions (<= 1.11.2), unwrapping to this class can be
+ *     <li>{@code org.bukkit.entity.EntityType} - for legacy versions (&lt;= 1.11.2), unwrapping to this class can be
  *     inaccurate and may cause unexpected type conversion for horses, skeleton types and zombie types (e.g. skeleton_horse -> horse)</li>
  * </ul>
  * <p>
@@ -61,6 +61,8 @@ import java.util.function.Function;
  * The holder itself lacks identity and should not be compared using {@code ==}, use {@link Object#equals(Object)} instead.
  *
  * @since 2.0.3
+ * @apiNote This file is part of the ScreamingLib project and thus follow its versioning.
+ *          Check the derived API changelog for when it was introduced there.
  */
 @ApiStatus.NonExtendable
 public interface EntityTypeHolder extends Wrapper {
@@ -100,6 +102,9 @@ public interface EntityTypeHolder extends Wrapper {
         return Provider.provider.apply(entityType);
     }
 
+    /**
+     * @hidden
+     */
     @ApiStatus.Internal
     final class Provider {
         private static @Nullable Function<@NotNull Object, @Nullable EntityTypeHolder> provider;
