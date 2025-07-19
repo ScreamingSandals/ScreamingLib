@@ -68,6 +68,10 @@ public abstract class Server {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getServerSoftwareVersion0();
     }
 
+    public static @NotNull String getServerSoftwareName() {
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getServerSoftwareName0();
+    }
+
     /**
      * Compares the server version with a supplied value.
      *
@@ -153,6 +157,8 @@ public abstract class Server {
     public abstract @NotNull String getVersion0();
 
     public abstract @NotNull String getServerSoftwareVersion0();
+
+    public abstract @NotNull String getServerSoftwareName0();
 
     public static List<@NotNull ChannelFuture> getConnections() {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConnections0();

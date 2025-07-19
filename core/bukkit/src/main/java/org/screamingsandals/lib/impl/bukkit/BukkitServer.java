@@ -522,6 +522,11 @@ public class BukkitServer extends Server {
     }
 
     @Override
+    public @NotNull String getServerSoftwareName0() {
+        return Bukkit.getName();
+    }
+
+    @Override
     public boolean isVersion0(int major, int minor) {
         return Version.isVersion(major, minor);
     }
