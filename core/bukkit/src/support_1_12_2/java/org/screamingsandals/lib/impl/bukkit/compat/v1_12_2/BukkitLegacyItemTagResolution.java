@@ -304,6 +304,90 @@ public class BukkitLegacyItemTagResolution {
             case "WOOL":
                 list.add("wool");
                 break;
+            // axes
+            case "IRON_AXE":
+            case "WOOD_AXE":
+            case "STONE_AXE":
+            case "DIAMOND_AXE":
+            case "GOLD_AXE":
+                list.add("axes");
+                break;
+            // hoes
+            case "WOOD_HOE":
+            case "STONE_HOE":
+            case "IRON_HOE":
+            case "DIAMOND_HOE":
+            case "GOLD_HOE":
+                list.add("hoes");
+                break;
+            // pickaxes
+            case "IRON_PICKAXE":
+            case "WOOD_PICKAXE":
+            case "STONE_PICKAXE":
+            case "DIAMOND_PICKAXE":
+            case "GOLD_PICKAXE":
+                list.add("pickaxes");
+                break;
+            // shovels
+            case "IRON_SPADE":
+            case "WOOD_SPADE":
+            case "STONE_SPADE":
+            case "DIAMOND_SPADE":
+            case "GOLD_SPADE":
+                list.add("shovels");
+                break;
+            // swords
+            case "IRON_SWORD":
+            case "WOOD_SWORD":
+            case "STONE_SWORD":
+            case "DIAMOND_SWORD":
+            case "GOLD_SWORD":
+                list.add("swords");
+                break;
+            // chest_armor
+            case "LEATHER_CHESTPLATE":
+            case "CHAINMAIL_CHESTPLATE":
+            case "IRON_CHESTPLATE":
+            case "DIAMOND_CHESTPLATE":
+            case "GOLD_CHESTPLATE":
+                list.add("chest_armor");
+                list.add("enchantable/chest_armor");
+                list.add("enchantable/armor");
+                break;
+            // foot_armor
+            case "LEATHER_BOOTS":
+            case "CHAINMAIL_BOOTS":
+            case "IRON_BOOTS":
+            case "DIAMOND_BOOTS":
+            case "GOLD_BOOTS":
+                list.add("foot_armor");
+                list.add("enchantable/foot_armor");
+                list.add("enchantable/armor");
+                break;
+            // head_armor
+            case "LEATHER_HELMET":
+            case "CHAINMAIL_HELMET":
+            case "IRON_HELMET":
+            case "DIAMOND_HELMET":
+            case "GOLD_HELMET":
+                list.add("head_armor");
+                list.add("enchantable/head_armor");
+                list.add("enchantable/armor");
+                break;
+            // leg_armor
+            case "LEATHER_LEGGINGS":
+            case "CHAINMAIL_LEGGINGS":
+            case "IRON_LEGGINGS":
+            case "DIAMOND_LEGGINGS":
+            case "GOLD_LEGGINGS":
+                list.add("leg_armor");
+                list.add("enchantable/leg_armor");
+                list.add("enchantable/armor");
+                break;
+            // skulls
+            case "SKULL_ITEM":
+                list.add("skulls");
+                break;
         }
         return list;
     }

@@ -289,6 +289,124 @@ public class ModernItemTagsBackPorts {
             }
         }
 
+        if (!Server.isVersion(1, 19, 4)) {
+            if (itemType.is(
+                "minecraft:diamond_axe",
+                "minecraft:golden_axe",
+                "minecraft:iron_axe",
+                "minecraft:netherite_axe",
+                "minecraft:stone_axe",
+                "minecraft:wooden_axe"
+            )) {
+                helper.port("axes");
+            }
+            if (itemType.is(
+                "minecraft:diamond_hoe",
+                "minecraft:golden_hoe",
+                "minecraft:iron_hoe",
+                "minecraft:netherite_hoe",
+                "minecraft:stone_hoe",
+                "minecraft:wooden_hoe"
+            )) {
+                helper.port("hoes");
+            }
+            if (itemType.is(
+                "minecraft:diamond_pickaxe",
+                "minecraft:golden_pickaxe",
+                "minecraft:iron_pickaxe",
+                "minecraft:netherite_pickaxe",
+                "minecraft:stone_pickaxe",
+                "minecraft:wooden_pickaxe"
+            )) {
+                helper.port("pickaxes");
+            }
+            if (itemType.is(
+                "minecraft:diamond_shovel",
+                "minecraft:golden_shovel",
+                "minecraft:iron_shovel",
+                "minecraft:netherite_shovel",
+                "minecraft:stone_shovel",
+                "minecraft:wooden_shovel"
+            )) {
+                helper.port("shovels");
+            }
+            if (itemType.is(
+                "minecraft:diamond_sword",
+                "minecraft:golden_sword",
+                "minecraft:iron_sword",
+                "minecraft:netherite_sword",
+                "minecraft:stone_sword",
+                "minecraft:wooden_sword"
+            )) {
+                helper.port("swords");
+            }
+        }
+
+        if (!Server.isVersion(1, 20, 5)) {
+            if (itemType.is(
+                "minecraft:chainmail_chestplate",
+                "minecraft:diamond_chestplate",
+                "minecraft:golden_chestplate",
+                "minecraft:iron_chestplate",
+                "minecraft:leather_chestplate",
+                "minecraft:netherite_chestplate"
+            )) {
+                helper.port("chest_armor");
+                helper.port("enchantable/chest_armor");
+                helper.port("enchantable/armor");
+            }
+            if (itemType.is(
+                "minecraft:chainmail_boots",
+                "minecraft:diamond_boots",
+                "minecraft:golden_boots",
+                "minecraft:iron_boots",
+                "minecraft:leather_boots",
+                "minecraft:netherite_boots"
+            )) {
+                helper.port("foot_armor");
+                helper.port("enchantable/foot_armor");
+                helper.port("enchantable/armor");
+            }
+            if (itemType.is(
+                "minecraft:chainmail_helmet",
+                "minecraft:diamond_helmet",
+                "minecraft:golden_helmet",
+                "minecraft:iron_helmet",
+                "minecraft:leather_helmet",
+                "minecraft:netherite_helmet",
+                "minecraft:turtle_helmet"
+            )) {
+                helper.port("head_armor");
+                helper.port("enchantable/head_armor");
+                helper.port("enchantable/armor");
+            }
+            if (itemType.is(
+                "minecraft:chainmail_leggings",
+                "minecraft:diamond_leggings",
+                "minecraft:golden_leggings",
+                "minecraft:iron_leggings",
+                "minecraft:leather_leggings",
+                "minecraft:netherite_leggings"
+            )) {
+                helper.port("leg_armor");
+                helper.port("enchantable/leg_armor");
+                helper.port("enchantable/armor");
+            }
+            if (itemType.is(
+                "minecraft:creeper_head",
+                "minecraft:dragon_head",
+                "minecraft:piglin_head",
+                "minecraft:player_head",
+                "minecraft:skeleton_skull",
+                "minecraft:wither_skeleton_skull",
+                "minecraft:zombie_head"
+            )) {
+                helper.port("skulls");
+            }
+        }
+
+        // TODO: check other tags and port them if it makes sense
+
         return helper.getPorts();
     }
 }
