@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.bukkit.packet.listener.ServerboundInteractPacketListener;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.impl.nms.accessors.network.ProtocolInfoAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerCommonPacketListenerImplAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.decoration.ArmorStandAccessor;
 import org.screamingsandals.lib.impl.vanilla.packet.PacketIdMapping1_20_5;
 import org.screamingsandals.lib.packet.AbstractPacket;
@@ -38,6 +39,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.internal.AccessPluginClasses;
 import org.screamingsandals.lib.impl.vanilla.packet.PacketIdMapping;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 @Service
 @ServiceDependencies(dependsOn = ServerboundInteractPacketListener.class)
@@ -125,12 +127,28 @@ public class BukkitPacketMapper extends PacketMapper {
                 // TODO: ProtocolSupport
             }
 
+            boolean flush;
+            if (ServerCommonPacketListenerImplAccessor.FIELD_SUSPEND_FLUSHING_ON_SERVER_THREAD.get() != null) {
+                //noinspection DataFlowIssue
+                flush = (boolean) Reflect.getField(ClassStorage.getPlayerConnection(player.as(org.bukkit.entity.Player.class)), ServerCommonPacketListenerImplAccessor.FIELD_SUSPEND_FLUSHING_ON_SERVER_THREAD.get());
+            } else {
+                flush = true;
+            }
+
             var finalCtx = ctx;
             final Runnable task = () -> {
                 if (finalCtx != null) {
-                    finalCtx.writeAndFlush(buffer);
+                    if (flush) {
+                        finalCtx.writeAndFlush(buffer);
+                    } else {
+                        finalCtx.write(buffer);
+                    }
                 } else {
-                    channel.writeAndFlush(buffer);
+                    if (flush) {
+                        channel.writeAndFlush(buffer);
+                    } else {
+                        channel.write(buffer);
+                    }
                 }
             };
 
