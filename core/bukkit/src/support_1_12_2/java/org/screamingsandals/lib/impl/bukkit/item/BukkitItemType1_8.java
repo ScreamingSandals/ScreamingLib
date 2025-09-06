@@ -38,7 +38,8 @@ public class BukkitItemType1_8 extends BasicWrapper<Pair<Material, Short>> imple
     }
 
     public BukkitItemType1_8(@NotNull Material material, short forcedDurability) {
-        this(Pair.of(material, forcedDurability));
+        // Fix: for some reason, AIR may have durability other than 0 even if that does not make any sense
+        this(Pair.of(material, material != Material.AIR ? forcedDurability : 0));
     }
 
     public BukkitItemType1_8(@NotNull Pair<@NotNull Material, @NotNull Short> wrappedObject) {
