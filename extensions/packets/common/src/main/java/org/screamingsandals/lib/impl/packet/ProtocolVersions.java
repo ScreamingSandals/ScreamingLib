@@ -24,4 +24,5 @@ public class ProtocolVersions {
     public static final int V1_20_5 = 766;
     public static final int V1_21_2 = 768;
     public static final int V1_21_5 = 770;
+    public static final int V1_21_9 = 773;
 }
