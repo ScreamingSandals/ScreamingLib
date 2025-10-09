@@ -50,7 +50,7 @@ junit-platform = "1.10.2"
 # plugins
 screaming-plugin-builder = "1.0.87"
 takenaka = "1.2.1-SNAPSHOT"
-mappings = "1.8.8+1.21.9"
+mappings = "1.8.8+1.21.10"
 
 [libraries]
 javapoet = { group = "com.squareup", name = "javapoet", version.ref = "javapoet" }
