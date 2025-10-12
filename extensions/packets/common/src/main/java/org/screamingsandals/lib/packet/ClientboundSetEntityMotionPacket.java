@@ -21,6 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.packet.ProtocolVersions;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 @EqualsAndHashCode(callSuper = true)
@@ -34,6 +35,10 @@ public class ClientboundSetEntityMotionPacket extends AbstractPacket {
     @Override
     public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(entityId);
-        writer.writeMotion(velocity);
+        if (writer.protocol() >= ProtocolVersions.V1_21_9) {
+            writer.writeLpVec3(velocity);
+        } else {
+            writer.writeMotion(velocity);
+        }
     }
 }

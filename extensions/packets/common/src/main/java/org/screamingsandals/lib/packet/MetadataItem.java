@@ -417,27 +417,6 @@ public abstract class MetadataItem {
     }
 
     /**
-     * Represents a BlockPositionMetadataItem which is used to serialize data of type BlockPosition to a PacketWriter.
-     */
-    @Getter
-    @ToString(callSuper = true)
-    public static class BlockPositionMetadataItem extends MetadataItem {
-        private final @NotNull Vector3Di val;
-
-        public BlockPositionMetadataItem(byte index, @NotNull Vector3Di val) {
-            super(index);
-            this.val = val;
-        }
-
-        @Override
-        public void write(@NotNull PacketWriter writer) {
-            writeModernHeader(writer);
-            writer.writeVarInt(writer.protocol() < 393 ? 8 : writer.protocol() >= 761 ? 10 : 9);
-            writer.writeLong(blockPosToLong(val.getX(), val.getY(), val.getZ()));
-        }
-    }
-
-    /**
      * Represents a OptionalBlockPositionMetadataItem which is used to serialize data of BlockPosition with a flag that indicates its presence to a PacketWriter.
      */
     @Getter

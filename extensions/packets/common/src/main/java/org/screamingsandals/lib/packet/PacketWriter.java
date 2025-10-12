@@ -570,6 +570,50 @@ public abstract class PacketWriter extends OutputStream {
         writeByte(protocol() <= 47 ? (byte) 0x7f : (byte) 0xff); // termination sequence
     }
 
+
+    private static double sanitizeLpVec3Component(double d) {
+        if (Double.isNaN(d)) {
+            return 0.0;
+        } else if (d < -1.7179869183E10) {
+            return -1.7179869183E10;
+        } else if (d > 1.7179869183E10) {
+            return 1.7179869183E10;
+        }
+        return d;
+    }
+
+    private static long packLpVec3Component(double d) {
+        return Math.round((d * 0.5 + 0.5) * 32766.0);
+    }
+
+    public void writeLpVec3(Vector3D vec) {
+        double sanitizedX = sanitizeLpVec3Component(vec.getX());
+        double sanitizedY = sanitizeLpVec3Component(vec.getY());
+        double sanitizedZ = sanitizeLpVec3Component(vec.getZ());
+        double maxVal = Math.max(Math.abs(sanitizedX), Math.max(Math.abs(sanitizedY), Math.abs(sanitizedZ)));
+
+        if (maxVal < 3.051944088384301E-5) {
+            buffer.writeByte(0);
+            return;
+        }
+
+        long scale = (long) Math.ceil(maxVal);
+        boolean scaleTooLargeForBits = (scale & 3L) != scale;
+        long scaleBits = scaleTooLargeForBits ? scale & 3L | 4L : scale;
+        long encodedX = packLpVec3Component(sanitizedX / scale) << 3;
+        long encodedY = packLpVec3Component(sanitizedY / scale) << 18;
+        long encodedZ = packLpVec3Component(sanitizedZ / scale) << 33;
+        long packed = scaleBits | encodedX | encodedY | encodedZ;
+
+        buffer.writeByte((byte) packed);
+        buffer.writeByte((byte) (packed >> 8));
+        buffer.writeInt((int) (packed >> 16));
+
+        if (scaleTooLargeForBits) {
+            writeVarInt((int) (scale >> 2));
+        }
+    }
+
     // Platform classes must override this method
     public void writeItemComponents(@NotNull ItemStack item) {
         write(0);

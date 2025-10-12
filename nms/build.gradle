@@ -321,24 +321,14 @@ accessors {
 
     var Packet = mapClass('net.minecraft.network.protocol.Packet')
 
-    mapClass('net.minecraft.network.protocol.game.ClientboundAnimatePacket')
-    mapClass('net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket')
-    mapClass('net.minecraft.network.protocol.game.ClientboundBlockEventPacket')
-    mapClass('net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket')
-
     mapClass('net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket') { // <= 1.20.1 known as game.ClientboundCustomPayloadPacket; 1.20.2+ new name
         constructor(String, 'net.minecraft.server.VVV.PacketDataSerializer') // pre-1.13, Spigot mapped
         constructor(ResourceLocation, FriendlyByteBuf) // 1.13+
     }
 
-    mapClass('net.minecraft.network.protocol.game.ClientboundContainerClosePacket')
-    mapClass('net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket')
     mapClass('net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket') {
         constructor(int[]) // 1.8.8 compat - bossbar
     }
-    mapClass('net.minecraft.network.protocol.game.ClientboundSetCameraPacket')
-    mapClass('net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket')
-    mapClass('net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket')
     mapClass('net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket') {
         field(int, 'entityId') // TODO: This field is required by SBA, not Slib; accessor generation for this field should be moved to SBA repository
     }
@@ -352,16 +342,11 @@ accessors {
     mapClass('net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket') {
         constructor(int, SynchedEntityData, boolean) // 1.8.8 compat - bossbar
     }
-    mapClass('net.minecraft.network.protocol.game.ClientboundEntityEventPacket')
     mapClass('net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket') {
         constructor(Entity) // 1.8.8 compat - bossbar
     }
     mapClass('net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket')
     mapClass('net.minecraft.network.protocol.game.ClientboundSetExperiencePacket')
-    mapClass('net.minecraft.network.protocol.game.ClientboundExplodePacket')
-    mapClass('net.minecraft.network.protocol.game.ClientboundSetHeldSlotPacket')
-
-    mapClass('net.minecraft.network.protocol.common.ClientboundDisconnectPacket')
 
     mapClass('net.minecraft.network.protocol.game.ClientboundAddPlayerPacket')
     mapClass('net.minecraft.network.protocol.game.ClientboundOpenBookPacket') {
@@ -384,7 +369,6 @@ accessors {
         constructor(LivingEntity) // 1.8.8 compat - bossbar
     }
     mapClass('net.minecraft.network.protocol.game.ClientboundAddEntityPacket')
-    mapClass('net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket')
     mapClass('net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket')
     mapClass('net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket')
 

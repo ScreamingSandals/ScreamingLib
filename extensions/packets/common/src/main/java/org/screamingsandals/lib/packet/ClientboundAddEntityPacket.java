@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.impl.packet.ProtocolVersions;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.Location;
 
@@ -54,6 +55,9 @@ public class ClientboundAddEntityPacket extends AbstractPacket {
         } else {
             writer.writeFixedPointVector(location);
         }
+        if (writer.protocol() >= ProtocolVersions.V1_21_9) {
+            writer.writeLpVec3(velocity);
+        }
         writer.writeByteRotation(location);
         if (writer.protocol() >= 759) {
             writer.writeByte(headYaw != null ? headYaw : (byte) (location.getYaw() * 256 / 360));
@@ -61,7 +65,7 @@ public class ClientboundAddEntityPacket extends AbstractPacket {
         } else {
             writer.writeInt(data);
         }
-        if (data != 0 || writer.protocol() >= 49) {
+        if ((data != 0 || writer.protocol() >= 49) && writer.protocol() < ProtocolVersions.V1_21_9) {
             writer.writeMotion(velocity);
         }
     }
