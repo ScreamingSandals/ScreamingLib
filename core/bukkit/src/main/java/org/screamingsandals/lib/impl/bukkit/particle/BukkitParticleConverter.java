@@ -80,6 +80,13 @@ public class BukkitParticleConverter {
             } else if (BukkitFeature.TARGET_COLOR_PARTICLE_API.isSupported()) {
                 return TargetColorCompat.convertTargetColor((Trail) data);
             }
+        } else if (data instanceof Spell) {
+            if (BukkitFeature.PARTICLE_SPELL.isSupported()) {
+                return new Particle.Spell(
+                        ColorUtils.getBukkitColor(((Spell) data).color()),
+                        ((Spell) data).power()
+                );
+            }
         }
         return null;
     }

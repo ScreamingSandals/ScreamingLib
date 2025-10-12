@@ -39,10 +39,6 @@ public class BukkitPlayerCommandPreprocessEvent implements PlayerCommandPreproce
     public @NotNull Player player() {
         return new BukkitPlayer(event.getPlayer());
     }
-    @Override
-    public void player(@NotNull Player player) {
-        event.setPlayer(player.as(org.bukkit.entity.Player.class));
-    }
 
     @Override
     public @NotNull String command() {

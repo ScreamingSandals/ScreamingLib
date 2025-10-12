@@ -1,6 +1,6 @@
 [versions]
 # platforms
-paper = "1.21.6-R0.1-SNAPSHOT"
+paper = "1.21.10-R0.1-SNAPSHOT"
 paper-support_1_21_3 = "1.21.3-R0.1-SNAPSHOT"
 paper-support_1_21_1 = "1.21.1-R0.1-SNAPSHOT"
 paper-support_1_20_6 = "1.20.6-R0.1-SNAPSHOT"
@@ -10,10 +10,10 @@ paper-support_1_8_8 = "1.8.8-R0.1-SNAPSHOT"
 sponge = "8.2.0"
 minestom = "master-SNAPSHOT"
 waterfall = "1.21-R0.1-SNAPSHOT"
-bungeecord = "1.21-R0.3"
+bungeecord = "1.21-R0.4"
 bungeecord-support_1_21_R01 = "1.21-R0.1"
 velocity = "3.2.0-SNAPSHOT"
-adventure = "4.23.0"
+adventure = "4.25.0"
 datafixerupper = "8.0.16"
 datafixerupper2 = "2.0.24"
 

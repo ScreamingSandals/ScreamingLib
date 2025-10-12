@@ -75,22 +75,6 @@ public class AttributeModifier implements Wrapper {
         ADD_MULTIPLIED_BASE,
         ADD_MULTIPLIED_TOTAL;
 
-        /**
-         * @deprecated Use {@link #ADD_VALUE}
-         */
-        @Deprecated(forRemoval = true)
-        public static final @NotNull Operation ADDITION = ADD_VALUE;
-        /**
-         * @deprecated Use {@link #ADD_MULTIPLIED_BASE}
-         */
-        @Deprecated(forRemoval = true)
-        public static final @NotNull Operation MULTIPLY_BASE = ADD_MULTIPLIED_BASE;
-        /**
-         * @deprecated Use {@link #ADD_MULTIPLIED_TOTAL}
-         */
-        @Deprecated(forRemoval = true)
-        public static final @NotNull Operation MULTIPLY_TOTAL = ADD_MULTIPLIED_TOTAL;
-
         public static @NotNull Operation byOrdinal(int ordinal) {
             return values()[ordinal];
         }

@@ -405,45 +405,6 @@ public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudien
     void storeCookie(@NotNull ResourceLocation location, byte @NotNull[] value);
 
     /**
-     * Launches the player in its facing direction.
-     *
-     * @param multiply the velocity multiplier
-     * @param y        the y velocity
-     */
-    default void launch(double multiply, double y) {
-        if (isOnline()) {
-            setVelocity(getVelocity().multiply(multiply).setY(y));
-
-            EventManager.getDefaultEventManager().registerOneTime(EntityDamageEvent.class, event -> {
-                if (!(event.entity() instanceof Player) || !equals(event.entity()) || !event.damageCause().is("FALL")) {
-                    return false;
-                }
-                event.cancelled(true);
-                return true;
-            });
-        }
-    }
-
-    /**
-     * Launches the player in its facing direction.
-     *
-     * @param velocity the new velocity vector
-     */
-    default void launch(@NotNull Vector3D velocity) {
-        if (isOnline()) {
-            setVelocity(velocity);
-
-            EventManager.getDefaultEventManager().registerOneTime(EntityDamageEvent.class, event -> {
-                if (!(event.entity() instanceof Player) || !equals(event.entity()) || !event.damageCause().is("FALL")) {
-                    return false;
-                }
-                event.cancelled(true);
-                return true;
-            });
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override

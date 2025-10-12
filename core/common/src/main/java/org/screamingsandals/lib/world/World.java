@@ -159,13 +159,6 @@ public interface World extends Wrapper, RawValueHolder, PlayerAudience.Forwardin
     void sendParticle(@NotNull Particle particle, @NotNull Location location);
 
     /**
-     * Determines if the spawn point of this world is loaded and being held in memory.
-     *
-     * @return is this world's spawn point loaded?
-     */
-    boolean isSpawnKeptInMemory();
-
-    /**
      * Determines if spawning of animals is allowed in this world.
      *
      * @return is spawning of animals allowed in this world?

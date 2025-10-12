@@ -170,6 +170,8 @@ public interface CreatureSpawnEvent extends EntitySpawnEvent {
         /**
          * When an entity is missing a SpawnReason
          */
-        DEFAULT
+        DEFAULT,
+        REHYDRATION,
+        BUILD_COPPERGOLEM
     }
 }

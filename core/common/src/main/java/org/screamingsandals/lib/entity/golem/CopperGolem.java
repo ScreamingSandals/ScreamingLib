@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.event.player;
+package org.screamingsandals.lib.entity.golem;
 
-import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.CancellableEvent;
-
-public interface PlayerCommandPreprocessEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
-    @NotNull String command();
-
-    void command(@NotNull String command);
+/**
+ * Represents an entity with identifier {@code minecraft:copper_golem}.
+ */
+public interface CopperGolem extends Golem {
 }

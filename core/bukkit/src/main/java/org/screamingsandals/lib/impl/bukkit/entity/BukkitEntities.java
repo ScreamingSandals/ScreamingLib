@@ -80,6 +80,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitZombieHors
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitZombieHorse1_8;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitGhast;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitPhantom;
+import org.screamingsandals.lib.impl.bukkit.entity.golem.BukkitCopperGolem;
 import org.screamingsandals.lib.impl.bukkit.entity.golem.BukkitGolem;
 import org.screamingsandals.lib.impl.bukkit.entity.golem.BukkitIronGolem;
 import org.screamingsandals.lib.impl.bukkit.entity.golem.BukkitShulker;
@@ -230,6 +231,12 @@ public class BukkitEntities extends Entities {
                 }
 
                 return new BukkitHumanEntity((org.bukkit.entity.HumanEntity) entity);
+            }
+
+            if (BukkitFeature.ENTITY_MANNEQUIN.isSupported()) {
+                if (entity instanceof org.bukkit.entity.Mannequin) {
+                    return new BukkitMannequin((org.bukkit.entity.Mannequin) entity);
+                }
             }
 
             if (entity instanceof org.bukkit.entity.WaterMob) { // must be before Creature
@@ -669,6 +676,11 @@ public class BukkitEntities extends Entities {
                     if (BukkitFeature.ENTITY_SHULKER.isSupported()) {
                         if (entity instanceof org.bukkit.entity.Shulker) {
                             return new BukkitShulker((org.bukkit.entity.Shulker) entity);
+                        }
+                    }
+                    if (BukkitFeature.ENTITY_COPPER_GOLEM.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.CopperGolem) {
+                            return new BukkitCopperGolem((org.bukkit.entity.CopperGolem) entity);
                         }
                     }
                     return new BukkitGolem((org.bukkit.entity.Golem) entity);

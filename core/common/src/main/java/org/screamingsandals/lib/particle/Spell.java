@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.event.player;
+package org.screamingsandals.lib.particle;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.PlatformEvent;
-import org.screamingsandals.lib.event.CancellableEvent;
+import org.screamingsandals.lib.spectator.Color;
 
-public interface PlayerCommandPreprocessEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
-    @NotNull String command();
-
-    void command(@NotNull String command);
+@Data
+@Accessors(chain = true, fluent = true)
+public class Spell implements ParticleData {
+    private final @NotNull Color color;
+    private final float power;
 }

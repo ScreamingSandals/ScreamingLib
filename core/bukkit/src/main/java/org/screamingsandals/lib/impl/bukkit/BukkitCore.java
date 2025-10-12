@@ -163,7 +163,6 @@ import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerKickEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerLeaveEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerLevelChangeEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerLocaleChangeEvent;
-import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerLoginEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerMoveEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerPortalEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerRespawnEvent;
@@ -316,7 +315,6 @@ import org.screamingsandals.lib.event.player.PlayerKickEvent;
 import org.screamingsandals.lib.event.player.PlayerLeaveEvent;
 import org.screamingsandals.lib.event.player.PlayerLevelChangeEvent;
 import org.screamingsandals.lib.event.player.PlayerLocaleChangeEvent;
-import org.screamingsandals.lib.event.player.PlayerLoginEvent;
 import org.screamingsandals.lib.event.player.PlayerMoveEvent;
 import org.screamingsandals.lib.event.player.PlayerRespawnEvent;
 import org.screamingsandals.lib.event.player.PlayerShearEntityEvent;
@@ -609,7 +607,6 @@ public class BukkitCore extends Core {
         if (BukkitFeature.PLAYER_LOCALE_CHANGE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.player.PlayerLocaleChangeEvent.class, PlayerLocaleChangeEvent.class, BukkitPlayerLocaleChangeEvent::new);
         }
-        constructDefaultListener(org.bukkit.event.player.PlayerLoginEvent.class, PlayerLoginEvent.class, BukkitPlayerLoginEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerShearEntityEvent.class, PlayerShearEntityEvent.class, BukkitPlayerShearEntityEvent::new);
         if (BukkitFeature.PLAYER_SWAP_HAND_ITEMS_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.player.PlayerSwapHandItemsEvent.class, PlayerSwapHandItemsEvent.class, BukkitPlayerSwapHandItemsEvent::new);

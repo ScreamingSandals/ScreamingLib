@@ -199,11 +199,6 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
     }
 
     @Override
-    public boolean isSpawnKeptInMemory() {
-        return wrappedObject.getKeepSpawnInMemory();
-    }
-
-    @Override
     public boolean isSpawningOfAnimalsAllowed() {
         return wrappedObject.getAllowAnimals();
     }

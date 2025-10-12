@@ -56,14 +56,6 @@ public interface ShadowColor extends Wrapper, ComponentBuilderApplicable, RawVal
         return Spectator.getBackend().shadowArgb((compound >> 24) & 0xFF, (compound >> 16) & 0xFF, (compound >> 8) & 0xFF, compound & 0xFF);
     }
 
-    /**
-     * @deprecated use {@link #hexOrName(String)}
-     */
-    @Deprecated(forRemoval = true)
-    static @NotNull ShadowColor hex(@NotNull String hex) {
-        return hexOrName(hex);
-    }
-
     static @NotNull ShadowColor hexOrName(@NotNull String hex) {
         // bri'ish
         if ("grey".equalsIgnoreCase(hex)) {

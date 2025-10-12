@@ -155,8 +155,8 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature PLAYER_HIDE_API_PLUGIN_TICKET = PlatformFeature.of(() -> Reflect.hasMethod(Player.class, "hidePlayer", Plugin.class, Player.class));
     public static final @NotNull PlatformFeature HAS_BUKKIT_CONSUMER = PlatformFeature.of(() -> Reflect.has("org.bukkit.util.Consumer"));
     public static final @NotNull PlatformFeature ENTITY_PRE_SPAWN_FUNCTION_JAVA_CONSUMER = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "spawn", Location.class, Class.class, java.util.function.Consumer.class));
-    public static final @NotNull PlatformFeature ENTITY_PRE_SPAWN_FUNCTION = HAS_BUKKIT_CONSUMER.and(() -> Reflect.hasMethod(World.class, "spawn", Location.class, Class.class, org.bukkit.util.Consumer.class));
-    public static final @NotNull PlatformFeature ITEM_ENTITY_PRE_SPAWN_FUNCTION = HAS_BUKKIT_CONSUMER.and(() -> Reflect.hasMethod(World.class, "dropItem", Location.class, ItemStack.class, org.bukkit.util.Consumer.class));
+    public static final @NotNull PlatformFeature ENTITY_PRE_SPAWN_FUNCTION = HAS_BUKKIT_CONSUMER.and(() -> Reflect.hasMethod(World.class, "spawn", Location.class, Class.class, Reflect.getClassSafe("org.bukkit.util.Consumer")));
+    public static final @NotNull PlatformFeature ITEM_ENTITY_PRE_SPAWN_FUNCTION = HAS_BUKKIT_CONSUMER.and(() -> Reflect.hasMethod(World.class, "dropItem", Location.class, ItemStack.class, Reflect.getClassSafe("org.bukkit.util.Consumer")));
     public static final @NotNull PlatformFeature ITEM_ENTITY_PRE_SPAWN_FUNCTION_JAVA_CONSUMER = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "dropItem", Location.class, ItemStack.class, java.util.function.Consumer.class));
     public static final @NotNull PlatformFeature NEW_VILLAGERS = PlatformFeature.of(() -> Reflect.hasMethod(Villager.Profession.class, "getKey"));
     public static final @NotNull PlatformFeature ENTITY_AREA_EFFECT_CLOUD = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.AreaEffectCloud"));
@@ -221,6 +221,8 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature VILLAGER_TYPE_INTERFACE = NEW_VILLAGERS.and(() -> Reflect.hasAsInterface("org.bukkit.entity.Villager$Type"));
     public static final @NotNull PlatformFeature ENTITY_CREAKING = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Creaking"));
     public static final @NotNull PlatformFeature ENTITY_HAPPY_GHAST = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.HappyGhast"));
+    public static final @NotNull PlatformFeature ENTITY_COPPER_GOLEM = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.CopperGolem"));
+    public static final @NotNull PlatformFeature ENTITY_MANNEQUIN = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Mannequin"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));
@@ -285,4 +287,5 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature TELEPORT_ASYNC = PlatformFeature.of(() -> Reflect.hasMethod(Entity.class, "teleportAsync", Location.class));
     public static final @NotNull PlatformFeature CHUNK_ASYNC_1_9 = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getChunkAtAsync", int.class, int.class, Reflect.getClassSafe("org.bukkit.World$ChunkLoadCallback")));
     public static final @NotNull PlatformFeature CHUNK_ASYNC_1_13 = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getChunkAtAsync", Location.class));
+    public static final @NotNull PlatformFeature PARTICLE_SPELL = PlatformFeature.of(() -> Reflect.has("org.bukkit.Particle$Spell"));
 }
