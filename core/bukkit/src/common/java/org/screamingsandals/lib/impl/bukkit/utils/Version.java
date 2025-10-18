@@ -35,10 +35,10 @@ public class Version {
         Matcher matcher;
         if (BukkitFeature.BUKKIT_GET_MINECRAFT_VERSION.isSupported()) {
             // TODO: somehow update this to support future Paper snapshots
-            Pattern versionPattern = Pattern.compile("^(\\d+)\\.(\\d+)\\.?(\\d+?)?");
+            Pattern versionPattern = Pattern.compile("^(\\d+)\\.(\\d+)\\.?(\\d+)?");
             matcher = versionPattern.matcher(Bukkit.getMinecraftVersion());
         } else {
-            Pattern versionPattern = Pattern.compile("\\(MC: (\\d+)\\.(\\d+)\\.?(\\d+?)?");
+            Pattern versionPattern = Pattern.compile("\\(MC: (\\d+)\\.(\\d+)\\.?(\\d+)?");
             matcher = versionPattern.matcher(Bukkit.getVersion());
         }
         int majorVersion = 1;
