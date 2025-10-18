@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.annotation.generators;
 
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import org.jetbrains.annotations.NotNull;
@@ -51,8 +52,13 @@ public class BukkitMainClassGenerator extends StandardMainClassGenerator {
         fillInOnEnableMethod(onEnableBuilder);
         fillInOnDisableMethod(onDisableBuilder);
 
+        var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
+
         var bukkitMainClass = prepareType(newClassName)
                 .superclass(Classes.Bukkit.JAVA_PLUGIN)
+                .addStaticBlock(CodeBlock.builder()
+                        .addStatement("$T.applyFallbackIfNeeded($S)", Classes.SLib.VERSION_FALLBACK, !pluginAnnotation.name().isBlank() ? pluginAnnotation.name() : pluginAnnotation.id())
+                        .build())
                 .addMethod(onLoadBuilder.build())
                 .addMethod(onEnableBuilder.build())
                 .addMethod(onDisableBuilder.build())
@@ -63,8 +69,6 @@ public class BukkitMainClassGenerator extends StandardMainClassGenerator {
         JavaFile.builder(newClassPackage, bukkitMainClass)
                 .build()
                 .writeTo(processingEnvironment.getFiler());
-
-        var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
 
         {
             var loader = YamlConfigurationLoader.builder()

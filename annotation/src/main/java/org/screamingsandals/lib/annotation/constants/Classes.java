@@ -45,6 +45,7 @@ public class Classes {
         public static final @NotNull ClassName BUKKIT_PLUGIN = ClassName.get("org.screamingsandals.lib.impl.bukkit.plugin", "BukkitPlugin");
         public static final @NotNull ClassName BUNGEE_PLUGIN = ClassName.get("org.screamingsandals.lib.impl.bungee.plugin", "BungeePlugin");
         public static final @NotNull ClassName VELOCITY_PLUGIN = ClassName.get("org.screamingsandals.lib.impl.velocity.plugin", "VelocityPlugin");
+        public static final @NotNull ClassName VERSION_FALLBACK = ClassName.get("org.screamingsandals.lib.impl.bukkit.utils", "VersionFallback");
     }
 
     @UtilityClass
