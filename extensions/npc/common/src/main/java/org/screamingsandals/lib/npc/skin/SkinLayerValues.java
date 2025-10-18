@@ -27,7 +27,7 @@ import java.util.Collections;
 public enum SkinLayerValues {
     V8(10, 8, 0),
     V9(12, 9, 0),
-    V13(13, 13, 0),
+    V10(13, 10, 0),
     V14(15, 14, 0),
     V16(16, 15, 0),
     V17(17, 17, 0),
