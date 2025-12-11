@@ -39,7 +39,7 @@ import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.nms.accessors.server.VVV.EnumZombieTypeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.ZombieAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.zombie.ZombieAccessor;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;

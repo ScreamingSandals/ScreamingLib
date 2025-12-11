@@ -25,15 +25,16 @@ import java.util.Collections;
 
 @RequiredArgsConstructor
 public enum SkinLayerValues {
-    V8(10, 8, 0),
-    V9(12, 9, 0),
-    V10(13, 10, 0),
-    V14(15, 14, 0),
-    V16(16, 15, 0),
-    V17(17, 17, 0),
-    V21_9(16, 21, 9);
+    V8(10, 1, 8, 0),
+    V9(12, 1, 9, 0),
+    V10(13, 1, 10, 0),
+    V14(15, 1, 14, 0),
+    V16(16, 1, 15, 0),
+    V17(17, 1, 17, 0),
+    V21_9(16, 1, 21, 9);
 
     private final int layerValue;
+    private final int major;
     private final int minVersion;
     private final int patch;
 
@@ -43,7 +44,7 @@ public enum SkinLayerValues {
         if (currentLayerValue == 0) {
             currentLayerValue = Arrays.stream(values())
                     .sorted(Collections.reverseOrder())
-                    .filter(value -> Server.isVersion(1, value.minVersion, value.patch))
+                    .filter(value -> Server.isVersion(value.major, value.minVersion, value.patch))
                     .map(value -> value.layerValue)
                     .findFirst()
                     .orElse(V9.layerValue);

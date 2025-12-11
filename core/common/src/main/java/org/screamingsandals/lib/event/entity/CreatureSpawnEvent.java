@@ -172,6 +172,7 @@ public interface CreatureSpawnEvent extends EntitySpawnEvent {
          */
         DEFAULT,
         REHYDRATION,
-        BUILD_COPPERGOLEM
+        BUILD_COPPERGOLEM,
+        REANIMATE
     }
 }

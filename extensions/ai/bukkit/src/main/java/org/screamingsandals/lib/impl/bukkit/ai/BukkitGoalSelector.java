@@ -24,7 +24,7 @@ import org.screamingsandals.lib.ai.goal.Goal;
 import org.screamingsandals.lib.ai.goal.GoalType;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.ai.goal.BukkitGoal;
-import org.screamingsandals.lib.impl.nms.accessors.resources.ResourceLocationAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.resources.IdentifierAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.VVV.PathfinderGoalSelector$PathfinderGoalSelectorItemAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerPlayerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityAccessor;
@@ -341,7 +341,7 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
             if (EntityTypeAccessor.CONST_FIELD_191308_B.get() != null) { // 1.11-1.12.2
                 @SuppressWarnings("unchecked")
                 var map = (Map<Object, Class<?>>) EntityTypeAccessor.CONST_FIELD_191308_B.get();
-                return map.get(Reflect.construct(ResourceLocationAccessor.CONSTRUCTOR_0.get(), type.as(org.bukkit.entity.EntityType.class).getName()));
+                return map.get(Reflect.construct(IdentifierAccessor.CONSTRUCTOR_0.get(), type.as(org.bukkit.entity.EntityType.class).getName()));
             } else if (EntityTypeAccessor.CONST_FIELD_75625_B.get() != null) { // 1.8-1.10.2
                 @SuppressWarnings("unchecked")
                 var map = (Map<String, Class<?>>) EntityTypeAccessor.CONST_FIELD_75625_B.get();

@@ -1,6 +1,6 @@
 [versions]
 # platforms
-paper = "1.21.10-R0.1-SNAPSHOT"
+paper = "1.21.11-R0.1-SNAPSHOT"
 paper-support_1_21_3 = "1.21.3-R0.1-SNAPSHOT"
 paper-support_1_21_1 = "1.21.1-R0.1-SNAPSHOT"
 paper-support_1_20_6 = "1.20.6-R0.1-SNAPSHOT"
@@ -50,7 +50,7 @@ junit-platform = "1.10.2"
 # plugins
 screaming-plugin-builder = "1.0.87"
 takenaka = "1.2.1-SNAPSHOT"
-mappings = "1.8.8+1.21.10"
+mappings = "1.8.8+1.21.11"
 
 [libraries]
 javapoet = { group = "com.squareup", name = "javapoet", version.ref = "javapoet" }

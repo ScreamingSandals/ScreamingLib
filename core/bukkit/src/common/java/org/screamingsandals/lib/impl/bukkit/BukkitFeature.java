@@ -288,4 +288,5 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature CHUNK_ASYNC_1_9 = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getChunkAtAsync", int.class, int.class, Reflect.getClassSafe("org.bukkit.World$ChunkLoadCallback")));
     public static final @NotNull PlatformFeature CHUNK_ASYNC_1_13 = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getChunkAtAsync", Location.class));
     public static final @NotNull PlatformFeature PARTICLE_SPELL = PlatformFeature.of(() -> Reflect.has("org.bukkit.Particle$Spell"));
+    public static final @NotNull PlatformFeature GAME_RULE_REGISTRY = REGISTRY.and(() -> Reflect.getField(Registry.class, "GAME_RULE") != null);
 }

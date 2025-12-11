@@ -196,7 +196,7 @@ import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.entity.type.InternalEntityLegacyConstants;
 import org.screamingsandals.lib.impl.nms.accessors.server.VVV.EnumZombieTypeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.ZombieAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.zombie.ZombieAccessor;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.tasker.DefaultThreads;
 import org.screamingsandals.lib.tasker.Tasker;

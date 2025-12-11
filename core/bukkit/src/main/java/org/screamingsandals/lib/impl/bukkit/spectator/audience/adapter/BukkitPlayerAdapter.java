@@ -40,7 +40,7 @@ import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.Clientb
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetTitlesPacket$TypeAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundSetTitlesPacketAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ClientboundTabListPacketAccessor;
-import org.screamingsandals.lib.impl.nms.accessors.resources.ResourceLocationAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.resources.IdentifierAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.InteractionHandAccessor;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.item.builder.ItemStackFactory;
@@ -346,7 +346,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
                 ClassStorage.sendNMSConstructedPacket(player, packet);
             } else if (BukkitFeature.MODERN_OPEN_BOOK_PLUGIN_MESSAGE.isSupported()) {
                 var bytebuf = Reflect.construct(FriendlyByteBufAccessor.CONSTRUCTOR_0.get(), Unpooled.buffer(256).setByte(0, (byte) 0).writerIndex(1));
-                var location = Reflect.construct(ResourceLocationAccessor.CONSTRUCTOR_0.get(), "minecraft:book_open");
+                var location = Reflect.construct(IdentifierAccessor.CONSTRUCTOR_0.get(), "minecraft:book_open");
                 var packet = Reflect.construct(ClientboundCustomPayloadPacketAccessor.CONSTRUCTOR_1.get(), location, bytebuf);
                 ClassStorage.sendNMSConstructedPacket(player, packet);
             } else {

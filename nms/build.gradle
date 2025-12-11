@@ -45,7 +45,7 @@ class SlibNamingStrategy extends ForwardingNamingStrategy {
 accessors {
     // uncomment this and remove the mappingBundle dependency,
     // if you want to develop against custom versions
-    /*versionRange('1.8.8', '1.21.10') {
+    /*versionRange('1.8.8', '1.21.11') {
         // exclude 1.20, 1.20.3, 1.20.5 and 1.21.2 - hotfixed versions
         // exclude 1.16 and 1.10.1, they don't have most mappings and are basically not used at all
         // exclude 1.8.9, client-only update - no Spigot mappings, no thank you
@@ -62,7 +62,7 @@ accessors {
 
     namingStrategy new SlibNamingStrategy('org.screamingsandals.lib.impl.nms.accessors')
 
-    var ResourceLocation = mapClass('net.minecraft.resources.ResourceLocation') {
+    mapClass('net.minecraft.resources.Identifier') {
         constructor(String) // <= 1.20.6
 //        method(it.name, 'parse', String) // 1.21+ // TODO: uncomment when needed in modern versions
     }
@@ -323,7 +323,7 @@ accessors {
 
     mapClass('net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket') { // <= 1.20.1 known as game.ClientboundCustomPayloadPacket; 1.20.2+ new name
         constructor(String, 'net.minecraft.server.VVV.PacketDataSerializer') // pre-1.13, Spigot mapped
-        constructor(ResourceLocation, FriendlyByteBuf) // 1.13+
+        constructor('net.minecraft.resources.ResourceLocation', FriendlyByteBuf) // 1.13+
     }
 
     mapClass('net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket') {
@@ -485,7 +485,7 @@ accessors {
     }
     mapClass('net.minecraft.network.protocol.PacketType') {
         method('net.minecraft.network.protocol.PacketFlow', 'flow')
-        method('net.minecraft.resources.ResourceLocation', 'id')
+        method('net.minecraft.resources.Identifier', 'id')
     }
     mapClass('net.minecraft.network.codec.StreamEncoder') {
         method(void, 'encode', Object, Object)
@@ -535,7 +535,10 @@ accessors {
         constructor()
         method(Set, 'keySet')
         method(Tag, 'get', String)
-        method(void, 'remove', String)
+        methodChain {
+            it.item(void, 'remove', String)
+            it.item(Tag, 'remove', String)
+        }
 
         var cmpTagName = it.name
         methodChain {
@@ -631,7 +634,7 @@ accessors {
         enumConstant('HUSK')
     }
 
-    mapClass('net.minecraft.world.entity.monster.Zombie') {
+    mapClass('net.minecraft.world.entity.monster.zombie.Zombie') {
         setter(EnumZombieType, 'villagerType') // Spigot mapped
         getter(EnumZombieType, 'villagerType') // Spigot mapped
         field(Attribute, 'SPAWN_REINFORCEMENTS_CHANCE')
@@ -666,7 +669,7 @@ accessors {
         field(Attribute, 'LUCK')
     }
 
-    mapClass('net.minecraft.world.entity.animal.horse.Horse') {
+    mapClass('net.minecraft.world.entity.animal.equine.Horse') {
         field('net.minecraft.server.VVV.IAttribute', 'attributeJumpStrength') // Spigot mapped
     }
 
