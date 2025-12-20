@@ -223,6 +223,9 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_HAPPY_GHAST = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.HappyGhast"));
     public static final @NotNull PlatformFeature ENTITY_COPPER_GOLEM = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.CopperGolem"));
     public static final @NotNull PlatformFeature ENTITY_MANNEQUIN = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Mannequin"));
+    public static final @NotNull PlatformFeature ENTITY_NAUTILUS = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Nautilus"));
+    public static final @NotNull PlatformFeature ENTITY_CAMEL_HUSK = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.CamelHusk"));
+    public static final @NotNull PlatformFeature ENTITY_PARCHED = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Parched"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));
@@ -233,6 +236,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature CHUNK_TICKET_API = PlatformFeature.of(() -> Reflect.hasMethod(Chunk.class, "addPluginChunkTicket", Plugin.class));
     public static final @NotNull PlatformFeature TRAIL_PARTICLE_API = PlatformFeature.of(() -> Reflect.has("org.bukkit.Particle$Trail"));
     public static final @NotNull PlatformFeature TARGET_COLOR_PARTICLE_API = PlatformFeature.of(() -> Reflect.has("org.bukkit.Particle$TargetColor"));
+    public static final @NotNull PlatformFeature GAME_RULE_REGISTRY = REGISTRY.and(() -> Reflect.getField(Registry.class, "GAME_RULE") != null);
 
     // POTION & POTION EFFECT API
     public static final @NotNull PlatformFeature POTION_API = PlatformFeature.of(() -> Version.isVersion(1, 9));
@@ -288,5 +292,4 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature CHUNK_ASYNC_1_9 = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getChunkAtAsync", int.class, int.class, Reflect.getClassSafe("org.bukkit.World$ChunkLoadCallback")));
     public static final @NotNull PlatformFeature CHUNK_ASYNC_1_13 = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getChunkAtAsync", Location.class));
     public static final @NotNull PlatformFeature PARTICLE_SPELL = PlatformFeature.of(() -> Reflect.has("org.bukkit.Particle$Spell"));
-    public static final @NotNull PlatformFeature GAME_RULE_REGISTRY = REGISTRY.and(() -> Reflect.getField(Registry.class, "GAME_RULE") != null);
 }

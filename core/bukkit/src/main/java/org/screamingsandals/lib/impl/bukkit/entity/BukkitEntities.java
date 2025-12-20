@@ -63,6 +63,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitTamable;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitTurtle;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.BukkitWolf;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitCamel;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitCamelHusk;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitChestedHorseEntity1_11;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitDonkey1_11;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitDonkey1_8;
@@ -78,6 +79,9 @@ import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitSkeletonHo
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitTraderLlama;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitZombieHorse1_11;
 import org.screamingsandals.lib.impl.bukkit.entity.animal.horse.BukkitZombieHorse1_8;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.nautilus.BukkitNautilus;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.nautilus.BukkitNautilusEntity;
+import org.screamingsandals.lib.impl.bukkit.entity.animal.nautilus.BukkitZombieNautilus;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitGhast;
 import org.screamingsandals.lib.impl.bukkit.entity.flying.BukkitPhantom;
 import org.screamingsandals.lib.impl.bukkit.entity.golem.BukkitCopperGolem;
@@ -122,6 +126,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.monster.illager.BukkitVindica
 import org.screamingsandals.lib.impl.bukkit.entity.monster.piglin.BukkitPiglin;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.piglin.BukkitPiglinBrute;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitBogged;
+import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitParched;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitSkeleton;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitStray1_10;
 import org.screamingsandals.lib.impl.bukkit.entity.monster.skeleton.BukkitStray1_11;
@@ -308,6 +313,20 @@ public class BukkitEntities extends Entities {
                         return new BukkitPig((org.bukkit.entity.Pig) entity);
                     }
 
+                    if (BukkitFeature.ENTITY_NAUTILUS.isSupported()) {
+                        if (entity instanceof org.bukkit.entity.AbstractNautilus) {
+                            if (entity instanceof org.bukkit.entity.Nautilus) {
+                                return new BukkitNautilus((org.bukkit.entity.Nautilus) entity);
+                            }
+
+                            if (entity instanceof org.bukkit.entity.ZombieNautilus) {
+                                return new BukkitZombieNautilus((org.bukkit.entity.ZombieNautilus) entity);
+                            }
+
+                            return new BukkitNautilusEntity((org.bukkit.entity.AbstractNautilus) entity);
+                        }
+                    }
+
                     if (BukkitFeature.ENTITY_ABSTRACT_HORSE.isSupported()) {
                         if (entity instanceof org.bukkit.entity.AbstractHorse) {
                             if (entity instanceof org.bukkit.entity.ChestedHorse) {
@@ -339,6 +358,11 @@ public class BukkitEntities extends Entities {
                             }
                             if (BukkitFeature.ENTITY_CAMEL.isSupported()) {
                                 if (entity instanceof org.bukkit.entity.Camel) {
+                                    if (BukkitFeature.ENTITY_CAMEL_HUSK.isSupported()) {
+                                        if (entity instanceof org.bukkit.entity.CamelHusk) {
+                                            return new BukkitCamelHusk((org.bukkit.entity.CamelHusk) entity);
+                                        }
+                                    }
                                     return new BukkitCamel((org.bukkit.entity.Camel) entity);
                                 }
                             }
@@ -527,6 +551,11 @@ public class BukkitEntities extends Entities {
                         if (BukkitFeature.ENTITY_BOGGED.isSupported()) {
                             if (entity instanceof org.bukkit.entity.Bogged) {
                                 return new BukkitBogged((org.bukkit.entity.Bogged) entity);
+                            }
+                        }
+                        if (BukkitFeature.ENTITY_PARCHED.isSupported()) {
+                            if  (entity instanceof org.bukkit.entity.Parched) {
+                                return new BukkitParched((org.bukkit.entity.Parched) entity);
                             }
                         }
                     }

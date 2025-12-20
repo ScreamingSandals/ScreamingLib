@@ -208,7 +208,7 @@ import org.screamingsandals.lib.impl.bukkit.world.BukkitWorlds;
 import org.screamingsandals.lib.impl.bukkit.world.chunk.BukkitChunks;
 import org.screamingsandals.lib.impl.bukkit.world.difficulty.BukkitDifficultyRegistry;
 import org.screamingsandals.lib.impl.bukkit.world.dimension.BukkitDimensionRegistry;
-import org.screamingsandals.lib.impl.bukkit.world.gamerule.BukkitGameRuleRegistry;
+import org.screamingsandals.lib.impl.bukkit.world.gamerule.BukkitGameRuleRegistryServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.world.weather.BukkitWeatherRegistry;
 import org.screamingsandals.lib.event.EventExecutionOrder;
 import org.screamingsandals.lib.event.Event;
@@ -374,9 +374,7 @@ import java.util.function.Function;
             BukkitDifficultyRegistry.class,
             BukkitDimensionRegistry.class,
             BukkitChunks.class,
-            BukkitGameRuleRegistry.class,
             BukkitWeatherRegistry.class,
-            BukkitGameRuleRegistry.class,
             BukkitWorlds.class,
             BukkitContainerFactory.class,
             BukkitGameEventRegistry.class,
@@ -393,7 +391,8 @@ import java.util.function.Function;
             BukkitParticleTypeRegistryServiceFactory.class,
             BukkitProfessionRegistryServiceFactory.class,
             BukkitVillagerTypeRegistryServiceFactory.class,
-            BukkitEquipmentSlotGroupRegistryServiceFactory.class
+            BukkitEquipmentSlotGroupRegistryServiceFactory.class,
+            BukkitGameRuleRegistryServiceFactory.class,
     }
 )
 @AccessPluginClasses({"ViaVersion", "ProtocolSupport"})

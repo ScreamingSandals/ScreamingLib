@@ -23,6 +23,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockPlacement;
 import org.screamingsandals.lib.impl.bukkit.BukkitFeature;
 import org.screamingsandals.lib.impl.bukkit.block.BukkitBlockPlacement;
+import org.screamingsandals.lib.impl.bukkit.compat.v1_12_2.GameRuleCompat;
 import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.impl.bukkit.particle.BukkitParticleConverter1_8;
 import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
@@ -109,19 +110,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
         if (BukkitFeature.GAME_RULE_API.isSupported()) {
             return (T) wrappedObject.getGameRuleValue(holder.as(GameRule.class));
         } else {
-            var val = wrappedObject.getGameRuleValue(holder.platformName());
-            if (val == null) {
-                return null;
-            }
-            try {
-                return (T) Integer.valueOf(val);
-            } catch (Throwable ignored) {
-                if ("true".equalsIgnoreCase(val) || "false".equalsIgnoreCase(val)) {
-                    return (T) Boolean.valueOf(val);
-                } else {
-                    return (T) val;
-                }
-            }
+            return GameRuleCompat.getGameRuleValue(wrappedObject, holder.platformName());
         }
     }
 
@@ -131,7 +120,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
         if (BukkitFeature.GAME_RULE_API.isSupported()) {
             wrappedObject.setGameRule((GameRule<T>) holder.as(GameRule.class), value);
         } else {
-            wrappedObject.setGameRuleValue(holder.platformName(), value.toString());
+            GameRuleCompat.setGameRuleValue(wrappedObject, holder.platformName(), value);
         }
     }
 
