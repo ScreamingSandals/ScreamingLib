@@ -1,3 +1,0 @@
-includeModule('core')
-includeModule('visuals-api')
-includeModule('hologram')

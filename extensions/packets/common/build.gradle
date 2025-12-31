@@ -1,5 +1,0 @@
-includeModule('core')
-
-dependencies {
-    compileOnly(libs.netty)
-}

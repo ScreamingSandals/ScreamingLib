@@ -1,2 +1,0 @@
-includeModule('core')
-includeModule('packets')
