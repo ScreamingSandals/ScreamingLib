@@ -1,5 +1,5 @@
 includeModule('core')
 
 dependencies {
-    compileOnly libs.netty
+    compileOnly(libs.netty)
 }

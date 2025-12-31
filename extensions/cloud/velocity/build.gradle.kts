@@ -1,0 +1,5 @@
+dependencies {
+    compileOnly(libs.velocity)
+    api(project(":proxy-velocity"))
+    api(libs.cloud.velocity)
+}

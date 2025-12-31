@@ -1,0 +1,6 @@
+dependencies {
+    compileOnly(libs.slf4j)
+
+    api(project(":utils-common"))
+    api(project(":spectator-common"))
+}

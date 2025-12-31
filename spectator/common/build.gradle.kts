@@ -1,0 +1,5 @@
+dependencies {
+    api(project(":utils-common"))
+    api(project(":minitag"))
+    api(project(":nbt"))
+}

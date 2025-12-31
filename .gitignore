@@ -1,4 +1,4 @@
-# Gradle shit
+# Gradle
 .gradle
 **/build/
 !src/**/build/

@@ -1,0 +1,7 @@
+dependencies {
+    api(project(":nms")) {
+        targetConfiguration = "shadow"
+    }
+
+    compileOnly(libs.netty)
+}

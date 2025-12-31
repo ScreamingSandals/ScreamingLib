@@ -1,0 +1,5 @@
+dependencies {
+    api(project(":nms")) {
+        targetConfiguration = "shadow"
+    }
+}

@@ -1,0 +1,5 @@
+dependencies {
+    api(project(":core-common"))
+
+    compileOnly(libs.minestom)
+}

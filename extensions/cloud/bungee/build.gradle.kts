@@ -1,0 +1,5 @@
+dependencies {
+    compileOnly(libs.waterfall)
+    api(project(":proxy-bungee"))
+    api(libs.cloud.bungee)
+}

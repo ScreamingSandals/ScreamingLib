@@ -1,0 +1,5 @@
+dependencies {
+    compileOnly(libs.paper)
+    api(project(":core-bukkit"))
+    api(libs.cloud.paper)
+}

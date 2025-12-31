@@ -1,0 +1,6 @@
+dependencies {
+    api(project(":utils-sponge"))
+    api(project(":core-common"))
+
+    compileOnly(libs.sponge)
+}

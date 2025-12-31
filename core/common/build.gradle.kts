@@ -1,0 +1,8 @@
+dependencies {
+    compileOnly(libs.netty)
+
+    api(project(":utils-common"))
+    api(project(":shared-core"))
+    api(project(":nbt"))
+    api(libs.configurate.core)
+}

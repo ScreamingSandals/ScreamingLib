@@ -1,0 +1,5 @@
+dependencies {
+    compileOnly(libs.paper)
+    compileOnly(libs.netty)
+    compileOnly(libs.viaversion)
+}

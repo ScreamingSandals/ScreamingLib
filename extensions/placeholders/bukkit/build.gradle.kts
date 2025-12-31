@@ -1,0 +1,8 @@
+dependencies {
+    api(project(":core-bukkit"))
+
+    compileOnly(libs.paper)
+
+    compileOnly(libs.placeholderapi)
+    compileOnly(libs.vault)
+}

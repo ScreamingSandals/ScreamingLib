@@ -1,0 +1,5 @@
+dependencies {
+    api(project(":shared-core"))
+    api(project(":placeholders-common"))
+    api(libs.configurate.core)
+}

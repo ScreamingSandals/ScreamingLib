@@ -1,0 +1,4 @@
+dependencies {
+    api(project(":shared-core"))
+    api(libs.cloud.common)
+}
