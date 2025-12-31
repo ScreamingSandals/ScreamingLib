@@ -5,32 +5,6 @@ plugins {
 defaultTasks 'clean', 'screamCompile'//, 'allowJavadocUpload'
 
 subprojects {
-    ext.includeModule = { String module ->
-        if (!project.name.endsWith('-common')) {
-            throw new UnsupportedOperationException("This method can be used only in common modules!")
-        }
-
-        dependencies {
-            api project(":${module}-common")
-        }
-
-        rootProject.subprojects.each { Project sub ->
-            if (!sub.name.endsWith('-common') && sub.name.matches("${project.name.replace('-common', '')}-[^-]+")) {
-                var moduleProject = rootProject.findProject(":${module}-${sub.name.split("-")[1]}")
-                if (moduleProject != null) {
-                    sub.dependencies {
-                        api moduleProject
-
-                        if (moduleProject.name == 'core-bukkit') {
-                            // Fix another source sets missing when compiling
-                            compileOnly moduleProject.sourceSets.main.output
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     if (!project.file('src').exists() && !project.file('build.gradle').exists()) {
         project.ext['onlyPomArtifact'] = true
 
