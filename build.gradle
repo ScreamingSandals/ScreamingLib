@@ -1,18 +1,18 @@
 plugins {
-    alias libs.plugins.screaming.plugin.builder apply false
+    alias(libs.plugins.screaming.plugin.builder) apply false
 }
 
-defaultTasks 'clean', 'screamCompile'//, 'allowJavadocUpload'
+defaultTasks "clean", "screamCompile"//, 'allowJavadocUpload'
 
 subprojects {
-    if (!project.file('src').exists() && !project.file('build.gradle').exists()) {
-        project.ext['onlyPomArtifact'] = true
+    if (!project.file("src").exists() && !project.file("build.gradle").exists()) {
+        project.ext["onlyPomArtifact"] = true
 
-        apply plugin: 'org.screamingsandals.plugin-builder-lite'
+        apply plugin: "org.screamingsandals.plugin-builder-lite"
     } else {
-        apply plugin: 'java'
-        apply plugin: 'java-library'
-        apply plugin: 'org.screamingsandals.plugin-builder'
+        apply plugin: "java"
+        apply plugin: "java-library"
+        apply plugin: "org.screamingsandals.plugin-builder"
     }
 
     if (project.name.matches('[a-z]+-[a-z]+') && !project.name.endsWith("-common")) {

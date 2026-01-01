@@ -1,3 +1,5 @@
+import org.screamingsandals.lib.gradle.enableShadowPlugin
+
 dependencies {
     implementation(project(":utils-common"))
     implementation(project(":shared-core"))
