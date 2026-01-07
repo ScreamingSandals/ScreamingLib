@@ -24,7 +24,7 @@ ScreamingLib is a WIP multiplatform library for creating Minecraft plugins.
 
 ## Compiling
 
-This project uses **Gradle** and requires **JDK 17** or newer (the compiled artifacts require JDK 11 or newer). To build it, clone the repository and run:
+This project uses **Gradle** and requires **JDK 21** or newer (the compiled artifacts require JDK 11 or newer). To build it, clone the repository and run:
 
 ```bash
 ./gradlew clean build
