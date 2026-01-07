@@ -1,5 +1,7 @@
 # ScreamingLib
-ScreamingLib is a multiplatform library for creating Minecraft plugins.
+[![Build and publish ScreamingLib](https://github.com/ScreamingSandals/ScreamingLib/actions/workflows/publish.yml/badge.svg)](https://github.com/ScreamingSandals/ScreamingLib/actions/workflows/publish.yml)
+
+ScreamingLib is a WIP multiplatform library for creating Minecraft plugins.
 
 ## Module list
 
@@ -22,8 +24,20 @@ ScreamingLib is a multiplatform library for creating Minecraft plugins.
 
 ## Compiling
 
-Requirements:
-* JDK 21 and higher (compiled artifacts are than compatible with Java 11 and higher)
-* Internet connection
+This project uses **Gradle** and requires **JDK 17** or newer (the compiled artifacts require JDK 11 or newer). To build it, clone the repository and run:
 
-Clone this repo and run `./gradlew screamCompile`. Binaries for each module will be present in the `build/libs` folder of each subproject and also in your local maven repository.
+```bash
+./gradlew clean build
+```
+
+On Windows, use:
+
+```bat
+gradlew.bat clean build
+```
+
+The compiled JAR file for each module will be located in the `build/libs` folder of each subproject. You can also publish it to your local maven repository (`gradlew publishToMavenLocal`).
+
+## License
+
+This project is licensed under the **Apache License 2.0** License - see the [LICENSE](LICENSE) file for details.
