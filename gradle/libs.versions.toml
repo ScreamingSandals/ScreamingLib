@@ -22,12 +22,13 @@ javapoet = "1.13.0"
 guava = "32.1.2-jre"
 
 # kotlin-extra (compileOnly)
-kotlin = "1.9.24"
+kotlin = "2.2.20"
 
 # all modules (compileOnly)
 gson = "2.9.0"
 slf4j = "1.7.32"
 netty = "4.1.72.Final"
+jetbrains-annotations = "26.0.2"
 
 # 3rd party plugins/mods (compileOnly)
 placeholderapi = "2.11.5"
@@ -48,7 +49,8 @@ junit = "5.10.2"
 junit-platform = "1.10.2"
 
 # plugins
-screaming-plugin-builder = "1.0.87"
+screaming-plugin-builder = "2.0.0-SNAPSHOT"
+lombok = "9.1.0"
 takenaka = "1.2.1-SNAPSHOT"
 mappings = "1.8.8+1.21.11"
 
@@ -71,6 +73,7 @@ vault = { group = "com.github.MilkBowl", name = "VaultAPI", version.ref = "vault
 protocolsupport = { group = "com.github.ProtocolSupport", name = "ProtocolSupport", version.ref = "protocolsupport" }
 datafixerupper = { group = "com.mojang", name = "datafixerupper", version.ref = "datafixerupper" }
 datafixerupper2 = { group = "com.mojang", name = "datafixerupper", version.ref = "datafixerupper2" }
+jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
 
 # platforms
 paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
@@ -112,3 +115,4 @@ takenaka-mappings = { group = "me.kcra.takenaka", name = "mappings", version.ref
 screaming-plugin-builder = { id = "org.screamingsandals.plugin-builder", version.ref = "screaming-plugin-builder" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 takenaka = { id = "me.kcra.takenaka.accessor", version.ref = "takenaka" }
+lombok = { id = "io.freefair.lombok", version.ref = "lombok" }

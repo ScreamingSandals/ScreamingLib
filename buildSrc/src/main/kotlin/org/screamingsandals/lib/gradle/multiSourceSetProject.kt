@@ -2,9 +2,7 @@ package org.screamingsandals.lib.gradle
 
 import org.gradle.api.Project
 import org.gradle.api.tasks.SourceSetContainer
-import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.named
 
 fun Project.initSupportSourceSets(
     versions: Collection<String>,
@@ -63,18 +61,6 @@ fun Project.initSupportSourceSets(
                 commonSourceSet.output.classesDirs
             )
             compileClasspath += mainCompileOnly
-        }
-    }
-}
-
-fun Project.fixSourceJar() {
-    val sourceSets = extensions.getByType<SourceSetContainer>()
-
-    tasks.findByName("sourceJar")?.let {
-        tasks.named<Jar>("sourceJar") {
-            sourceSets.matching { it.name != "test" }.forEach {
-                from(it.allJava)
-            }
         }
     }
 }

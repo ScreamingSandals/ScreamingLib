@@ -2,22 +2,18 @@ import me.kcra.takenaka.generator.accessor.model.FieldAccessor
 import me.kcra.takenaka.generator.accessor.naming.StandardNamingStrategies
 import me.kcra.takenaka.generator.accessor.naming.ForwardingNamingStrategy
 import me.kcra.takenaka.generator.accessor.naming.prefixed
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
-import org.screamingsandals.lib.gradle.enableShadowPlugin
+import org.screamingsandals.gradle.builder.*
 
 plugins {
     alias(libs.plugins.takenaka)
 }
-
-enableShadowPlugin()
 
 dependencies {
     mappingBundle(libs.takenaka.mappings)
     implementation(libs.takenaka.runtime)
 }
 
-tasks.named<ShadowJar>("shadowJar") {
+configureShadowPlugin {
     relocate("me.kcra.takenaka.accessor", "org.screamingsandals.lib.impl.ext.takenaka")
 
     exclude("org/intellij/lang/annotations/**")

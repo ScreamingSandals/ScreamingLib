@@ -1,5 +1,4 @@
 import org.screamingsandals.lib.gradle.initSupportSourceSets
-import org.screamingsandals.lib.gradle.fixSourceJar
 
 val supportVersions = mapOf(
     "1_21_3" to libs.paper.support.one.twentyone.three,
@@ -32,5 +31,3 @@ dependencies {
     compileOnly(libs.viaversion)
     compileOnly(libs.protocolsupport)
 }
-
-fixSourceJar()

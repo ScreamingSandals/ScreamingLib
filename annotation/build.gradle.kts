@@ -1,4 +1,4 @@
-import org.screamingsandals.lib.gradle.enableShadowPlugin
+import org.screamingsandals.gradle.builder.configureShadowPlugin
 
 dependencies {
     implementation(project(":utils-common"))
@@ -13,4 +13,4 @@ license {
     exclude("org/screamingsandals/lib/annotation/utils/JohnsonSimpleCycles.java")
 }
 
-enableShadowPlugin()
+configureShadowPlugin()
