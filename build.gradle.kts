@@ -52,7 +52,7 @@ subprojects {
         }
     }
 
-    val onlyPomArtifact = !project.file("src").exists() && !project.file("build.gradle").exists()
+    val onlyPomArtifact = !project.file("src").exists() && !project.file("build.gradle.kts").exists()
     if (!onlyPomArtifact) {
         apply<JavaPlugin>()
         apply<LombokPlugin>()
