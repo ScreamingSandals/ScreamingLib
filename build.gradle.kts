@@ -68,16 +68,18 @@ subprojects {
             "compileOnly"(rootProject.libs.jetbrains.annotations)
         }
 
-        configureSourcesJar(
-            // allow every non-test source set to be in sources jar
-            predicate={ it.name != "test" }
-        )
+        if (name != "nms") {
+            configureSourcesJar(
+                // allow every non-test source set to be in sources jar
+                predicate = { it.name != "test" }
+            )
+        }
     }
 
     project.afterEvaluate {
         // Some subprojects may configure shadowJar later, so we need to postpone this to afterEvaluate
 
-        setupMavenPublishing(onlyPomArtifact = onlyPomArtifact, addSourceJar = !onlyPomArtifact) {
+        setupMavenPublishing(onlyPomArtifact = onlyPomArtifact, addSourceJar = !onlyPomArtifact && name != "nms") {
             pom {
                 name.set("ScreamingLib")
                 description.set("Cross-platform library for developing Minecraft: Java Edition server plugins.")
