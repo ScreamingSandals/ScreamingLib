@@ -29,10 +29,8 @@ registerModule("core", "bukkit", "vanilla"/*, "minestom"*/) //TODO: add others (
 registerModule("proxy", "bungee", "velocity")
 
 // Extensions (Optional modules)
-include(":lang")
-project(":lang").projectDir = file("extensions/lang")
-include(":kotlin-extra")
-project(":kotlin-extra").projectDir = file("extensions/kotlin-extra")
+setupProject("lang", "extensions/lang")
+setupProject("kotlin-extra", "extensions/kotlin-extra")
 registerExtension("sidebar", "bukkit") //TODO: add others
 registerExtension("healthindicator", "bukkit") //TODO: add others
 registerExtension("npc", "bukkit") //TODO: add others
@@ -48,19 +46,25 @@ registerExtension("cloud", "bukkit", /*"minestom" , "sponge",*/ "bungee", "veloc
 
 
 fun registerModule(name: String, vararg platforms: String) {
-    include(":$name-common")
-    project(":$name-common").projectDir = file("$name/common")
+    setupProject("$name-common", "$name/common")
     platforms.forEach {
-        include(":$name-$it")
-        project(":$name-$it").projectDir = file("$name/$it")
+        setupProject("$name-$it", "$name/$it", mkdir=true)
     }
 }
 
 fun registerExtension(name: String, vararg platforms: String) {
-    include(":$name-common")
-    project(":$name-common").projectDir = file("extensions/$name/common")
+    setupProject("$name-common", "extensions/$name/common")
     platforms.forEach {
-        include(":$name-$it")
-        project(":$name-$it").projectDir = file("extensions/$name/$it")
+        setupProject("$name-$it", "extensions/$name/$it", mkdir=true)
+    }
+}
+
+fun setupProject(name: String, folder: String, mkdir: Boolean = false) {
+    include(name)
+    project(":$name").let {
+        it.projectDir = file(folder)
+        if (mkdir) {
+            it.projectDir.mkdirs()
+        }
     }
 }
