@@ -22,7 +22,7 @@ javapoet = "1.13.0"
 guava = "32.1.2-jre"
 
 # kotlin-extra (compileOnly)
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 
 # all modules (compileOnly)
 gson = "2.9.0"
@@ -50,7 +50,7 @@ junit-platform = "1.10.2"
 
 # plugins
 screaming-plugin-builder = "2.0.0-SNAPSHOT"
-lombok = "9.1.0"
+lombok = "9.2.0"
 takenaka = "1.2.1-SNAPSHOT"
 mappings = "1.8.8+1.21.11"
 
