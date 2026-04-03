@@ -574,7 +574,9 @@ public class BukkitCore extends Core {
 
         // PlayerInteractEntityEvent is a weird event, each child has its own HandlerList
         constructDefaultListener(org.bukkit.event.player.PlayerInteractEntityEvent.class, PlayerInteractEntityEvent.class, BukkitPlayerInteractEntityEvent::new);
-        constructDefaultListener(org.bukkit.event.player.PlayerInteractAtEntityEvent.class, PlayerInteractEntityEvent.class, BukkitPlayerInteractAtEntityEvent::new);
+        if (!BukkitFeature.PLAYER_INTERACT_EVENT_HANDLERS_COLLAPSED.isSupported()) { // not having its own HandlerList since 26.1.1 in both Spigot/Paper
+            constructDefaultListener(org.bukkit.event.player.PlayerInteractAtEntityEvent.class, PlayerInteractEntityEvent.class, BukkitPlayerInteractAtEntityEvent::new);
+        }
         if (BukkitFeature.PLAYER_ARMOR_STAND_MANIPULATE_EVENT.isSupported()) {
             constructDefaultListener(org.bukkit.event.player.PlayerArmorStandManipulateEvent.class, PlayerInteractEntityEvent.class, BukkitPlayerArmorStandManipulateEvent::new);
         }

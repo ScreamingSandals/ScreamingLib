@@ -82,6 +82,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature TIME_SKIP_EVENT = PlatformFeature.of(() -> Reflect.has("org.bukkit.event.world.TimeSkipEvent"));
     public static final @NotNull PlatformFeature PROJECTILE_LAUNCH_EVENT_EXTENDS_ENTITY_SPAWN_EVENT = PlatformFeature.of(() -> org.bukkit.event.entity.EntitySpawnEvent.class.isAssignableFrom(org.bukkit.event.entity.ProjectileLaunchEvent.class));
     public static final @NotNull PlatformFeature ENTITY_COMBUST_EVENT_DURATION_FLOAT = PlatformFeature.of(() -> Reflect.hasMethod(org.bukkit.event.entity.EntityCombustEvent.class, "setDuration", float.class));
+    public static final @NotNull PlatformFeature PLAYER_INTERACT_EVENT_HANDLERS_COLLAPSED = PlatformFeature.of(() -> Version.isVersion(26, 1, 1));
 
     // Attribute API
     public static final @NotNull PlatformFeature ATTRIBUTES_API = PlatformFeature.of(() -> Version.isVersion(1, 9));
