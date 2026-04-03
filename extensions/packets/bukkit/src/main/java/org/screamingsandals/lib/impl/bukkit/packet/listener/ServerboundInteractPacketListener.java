@@ -21,7 +21,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.impl.bukkit.utils.Version;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.game.ServerboundAttackPacketAccessor;
@@ -34,6 +33,7 @@ import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.utils.PacketMethod;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 @Service
@@ -64,7 +64,7 @@ public class ServerboundInteractPacketListener {
         }
     }
 
-    @OnEvent
+    @OnEnable
     public void onEnable(@NotNull Plugin plugin) {
         if (supportsUseUnknownEntityEvent) {
             plugin.getServer().getPluginManager().registerEvents(new PaperListener(), plugin);
