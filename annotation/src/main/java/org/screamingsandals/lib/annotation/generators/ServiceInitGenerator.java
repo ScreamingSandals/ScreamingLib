@@ -396,8 +396,8 @@ public final class ServiceInitGenerator {
                                         annotatedElement.getAnnotation(annotatedInitArgument.get().getKey().getThird()),
                                         (TypeElement) types.asElement(variableElement.asType())
                                 );
-                    } else if (initArguments.containsKey(variableElement.asType().toString())) {
-                        initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
+                    } else if (initArguments.containsKey(types.erasure(variableElement.asType()).toString())) {
+                        initArguments.get(types.erasure(variableElement.asType()).toString()).accept(statement, processedArguments);
                     } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
                         statement.append("$N");
                         processedArguments.add(instancedServices.get(typeMirror.get()));
@@ -534,8 +534,8 @@ public final class ServiceInitGenerator {
                                     variableElement.getAnnotation(annotatedParameter.get().getKey().getThird()),
                                     (TypeElement) types.asElement(variableElement.asType())
                             );
-                } else if (initArguments.containsKey(variableElement.asType().toString())) {
-                    initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
+                } else if (initArguments.containsKey(types.erasure(variableElement.asType()).toString())) {
+                    initArguments.get(types.erasure(variableElement.asType()).toString()).accept(statement, processedArguments);
                 } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
                     statement.append("$N");
                     processedArguments.add(instancedServices.get(typeMirror.get()));
@@ -667,8 +667,8 @@ public final class ServiceInitGenerator {
                                     variableElement.getAnnotation(annotatedParameter.get().getKey().getThird()),
                                     (TypeElement) types.asElement(variableElement.asType())
                             );
-                } else if (initArguments.containsKey(variableElement.asType().toString())) {
-                    initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
+                } else if (initArguments.containsKey(types.erasure(variableElement.asType()).toString())) {
+                    initArguments.get(types.erasure(variableElement.asType()).toString()).accept(statement, processedArguments);
                 } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
                     statement.append("$N");
                     processedArguments.add(instancedServices.get(typeMirror.get()));
@@ -705,7 +705,7 @@ public final class ServiceInitGenerator {
                         element.getSimpleName(),
                         element.getParameters()
                                 .stream()
-                                .map(variableElement -> variableElement.asType().toString())
+                                .map(variableElement -> types.erasure(variableElement.asType()).toString())
                                 .collect(Collectors.toList()))
                 ))
                 .collect(Collectors.toList());
@@ -764,8 +764,8 @@ public final class ServiceInitGenerator {
                                     variableElement.getAnnotation(annotatedParameter.get().getKey().getThird()),
                                     (TypeElement) types.asElement(variableElement.asType())
                             );
-                } else if (initArguments.containsKey(variableElement.asType().toString())) {
-                    initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
+                } else if (initArguments.containsKey(types.erasure(variableElement.asType()).toString())) {
+                    initArguments.get(types.erasure(variableElement.asType()).toString()).accept(statement, processedArguments);
                 } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
                     statement.append("$N");
                     processedArguments.add(instancedServices.get(typeMirror.get()));
@@ -847,7 +847,7 @@ public final class ServiceInitGenerator {
                         element.getSimpleName(),
                         element.getParameters()
                                 .stream()
-                                .map(variableElement -> variableElement.asType().toString())
+                                .map(variableElement -> types.erasure(variableElement.asType()).toString())
                                 .collect(Collectors.toList()))
                 ))
                 .collect(Collectors.toList());
