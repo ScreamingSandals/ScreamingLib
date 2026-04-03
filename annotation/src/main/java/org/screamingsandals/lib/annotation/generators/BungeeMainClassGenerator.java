@@ -51,6 +51,7 @@ public class BungeeMainClassGenerator extends StandardMainClassGenerator {
 
         var bungeeMainClass = prepareType(newClassName)
                 .superclass(Classes.Bungee.PLUGIN)
+                .addOriginatingElement(pluginContainer)
                 .addMethod(onLoadBuilder.build())
                 .addMethod(onEnableBuilder.build())
                 .addMethod(onDisableBuilder.build())

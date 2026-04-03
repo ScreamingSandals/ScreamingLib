@@ -56,6 +56,7 @@ public class BukkitMainClassGenerator extends StandardMainClassGenerator {
 
         var bukkitMainClass = prepareType(newClassName)
                 .superclass(Classes.Bukkit.JAVA_PLUGIN)
+                .addOriginatingElement(pluginContainer)
                 .addStaticBlock(CodeBlock.builder()
                         .addStatement("$T.applyFallbackIfNeeded($S)", Classes.SLib.VERSION_FALLBACK, !pluginAnnotation.name().isBlank() ? pluginAnnotation.name() : pluginAnnotation.id())
                         .build())

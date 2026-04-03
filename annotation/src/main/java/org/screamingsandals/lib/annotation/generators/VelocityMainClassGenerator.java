@@ -69,6 +69,7 @@ public class VelocityMainClassGenerator extends StandardMainClassGenerator {
         fillInOnDisableMethod(onDisableBuilder);
 
         var velocityMainClass = prepareType(newClassName)
+                .addOriginatingElement(pluginContainer)
                 .addField(FieldSpec
                         .builder(Classes.Slf4j.LOGGER, "slf4jLogger", Modifier.PRIVATE)
                         .build())

@@ -51,6 +51,7 @@ public class MinestomMainClassGenerator extends StandardMainClassGenerator {
 
         var minestomMainClass = prepareType(newClassName)
                 .superclass(Classes.Minestom.EXTENSION)
+                .addOriginatingElement(pluginContainer)
                 .addMethod(onLoadBuilder.build())
                 .addMethod(onEnableBuilder.build())
                 .addMethod(onDisableBuilder.build())
