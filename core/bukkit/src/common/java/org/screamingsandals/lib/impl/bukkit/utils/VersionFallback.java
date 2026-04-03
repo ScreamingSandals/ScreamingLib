@@ -67,11 +67,8 @@ public class VersionFallback {
         }
 
         MapperPlatforms.setCurrentPlatform(MapperPlatform.create(latest, MapperPlatforms.getCurrentPlatform().getClassLoader(), mappingNamespaces));
-        Bukkit.getLogger().warning("[" + pluginName + "] ==========================");
         Bukkit.getLogger().warning("[" + pluginName + "] This Minecraft version (" + version + ") is newer than the latest supported version (" + latest + ").");
-        Bukkit.getLogger().warning("[" + pluginName + "] Attempting to use the latest known mappings. This is only safe if the newer Minecraft version is a bugfix release.");
-        Bukkit.getLogger().warning("[" + pluginName + "] Unless we confirm compatibility, do NOT run this version and wait for an update.");
-        Bukkit.getLogger().warning("[" + pluginName + "] ==========================");
+        Bukkit.getLogger().warning("[" + pluginName + "] Compatibility is unknown. Check for updates or official support confirmation. If support is confirmed, ignore this message.");
         Bukkit.getLogger().info("[" + pluginName + "] Loaded fallback NMS modules for " + latest + " in namespaces " + Arrays.toString(mappingNamespaces));
     }
 
