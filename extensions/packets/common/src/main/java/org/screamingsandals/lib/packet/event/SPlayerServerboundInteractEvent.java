@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet.event;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.CancellableAsyncEvent;
 import org.screamingsandals.lib.player.Player;
@@ -27,6 +28,7 @@ import org.screamingsandals.lib.utils.InteractType;
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @Data
+@ApiStatus.Internal
 public class SPlayerServerboundInteractEvent implements CancellableAsyncEvent {
     private final @NotNull Player player;
     private final int entityId;

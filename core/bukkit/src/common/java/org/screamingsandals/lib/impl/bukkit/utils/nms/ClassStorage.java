@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.bukkit.utils.DataFixerUtils;
-import org.screamingsandals.lib.impl.nms.accessors.core.IRegistryAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.core.RegistryAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.core.MappedRegistryAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.core.RegistryAccessAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.core.registries.BuiltInRegistriesAccessor;
@@ -126,22 +126,22 @@ public class ClassStorage {
 			// 1.19.3+
 			var optional = Reflect.fastInvoke(EntityTypeAccessor.METHOD_BY_STRING.get(), (Object) key);
 
-			return Reflect.fastInvokeResulted(registry1_19_3, IRegistryAccessor.METHOD_GET_ID.get(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
+			return Reflect.fastInvokeResulted(registry1_19_3, RegistryAccessor.METHOD_GET_ID.get(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
 		} else {
 			// <= 1.19.2
-			var registry = IRegistryAccessor.CONST_ENTITY_TYPE.get();
+			var registry = RegistryAccessor.CONST_ENTITY_TYPE.get();
 
 			if (registry != null) {
 				// 1.14+
 				var optional = Reflect.fastInvoke(EntityTypeAccessor.METHOD_BY_STRING.get(), (Object) key);
 
 				if (optional instanceof Optional) {
-					return Reflect.fastInvokeResulted(registry, IRegistryAccessor.METHOD_GET_ID.get(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
+					return Reflect.fastInvokeResulted(registry, RegistryAccessor.METHOD_GET_ID.get(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
 				}
 
 				// 1.13.X
 				var nullable = Reflect.fastInvoke(EntityTypeAccessor.METHOD_FUNC_200713_A.get(), (Object) key);
-				return Reflect.fastInvokeResulted(registry, IRegistryAccessor.METHOD_GET_ID.get(), nullable).asOptional(Integer.class).orElse(0);
+				return Reflect.fastInvokeResulted(registry, RegistryAccessor.METHOD_GET_ID.get(), nullable).asOptional(Integer.class).orElse(0);
 			} else {
 				// 1.11 - 1.12.2
 				if (EntityTypeAccessor.CONST_FIELD_191308_B.get() != null) {

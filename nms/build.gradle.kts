@@ -38,7 +38,7 @@ class SlibNamingStrategy(accessorPackage: String)
 accessors {
     // uncomment this and remove the mappingBundle dependency,
     // if you want to develop against custom versions
-    /*versionRange('1.8.8', '1.21.11') {
+    /*versionRange('1.8.8', '26.1.1') {
         // exclude 1.20, 1.20.3, 1.20.5 and 1.21.2 - hotfixed versions
         // exclude 1.16 and 1.10.1, they don't have most mappings and are basically not used at all
         // exclude 1.8.9, client-only update - no Spigot mappings, no thank you
@@ -78,7 +78,7 @@ accessors {
         field("net.minecraft.world.entity.EntityType\$EntityFactory", "factory") // 1.14+ - factory method
     }
 
-    mapClass("net.minecraft.core.IRegistry") { // TODO: should be net.minecraft.core.Registry, currently Spigot mapped
+    mapClass("net.minecraft.core.Registry") {
         field("net.minecraft.core.DefaultedRegistry", "ENTITY_TYPE") // <= 1.19.2
         method("int", "getId", "java.lang.Object")
     }
@@ -396,6 +396,10 @@ accessors {
         field("int", "entityId")
         field(ServerboundInteractPacket_Action, "action")
         field(ServerboundInteractPacket_Action, "ATTACK_ACTION")
+    }
+
+    mapClass("net.minecraft.network.protocol.game.ServerboundAttackPacket") {
+        method("int", "entityId")
     }
 
     mapClass("net.minecraft.world.item.Item") {
