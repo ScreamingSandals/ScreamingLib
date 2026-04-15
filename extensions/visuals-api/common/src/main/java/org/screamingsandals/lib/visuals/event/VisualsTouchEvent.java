@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.event.CancellableAsyncEvent;
+import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.visuals.Visual;
@@ -29,7 +29,7 @@ import org.screamingsandals.lib.visuals.Visual;
 @Accessors(fluent = true, chain = false)
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class VisualsTouchEvent<T extends Visual<T>> implements CancellableAsyncEvent {
+public class VisualsTouchEvent<T extends Visual<T>> implements CancellableEvent {
     private final @NotNull Player player;
     private final @NotNull T visual;
     private final @NotNull InteractType interactType;
