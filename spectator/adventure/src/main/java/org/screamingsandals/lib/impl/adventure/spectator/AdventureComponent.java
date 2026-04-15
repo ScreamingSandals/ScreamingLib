@@ -329,6 +329,7 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
 
     @RequiredArgsConstructor
     @Data
+    // TODO: will the generics continue to work for both v4 and v5 when Adventure 5 comes out and this class updates?
     public abstract static class AdventureBuilder<A extends BuildableComponent<A, D>, B extends Builder<B, C>, C extends Component, D extends ComponentBuilder<A, D>> implements Builder<B, C> {
         private final @NotNull D builder;
 

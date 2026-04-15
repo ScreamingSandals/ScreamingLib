@@ -1,6 +1,6 @@
 [versions]
 # platforms
-paper = "1.21.11-R0.1-SNAPSHOT"
+paper = "26.1.2.build.5-alpha"
 paper-support_1_21_3 = "1.21.3-R0.1-SNAPSHOT"
 paper-support_1_21_1 = "1.21.1-R0.1-SNAPSHOT"
 paper-support_1_20_6 = "1.20.6-R0.1-SNAPSHOT"
@@ -13,7 +13,8 @@ waterfall = "1.21-R0.1-SNAPSHOT"
 bungeecord = "1.21-R0.4"
 bungeecord-support_1_21_R01 = "1.21-R0.1"
 velocity = "3.2.0-SNAPSHOT"
-adventure = "4.25.0"
+adventure = "4.26.1"
+adventure4 = "4.26.1"
 datafixerupper = "8.0.16"
 datafixerupper2 = "2.0.24"
 
@@ -94,6 +95,11 @@ adventure-gson = { group = "net.kyori", name = "adventure-text-serializer-gson",
 adventure-legacy = { group = "net.kyori", name = "adventure-text-serializer-legacy", version.ref = "adventure" }
 adventure-plain = { group = "net.kyori", name = "adventure-text-serializer-plain", version.ref = "adventure" }
 adventure-json = { group = "net.kyori", name = "adventure-text-serializer-json", version.ref = "adventure" }
+adventure4-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure4" }
+adventure4-gson = { group = "net.kyori", name = "adventure-text-serializer-gson", version.ref = "adventure4" }
+adventure4-legacy = { group = "net.kyori", name = "adventure-text-serializer-legacy", version.ref = "adventure4" }
+adventure4-plain = { group = "net.kyori", name = "adventure-text-serializer-plain", version.ref = "adventure4" }
+adventure4-json = { group = "net.kyori", name = "adventure-text-serializer-json", version.ref = "adventure4" }
 
 # cloud-*
 cloud-common = { group = "cloud.commandframework", name = "cloud-core", version.ref = "cloud" }

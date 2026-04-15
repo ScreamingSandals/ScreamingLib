@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public class GameRuleCompat {
+    @SuppressWarnings("unchecked")
     public static <T> @Nullable T getGameRuleValue(@NotNull World world, @NotNull String gameRule) {
         var val = world.getGameRuleValue(gameRule);
         if (val == null) {

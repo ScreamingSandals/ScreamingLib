@@ -16,8 +16,11 @@
 
 package org.screamingsandals.lib.impl.adventure.spectator;
 
+import net.kyori.adventure.text.TranslationArgumentLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.TranslatableComponentCompat;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TranslatableComponent;
 
@@ -43,33 +46,53 @@ public class AdventureTranslatableComponent extends AdventureComponent implement
 
     @Override
     public @NotNull List<Component> args() {
-        return ((net.kyori.adventure.text.TranslatableComponent) wrappedObject).args()
-                .stream()
-                .map(AdventureBackend::wrapComponent)
-                .collect(Collectors.toList());
+        if (AdventureFeature.TRANSLATABLE_ARGUMENTS_METHOD.isSupported()) {
+            return ((net.kyori.adventure.text.TranslatableComponent) wrappedObject).arguments()
+                    .stream()
+                    .map(TranslationArgumentLike::asComponent)
+                    .map(AdventureBackend::wrapComponent)
+                    .collect(Collectors.toList());
+        } else {
+            return TranslatableComponentCompat.arguments((net.kyori.adventure.text.TranslatableComponent) wrappedObject)
+                    .stream()
+                    .map(AdventureBackend::wrapComponent)
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
     public @NotNull TranslatableComponent withArgs(@NotNull Component @NotNull... components) {
-        return (TranslatableComponent) AdventureBackend.wrapComponent(
-                ((net.kyori.adventure.text.TranslatableComponent) wrappedObject)
-                        .args(Arrays.stream(components)
-                                .map(component -> component.as(net.kyori.adventure.text.Component.class))
-                                .collect(Collectors.toList())
-                        )
-        );
+        var input = Arrays.stream(components)
+                .map(component -> component.as(net.kyori.adventure.text.Component.class))
+                .collect(Collectors.toList());
+
+        if (AdventureFeature.TRANSLATABLE_ARGUMENTS_METHOD.isSupported()) {
+            return (TranslatableComponent) AdventureBackend.wrapComponent(
+                    ((net.kyori.adventure.text.TranslatableComponent) wrappedObject).arguments(input)
+            );
+        } else {
+            return (TranslatableComponent) AdventureBackend.wrapComponent(
+                    TranslatableComponentCompat.arguments(((net.kyori.adventure.text.TranslatableComponent) wrappedObject), input)
+            );
+        }
     }
 
     @Override
     public @NotNull TranslatableComponent withArgs(@NotNull Collection<Component> components) {
-        return (TranslatableComponent) AdventureBackend.wrapComponent(
-                ((net.kyori.adventure.text.TranslatableComponent) wrappedObject)
-                        .args(components
-                                .stream()
-                                .map(component -> component.as(net.kyori.adventure.text.Component.class))
-                                .collect(Collectors.toList())
-                        )
-        );
+        var input = components
+                .stream()
+                .map(component -> component.as(net.kyori.adventure.text.Component.class))
+                .collect(Collectors.toList());
+
+        if (AdventureFeature.TRANSLATABLE_ARGUMENTS_METHOD.isSupported()) {
+            return (TranslatableComponent) AdventureBackend.wrapComponent(
+                    ((net.kyori.adventure.text.TranslatableComponent) wrappedObject).arguments(input)
+            );
+        } else {
+            return (TranslatableComponent) AdventureBackend.wrapComponent(
+                    TranslatableComponentCompat.arguments((net.kyori.adventure.text.TranslatableComponent) wrappedObject, input)
+            );
+        }
     }
 
     @Override
@@ -100,7 +123,7 @@ public class AdventureTranslatableComponent extends AdventureComponent implement
             net.kyori.adventure.text.TranslatableComponent.Builder
             > implements TranslatableComponent.Builder {
 
-        public AdventureTranslatableBuilder(net.kyori.adventure.text.TranslatableComponent.Builder builder) {
+        public AdventureTranslatableBuilder(net.kyori.adventure.text.TranslatableComponent.@NonNull Builder builder) {
             super(builder);
         }
 
@@ -112,13 +135,25 @@ public class AdventureTranslatableComponent extends AdventureComponent implement
 
         @Override
         public TranslatableComponent.@NotNull Builder args(@NotNull Component @NotNull... components) {
-            getBuilder().args(Arrays.stream(components).map(component -> component.as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
+            var input = Arrays.stream(components).map(component -> component.as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList());
+
+            if (AdventureFeature.TRANSLATABLE_ARGUMENTS_METHOD.isSupported()) {
+                getBuilder().arguments(input);
+            } else {
+                TranslatableComponentCompat.builderArguments(getBuilder(), input);
+            }
             return self();
         }
 
         @Override
         public TranslatableComponent.@NotNull Builder args(@NotNull Collection<Component> components) {
-            getBuilder().args(components.stream().map(component -> component.as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
+            var input = components.stream().map(component -> component.as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList());
+
+            if (AdventureFeature.TRANSLATABLE_ARGUMENTS_METHOD.isSupported()) {
+                getBuilder().arguments(input);
+            } else {
+                TranslatableComponentCompat.builderArguments(getBuilder(), input);
+            }
             return self();
         }
 

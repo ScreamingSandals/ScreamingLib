@@ -18,6 +18,7 @@ package org.screamingsandals.lib.impl.adventure.spectator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.EntityNBTComponent;
 
@@ -63,7 +64,7 @@ public class AdventureEntityNBTComponent extends AdventureNBTComponent<net.kyori
             net.kyori.adventure.text.EntityNBTComponent.Builder
             > implements EntityNBTComponent.Builder {
 
-        public AdventureEntityNBTBuilder(net.kyori.adventure.text.EntityNBTComponent.Builder builder) {
+        public AdventureEntityNBTBuilder(net.kyori.adventure.text.EntityNBTComponent.@NonNull Builder builder) {
             super(builder);
         }
 

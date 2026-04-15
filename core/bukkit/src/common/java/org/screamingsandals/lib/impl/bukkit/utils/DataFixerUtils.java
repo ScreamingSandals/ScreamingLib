@@ -77,7 +77,7 @@ public class DataFixerUtils {
                 .getValue();
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
     public static @NotNull Object parseComponent(@NotNull String javaJson) {
         var reader = new JsonReader(new StringReader(javaJson));
         reader.setLenient(true);

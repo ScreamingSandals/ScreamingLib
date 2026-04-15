@@ -34,6 +34,7 @@ import org.screamingsandals.lib.impl.nms.accessors.world.level.block.entity.Bloc
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
+@SuppressWarnings("deprecation")
 @UtilityClass
 @LimitedVersionSupport("<= 1.12.2")
 public class BlockUtils1_8 {

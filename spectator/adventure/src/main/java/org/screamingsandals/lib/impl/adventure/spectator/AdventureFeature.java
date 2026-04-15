@@ -50,4 +50,5 @@ public class AdventureFeature {
     public static final @NotNull PlatformFeature TIMES_NEW_FACTORY_METHOD = PlatformFeature.of(() -> Reflect.hasMethod(Title.Times.class, "times", Duration.class, Duration.class, Duration.class));
     public static final @NotNull PlatformFeature SHADOW_COLOR = PlatformFeature.of(() -> Reflect.has("net.kyori.adventure.text.format.ShadowColor"));
     public static final @NotNull PlatformFeature CLICK_EVENT_PAYLOAD = PlatformFeature.of(() -> Reflect.has("net.kyori.adventure.text.event.ClickEvent.Payload"));
+    public static final @NotNull PlatformFeature TRANSLATABLE_ARGUMENTS_METHOD = PlatformFeature.of(() -> Reflect.hasMethod(TranslatableComponent.class, "arguments"));
 }

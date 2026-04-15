@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("deprecation")
 public class BukkitBlock1_8 extends BasicWrapper<MaterialData> implements Block {
     private final int tileEntityVariant;
 

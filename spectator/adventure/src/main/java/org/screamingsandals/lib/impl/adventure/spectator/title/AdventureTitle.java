@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.TitleCompat;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -78,8 +79,7 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
         if (AdventureFeature.TIMES_NEW_FACTORY_METHOD.isSupported()) {
             advntrTimes = Title.Times.times(times.fadeIn(), times.stay(), times.fadeOut());
         } else {
-            //noinspection UnstableApiUsage
-            advntrTimes = Title.Times.of(times.fadeIn(), times.stay(), times.fadeOut());
+            advntrTimes = TitleCompat.times(times.fadeIn(), times.stay(), times.fadeOut());
         }
 
         return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), advntrTimes));
@@ -95,8 +95,7 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
                     fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
             );
         } else {
-            //noinspection UnstableApiUsage
-            advntrTimes = Title.Times.of(
+            advntrTimes = TitleCompat.times(
                     fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
                     stay != null ? stay : Title.DEFAULT_TIMES.stay(),
                     fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
@@ -116,8 +115,7 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
                     Duration.ofMillis(fadeOut * 50)
             );
         } else {
-            //noinspection UnstableApiUsage
-            advntrTimes = Title.Times.of(
+            advntrTimes = TitleCompat.times(
                     Duration.ofMillis(fadeIn * 50),
                     Duration.ofMillis(stay * 50),
                     Duration.ofMillis(fadeOut * 50)
@@ -137,8 +135,7 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
                     fadeOut()
             );
         } else {
-            //noinspection UnstableApiUsage
-            advntrTimes = Title.Times.of(
+            advntrTimes = TitleCompat.times(
                     fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
                     stay(),
                     fadeOut()
@@ -158,8 +155,7 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
                     fadeOut()
             );
         } else {
-            //noinspection UnstableApiUsage
-            advntrTimes = Title.Times.of(
+            advntrTimes = TitleCompat.times(
                     fadeIn(),
                     stay != null ? stay : Title.DEFAULT_TIMES.stay(),
                     fadeOut()
@@ -179,8 +175,7 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
                     fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
             );
         } else {
-            //noinspection UnstableApiUsage
-            advntrTimes = Title.Times.of(
+            advntrTimes = TitleCompat.times(
                     fadeIn(),
                     stay(),
                     fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
@@ -200,8 +195,7 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
                     fadeOut()
             );
         } else {
-            //noinspection UnstableApiUsage
-            advntrTimes = Title.Times.of(
+            advntrTimes = TitleCompat.times(
                     Duration.ofMillis(ticks * 50),
                     stay(),
                     fadeOut()
@@ -221,8 +215,7 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
                     fadeOut()
             );
         } else {
-            //noinspection UnstableApiUsage
-            advntrTimes = Title.Times.of(
+            advntrTimes = TitleCompat.times(
                     fadeIn(),
                     Duration.ofMillis(ticks * 50),
                     fadeOut()
@@ -242,8 +235,7 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
                     Duration.ofMillis(ticks * 50)
             );
         } else {
-            //noinspection UnstableApiUsage
-            advntrTimes = Title.Times.of(
+            advntrTimes = TitleCompat.times(
                     fadeIn(),
                     stay(),
                     Duration.ofMillis(ticks * 50)
@@ -315,8 +307,7 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
                         fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
                 );
             } else {
-                //noinspection UnstableApiUsage
-                times = Title.Times.of(
+                times = TitleCompat.times(
                         fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
                         stay != null ? stay : Title.DEFAULT_TIMES.stay(),
                         fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()

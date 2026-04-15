@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.HoverEventCompat;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -49,8 +50,7 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
         if (AdventureFeature.SHOW_ENTITY_NEW_FACTORY_METHOD.isSupported()) {
             return new AdventureEntityContent(HoverEvent.ShowEntity.showEntity(wrappedObject.type(), id, wrappedObject.name()));
         } else {
-            //noinspection UnstableApiUsage
-            return new AdventureEntityContent(HoverEvent.ShowEntity.of(wrappedObject.type(), id, wrappedObject.name()));
+            return new AdventureEntityContent(HoverEventCompat.showEntity(wrappedObject.type(), id, wrappedObject.name()));
         }
     }
 
@@ -65,8 +65,7 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
         if (AdventureFeature.SHOW_ENTITY_NEW_FACTORY_METHOD.isSupported()) {
             return new AdventureEntityContent(HoverEvent.ShowEntity.showEntity(Key.key(type.namespace(), type.path()), wrappedObject.id(), wrappedObject.name()));
         } else {
-            //noinspection UnstableApiUsage
-            return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.namespace(), type.path()), wrappedObject.id(), wrappedObject.name()));
+            return new AdventureEntityContent(HoverEventCompat.showEntity(Key.key(type.namespace(), type.path()), wrappedObject.id(), wrappedObject.name()));
         }
     }
 
@@ -80,8 +79,7 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
         if (AdventureFeature.SHOW_ENTITY_NEW_FACTORY_METHOD.isSupported()) {
             return new AdventureEntityContent(HoverEvent.ShowEntity.showEntity(wrappedObject.type(), wrappedObject.id(), name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
         } else {
-            //noinspection UnstableApiUsage
-            return new AdventureEntityContent(HoverEvent.ShowEntity.of(wrappedObject.type(), wrappedObject.id(), name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+            return new AdventureEntityContent(HoverEventCompat.showEntity(wrappedObject.type(), wrappedObject.id(), name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
         }
     }
 
@@ -121,8 +119,7 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
             if (AdventureFeature.SHOW_ENTITY_NEW_FACTORY_METHOD.isSupported()) {
                 return new AdventureEntityContent(HoverEvent.ShowEntity.showEntity(Key.key(type.namespace(), type.path()), id, name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
             } else {
-                //noinspection UnstableApiUsage
-                return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.namespace(), type.path()), id, name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+                return new AdventureEntityContent(HoverEventCompat.showEntity(Key.key(type.namespace(), type.path()), id, name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
             }
         }
     }

@@ -27,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.BinaryTagHolderCompat;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.HoverEventCompat;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -42,14 +44,15 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
         return ResourceLocation.of(wrappedObject.item().asString());
     }
 
-    @SuppressWarnings("PatternValidation")
+    @SuppressWarnings({"PatternValidation", "deprecation"})
     @Override
     public @NotNull ItemContent withId(@NotNull ResourceLocation id) {
         if (AdventureFeature.SHOW_ITEM_NEW_FACTORY_METHOD.isSupported()) {
+            // not scheduled for removal
             return new AdventureItemContent(HoverEvent.ShowItem.showItem(Key.key(id.namespace(), id.path()), wrappedObject.count(), wrappedObject.nbt()));
         } else {
-            //noinspection UnstableApiUsage
-            return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.namespace(), id.path()), wrappedObject.count(), wrappedObject.nbt()));
+            // nbt() not scheduled for removal
+            return new AdventureItemContent(HoverEventCompat.showItem(Key.key(id.namespace(), id.path()), wrappedObject.count(), wrappedObject.nbt()));
         }
     }
 
@@ -58,18 +61,22 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
         return wrappedObject.count();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public @NotNull ItemContent withCount(int count) {
         if (AdventureFeature.SHOW_ITEM_NEW_FACTORY_METHOD.isSupported()) {
+            // not scheduled for removal
             return new AdventureItemContent(HoverEvent.ShowItem.showItem(wrappedObject.item(), count, wrappedObject.nbt()));
         } else {
-            //noinspection UnstableApiUsage
-            return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), count, wrappedObject.nbt()));
+            // nbt() not scheduled for removal
+            return new AdventureItemContent(HoverEventCompat.showItem(wrappedObject.item(), count, wrappedObject.nbt()));
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public @Nullable CompoundTag tag() {
+        // nbt() not scheduled for removal
         var nbt = wrappedObject.nbt();
         if (nbt == null) {
             return null;
@@ -81,13 +88,14 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
         return null;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public @NotNull ItemContent withTag(@Nullable CompoundTag tag) {
         if (AdventureFeature.SHOW_ITEM_NEW_FACTORY_METHOD.isSupported()) {
+            // not scheduled for removal
             return new AdventureItemContent(HoverEvent.ShowItem.showItem(wrappedObject.item(), wrappedObject.count(), tag == null || tag.isEmpty() ? null : BinaryTagHolder.binaryTagHolder(AdventureBackend.getSnbtSerializer().serialize(tag))));
         } else {
-            //noinspection UnstableApiUsage
-            return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), wrappedObject.count(), tag == null || tag.isEmpty() ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
+            return new AdventureItemContent(HoverEventCompat.showItem(wrappedObject.item(), wrappedObject.count(), tag == null || tag.isEmpty() ? null : BinaryTagHolderCompat.binaryTagHolder(AdventureBackend.getSnbtSerializer().serialize(tag))));
         }
     }
 
@@ -116,14 +124,14 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
         private int count = 1;
         private @Nullable CompoundTag tag;
 
-        @SuppressWarnings("PatternValidation")
+        @SuppressWarnings({"PatternValidation", "deprecation"})
         @Override
         public @NotNull ItemContent build() {
             if (AdventureFeature.SHOW_ITEM_NEW_FACTORY_METHOD.isSupported()) {
+                // not scheduled for removal
                 return new AdventureItemContent(HoverEvent.ShowItem.showItem(Key.key(id.namespace(), id.path()), count, tag == null ? null : BinaryTagHolder.binaryTagHolder(AdventureBackend.getSnbtSerializer().serialize(tag))));
             } else {
-                //noinspection UnstableApiUsage
-                return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.namespace(), id.path()), count, tag == null ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
+                return new AdventureItemContent(HoverEventCompat.showItem(Key.key(id.namespace(), id.path()), count, tag == null ? null : BinaryTagHolderCompat.binaryTagHolder(AdventureBackend.getSnbtSerializer().serialize(tag))));
             }
         }
     }

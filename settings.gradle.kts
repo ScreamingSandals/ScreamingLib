@@ -6,10 +6,10 @@ pluginManagement {
     }
 }
 
-// The result will be for Java 11 but some dependencies requires Java 17 or Java 21
+// The result will be for Java 11 but some dependencies requires Java 17, 21 or 25
 val javaVersion = System.getProperty("java.class.version").toDouble()
-if (javaVersion < 65.0) {
-    throw GradleException("ScreamingLib requires JDK 21 to compile")
+if (javaVersion < 69.0) {
+    throw GradleException("ScreamingLib requires JDK 25 to compile")
 }
 
 rootProject.name = "ScreamingLib"

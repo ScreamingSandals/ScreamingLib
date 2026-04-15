@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.impl.adventure.spectator;
 
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.screamingsandals.lib.spectator.KeybindComponent;
 
 public class AdventureKeybindComponent extends AdventureComponent implements KeybindComponent {
@@ -46,7 +47,7 @@ public class AdventureKeybindComponent extends AdventureComponent implements Key
             net.kyori.adventure.text.KeybindComponent.Builder
             > implements KeybindComponent.Builder {
 
-        public AdventureKeybindBuilder(net.kyori.adventure.text.KeybindComponent.Builder builder) {
+        public AdventureKeybindBuilder(net.kyori.adventure.text.KeybindComponent.@NonNull Builder builder) {
             super(builder);
         }
 

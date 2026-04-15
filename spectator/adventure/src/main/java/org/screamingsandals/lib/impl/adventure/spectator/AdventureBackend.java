@@ -33,13 +33,12 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import net.kyori.adventure.text.serializer.json.JSONOptions;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import net.kyori.option.OptionState;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.impl.adventure.spectator.bossbar.AdventureBossBar;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.PlainTextCompat;
 import org.screamingsandals.lib.impl.adventure.spectator.event.AdventureClickEvent;
 import org.screamingsandals.lib.impl.adventure.spectator.event.AdventureHoverEvent;
 import org.screamingsandals.lib.impl.adventure.spectator.event.hover.AdventureEntityContent;
@@ -49,7 +48,6 @@ import org.screamingsandals.lib.impl.adventure.spectator.sound.AdventureSoundSta
 import org.screamingsandals.lib.impl.adventure.spectator.sound.AdventureSoundStop;
 import org.screamingsandals.lib.impl.adventure.spectator.title.AdventureTitle;
 import org.screamingsandals.lib.impl.spectator.DummyShadowColor;
-import org.screamingsandals.lib.impl.utils.feature.PlatformFeature;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Color;
@@ -120,8 +118,7 @@ public class AdventureBackend implements SpectatorBackend {
             plainText = PlainTextComponentSerializer.plainText();
         } else {
             // Adventure pre-4.8.0
-            //noinspection UnstableApiUsage
-            plainText = PlainComponentSerializer.plain();
+            plainText = PlainTextCompat.plainTextSerializer();
         }
         plainTextComponentSerializer = plainText;
 

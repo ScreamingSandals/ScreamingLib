@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.impl.adventure.spectator;
 
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.screamingsandals.lib.spectator.TextComponent;
 
 public class AdventureTextComponent extends AdventureComponent implements TextComponent {
@@ -46,7 +47,7 @@ public class AdventureTextComponent extends AdventureComponent implements TextCo
             net.kyori.adventure.text.TextComponent.Builder
             > implements TextComponent.Builder {
 
-        public AdventureTextBuilder(net.kyori.adventure.text.TextComponent.Builder builder) {
+        public AdventureTextBuilder(net.kyori.adventure.text.TextComponent.@NonNull Builder builder) {
             super(builder);
         }
 
