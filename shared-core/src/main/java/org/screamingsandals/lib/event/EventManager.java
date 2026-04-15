@@ -29,11 +29,10 @@ import org.screamingsandals.lib.impl.utils.executor.ExecutorProvider;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Custom event manager that has its own {@link java.util.concurrent.ExecutorService}.
@@ -47,6 +46,7 @@ public abstract class EventManager {
     @Getter
     private static @Nullable EventManager defaultEventManager;
     private final @NotNull Map<@NotNull Class<?>, List<@NotNull EventHandler<? extends Event>>> handlers = new ConcurrentHashMap<>();
+    private final @NotNull Map<@NotNull Class<?>, @NotNull EnumMap<EventExecutionOrder, List<EventHandler<? extends Event>>>> cache = new ConcurrentHashMap<>();
     @Getter
     private @Nullable EventManager customManager;
 
@@ -137,9 +137,10 @@ public abstract class EventManager {
     }
 
     public <T extends Event> @NotNull EventHandler<T> register(@NotNull Class<T> event, @NotNull EventHandler<T> handler) {
-        handlers.computeIfAbsent(event, e -> Collections.synchronizedList(new ArrayList<>())).add(handler);
-        fireEvent(new HandlerRegisteredEvent(this, event, handler));
+        handlers.computeIfAbsent(event, k -> new CopyOnWriteArrayList<>()).add(handler);
+        cache.clear();
 
+        fireEvent(new HandlerRegisteredEvent(this, event, handler));
         return handler;
     }
 
@@ -148,6 +149,7 @@ public abstract class EventManager {
             if (value.contains(handler)) {
                 fireEvent(new HandlerUnregisteredEvent(this, key, handler));
                 value.remove(handler);
+                cache.clear();
                 if (value.isEmpty()) {
                     handlers.remove(key, value);
                 }
@@ -156,7 +158,9 @@ public abstract class EventManager {
     }
 
     public <K extends Event> @NotNull K fireEvent(@NotNull K event) {
-        EventExecutionOrder.VALUES.forEach(order -> fireEvent(event, order));
+        for (var order : EventExecutionOrder.VALUES) {
+            fireEvent(event, order);
+        }
         return event;
     }
 
@@ -165,8 +169,11 @@ public abstract class EventManager {
             throw new UnsupportedOperationException("Async event cannot be fired sync!");
         }
 
-        findEventHandlers(event, executionOrder)
-                .forEach(eventHandler -> eventHandler.fire(event));
+        var handlers = resolveHandlers(event.getClass(), executionOrder);
+
+        for (var handler : handlers) {
+            handler.fire(event);
+        }
 
         if (customManager != null) {
             customManager.fireEvent(event, executionOrder);
@@ -191,18 +198,21 @@ public abstract class EventManager {
             return CompletableFuture.completedFuture(fireEvent(event, executionOrder));
         }
 
-        final var futures = findEventHandlers(event, executionOrder)
-                .map(eventHandler -> {
-                    // checks for server thread
-                    if (isServerThread()) {
-                        return CompletableFuture.runAsync(() -> eventHandler.fire(event), executor)
-                                .exceptionally(ex -> {
-                                    throw new RuntimeException("Exception occurred while firing event!", ex);
-                                });
-                    }
-                    return CompletableFuture.completedFuture(fireEvent(event, executionOrder));
-                })
-                .collect(Collectors.toCollection(LinkedList::new));
+        final var handlers = resolveHandlers(event.getClass(), executionOrder);
+        final var futures = new ArrayList<CompletableFuture<?>>(handlers.size());
+
+        for (var handler : handlers) {
+            if (isServerThread()) {
+                futures.add(
+                        CompletableFuture.runAsync(() -> handler.fire(event), executor)
+                            .exceptionally(ex -> {
+                                throw new RuntimeException("Exception occurred while firing event!", ex);
+                            })
+                );
+            } else {
+                handler.fire(event);
+            }
+        }
 
         if (customManager != null) {
             futures.add(customManager.fireEventAsync(event, executionOrder)
@@ -222,10 +232,12 @@ public abstract class EventManager {
 
     public void unregisterAll() {
         handlers.entrySet().stream().flatMap(entry -> entry.getValue().stream()).forEach(this::unregister);
+        cache.clear();
     }
 
     public void drop() {
         handlers.clear();
+        cache.clear();
     }
 
     public void setCustomManager(@Nullable EventManager parent) {
@@ -246,19 +258,33 @@ public abstract class EventManager {
 
     public void destroy() {
         handlers.clear();
+        cache.clear();
 
         if (this == defaultEventManager && executor != null) {
             ExecutorProvider.destroyExecutor(executor);
         }
     }
 
-    private <E extends Event> @NotNull Stream<? extends @NotNull EventHandler<? extends Event>> findEventHandlers(@NotNull E event, @NotNull EventExecutionOrder executionOrder) {
-        return handlers.entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().isInstance(event))
-                .map(Map.Entry::getValue)
-                .flatMap(Collection::stream)
-                .filter(eventHandler -> eventHandler.getExecutionOrder() == executionOrder);
+    private @NotNull List<@NotNull EventHandler<? extends Event>> resolveHandlers(@NotNull Class<?> eventClass, @NotNull EventExecutionOrder order) {
+        var byOrder = cache.computeIfAbsent(eventClass, cls -> {
+            EnumMap<EventExecutionOrder, List<EventHandler<? extends Event>>> map = new EnumMap<>(EventExecutionOrder.class);
+
+            for (var o : EventExecutionOrder.VALUES) {
+                map.put(o, new ArrayList<>());
+            }
+
+            for (var entry : handlers.entrySet()) {
+                if (entry.getKey().isAssignableFrom(cls)) {
+                    for (var handler : entry.getValue()) {
+                        map.get(handler.getExecutionOrder()).add(handler);
+                    }
+                }
+            }
+
+            return map;
+        });
+
+        return byOrder.get(order);
     }
 
     public abstract boolean isServerThread();
