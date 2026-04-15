@@ -23,8 +23,8 @@ import org.screamingsandals.lib.api.Wrapper;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -36,57 +36,107 @@ public final class BidirectionalConverter<SpecificWrapper extends Wrapper> {
     private final @NotNull Map<@NotNull Class<?>, Function<@NotNull Object, @Nullable SpecificWrapper>> p2wConverters = new HashMap<>();
     private final @NotNull Map<@NotNull Class<?>, Function<@NotNull SpecificWrapper, @Nullable Object>> w2pConverters = new HashMap<>();
 
+
+    // Caches resolved converters for fast lookup
+    private final @NotNull Map<@NotNull Class<?>, Function<Object, SpecificWrapper>> p2wCache = new ConcurrentHashMap<>();
+    private final @NotNull Map<@NotNull Class<?>, Map<Class<?>, Function<SpecificWrapper, Object>>> w2pCache = new ConcurrentHashMap<>();
+
     @SuppressWarnings("unchecked")
     public <P> @NotNull BidirectionalConverter<SpecificWrapper> registerW2P(@NotNull Class<P> type, @NotNull Function<@NotNull SpecificWrapper, @Nullable P> convertor) {
         w2pConverters.put(type, (Function<SpecificWrapper, Object>) convertor);
+        w2pCache.clear();
         return this;
     }
 
     @SuppressWarnings("unchecked")
     public <P> @NotNull BidirectionalConverter<SpecificWrapper> registerP2W(@NotNull Class<P> type, @NotNull Function<@NotNull P, @Nullable SpecificWrapper> convertor) {
         p2wConverters.put(type, (Function<Object, SpecificWrapper>) convertor);
+        p2wCache.clear();
         return this;
     }
 
     public <P> @NotNull SpecificWrapper convert(@NotNull P object) {
-       return convertOptional(object).orElseThrow(() -> new UnsupportedOperationException("Can't convert " + object.getClass().getName() + " to the wrapper"));
-    }
-
-    public <P> @NotNull Optional<SpecificWrapper> convertOptional(@Nullable P object) {
-        if (object == null) {
-            return Optional.empty();
+        var result = convertNullable(object);
+        if (result == null) {
+            throw new UnsupportedOperationException(
+                    "Can't convert " + object.getClass().getName() + " to the wrapper"
+            );
         }
-
-        return p2wConverters.entrySet()
-                .stream()
-                .filter(c -> c.getKey().isInstance(object))
-                .map(entry -> entry.getValue().apply(object))
-                .filter(Objects::nonNull)
-                .findFirst();
+        return result;
     }
 
     public <P> @Nullable SpecificWrapper convertNullable(@Nullable P object) {
-        return convertOptional(object).orElse(null);
+        if (object == null) {
+            return null;
+        }
+
+        var type = object.getClass();
+
+        // fast path via cache
+        var converter = p2wCache.get(type);
+        if (converter == null) {
+            for (var entry : p2wConverters.entrySet()) {
+                if (entry.getKey().isAssignableFrom(type)) {
+                    converter = entry.getValue();
+                    p2wCache.put(type, converter);
+                    break;
+                }
+            }
+        }
+
+        if (converter == null) {
+            return null;
+        }
+
+        return converter.apply(object);
+    }
+
+    public <P> @NotNull Optional<SpecificWrapper> convertOptional(@Nullable P object) {
+        return Optional.ofNullable(convertNullable(object));
     }
 
     public <P> @NotNull P convert(@NotNull SpecificWrapper object, @NotNull Class<P> newType) {
-        return convertOptional(object, newType).orElseThrow(() ->
-                new UnsupportedOperationException("Can't convert wrapper " + object.getClass().getName() + " to " + newType.getName()));
+        var result = convertNullable(object, newType);
+        if (result == null) {
+            throw new UnsupportedOperationException(
+                    "Can't convert wrapper " + object.getClass().getName() + " to " + newType.getName()
+            );
+        }
+        return result;
     }
 
     @SuppressWarnings("unchecked")
-    public <P> @NotNull Optional<P> convertOptional(@Nullable SpecificWrapper object, @NotNull Class<P> newType) {
+    public <P> @Nullable P convertNullable(@Nullable SpecificWrapper object, @NotNull Class<P> newType) {
         if (object == null) {
-            return Optional.empty();
+            return null;
         }
+
         if (newType.isInstance(object)) {
-            return Optional.of((P) object);
+            return (P) object;
         }
-        return w2pConverters.entrySet()
-                .stream()
-                .filter(c -> newType.isAssignableFrom(c.getKey()))
-                .map(entry -> (P) entry.getValue().apply(object))
-                .filter(Objects::nonNull)
-                .findFirst();
+
+        var perTypeCache = w2pCache.computeIfAbsent(object.getClass(), k -> new ConcurrentHashMap<>());
+
+        // fast path via cache
+        var converter = perTypeCache.get(newType);
+        if (converter == null) {
+            for (var entry : w2pConverters.entrySet()) {
+                if (newType.isAssignableFrom(entry.getKey())) {
+                    converter = entry.getValue();
+                    perTypeCache.put(newType, converter);
+                    break;
+                }
+            }
+        }
+
+        if (converter == null) {
+            return null;
+        }
+
+        return (P) converter.apply(object);
+    }
+
+    public <P> @NotNull Optional<P> convertOptional(@Nullable SpecificWrapper object, @NotNull Class<P> newType) {
+        return Optional.ofNullable(convertNullable(object, newType));
     }
 }

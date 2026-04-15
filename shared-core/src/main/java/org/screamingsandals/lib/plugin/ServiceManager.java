@@ -21,9 +21,12 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -31,28 +34,45 @@ import java.util.stream.Collectors;
  */
 @UtilityClass
 public class ServiceManager {
-    private static final @NotNull List<@NotNull Object> services = new LinkedList<>();
+    private static final @NotNull List<@NotNull Object> services = new ArrayList<>();
+
+    private static final @NotNull Map<@NotNull Class<?>, @NotNull Object> singleCache = new ConcurrentHashMap<>();
 
     @ApiStatus.Internal
     public static void putService(@NotNull Object service) {
         if (!services.contains(service)) {
             services.add(service);
+            singleCache.clear();
         }
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> @NotNull T get(@NotNull Class<T> serviceType) {
-        return (T) services.stream().filter(o -> serviceType.isAssignableFrom(o.getClass())).findFirst().orElseThrow();
+        var result = getNullable(serviceType);
+        if (result == null) {
+            throw new NoSuchElementException("No service found for " + serviceType.getName());
+        }
+        return result;
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> Optional<T> getOptional(@NotNull Class<T> serviceType) {
-        return (Optional<T>) services.stream().filter(o -> serviceType.isAssignableFrom(o.getClass())).findFirst();
+        return Optional.ofNullable(getNullable(serviceType));
     }
 
     @SuppressWarnings("unchecked")
     public static <T> @Nullable T getNullable(@NotNull Class<T> serviceType) {
-        return (T) services.stream().filter(o -> serviceType.isAssignableFrom(o.getClass())).findFirst().orElse(null);
+        var cached = singleCache.get(serviceType);
+        if (cached != null) {
+            return (T) cached;
+        }
+
+        for (var service : services) {
+            if (serviceType.isAssignableFrom(service.getClass())) {
+                singleCache.put(serviceType, service);
+                return (T) service;
+            }
+        }
+
+        return null;
     }
 
     @SuppressWarnings("unchecked")
