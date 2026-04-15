@@ -18,6 +18,7 @@ package org.screamingsandals.lib.impl.adventure.spectator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.ComponentBuilderCompat;
 import org.screamingsandals.lib.spectator.KeybindComponent;
 
 public class AdventureKeybindComponent extends AdventureComponent implements KeybindComponent {
@@ -37,7 +38,11 @@ public class AdventureKeybindComponent extends AdventureComponent implements Key
 
     @Override
     public KeybindComponent.@NotNull Builder toBuilder() {
-        return new AdventureKeybindBuilder(((net.kyori.adventure.text.KeybindComponent) wrappedObject).toBuilder());
+        if (AdventureFeature.BUILDABLE_COMPONENT_REMOVAL.isSupported()) {
+            return new AdventureKeybindBuilder(((net.kyori.adventure.text.KeybindComponent) wrappedObject).toBuilder());
+        } else {
+            return new AdventureKeybindBuilder((net.kyori.adventure.text.KeybindComponent.Builder) ComponentBuilderCompat.toBuilder(wrappedObject));
+        }
     }
 
     public static class AdventureKeybindBuilder extends AdventureBuilder<

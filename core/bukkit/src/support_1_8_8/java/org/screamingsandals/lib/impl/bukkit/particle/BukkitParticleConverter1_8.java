@@ -25,6 +25,7 @@ import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemType;
 import org.screamingsandals.lib.particle.ParticleData;
 
+@SuppressWarnings("deprecation")
 @UtilityClass
 public class BukkitParticleConverter1_8 {
     public int @NotNull [] convertParticleData(@NotNull ParticleData data) {

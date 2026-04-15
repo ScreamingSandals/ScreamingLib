@@ -13,7 +13,7 @@ waterfall = "1.21-R0.1-SNAPSHOT"
 bungeecord = "1.21-R0.4"
 bungeecord-support_1_21_R01 = "1.21-R0.1"
 velocity = "3.2.0-SNAPSHOT"
-adventure = "4.26.1"
+adventure5 = "5.0.0"
 adventure4 = "4.26.1"
 datafixerupper = "8.0.16"
 datafixerupper2 = "2.0.24"
@@ -90,11 +90,11 @@ waterfall = { group = "io.github.waterfallmc", name = "waterfall-api", version.r
 bungeecord-chat = { group = "net.md-5", name = "bungeecord-serializer", version.ref = "bungeecord" }
 bungeecord-chat-support_one_twentyone_r01 = { group = "net.md-5", name = "bungeecord-chat", version.ref = "bungeecord-support_1_21_R01" }
 velocity = { group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity" }
-adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
-adventure-gson = { group = "net.kyori", name = "adventure-text-serializer-gson", version.ref = "adventure" }
-adventure-legacy = { group = "net.kyori", name = "adventure-text-serializer-legacy", version.ref = "adventure" }
-adventure-plain = { group = "net.kyori", name = "adventure-text-serializer-plain", version.ref = "adventure" }
-adventure-json = { group = "net.kyori", name = "adventure-text-serializer-json", version.ref = "adventure" }
+adventure5-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure5" }
+adventure5-gson = { group = "net.kyori", name = "adventure-text-serializer-gson", version.ref = "adventure5" }
+adventure5-legacy = { group = "net.kyori", name = "adventure-text-serializer-legacy", version.ref = "adventure5" }
+adventure5-plain = { group = "net.kyori", name = "adventure-text-serializer-plain", version.ref = "adventure5" }
+adventure5-json = { group = "net.kyori", name = "adventure-text-serializer-json", version.ref = "adventure5" }
 adventure4-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure4" }
 adventure4-gson = { group = "net.kyori", name = "adventure-text-serializer-gson", version.ref = "adventure4" }
 adventure4-legacy = { group = "net.kyori", name = "adventure-text-serializer-legacy", version.ref = "adventure4" }

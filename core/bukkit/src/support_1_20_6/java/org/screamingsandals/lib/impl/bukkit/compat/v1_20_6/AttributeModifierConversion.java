@@ -26,6 +26,7 @@ import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.slot.EquipmentSlotGroup;
 import org.screamingsandals.lib.utils.Preconditions;
 
+@SuppressWarnings("deprecation")
 @UtilityClass
 public class AttributeModifierConversion {
     public static @NotNull AttributeModifier constructSlibModifier(@NotNull org.bukkit.attribute.AttributeModifier attributeModifier) {

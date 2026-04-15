@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.compat.v1_8_8;
+package org.screamingsandals.lib.impl.adventure.spectator.compat.v4;
 
 import lombok.experimental.UtilityClass;
-import org.bukkit.inventory.ItemStack;
+import net.kyori.adventure.text.BuildableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.item.meta.Potion;
 
-@SuppressWarnings("deprecation")
 @UtilityClass
-public class PotionCompat {
-    public static void applyPotion(@NotNull ItemStack stack, @NotNull Potion potion) {
-        stack.setDurability(potion.as(org.bukkit.potion.Potion.class).toDamageValue());
+public class ComponentBuilderCompat {
+    public static @NotNull Component build(@NotNull ComponentBuilder builder) {
+        return builder.build();
+    }
+
+    public static @NotNull ComponentBuilder toBuilder(@NotNull Component component) {
+        return ((BuildableComponent) component).toBuilder();
     }
 }

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.bungee.spectator;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 import org.screamingsandals.lib.impl.bungee.spectator.backports.NBTPortedComponent;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.NBTComponent;
@@ -49,6 +50,18 @@ public abstract class PortedBungeeNBTComponent extends BungeeComponent implement
     public @NotNull NBTComponent withInterpret(boolean interpret) {
         var duplicate = ((NBTPortedComponent) wrappedObject).duplicate();
         duplicate.setInterpret(interpret);
+        return (NBTComponent) AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    public boolean plain() {
+        return ((NBTPortedComponent) wrappedObject).isPlain();
+    }
+
+    @Override
+    public @NotNull NBTComponent withPlain(boolean plain) {
+        var duplicate = ((NBTPortedComponent) wrappedObject).duplicate();
+        duplicate.setPlain(plain);
         return (NBTComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
@@ -85,6 +98,12 @@ public abstract class PortedBungeeNBTComponent extends BungeeComponent implement
         @Override
         public @NotNull B separator(@Nullable Component separator) {
             component.setSeparator(separator == null ? null : separator.as(BaseComponent.class));
+            return self();
+        }
+
+        @Override
+        public @NonNull B plain(boolean plain) {
+            component.setPlain(plain);
             return self();
         }
     }

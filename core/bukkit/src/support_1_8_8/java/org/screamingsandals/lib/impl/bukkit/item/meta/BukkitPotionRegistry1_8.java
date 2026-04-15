@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+@SuppressWarnings("deprecation")
 public class BukkitPotionRegistry1_8 extends PotionRegistry {
     public BukkitPotionRegistry1_8() {
         specialType(PotionType.class, BukkitPotion1_8::new);

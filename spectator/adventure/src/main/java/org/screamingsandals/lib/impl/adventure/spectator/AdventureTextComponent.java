@@ -18,6 +18,7 @@ package org.screamingsandals.lib.impl.adventure.spectator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.ComponentBuilderCompat;
 import org.screamingsandals.lib.spectator.TextComponent;
 
 public class AdventureTextComponent extends AdventureComponent implements TextComponent {
@@ -37,7 +38,11 @@ public class AdventureTextComponent extends AdventureComponent implements TextCo
 
     @Override
     public TextComponent.@NotNull Builder toBuilder() {
-        return new AdventureTextBuilder(((net.kyori.adventure.text.TextComponent) wrappedObject).toBuilder());
+        if (AdventureFeature.BUILDABLE_COMPONENT_REMOVAL.isSupported()) {
+            return new AdventureTextBuilder(((net.kyori.adventure.text.TextComponent) wrappedObject).toBuilder());
+        } else {
+            return new AdventureTextBuilder((net.kyori.adventure.text.TextComponent.Builder) ComponentBuilderCompat.toBuilder(wrappedObject));
+        }
     }
 
     public static class AdventureTextBuilder extends AdventureBuilder<

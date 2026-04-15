@@ -18,6 +18,8 @@ package org.screamingsandals.lib.impl.adventure.spectator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.ComponentBuilderCompat;
 import org.screamingsandals.lib.spectator.BlockNBTComponent;
 import org.screamingsandals.lib.spectator.Component;
 
@@ -38,7 +40,11 @@ public class AdventureBlockNBTComponent extends AdventureNBTComponent<net.kyori.
 
     @Override
     public BlockNBTComponent.@NotNull Builder toBuilder() {
-        return new AdventureBlockNBTBuilder(((net.kyori.adventure.text.BlockNBTComponent) wrappedObject).toBuilder());
+        if (AdventureFeature.BUILDABLE_COMPONENT_REMOVAL.isSupported()) {
+            return new AdventureBlockNBTBuilder(((net.kyori.adventure.text.BlockNBTComponent) wrappedObject).toBuilder());
+        } else {
+            return new AdventureBlockNBTBuilder((net.kyori.adventure.text.BlockNBTComponent.Builder) ComponentBuilderCompat.toBuilder(wrappedObject));
+        }
     }
 
     @Override
@@ -63,7 +69,7 @@ public class AdventureBlockNBTComponent extends AdventureNBTComponent<net.kyori.
             net.kyori.adventure.text.BlockNBTComponent.Builder
             > implements BlockNBTComponent.Builder {
 
-        public AdventureBlockNBTBuilder(net.kyori.adventure.text.BlockNBTComponent.Builder builder) {
+        public AdventureBlockNBTBuilder(net.kyori.adventure.text.BlockNBTComponent.@NonNull Builder builder) {
             super(builder);
         }
 

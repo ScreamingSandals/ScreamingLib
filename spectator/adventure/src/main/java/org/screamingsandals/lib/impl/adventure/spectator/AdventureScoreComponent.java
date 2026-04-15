@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.adventure.spectator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.ComponentBuilderCompat;
 import org.screamingsandals.lib.spectator.ScoreComponent;
 
 public class AdventureScoreComponent extends AdventureComponent implements ScoreComponent {
@@ -46,13 +47,11 @@ public class AdventureScoreComponent extends AdventureComponent implements Score
         return (ScoreComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.ScoreComponent) wrappedObject).objective(objective));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public String value() {
         return ((net.kyori.adventure.text.ScoreComponent) wrappedObject).value();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull ScoreComponent withValue(@Nullable String value) {
         return (ScoreComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.ScoreComponent) wrappedObject).value(value));
@@ -60,7 +59,11 @@ public class AdventureScoreComponent extends AdventureComponent implements Score
 
     @Override
     public ScoreComponent.@NotNull Builder toBuilder() {
-        return new AdventureScoreBuilder(((net.kyori.adventure.text.ScoreComponent) wrappedObject).toBuilder());
+        if (AdventureFeature.BUILDABLE_COMPONENT_REMOVAL.isSupported()) {
+            return new AdventureScoreBuilder(((net.kyori.adventure.text.ScoreComponent) wrappedObject).toBuilder());
+        } else {
+            return new AdventureScoreBuilder((net.kyori.adventure.text.ScoreComponent.Builder) ComponentBuilderCompat.toBuilder(wrappedObject));
+        }
     }
 
     public static class AdventureScoreBuilder extends AdventureBuilder<
@@ -86,7 +89,6 @@ public class AdventureScoreComponent extends AdventureComponent implements Score
             return self();
         }
 
-        @SuppressWarnings("deprecation")
         @Override
         public ScoreComponent.@NotNull Builder value(@Nullable String value) {
             getBuilder().value(value);

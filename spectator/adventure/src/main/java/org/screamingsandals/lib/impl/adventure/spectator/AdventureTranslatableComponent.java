@@ -20,6 +20,7 @@ import net.kyori.adventure.text.TranslationArgumentLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.ComponentBuilderCompat;
 import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.TranslatableComponentCompat;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TranslatableComponent;
@@ -113,7 +114,11 @@ public class AdventureTranslatableComponent extends AdventureComponent implement
 
     @Override
     public TranslatableComponent.@NotNull Builder toBuilder() {
-        return new AdventureTranslatableBuilder(((net.kyori.adventure.text.TranslatableComponent) wrappedObject).toBuilder());
+        if (AdventureFeature.BUILDABLE_COMPONENT_REMOVAL.isSupported()) {
+            return new AdventureTranslatableBuilder(((net.kyori.adventure.text.TranslatableComponent) wrappedObject).toBuilder());
+        } else {
+            return new AdventureTranslatableBuilder((net.kyori.adventure.text.TranslatableComponent.Builder) ComponentBuilderCompat.toBuilder(wrappedObject));
+        }
     }
 
     public static class AdventureTranslatableBuilder extends AdventureBuilder<

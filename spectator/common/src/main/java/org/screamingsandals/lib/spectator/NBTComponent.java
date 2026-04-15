@@ -33,6 +33,13 @@ public interface NBTComponent extends SeparableComponent {
     @Contract(pure = true)
     @NotNull NBTComponent withInterpret(boolean interpret);
 
+    @LimitedVersionSupport(">= 26.1")
+    boolean plain();
+
+    @LimitedVersionSupport(">= 26.1")
+    @Contract(pure = true)
+    @NotNull NBTComponent withPlain(boolean plain);
+
     /**
      * {@inheritDoc}
      */
@@ -51,5 +58,14 @@ public interface NBTComponent extends SeparableComponent {
 
         @Contract("_ -> this")
         @NotNull B interpret(boolean interpret);
+
+        @Contract("-> this")
+        default @NotNull B plain() {
+            return plain(true);
+        }
+
+        @LimitedVersionSupport(">= 26.1")
+        @Contract("_ -> this")
+        @NotNull B plain(boolean plain);
     }
 }

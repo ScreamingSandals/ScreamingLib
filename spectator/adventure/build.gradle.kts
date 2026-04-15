@@ -3,12 +3,12 @@ import org.screamingsandals.lib.gradle.initSupportSourceSets
 initSupportSourceSets(listOf("4"), createCommon = false)
 
 dependencies {
-    // TODO: depend on Adventure 5 in main module when it releases
-    compileOnly(libs.adventure.api)
-    compileOnly(libs.adventure.gson)
-    compileOnly(libs.adventure.json)
-    compileOnly(libs.adventure.legacy)
-    compileOnly(libs.adventure.plain)
+    compileOnly(libs.adventure5.api)
+    compileOnly(libs.adventure5.gson)
+    compileOnly(libs.adventure5.json)
+    compileOnly(libs.adventure5.legacy)
+    compileOnly(libs.adventure5.plain)
+    "support_4CompileOnly"(project(":spectator-common"))
     "support_4CompileOnly"(libs.adventure4.api)
     "support_4CompileOnly"(libs.adventure4.gson)
     "support_4CompileOnly"(libs.adventure4.json)

@@ -19,13 +19,13 @@ package org.screamingsandals.lib.impl.adventure.spectator;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.BuildableComponent;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.ComponentBuilderCompat;
 import org.screamingsandals.lib.impl.adventure.spectator.event.AdventureClickEvent;
 import org.screamingsandals.lib.impl.adventure.spectator.event.AdventureHoverEvent;
 import org.screamingsandals.lib.spectator.Color;
@@ -330,7 +330,7 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     @RequiredArgsConstructor
     @Data
     // TODO: will the generics continue to work for both v4 and v5 when Adventure 5 comes out and this class updates?
-    public abstract static class AdventureBuilder<A extends BuildableComponent<A, D>, B extends Builder<B, C>, C extends Component, D extends ComponentBuilder<A, D>> implements Builder<B, C> {
+    public abstract static class AdventureBuilder<A extends net.kyori.adventure.text.Component, B extends Builder<B, C>, C extends Component, D extends ComponentBuilder<A, D>> implements Builder<B, C> {
         private final @NotNull D builder;
 
         @SuppressWarnings("unchecked")
@@ -502,7 +502,12 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         @SuppressWarnings("unchecked")
         @Override
         public @NotNull C build() {
-            return (C) AdventureBackend.wrapComponent(builder.build());
+            if (AdventureFeature.BUILDABLE_COMPONENT_REMOVAL.isSupported()) {
+                return (C) AdventureBackend.wrapComponent(builder.build());
+            } else {
+                // a little trick, because the actual signature changed in 5.0.0
+                return (C) AdventureBackend.wrapComponent(ComponentBuilderCompat.build(builder));
+            }
         }
     }
 

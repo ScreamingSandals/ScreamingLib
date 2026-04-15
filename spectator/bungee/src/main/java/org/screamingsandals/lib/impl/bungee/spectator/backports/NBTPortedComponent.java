@@ -35,12 +35,14 @@ public abstract class NBTPortedComponent extends BasePortedComponent {
     private String nbtPath;
     private @Nullable BaseComponent separator;
     private boolean interpret;
+    private boolean plain;
 
     public NBTPortedComponent(@NotNull NBTPortedComponent component) {
         super(component);
         this.nbtPath = component.nbtPath;
         this.separator = component.separator != null ? component.separator.duplicate() : null;
         this.interpret = component.interpret;
+        this.plain = component.plain;
     }
 
     @Override
@@ -53,5 +55,8 @@ public abstract class NBTPortedComponent extends BasePortedComponent {
             out.addProperty("separator", ComponentSerializer.toString(this.separator));
         }
         out.addProperty("interpret", this.interpret);
+        if (this.plain) {
+            out.addProperty("plain", true);
+        }
     }
 }

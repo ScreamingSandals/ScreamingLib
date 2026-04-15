@@ -23,7 +23,7 @@ import org.jspecify.annotations.NonNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.NBTComponent;
 
-public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.NBTComponent<C,?>> extends AdventureComponent implements NBTComponent {
+public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.NBTComponent<C>> extends AdventureComponent implements NBTComponent {
     public AdventureNBTComponent(@NotNull C wrappedObject) {
         super(wrappedObject);
     }
@@ -43,7 +43,7 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
     @Override
     public @Nullable Component separator() {
         if (AdventureFeature.NBT_SEPARATOR.isSupported()) {
-            return AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?,?>) wrappedObject).separator());
+            return AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?>) wrappedObject).separator());
         } else {
             // added in Adventure 4.8.0
             return null;
@@ -53,7 +53,7 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
     @Override
     public @NotNull NBTComponent withSeparator(@Nullable Component separator) {
         if (AdventureFeature.NBT_SEPARATOR.isSupported()) {
-            return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?,?>) wrappedObject).separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class)));
+            return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?>) wrappedObject).separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class)));
         } else {
             // added in Adventure 4.8.0
             return this;
@@ -62,16 +62,32 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
 
     @Override
     public @NotNull NBTComponent withNbtPath(@NotNull String nbtPath) {
-        return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?,?>) wrappedObject).nbtPath(nbtPath));
+        return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?>) wrappedObject).nbtPath(nbtPath));
     }
 
     @Override
     public @NotNull NBTComponent withInterpret(boolean interpret) {
-        return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?,?>) wrappedObject).interpret(interpret));
+        return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?>) wrappedObject).interpret(interpret));
+    }
+
+    @Override
+    public boolean plain() {
+        if (AdventureFeature.NBT_PLAIN_OPTION.isSupported()) {
+            return ((net.kyori.adventure.text.NBTComponent<?>) wrappedObject).plain();
+        } // added in Adventure 5.0.0
+        return false;
+    }
+
+    @Override
+    public @NotNull NBTComponent withPlain(boolean plain) {
+        if (AdventureFeature.NBT_PLAIN_OPTION.isSupported()) {
+            return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?>) wrappedObject).plain(plain));
+        } // added in Adventure 5.0.0
+        return this;
     }
 
     public static class AdventureNBTBuilder<
-            A extends net.kyori.adventure.text.NBTComponent<A, D>,
+            A extends net.kyori.adventure.text.NBTComponent<A>,
             B extends NBTComponent.Builder<B, C>,
             C extends NBTComponent,
             D extends NBTComponentBuilder<A, D>
@@ -98,6 +114,14 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
             if (AdventureFeature.NBT_SEPARATOR.isSupported()) {
                 getBuilder().separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class));
             } // added in Adventure 4.8.0
+            return self();
+        }
+
+        @Override
+        public @NonNull B plain(boolean plain) {
+            if (AdventureFeature.NBT_PLAIN_OPTION.isSupported()) {
+                getBuilder().plain(plain);
+            } // added in Adventure 5.0.0
             return self();
         }
     }

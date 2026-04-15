@@ -27,6 +27,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.Locale;
 import java.util.Map;
 
+@SuppressWarnings("deprecation")
 @UtilityClass
 public class SoundCompat {
     public static void fillSoundCache(@NotNull Map<@NotNull String, String> soundCache) {

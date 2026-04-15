@@ -51,4 +51,7 @@ public class AdventureFeature {
     public static final @NotNull PlatformFeature SHADOW_COLOR = PlatformFeature.of(() -> Reflect.has("net.kyori.adventure.text.format.ShadowColor"));
     public static final @NotNull PlatformFeature CLICK_EVENT_PAYLOAD = PlatformFeature.of(() -> Reflect.has("net.kyori.adventure.text.event.ClickEvent.Payload"));
     public static final @NotNull PlatformFeature TRANSLATABLE_ARGUMENTS_METHOD = PlatformFeature.of(() -> Reflect.hasMethod(TranslatableComponent.class, "arguments"));
+    public static final @NotNull PlatformFeature CLICK_EVENT_ACTION_NOT_ENUM = PlatformFeature.of(() -> Reflect.has("net.kyori.adventure.text.event.ClickEvent$Action$OpenUrl"));
+    public static final @NotNull PlatformFeature NBT_PLAIN_OPTION = PlatformFeature.of(() -> Reflect.hasMethod("net.kyori.adventure.text.NBTComponent", "plain"));
+    public static final @NotNull PlatformFeature BUILDABLE_COMPONENT_REMOVAL = PlatformFeature.of(() -> !Reflect.has("net.kyori.adventure.text.BuildableComponent"));
 }

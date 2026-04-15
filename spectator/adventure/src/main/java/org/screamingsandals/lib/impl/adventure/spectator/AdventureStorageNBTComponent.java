@@ -19,6 +19,8 @@ package org.screamingsandals.lib.impl.adventure.spectator;
 import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.ComponentBuilderCompat;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.StorageNBTComponent;
 import org.screamingsandals.lib.utils.ResourceLocation;
@@ -41,7 +43,11 @@ public class AdventureStorageNBTComponent extends AdventureNBTComponent<net.kyor
 
     @Override
     public StorageNBTComponent.@NotNull Builder toBuilder() {
-        return new AdventureStorageNBTBuilder(((net.kyori.adventure.text.StorageNBTComponent) wrappedObject).toBuilder());
+        if (AdventureFeature.BUILDABLE_COMPONENT_REMOVAL.isSupported()) {
+            return new AdventureStorageNBTBuilder(((net.kyori.adventure.text.StorageNBTComponent) wrappedObject).toBuilder());
+        } else {
+            return new AdventureStorageNBTBuilder((net.kyori.adventure.text.StorageNBTComponent.Builder) ComponentBuilderCompat.toBuilder(wrappedObject));
+        }
     }
 
     @Override
@@ -66,7 +72,7 @@ public class AdventureStorageNBTComponent extends AdventureNBTComponent<net.kyor
             net.kyori.adventure.text.StorageNBTComponent.Builder
             > implements StorageNBTComponent.Builder {
 
-        public AdventureStorageNBTBuilder(net.kyori.adventure.text.StorageNBTComponent.Builder builder) {
+        public AdventureStorageNBTBuilder(net.kyori.adventure.text.StorageNBTComponent.@NonNull Builder builder) {
             super(builder);
         }
 

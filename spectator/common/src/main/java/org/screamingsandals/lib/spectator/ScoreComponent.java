@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,10 +40,12 @@ public interface ScoreComponent extends Component {
     @NotNull ScoreComponent withObjective(@NotNull String objective);
 
     @LimitedVersionSupport("< 1.16.5")
-    @Deprecated
+    @ApiStatus.Obsolete
     @Nullable String value();
 
     @Contract(pure = true)
+    @LimitedVersionSupport("< 1.16.5")
+    @ApiStatus.Obsolete
     @NotNull ScoreComponent withValue(@Nullable String value);
 
     @Contract(value = "-> new", pure = true)
@@ -57,7 +60,7 @@ public interface ScoreComponent extends Component {
 
         @Contract("_ -> this")
         @LimitedVersionSupport("< 1.16.5")
-        @Deprecated
+        @ApiStatus.Obsolete
         @NotNull Builder value(@Nullable String value);
     }
 }

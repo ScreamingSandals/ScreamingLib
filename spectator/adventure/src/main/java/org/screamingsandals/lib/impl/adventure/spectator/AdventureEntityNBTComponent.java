@@ -19,6 +19,7 @@ package org.screamingsandals.lib.impl.adventure.spectator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.ComponentBuilderCompat;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.EntityNBTComponent;
 
@@ -39,7 +40,11 @@ public class AdventureEntityNBTComponent extends AdventureNBTComponent<net.kyori
 
     @Override
     public EntityNBTComponent.@NotNull Builder toBuilder() {
-        return new AdventureEntityNBTBuilder(((net.kyori.adventure.text.EntityNBTComponent) wrappedObject).toBuilder());
+        if (AdventureFeature.BUILDABLE_COMPONENT_REMOVAL.isSupported()) {
+            return new AdventureEntityNBTBuilder(((net.kyori.adventure.text.EntityNBTComponent) wrappedObject).toBuilder());
+        } else {
+            return new AdventureEntityNBTBuilder((net.kyori.adventure.text.EntityNBTComponent.Builder) ComponentBuilderCompat.toBuilder(wrappedObject));
+        }
     }
 
     @Override

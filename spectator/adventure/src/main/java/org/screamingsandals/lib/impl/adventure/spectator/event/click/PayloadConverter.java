@@ -17,12 +17,11 @@
 package org.screamingsandals.lib.impl.adventure.spectator.event.click;
 
 import lombok.experimental.UtilityClass;
-import net.kyori.adventure.dialog.DialogLike;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.impl.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.impl.adventure.spectator.AdventureFeature;
+import org.screamingsandals.lib.impl.adventure.spectator.compat.v4.PayloadConverterCompat;
 import org.screamingsandals.lib.spectator.event.click.Payload;
 
 @UtilityClass
@@ -43,109 +42,18 @@ public class PayloadConverter {
     }
 
     public static @NotNull ClickEvent withPayload(ClickEvent.@NotNull Action action, @NotNull Payload payload) {
-        switch (action) {
-            case OPEN_URL:
-                if (payload instanceof Payload.Text) {
-                    return ClickEvent.openUrl(((Payload.Text) payload).text());
-                }
-                break;
-            case OPEN_FILE:
-                if (payload instanceof Payload.Text) {
-                    return ClickEvent.openFile(((Payload.Text) payload).text());
-                }
-                break;
-            case RUN_COMMAND:
-                if (payload instanceof Payload.Text) {
-                    return ClickEvent.runCommand(((Payload.Text) payload).text());
-                }
-                break;
-            case SUGGEST_COMMAND:
-                if (payload instanceof Payload.Text) {
-                    return ClickEvent.suggestCommand(((Payload.Text) payload).text());
-                }
-                break;
-            case CHANGE_PAGE:
-                if (payload instanceof Payload.Text) {
-                    return ClickEvent.changePage(Integer.parseInt(((Payload.Text) payload).text()));
-                } else if (payload instanceof Payload.Int) {
-                    return ClickEvent.changePage(((Payload.Int) payload).number());
-                }
-                break;
-            case COPY_TO_CLIPBOARD:
-                if (payload instanceof Payload.Text) {
-                    return ClickEvent.copyToClipboard(((Payload.Text) payload).text());
-                }
-                break;
-            case SHOW_DIALOG:
-                if (payload instanceof AdventurePayloadShowDialog) {
-                    return ClickEvent.showDialog(((AdventurePayloadShowDialog) payload).as(ClickEvent.Payload.Dialog.class).dialog());
-                } else if (payload instanceof Payload.ShowDialog) {
-                    return ClickEvent.showDialog(((Payload.ShowDialog) payload).dialog().as(DialogLike.class));
-                }
-                break;
-            case CUSTOM:
-                if (payload instanceof AdventurePayloadCustom) {
-                    var advPayload = ((AdventurePayloadCustom) payload).as(ClickEvent.Payload.Custom.class);
-                    return ClickEvent.custom(advPayload.key(), advPayload.nbt());
-                } else if (payload instanceof Payload.Custom) {
-                    var location = ((Payload.Custom) payload).location();
-                    var tag = ((Payload.Custom) payload).tag();
-                    return ClickEvent.custom(
-                            Key.key(location.namespace(), location.path()),
-                            BinaryTagHolder.binaryTagHolder(AdventureBackend.getSnbtSerializer().serialize(tag))
-                    );
-                }
-                break;
+        if (AdventureFeature.CLICK_EVENT_ACTION_NOT_ENUM.isSupported()) {
+            return PayloadConverter5.withPayload(action, payload);
+        } else {
+            return PayloadConverterCompat.withPayload(action, payload, AdventureBackend.getSnbtSerializer());
         }
-        throw new IllegalArgumentException("Cannot use payload type " + payload.getClass() + " for action " + action.name());
     }
 
     public static @NotNull ClickEvent withAction(ClickEvent.@NotNull Action action, @NotNull ClickEvent clickEvent) {
-        var payload = clickEvent.payload();
-        switch (action) {
-            case OPEN_URL:
-                if (payload instanceof ClickEvent.Payload.Text) {
-                    return ClickEvent.openUrl(((ClickEvent.Payload.Text) payload).value());
-                }
-                break;
-            case OPEN_FILE:
-                if (payload instanceof ClickEvent.Payload.Text) {
-                    return ClickEvent.openFile(((ClickEvent.Payload.Text) payload).value());
-                }
-                break;
-            case RUN_COMMAND:
-                if (payload instanceof ClickEvent.Payload.Text) {
-                    return ClickEvent.runCommand(((ClickEvent.Payload.Text) payload).value());
-                }
-                break;
-            case SUGGEST_COMMAND:
-                if (payload instanceof ClickEvent.Payload.Text) {
-                    return ClickEvent.suggestCommand(((ClickEvent.Payload.Text) payload).value());
-                }
-                break;
-            case CHANGE_PAGE:
-                if (payload instanceof ClickEvent.Payload.Text) {
-                    return ClickEvent.changePage(Integer.parseInt(((ClickEvent.Payload.Text) payload).value()));
-                } else if (payload instanceof ClickEvent.Payload.Int) {
-                    return ClickEvent.changePage(((ClickEvent.Payload.Int) payload).integer());
-                }
-                break;
-            case COPY_TO_CLIPBOARD:
-                if (payload instanceof ClickEvent.Payload.Text) {
-                    return ClickEvent.copyToClipboard(((ClickEvent.Payload.Text) payload).value());
-                }
-                break;
-            case SHOW_DIALOG:
-                if (payload instanceof ClickEvent.Payload.Dialog) {
-                    return ClickEvent.showDialog(((ClickEvent.Payload.Dialog) payload).dialog());
-                }
-                break;
-            case CUSTOM:
-                if (payload instanceof ClickEvent.Payload.Custom) {
-                    return ClickEvent.custom(((ClickEvent.Payload.Custom) payload).key(), ((ClickEvent.Payload.Custom) payload).nbt());
-                }
-                break;
+        if (AdventureFeature.CLICK_EVENT_ACTION_NOT_ENUM.isSupported()) {
+            return PayloadConverter5.withAction(action, clickEvent);
+        } else {
+            return PayloadConverterCompat.withAction(action, clickEvent);
         }
-        throw new IllegalArgumentException("Cannot use action " + action.name() + " with payload type " + payload.getClass());
     }
 }
