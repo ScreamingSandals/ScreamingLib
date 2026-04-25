@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Core;
+import org.screamingsandals.lib.event.player.PlayerInventoryDragEvent;
 import org.screamingsandals.lib.event.server.ServerListPingEvent;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributeTypeServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributesServiceFactory;
@@ -153,6 +154,7 @@ import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerInteractEnt
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerInteractEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerInventoryClickEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerInventoryCloseEvent;
+import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerInventoryDragEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerInventoryOpenEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerItemConsumeEvent;
 import org.screamingsandals.lib.impl.bukkit.event.player.BukkitPlayerItemDamageEvent;
@@ -567,6 +569,7 @@ public class BukkitCore extends Core {
         constructDefaultListener(org.bukkit.event.inventory.InventoryClickEvent.class, PlayerInventoryClickEvent.class, factory(BukkitPlayerInventoryClickEvent::new)
                 .sub(org.bukkit.event.inventory.CraftItemEvent.class, BukkitPlayerCraftItemEvent::new)
         );
+        constructDefaultListener(org.bukkit.event.inventory.InventoryDragEvent.class, PlayerInventoryDragEvent.class, BukkitPlayerInventoryDragEvent::new);
         constructDefaultListener(org.bukkit.event.entity.FoodLevelChangeEvent.class, PlayerFoodLevelChangeEvent.class, BukkitPlayerFoodLevelChangeEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerDropItemEvent.class, PlayerDropItemEvent.class, BukkitPlayerDropItemEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerBedEnterEvent.class, PlayerBedEnterEvent.class, BukkitPlayerBedEnterEvent::new);
