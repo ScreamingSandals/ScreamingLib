@@ -44,7 +44,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 @Service
 @ServiceDependencies(dependsOn = ServerboundInteractPacketListener.class)
 @RequiredArgsConstructor
-@AccessPluginClasses({"ViaVersion", "ProtocolSupport"})
+@AccessPluginClasses({"ViaVersion"})
 public class BukkitPacketMapper extends PacketMapper {
 
     @Override
@@ -123,8 +123,6 @@ public class BukkitPacketMapper extends PacketMapper {
                         return;
                     }
                 }
-
-                // TODO: ProtocolSupport
             }
 
             boolean flush;

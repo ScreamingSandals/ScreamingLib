@@ -35,7 +35,6 @@ jetbrains-annotations = "26.0.2"
 placeholderapi = "2.11.5"
 viaversion = "4.5.1"
 vault = "1.7.1"
-protocolsupport = "3d24efeda6"
 
 # all modules (api)
 configurate = "4.1.2"
@@ -71,7 +70,6 @@ netty = { group = "io.netty", name = "netty-all", version.ref = "netty" }
 placeholderapi = { group = "me.clip", name = "placeholderapi", version.ref = "placeholderapi" }
 viaversion = { group = "com.viaversion", name = "viaversion-api", version.ref = "viaversion" }
 vault = { group = "com.github.MilkBowl", name = "VaultAPI", version.ref = "vault" }
-protocolsupport = { group = "com.github.ProtocolSupport", name = "ProtocolSupport", version.ref = "protocolsupport" }
 datafixerupper = { group = "com.mojang", name = "datafixerupper", version.ref = "datafixerupper" }
 datafixerupper2 = { group = "com.mojang", name = "datafixerupper", version.ref = "datafixerupper2" }
 jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }

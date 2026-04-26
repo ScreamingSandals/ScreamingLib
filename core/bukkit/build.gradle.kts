@@ -29,5 +29,4 @@ dependencies {
 
     compileOnly(libs.netty)
     compileOnly(libs.viaversion)
-    compileOnly(libs.protocolsupport)
 }

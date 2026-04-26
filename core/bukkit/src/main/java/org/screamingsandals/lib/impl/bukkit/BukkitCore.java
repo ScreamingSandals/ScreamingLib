@@ -397,7 +397,7 @@ import java.util.function.Function;
             BukkitGameRuleRegistryServiceFactory.class,
     }
 )
-@AccessPluginClasses({"ViaVersion", "ProtocolSupport"})
+@AccessPluginClasses({"ViaVersion"})
 public class BukkitCore extends Core {
     @Getter
     private static SpigotBackend spectatorBackend;

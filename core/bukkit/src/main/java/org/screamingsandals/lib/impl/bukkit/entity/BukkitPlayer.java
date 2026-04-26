@@ -51,7 +51,6 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.impl.world.Locations;
 import org.screamingsandals.lib.world.weather.WeatherType;
-import protocolsupport.api.ProtocolSupportAPI;
 
 import java.net.InetSocketAddress;
 import java.util.Locale;
@@ -447,12 +446,6 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     public int getProtocolVersion() {
         if (Reflect.has("com.viaversion.viaversion.api.Via")) {
             int version = Via.getAPI().getPlayerVersion(wrappedObject);
-            if (version != -1) {
-                return version;
-            }
-        }
-        if (Reflect.has("protocolsupport.api.ProtocolSupportAPI")) {
-            int version = ProtocolSupportAPI.getProtocolVersion((org.bukkit.entity.Player) wrappedObject).getId();
             if (version != -1) {
                 return version;
             }
