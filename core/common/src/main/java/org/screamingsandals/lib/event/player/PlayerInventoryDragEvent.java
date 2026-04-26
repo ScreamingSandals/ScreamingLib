@@ -22,9 +22,6 @@ import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.event.CancellableEvent;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.utils.ClickType;
-import org.screamingsandals.lib.utils.InventoryAction;
-import org.screamingsandals.lib.utils.SlotType;
 
 import java.util.Set;
 
@@ -32,7 +29,7 @@ public interface PlayerInventoryDragEvent extends CancellableEvent, PlayerEvent,
 
     @Nullable ItemStack cursorItem();
 
-    @Nullable ItemStack oldCursorItem();
+    @NotNull ItemStack oldCursorItem();
 
     void cursorItem(@Nullable ItemStack cursorItem);
 
