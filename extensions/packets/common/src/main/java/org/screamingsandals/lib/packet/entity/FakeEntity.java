@@ -181,7 +181,7 @@ public class FakeEntity {
                 .velocity(new Vector3D(0, 0, 0))
                 .headYaw((byte) 3.9f)
                 .location(location)
-                .metadata(metadataItems)
+                .metadata(new ArrayList<>(metadataItems))
                 .build();
         additionalMetadata.forEach(metadataItem -> {
             spawnPacket.metadata().removeIf(metadataItem1 -> metadataItem1.getIndex() == metadataItem.getIndex());
