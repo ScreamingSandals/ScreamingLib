@@ -36,7 +36,7 @@ import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeEntityCo
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeItemContent;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeLegacyEntityContent;
 import org.screamingsandals.lib.impl.bungee.spectator.event.hover.BungeeLegacyItemContent;
-import org.screamingsandals.lib.impl.spectator.DummyShadowColor;
+import org.screamingsandals.lib.impl.bungee.spectator.utils.LegacyTextDeserializer;
 import org.screamingsandals.lib.impl.spectator.SpectatorBackend;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.spectator.*;
@@ -410,8 +410,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
         if (legacy.isEmpty()) {
             return empty;
         }
-        // for some reason fromLegacyText implements its own custom url handling, which is not part of the format
-        var components = TextComponent.fromLegacyText(legacy);
+        var components = LegacyTextDeserializer.fromLegacyText(legacy, ChatColor.WHITE);
         if (components.length == 0) {
             return empty;
         } else if (components.length == 1) {
@@ -426,19 +425,10 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
         if (legacy.isEmpty()) {
             return empty;
         }
-        if (colorChar == '§') {
-            return fromLegacy(legacy);
+        if (colorChar != '§') {
+            legacy = ChatColor.translateAlternateColorCodes(colorChar, legacy);
         }
-        legacy = ChatColor.translateAlternateColorCodes(colorChar, legacy);
-        // for some reason fromLegacyText implements its own custom url handling, which is not part of the format
-        var components = TextComponent.fromLegacyText(legacy);
-        if (components.length == 0) {
-            return empty;
-        } else if (components.length == 1) {
-            return wrapComponent(components[0]);
-        } else {
-            return wrapComponent(new TextComponent(components));
-        }
+        return fromLegacy(legacy);
     }
 
     @Override
