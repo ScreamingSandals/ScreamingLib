@@ -200,6 +200,7 @@ import org.screamingsandals.lib.impl.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.entity.type.InternalEntityLegacyConstants;
 import org.screamingsandals.lib.impl.nms.accessors.server.VVV.EnumZombieTypeAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerLevelAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.EntityAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.world.entity.monster.zombie.ZombieAccessor;
 import org.screamingsandals.lib.item.ItemStack;
@@ -1206,19 +1207,26 @@ public class BukkitEntities extends Entities {
 
     @Override
     public int getNewEntityId0() {
-        final var entityCount = Reflect.getField(EntityAccessor.FIELD_ENTITY_COUNT.get());
-        if (entityCount != null) {
-            if (entityCount instanceof AtomicInteger) {
-                return ((AtomicInteger) entityCount).incrementAndGet();
+        if (ServerLevelAccessor.CONST_ENTITY_COUNTER.get() != null) {
+            final var entityCounter = ServerLevelAccessor.CONST_ENTITY_COUNTER.get();
+            if (entityCounter instanceof AtomicInteger) {
+                return ((AtomicInteger) entityCounter).incrementAndGet();
             }
-            final var newCount = ((int) entityCount) + 1;
-            Reflect.setField(EntityAccessor.FIELD_ENTITY_COUNT.get(), newCount);
-            return (int) entityCount;
-        }
+        } else {
+            final var entityCount = Reflect.getField(EntityAccessor.FIELD_ENTITY_COUNT.get());
+            if (entityCount != null) {
+                if (entityCount instanceof AtomicInteger) {
+                    return ((AtomicInteger) entityCount).incrementAndGet();
+                }
+                final var newCount = ((int) entityCount) + 1;
+                Reflect.setField(EntityAccessor.FIELD_ENTITY_COUNT.get(), newCount);
+                return (int) entityCount;
+            }
 
-        final var entityCounter = EntityAccessor.CONST_ENTITY_COUNTER.get();
-        if (entityCounter instanceof AtomicInteger) {
-            return ((AtomicInteger) entityCounter).incrementAndGet();
+            final var entityCounter = EntityAccessor.CONST_ENTITY_COUNTER.get();
+            if (entityCounter instanceof AtomicInteger) {
+                return ((AtomicInteger) entityCounter).incrementAndGet();
+            }
         }
         throw new UnsupportedOperationException("Can't obtain new Entity id");
     }

@@ -24,6 +24,8 @@ import org.screamingsandals.lib.ai.goal.Goal;
 import org.screamingsandals.lib.ai.goal.GoalType;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.impl.bukkit.ai.goal.BukkitGoal;
+import org.screamingsandals.lib.impl.nms.accessors.core.RegistryAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.core.registries.BuiltInRegistriesAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.resources.IdentifierAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.VVV.PathfinderGoalSelector$PathfinderGoalSelectorItemAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerPlayerAccessor;
@@ -309,7 +311,15 @@ public class BukkitGoalSelector extends BasicWrapper<Object> implements GoalSele
         }
 
         if (EntityTypeAccessor.FIELD_FACTORY.get() != null) { // 1.14+
-            var optional = Reflect.fastInvoke(EntityTypeAccessor.METHOD_BY_STRING.get(),  new Object[] {type.as(org.bukkit.entity.EntityType.class).getKey().toString()});
+            Object optional;
+
+            if (EntityTypeAccessor.METHOD_BY_STRING.get() == null) {
+                // 26.2+
+                var identifier = Reflect.fastInvoke(IdentifierAccessor.METHOD_TRY_PARSE.get(), new Object[]{type.as(org.bukkit.entity.EntityType.class).getKey().toString()});
+                optional = Reflect.fastInvoke(BuiltInRegistriesAccessor.CONST_ENTITY_TYPE.get(), RegistryAccessor.METHOD_GET_OPTIONAL.get(), identifier);
+            } else {
+                optional = Reflect.fastInvoke(EntityTypeAccessor.METHOD_BY_STRING.get(), new Object[]{type.as(org.bukkit.entity.EntityType.class).getKey().toString()});
+            }
 
             if (optional instanceof Optional && ((Optional<?>) optional).isPresent()) {
                 var entityType = ((Optional<?>) optional).get();

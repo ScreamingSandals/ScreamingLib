@@ -38,7 +38,7 @@ class SlibNamingStrategy(accessorPackage: String)
 accessors {
     // uncomment this and remove the mappingBundle dependency,
     // if you want to develop against custom versions
-    /*versionRange('1.8.8', '26.1.2') {
+    /*versionRange('1.8.8', '26.2') {
         // exclude 1.20, 1.20.3, 1.20.5 and 1.21.2 - hotfixed versions
         // exclude 1.16 and 1.10.1, they don't have most mappings and are basically not used at all
         // exclude 1.8.9, client-only update - no Spigot mappings, no thank you
@@ -57,7 +57,7 @@ accessors {
 
     mapClass("net.minecraft.resources.Identifier") {
         constructor(String::class) // <= 1.20.6
-//        method(it.name, 'parse', String::class) // 1.21+ // TODO: uncomment when needed in modern versions
+        method("net.minecraft.resources.Identifier", "tryParse", String::class) // 1.13+
     }
 
     val Component = mapClass("net.minecraft.network.chat.Component") {
@@ -81,6 +81,7 @@ accessors {
     mapClass("net.minecraft.core.Registry") {
         field("net.minecraft.core.DefaultedRegistry", "ENTITY_TYPE") // <= 1.19.2
         method("int", "getId", "java.lang.Object")
+        method("java.util.Optional", "getOptional", "net.minecraft.resources.Identifier")
     }
 
     mapClass("net.minecraft.core.registries.BuiltInRegistries") {
@@ -648,6 +649,7 @@ accessors {
     }
 
     mapClass("net.minecraft.server.level.ServerLevel") {
+        field("java.util.concurrent.atomic.AtomicInteger", "ENTITY_COUNTER") // 26.2+
         method("void", "func_180505_a", "net.minecraft.util.EnumParticleTypes", "boolean", "double", "double", "double", "int", "double", "double", "double", "double", "int[]") // Searge mapped
     }
 

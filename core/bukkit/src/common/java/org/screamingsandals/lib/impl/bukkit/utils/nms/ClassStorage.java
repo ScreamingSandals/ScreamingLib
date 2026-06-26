@@ -29,6 +29,7 @@ import org.screamingsandals.lib.impl.nms.accessors.core.registries.BuiltInRegist
 import org.screamingsandals.lib.impl.nms.accessors.network.chat.Component$SerializerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.chat.ComponentSerializationAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.network.protocol.PacketAccessor;
+import org.screamingsandals.lib.impl.nms.accessors.resources.IdentifierAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.level.ServerPlayerAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerCommonPacketListenerImplAccessor;
 import org.screamingsandals.lib.impl.nms.accessors.server.network.ServerGamePacketListenerImplAccessor;
@@ -124,9 +125,17 @@ public class ClassStorage {
 		var registry1_19_3 = BuiltInRegistriesAccessor.CONST_ENTITY_TYPE.get();
 		if (registry1_19_3 != null) {
 			// 1.19.3+
-			var optional = Reflect.fastInvoke(EntityTypeAccessor.METHOD_BY_STRING.get(), (Object) key);
+			if (EntityTypeAccessor.METHOD_BY_STRING.get() == null) {
+				// 26.2+
+				var identifier = Reflect.fastInvoke(IdentifierAccessor.METHOD_TRY_PARSE.get(), (Object) key);
+				var optional = Reflect.fastInvoke(registry1_19_3, RegistryAccessor.METHOD_GET_OPTIONAL.get(), identifier);
 
-			return Reflect.fastInvokeResulted(registry1_19_3, RegistryAccessor.METHOD_GET_ID.get(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
+				return Reflect.fastInvokeResulted(registry1_19_3, RegistryAccessor.METHOD_GET_ID.get(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
+			} else {
+				var optional = Reflect.fastInvoke(EntityTypeAccessor.METHOD_BY_STRING.get(), (Object) key);
+
+				return Reflect.fastInvokeResulted(registry1_19_3, RegistryAccessor.METHOD_GET_ID.get(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
+			}
 		} else {
 			// <= 1.19.2
 			var registry = RegistryAccessor.CONST_ENTITY_TYPE.get();

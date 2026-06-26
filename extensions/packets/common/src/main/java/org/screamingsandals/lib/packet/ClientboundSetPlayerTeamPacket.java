@@ -68,7 +68,12 @@ public class ClientboundSetPlayerTeamPacket extends AbstractPacket {
                 writer.writeSizedString(teamPrefix.toLegacy());
                 writer.writeSizedString(teamSuffix.toLegacy());
             }
-            writer.writeByte((byte) ((friendlyFire ? 0x01 : 0) | (seeInvisible ? 0x02 : 0)));
+            if (writer.protocol() >= ProtocolVersions.V26_2) {
+                writer.writeComponent(teamPrefix);
+                writer.writeComponent(teamSuffix);
+            } else {
+                writer.writeByte((byte) ((friendlyFire ? 0x01 : 0) | (seeInvisible ? 0x02 : 0)));
+            }
             if (writer.protocol() >= ProtocolVersions.V1_21_5) {
                 writer.writeVarInt(tagVisibility.ordinal());
             } else {
@@ -82,9 +87,14 @@ public class ClientboundSetPlayerTeamPacket extends AbstractPacket {
             if (writer.protocol() < 352) {
                 writer.writeByte((byte) teamColor.ordinal());
             } else {
+                if (writer.protocol() >= ProtocolVersions.V26_2) {
+                    writer.writeBoolean(true);
+                }
                 writer.writeVarInt(teamColor.ordinal());
             }
-            if (writer.protocol() >= 375) {
+            if (writer.protocol() >= ProtocolVersions.V26_2) {
+                writer.writeByte((byte) ((friendlyFire ? 0x01 : 0) | (seeInvisible ? 0x02 : 0)));
+            } else if (writer.protocol() >= 375) {
                 writer.writeComponent(teamPrefix);
                 writer.writeComponent(teamSuffix);
             }
