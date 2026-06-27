@@ -227,6 +227,7 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature ENTITY_NAUTILUS = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Nautilus"));
     public static final @NotNull PlatformFeature ENTITY_CAMEL_HUSK = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.CamelHusk"));
     public static final @NotNull PlatformFeature ENTITY_PARCHED = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.Parched"));
+    public static final @NotNull PlatformFeature ENTITY_SULFUR_CUBE = PlatformFeature.of(() -> Reflect.has("org.bukkit.entity.SulfurCube"));
 
     // WORLD
     public static final @NotNull PlatformFeature WORLD_MIN_HEIGHT = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getMinHeight"));
@@ -293,4 +294,6 @@ public class BukkitFeature {
     public static final @NotNull PlatformFeature CHUNK_ASYNC_1_9 = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getChunkAtAsync", int.class, int.class, Reflect.getClassSafe("org.bukkit.World$ChunkLoadCallback")));
     public static final @NotNull PlatformFeature CHUNK_ASYNC_1_13 = PlatformFeature.of(() -> Reflect.hasMethod(World.class, "getChunkAtAsync", Location.class));
     public static final @NotNull PlatformFeature PARTICLE_SPELL = PlatformFeature.of(() -> Reflect.has("org.bukkit.Particle$Spell"));
+    public static final @NotNull PlatformFeature PARTICLE_GEYSER = PlatformFeature.of(() -> Reflect.has("org.bukkit.Particle$Geyser"));
+    public static final @NotNull PlatformFeature PARTICLE_GEYSER_BASE =  PlatformFeature.of(() -> Reflect.has("org.bukkit.Particle$GeyserBase"));
 }

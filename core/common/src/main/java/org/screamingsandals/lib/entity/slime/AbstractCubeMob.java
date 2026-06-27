@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.entity.slime;
+package org.screamingsandals.lib.entity.slime;
 
-import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.slime.MagmaCube;
-import org.screamingsandals.lib.impl.bukkit.entity.BukkitMob;
+import org.screamingsandals.lib.entity.Mob;
 
-public class BukkitMagmaCube extends BukkitMob implements MagmaCube {
-    public BukkitMagmaCube(@NotNull org.bukkit.entity.MagmaCube wrappedObject) {
-        super(wrappedObject);
-    }
+/**
+ * Represents any cube mob.
+ */
+public interface AbstractCubeMob extends Mob {
 }

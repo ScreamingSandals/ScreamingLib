@@ -165,6 +165,7 @@ import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitWindCharge;
 import org.screamingsandals.lib.impl.bukkit.entity.projectile.BukkitWitherSkull;
 import org.screamingsandals.lib.impl.bukkit.entity.slime.BukkitMagmaCube;
 import org.screamingsandals.lib.impl.bukkit.entity.slime.BukkitSlime;
+import org.screamingsandals.lib.impl.bukkit.entity.slime.BukkitSulfurCube;
 import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitBlockDisplay;
 import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitDisplay;
 import org.screamingsandals.lib.impl.bukkit.entity.technical.BukkitInteraction;
@@ -288,6 +289,21 @@ public class BukkitEntities extends Entities {
                 }
 
                 return new BukkitWaterAnimal((org.bukkit.entity.WaterMob) entity);
+            }
+
+            // cubes cannot share superclass because of how the hierarchy changed over the years
+            if (BukkitFeature.ENTITY_SULFUR_CUBE.isSupported()) {
+                if (entity instanceof org.bukkit.entity.SulfurCube) {
+                    return new BukkitSulfurCube((org.bukkit.entity.SulfurCube) entity);
+                }
+            }
+
+            if (entity instanceof org.bukkit.entity.MagmaCube) {
+                return new BukkitMagmaCube((org.bukkit.entity.MagmaCube) entity);
+            }
+
+            if (entity instanceof org.bukkit.entity.Slime) {
+                return new BukkitSlime((org.bukkit.entity.Slime) entity);
             }
 
             if (entity instanceof org.bukkit.entity.Creature) {
@@ -734,15 +750,6 @@ public class BukkitEntities extends Entities {
 
                 return new BukkitPathfinderMob((org.bukkit.entity.Creature) entity);
             }
-
-            if (entity instanceof org.bukkit.entity.Slime) {
-                if (entity instanceof org.bukkit.entity.MagmaCube) {
-                    return new BukkitMagmaCube((org.bukkit.entity.MagmaCube) entity);
-                }
-
-                return new BukkitSlime((org.bukkit.entity.Slime) entity);
-            }
-
 
             if (entity instanceof org.bukkit.entity.Ghast) {
                 return new BukkitGhast((org.bukkit.entity.Ghast) entity);

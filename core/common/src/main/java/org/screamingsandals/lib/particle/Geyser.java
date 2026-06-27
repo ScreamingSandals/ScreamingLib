@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.bukkit.entity.slime;
+package org.screamingsandals.lib.particle;
 
-import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.slime.MagmaCube;
-import org.screamingsandals.lib.impl.bukkit.entity.BukkitMob;
+import lombok.Data;
+import lombok.experimental.Accessors;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
-public class BukkitMagmaCube extends BukkitMob implements MagmaCube {
-    public BukkitMagmaCube(@NotNull org.bukkit.entity.MagmaCube wrappedObject) {
-        super(wrappedObject);
-    }
+@Data
+@Accessors(fluent = true)
+@LimitedVersionSupport(">= 21.2")
+public class Geyser implements ParticleData {
+    private final int waterBlocks;
 }

@@ -16,10 +16,8 @@
 
 package org.screamingsandals.lib.entity.slime;
 
-import org.screamingsandals.lib.entity.Mob;
-
 /**
- * Represents an entity with identifier {@code minecraft:slime}. It is also a parent type for {@code minecraft:magma_cube}.
+ * Represents an entity with identifier {@code minecraft:slime}.
  */
-public interface Slime extends Mob {
+public interface Slime extends AbstractCubeMob {
 }

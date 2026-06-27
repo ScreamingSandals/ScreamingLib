@@ -17,11 +17,11 @@
 package org.screamingsandals.lib.impl.bukkit.entity.slime;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.slime.MagmaCube;
+import org.screamingsandals.lib.entity.slime.SulfurCube;
 import org.screamingsandals.lib.impl.bukkit.entity.BukkitMob;
 
-public class BukkitMagmaCube extends BukkitMob implements MagmaCube {
-    public BukkitMagmaCube(@NotNull org.bukkit.entity.MagmaCube wrappedObject) {
+public class BukkitSulfurCube extends BukkitMob implements SulfurCube {
+    public BukkitSulfurCube(@NotNull org.bukkit.entity.SulfurCube wrappedObject) {
         super(wrappedObject);
     }
 }

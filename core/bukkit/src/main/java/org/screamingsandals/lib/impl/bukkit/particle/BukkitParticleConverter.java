@@ -87,6 +87,21 @@ public class BukkitParticleConverter {
                         ((Spell) data).power()
                 );
             }
+        } else if (data instanceof Geyser) {
+            if (BukkitFeature.PARTICLE_GEYSER.isSupported()) {
+                return new Particle.Geyser(
+                        ((Geyser) data).waterBlocks()
+                );
+            } else {
+                return ((Geyser) data).waterBlocks();
+            }
+        } else if (data instanceof GeyserBase) {
+            if (BukkitFeature.PARTICLE_GEYSER_BASE.isSupported()) {
+                return new Particle.GeyserBase(
+                        ((GeyserBase) data).waterBlocks(),
+                        ((GeyserBase) data).burstImpulse()
+                );
+            }
         }
         return null;
     }

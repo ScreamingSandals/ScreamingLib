@@ -19,5 +19,5 @@ package org.screamingsandals.lib.entity.slime;
 /**
  * Represents an entity with identifier {@code minecraft:magma_cube}.
  */
-public interface MagmaCube extends Slime {
+public interface MagmaCube extends AbstractCubeMob {
 }
