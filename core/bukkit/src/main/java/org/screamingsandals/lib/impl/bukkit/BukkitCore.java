@@ -23,6 +23,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.event.player.PlayerInventoryDragEvent;
+import org.screamingsandals.lib.event.player.PlayerTeleportEvent;
 import org.screamingsandals.lib.event.server.ServerListPingEvent;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributeTypeServiceFactory;
 import org.screamingsandals.lib.impl.bukkit.attribute.BukkitAttributesServiceFactory;
@@ -551,17 +552,10 @@ public class BukkitCore extends Core {
         constructDefaultListener(org.bukkit.event.player.PlayerQuitEvent.class, PlayerLeaveEvent.class, BukkitPlayerLeaveEvent::new);
         constructDefaultListener(org.bukkit.event.block.BlockPlaceEvent.class, PlayerBlockPlaceEvent.class, BukkitPlayerBlockPlaceEvent::new);
         constructDefaultListener(org.bukkit.event.block.BlockDamageEvent.class, PlayerBlockDamageEvent.class, BukkitPlayerBlockDamageEvent::new);
-        /* we should register this only if someone exactly wants PlayerMoveEvent and not PlayerTeleportEvent */
-        new AbstractBukkitEventHandlerFactory<>(org.bukkit.event.player.PlayerMoveEvent.class, PlayerMoveEvent.class, plugin, false, true) {
-            @Override
-            protected PlayerMoveEvent wrapEvent(@NotNull org.bukkit.event.player.PlayerMoveEvent event, @NotNull EventExecutionOrder priority) {
-                return new BukkitPlayerMoveEvent(event);
-            }
-        };
-        // although PlayerTeleportEvent extends PlayerMoveEvent, it has its own HandlerList
-        constructDefaultListener(org.bukkit.event.player.PlayerTeleportEvent.class, PlayerMoveEvent.class, BukkitPlayerTeleportEvent::new);
+        constructDefaultListener(org.bukkit.event.player.PlayerMoveEvent.class, PlayerMoveEvent.class, BukkitPlayerMoveEvent::new);
+        constructDefaultListener(org.bukkit.event.player.PlayerTeleportEvent.class, PlayerTeleportEvent.class, BukkitPlayerTeleportEvent::new);
         // although PlayerPortalEvent extends PlayerTeleportEvent, it has its own HandlerList
-        constructDefaultListener(org.bukkit.event.player.PlayerPortalEvent.class, PlayerMoveEvent.class, BukkitPlayerPortalEvent::new);
+        constructDefaultListener(org.bukkit.event.player.PlayerPortalEvent.class, PlayerTeleportEvent.class, BukkitPlayerPortalEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerChangedWorldEvent.class, PlayerWorldChangeEvent.class, BukkitPlayerWorldChangeEvent::new);
         constructDefaultListener(org.bukkit.event.block.SignChangeEvent.class, PlayerUpdateSignEvent.class, BukkitPlayerUpdateSignEvent::new);
         constructDefaultListener(org.bukkit.event.player.PlayerRespawnEvent.class, PlayerRespawnEvent.class, BukkitPlayerRespawnEvent::new);

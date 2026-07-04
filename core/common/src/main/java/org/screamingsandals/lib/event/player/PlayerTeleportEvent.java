@@ -17,8 +17,17 @@
 package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.event.CancellableEvent;
+import org.screamingsandals.lib.event.PlatformEvent;
+import org.screamingsandals.lib.world.Location;
 
-public interface PlayerTeleportEvent extends PlayerMoveEvent {
+public interface PlayerTeleportEvent extends CancellableEvent, PlayerEvent, PlatformEvent {
+
+    @NotNull Location currentLocation();
+
+    @NotNull Location newLocation();
+
+    void newLocation(@NotNull Location newLocation);
 
     @NotNull TeleportCause cause();
 
