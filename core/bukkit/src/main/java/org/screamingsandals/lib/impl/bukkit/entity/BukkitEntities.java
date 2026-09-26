@@ -786,6 +786,12 @@ public class BukkitEntities extends Entities {
             return new BukkitLivingEntity((org.bukkit.entity.LivingEntity) entity);
         }
 
+        if (BukkitFeature.ENTITY_CUSHION.isSupported()) {
+            if (entity instanceof org.bukkit.entity.Cushion) {
+                return new BukkitCushion((org.bukkit.entity.Cushion) entity);
+            }
+        }
+
         if (entity instanceof org.bukkit.entity.Vehicle) {
             if (entity instanceof org.bukkit.entity.Boat) {
                 if (BukkitFeature.ENTITY_CHEST_BOAT.isSupported()) {

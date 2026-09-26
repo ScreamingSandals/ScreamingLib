@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.impl.packet.ProtocolVersions;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 @EqualsAndHashCode(callSuper = true)
@@ -32,14 +33,25 @@ public abstract class ClientboundMoveEntityPacket extends AbstractPacket {
     public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(entityId);
         if (this instanceof Pos) {
+            if (writer.protocol() >= ProtocolVersions.V26_3) {
+                writer.writeVarInt(onGround ? 1 : 0);
+            }
             writer.writeMove(((Pos) this).delta);
         } else if (this instanceof Rot) {
+            if (writer.protocol() >= ProtocolVersions.V26_3) {
+                writer.writeBoolean(onGround);
+            }
             writer.writeByteRotation(((Rot) this).yaw, ((Rot) this).pitch);
         } else if (this instanceof PosRot) {
+            if (writer.protocol() >= ProtocolVersions.V26_3) {
+                writer.writeVarInt(onGround ? 1 : 0);
+            }
             writer.writeMove(((PosRot) this).delta);
             writer.writeByteRotation(((PosRot) this).yaw, ((PosRot) this).pitch);
         }
-        writer.writeBoolean(onGround);
+        if (writer.protocol() < ProtocolVersions.V26_3) {
+            writer.writeBoolean(onGround);
+        }
     }
 
     @EqualsAndHashCode(callSuper = true)

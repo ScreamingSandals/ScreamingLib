@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.impl.packet;
+package org.screamingsandals.lib.impl.bukkit.entity;
 
-import lombok.experimental.UtilityClass;
+import org.jspecify.annotations.NonNull;
+import org.screamingsandals.lib.entity.Cushion;
 
-@UtilityClass
-public class ProtocolVersions {
-    // TODO: convert all magic protocol numbers to constants
-    public static final int V1_20_5 = 766;
-    public static final int V1_21_2 = 768;
-    public static final int V1_21_5 = 770;
-    public static final int V1_21_9 = 773;
-    public static final int V26_2 = 776;
-    public static final int V26_3 = 777;
+public class BukkitCushion extends BukkitEntity implements Cushion {
+    public BukkitCushion(org.bukkit.entity.@NonNull Cushion wrappedObject) {
+        super(wrappedObject);
+    }
 }

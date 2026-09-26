@@ -36,6 +36,9 @@ public class ClientboundTeleportEntityPacket extends AbstractPacket {
     @Override
     public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(entityId);
+        if (writer.protocol() >= ProtocolVersions.V26_3) {
+            writer.writeBoolean(false);
+        }
         if (writer.protocol() >= 100) {
             writer.writeVector(location);
         } else {
@@ -43,9 +46,11 @@ public class ClientboundTeleportEntityPacket extends AbstractPacket {
         }
         if (writer.protocol() >= ProtocolVersions.V1_21_2) {
             // Delta movement: we do not need the entity to move
-            writer.writeDouble(0);
-            writer.writeDouble(0);
-            writer.writeDouble(0);
+            if (writer.protocol() < ProtocolVersions.V26_3) {
+                writer.writeDouble(0);
+                writer.writeDouble(0);
+                writer.writeDouble(0);
+            }
             writer.writeFloat(location.getYaw());
             writer.writeFloat(location.getPitch());
         } else {
