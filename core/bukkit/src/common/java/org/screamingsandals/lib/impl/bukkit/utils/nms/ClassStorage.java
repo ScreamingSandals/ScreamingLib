@@ -114,11 +114,16 @@ public class ClassStorage {
 
 	public static ItemStack asCBStack(ItemStack item) {
 		Preconditions.checkNotNull(item, "Item is null!");
+		if (!Reflect.hasMethod(CB.CraftItemStack, "asCraftCopy", ItemStack.class)) {
+			// Paper 26.3+: asCraftCopy no longer exists, we can reach the same result by converting ItemStack to nms copy and then converting it back. No change in Spigot.
+			return nmsAsStack(stackAsNMS(item));
+		}
 		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftCopy", ItemStack.class).invokeStatic(item);
 	}
 
 	public static ItemStack nmsAsStack(Object nmsStack) {
-		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftMirror", ItemStackAccessor.TYPE.get()).invokeStatic(nmsStack);
+		// Paper 26.3+: asCraftMirror no longer exists and asBukkitMirror got the same meaning. No change in Spigot.
+		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftMirror,asBukkitMirror", ItemStackAccessor.TYPE.get()).invokeStatic(nmsStack);
 	}
 
 	public static int getEntityTypeId(String key, Class<?> clazz) {
